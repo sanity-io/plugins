@@ -51,9 +51,12 @@ export function useReplacementAssets({
   const searchQuery = filters.searchQuery.trim()
   const key = JSON.stringify([assetToReplaceId, folderId, searchQuery, tagId])
 
-  const [storedRequest, setPageRequest] = useState<PageRequest>({attempt: 0, key, pageIndex: 0})
-  // New filters start over from the first page.
-  const pageRequest = storedRequest.key === key ? storedRequest : {attempt: 0, key, pageIndex: 0}
+  const [pageRequest, setPageRequest] = useState<PageRequest>({attempt: 0, key, pageIndex: 0})
+  // New filters start over from the first page. Reset the stored request rather than
+  // only deriving page 0, so returning to earlier filters doesn't resume their old page.
+  if (pageRequest.key !== key) {
+    setPageRequest({attempt: 0, key, pageIndex: 0})
+  }
   const {attempt, pageIndex} = pageRequest
   const requestId = requestIdOf(pageRequest)
 

@@ -219,6 +219,31 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.getByText('image-0.png')).toBeTruthy()
   })
 
+  it('starts from the first page when returning to earlier filters', async () => {
+    const user = userEvent.setup()
+    const firstPage = Array.from({length: REPLACEMENT_PAGE_SIZE}, (_, index) =>
+      image(`image-${index}`),
+    )
+    fetchMock.mockImplementation((_query: string, params: FetchParams) => {
+      if (params.searchPattern) {
+        return of([image('image-hit', 'hit.png')])
+      }
+      return of(params.start === 0 ? firstPage : [image('image-last', 'last.png')])
+    })
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-0.png')
+    await user.click(screen.getByRole('button', {name: 'load more'}))
+    await screen.findByText('last.png')
+
+    const searchInput = screen.getByRole('textbox', {name: 'Search images'})
+    await user.type(searchInput, 'hit')
+    await screen.findByText('hit.png')
+    await user.clear(searchInput)
+
+    expect(await screen.findByText('image-0.png')).toBeTruthy()
+    expect(lastFetchParams()).toMatchObject({end: 100, start: 0})
+  })
+
   it('does not request another page after a short page', async () => {
     const user = userEvent.setup()
     renderWithProviders(<Harness />)
