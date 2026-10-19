@@ -1,65 +1,48 @@
 import {ClipboardIcon} from '@sanity/icons/Clipboard'
-import {Button, Text} from '@sanity/ui'
-import {Popover} from '@sanity/ui/popover'
+import {Button} from '@sanity/ui'
 import copy from 'copy-to-clipboard'
 import {useEffect, useRef, useState} from 'react'
 
-import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-
 type Props = {
   disabled?: boolean
-  url: string
+  label?: string
+  value: string
 }
 
-const ButtonAssetCopy = ({disabled, url}: Props) => {
-  const popoverProps = usePortalPopoverProps()
-  const refPopoverTimeout = useRef<ReturnType<typeof window.setTimeout>>(null)
-  const [popoverVisible, setPopoverVisible] = useState(false)
+const ButtonAssetCopy = ({disabled, label = 'Copy URL', value}: Props) => {
+  const refCopiedTimeout = useRef<ReturnType<typeof window.setTimeout>>(null)
+  const [copied, setCopied] = useState(false)
 
   const handleClick = () => {
-    if (refPopoverTimeout.current) {
-      clearTimeout(refPopoverTimeout.current)
+    if (refCopiedTimeout.current) {
+      clearTimeout(refCopiedTimeout.current)
     }
 
-    setPopoverVisible(true)
-    copy(url)
+    setCopied(true)
+    copy(value)
 
-    refPopoverTimeout.current = setTimeout(() => {
-      setPopoverVisible(false)
-    }, 1250)
+    refCopiedTimeout.current = setTimeout(() => {
+      setCopied(false)
+    }, 2000)
   }
 
-  // Effects
   useEffect(() => {
     return () => {
-      if (refPopoverTimeout.current) {
-        clearTimeout(refPopoverTimeout.current)
+      if (refCopiedTimeout.current) {
+        clearTimeout(refCopiedTimeout.current)
       }
     }
   }, [])
 
   return (
-    <Popover
-      content={
-        <Text muted size={1}>
-          Copied!
-        </Text>
-      }
-      open={popoverVisible}
-      padding={2}
-      placement="top"
-      radius={1}
-      {...popoverProps}
-    >
-      <Button
-        disabled={disabled}
-        fontSize={1}
-        icon={ClipboardIcon}
-        mode="ghost"
-        onClick={handleClick}
-        text="Copy URL"
-      />
-    </Popover>
+    <Button
+      disabled={disabled}
+      fontSize={1}
+      icon={ClipboardIcon}
+      mode="ghost"
+      onClick={handleClick}
+      text={copied ? 'Copied!' : label}
+    />
   )
 }
 

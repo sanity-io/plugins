@@ -25,7 +25,7 @@ _Individual asset view_
 - Support for batch uploads with drag and drop support
 - Edit text fields native to Sanity's asset documents, such as `title`, `description`, `altText` and `originalFilename`
 - Browse folder documents in a dedicated sidebar and assign assets to folders individually or in bulk
-- View asset metadata and a limited subset of EXIF data, if present
+- View asset metadata, including the asset document ID, and a limited subset of EXIF data, if present
 - Tag your assets individually or in bulk
 - Manage tags directly within the plugin
 - Get previews for audio and video files

@@ -14,9 +14,9 @@ type Props = {
   item?: AssetItem
 }
 
-const Row = ({label, value}: {label: string; value: ReactNode}) => {
+const Row = ({label, value, wrap = false}: {label: string; value: ReactNode; wrap?: boolean}) => {
   return (
-    <Flex justify="space-between">
+    <Flex align={wrap ? 'flex-start' : 'center'} justify="space-between">
       <Text
         size={1}
         style={{
@@ -30,11 +30,14 @@ const Row = ({label, value}: {label: string; value: ReactNode}) => {
       <Text
         size={1}
         style={{
-          opacity: 0.4,
+          opacity: wrap ? 0.9 : 0.4,
+          overflowWrap: wrap ? 'anywhere' : undefined,
           textAlign: 'right',
+          userSelect: wrap ? 'all' : undefined,
           width: '60%',
         }}
-        textOverflow="ellipsis"
+        textOverflow={wrap ? undefined : 'ellipsis'}
+        title={typeof value === 'string' ? value : undefined}
       >
         {value}
       </Text>
@@ -57,6 +60,7 @@ const AssetMetadata = (props: Props) => {
       {/* Base */}
       <Box>
         <Stack gap={3}>
+          <Row label="Asset ID" value={asset._id} wrap />
           <Row label="Size" value={filesize(asset?.size, {base: 10, round: 0})} />
           <Row label="MIME type" value={asset?.mimeType} />
           <Row label="Extension" value={asset?.extension?.toUpperCase()} />
@@ -113,7 +117,8 @@ const AssetMetadata = (props: Props) => {
             text="Download"
           />
           {/* Copy to clipboard */}
-          <ButtonAssetCopy disabled={!item || item?.updating} url={asset.url} />
+          <ButtonAssetCopy disabled={!item || item?.updating} label="Copy ID" value={asset._id} />
+          <ButtonAssetCopy disabled={!item || item?.updating} value={asset.url} />
         </Inline>
       </Box>
     </Box>
