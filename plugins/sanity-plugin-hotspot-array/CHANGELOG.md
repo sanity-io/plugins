@@ -1,5 +1,17 @@
 # sanity-plugin-hotspot-array
 
+## 5.0.22
+
+### Patch Changes
+
+- [#2198](https://github.com/sanity-io/plugins/pull/2198) [`c905155`](https://github.com/sanity-io/plugins/commit/c905155393631a2d2468ae160037c81588e45069) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.2.0
+
+## 5.0.21
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
 ## 5.0.20
 
 ### Patch Changes

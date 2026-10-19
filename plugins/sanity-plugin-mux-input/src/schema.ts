@@ -147,6 +147,10 @@ const muxAssetData = {
       name: 'max_resolution_tier',
     },
     {
+      type: 'number',
+      name: 'thumbnail_time',
+    },
+    {
       name: 'tracks',
       type: 'array',
       of: [{type: 'mux.track'}],
@@ -164,6 +168,82 @@ const muxAssetData = {
       name: 'master',
       type: 'mux.masterFile',
     },
+  ],
+}
+
+// Robots data lives at the document root: every refresh replaces `data` whole.
+const muxRobotsJob = {
+  name: 'mux.robotsJob',
+  type: 'object',
+  fields: [
+    {type: 'string', name: 'id'},
+    {type: 'string', name: 'workflow'},
+    {type: 'string', name: 'status'},
+    {type: 'number', name: 'created_at'},
+    {type: 'number', name: 'updated_at'},
+    {type: 'number', name: 'units_consumed'},
+    {type: 'string', name: 'error'},
+    {type: 'boolean', name: 'thumbnailApplied'},
+  ],
+}
+
+const muxRobotsOutputs = {
+  name: 'mux.robotsOutputs',
+  type: 'object',
+  fields: [
+    {
+      name: 'summarize',
+      type: 'object',
+      fields: [
+        {type: 'string', name: 'jobId'},
+        {type: 'number', name: 'completedAt'},
+        {type: 'string', name: 'title'},
+        {type: 'text', name: 'description'},
+        {type: 'array', name: 'tags', of: [{type: 'string'}]},
+      ],
+    },
+    {
+      name: 'moderate',
+      type: 'object',
+      fields: [
+        {type: 'string', name: 'jobId'},
+        {type: 'number', name: 'completedAt'},
+        {type: 'boolean', name: 'exceedsThreshold'},
+        {
+          name: 'maxScores',
+          type: 'object',
+          fields: [
+            {type: 'number', name: 'sexual'},
+            {type: 'number', name: 'violence'},
+          ],
+        },
+      ],
+    },
+  ],
+}
+
+const muxRobotsDirectiveRun = {
+  name: 'mux.robotsDirectiveRun',
+  type: 'object',
+  fields: [
+    {type: 'string', name: 'runId'},
+    {type: 'string', name: 'directiveId'},
+    {type: 'string', name: 'status'},
+    {type: 'number', name: 'startedAt'},
+    {type: 'number', name: 'completedAt'},
+    {type: 'array', name: 'jobIds', of: [{type: 'string'}]},
+  ],
+}
+
+const muxRobotsPendingCreate = {
+  name: 'mux.robotsPendingCreate',
+  type: 'object',
+  fields: [
+    {type: 'string', name: 'requestId'},
+    {type: 'string', name: 'kind'},
+    {type: 'string', name: 'workflow'},
+    {type: 'string', name: 'directiveId'},
+    {type: 'number', name: 'requestedAt'},
   ],
 }
 
@@ -196,6 +276,25 @@ const muxVideoAsset = {
       type: 'mux.assetData',
       name: 'data',
     },
+    {
+      name: 'robotsJobs',
+      type: 'array',
+      of: [{type: 'mux.robotsJob'}],
+    },
+    {
+      type: 'mux.robotsOutputs',
+      name: 'robotsOutputs',
+    },
+    {
+      name: 'robotsDirectiveRuns',
+      type: 'array',
+      of: [{type: 'mux.robotsDirectiveRun'}],
+    },
+    {
+      name: 'robotsPendingCreates',
+      type: 'array',
+      of: [{type: 'mux.robotsPendingCreate'}],
+    },
   ],
 }
 
@@ -206,5 +305,9 @@ export const schemaTypes = [
   muxStaticRenditions,
   muxMasterFile,
   muxAssetData,
+  muxRobotsJob,
+  muxRobotsOutputs,
+  muxRobotsDirectiveRun,
+  muxRobotsPendingCreate,
   muxVideoAsset,
 ]

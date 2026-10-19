@@ -13,18 +13,21 @@ import {getPlaybackId} from '../util/getPlaybackPolicy'
 import {getPlaybackPolicyById} from '../util/getPlaybackPolicy'
 import {getPosterSrc} from '../util/getPosterSrc'
 import {getVideoSrc} from '../util/getVideoSrc'
+import {readyTracksKey} from '../util/tracks'
 import {tryWithSuspend} from '../util/tryWithSuspend'
 import type {VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
 import MezzanineDialog from './MezzanineDialog'
+import {NoPlaybackIdNotice} from './NoPlaybackIdNotice'
 
 export default function VideoPlayer({
   asset,
   thumbnailWidth = 250,
   children,
   hlsConfig,
+  readOnly,
   ...props
 }: PropsWithChildren<
   {
@@ -32,6 +35,7 @@ export default function VideoPlayer({
     thumbnailWidth?: number
     forceAspectRatio?: number
     hlsConfig?: MuxPlayerProps['_hlsConfig']
+    readOnly?: boolean
   } & Partial<Pick<MuxPlayerProps, 'autoPlay'>>
 >) {
   const client = useClient()
@@ -42,35 +46,26 @@ export default function VideoPlayer({
   const playerContainerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<Error>()
 
+  // Robots `moderate` can delete every playback ID; the notice below says how to restore one.
+  const hasPlaybackIds = !!asset.data?.playback_ids?.length
   /* Playback ID that will be used to play the video */
-  const playbackId = useMemo(() => {
-    try {
-      return getPlaybackId(asset, ['public', 'signed', 'drm'])
-    } catch (e) {
-      // oxlint-disable-next-line react/set-state-in-render
-      setError(new TypeError('Asset has no playback ID', {cause: e}))
-      return undefined
-    }
-  }, [asset])
-
-  const muxPlaybackId = useMemo(() => {
-    if (!playbackId) return undefined
-    return getPlaybackPolicyById(asset, playbackId)
-  }, [asset, playbackId])
+  const playbackId = hasPlaybackIds ? getPlaybackId(asset, ['public', 'signed', 'drm']) : undefined
+  // Strings, so an unrelated document change doesn't sign a new token and reload the player.
+  const policy = playbackId ? getPlaybackPolicyById(asset, playbackId)?.policy : undefined
 
   const src = useMemo(() => {
-    if (!playbackId) return undefined
-    if (!muxPlaybackId) return undefined
+    if (!playbackId || !policy) return undefined
     return tryWithSuspend(
-      () => getVideoSrc({muxPlaybackId, client}),
+      () => getVideoSrc({muxPlaybackId: {id: playbackId, policy}, client}),
       (e: Error) => {
         setError(e)
         return undefined
       },
     )
-  }, [muxPlaybackId, playbackId, client])
+  }, [playbackId, policy, client])
 
   const poster = useMemo(() => {
+    if (!hasPlaybackIds) return undefined
     return tryWithSuspend(
       () => getPosterSrc({asset, client, width: thumbnailWidth}),
       (e: Error) => {
@@ -78,7 +73,7 @@ export default function VideoPlayer({
         return undefined
       },
     )
-  }, [asset, client, thumbnailWidth])
+  }, [asset, client, thumbnailWidth, hasPlaybackIds])
 
   const signedToken = useMemo(() => {
     try {
@@ -90,7 +85,7 @@ export default function VideoPlayer({
   }, [src])
   const drmToken = useMemo(() => {
     if (!playbackId) return undefined
-    if (muxPlaybackId?.policy !== 'drm') return undefined
+    if (policy !== 'drm') return undefined
 
     return tryWithSuspend(
       () => generateJwt(client, playbackId, 'd'),
@@ -99,7 +94,7 @@ export default function VideoPlayer({
         return undefined
       },
     )
-  }, [client, muxPlaybackId?.policy, playbackId])
+  }, [client, policy, playbackId])
   const tokens:
     | Partial<{
         playback?: string
@@ -178,6 +173,8 @@ export default function VideoPlayer({
             )}
             <Suspense fallback={null}>
               <MuxPlayer
+                // A new caption or audio track reaches the player only with a fresh manifest.
+                key={readyTracksKey(asset.data?.tracks)}
                 poster={isAudio ? undefined : poster}
                 ref={muxPlayer}
                 {...props}
@@ -205,6 +202,7 @@ export default function VideoPlayer({
             </Suspense>
           </>
         )}
+        {!hasPlaybackIds && <NoPlaybackIdNotice asset={asset} readOnly={readOnly} />}
         {error ? (
           <div
             style={{

@@ -2,7 +2,8 @@ import type {SanityClient} from 'sanity'
 
 import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
-import type {MuxAsset, VideoAssetDocument} from '../util/types'
+import type {MuxAsset, MuxPlaybackId, PlaybackPolicy, VideoAssetDocument} from '../util/types'
+import {toRobotsRequestError} from './robots'
 
 export function deleteAssetOnMux(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
@@ -84,7 +85,7 @@ export function addTextTrackFromUrl(
   options: {
     language_code: string
     name: string
-    text_type?: 'subtitles'
+    text_type?: 'subtitles' | 'chapters'
   },
 ) {
   const {dataset} = client.config()
@@ -172,4 +173,30 @@ export function updateMasterAccess(
     },
     query: PLUGIN_VERSION_QUERY,
   })
+}
+
+/**
+ * Creates a playback ID, e.g. after Robots `moderate` deleted them all. The proxy answers like
+ * the Robots routes, so failures are `RobotsRequestError`s; a 404 without `mux` means the proxy
+ * doesn't have the route yet.
+ */
+export async function createPlaybackId(
+  client: SanityClient,
+  assetId: string,
+  policy: PlaybackPolicy,
+  drmConfigurationId?: string,
+) {
+  const {dataset} = client.config()
+  try {
+    return await getMuxAddonClient(client).request<{data: MuxPlaybackId}>({
+      url: `/addons/mux/assets/${dataset}/${assetId}/playback-ids`,
+      withCredentials: true,
+      method: 'POST',
+      body: policy === 'drm' ? {policy, drm_configuration_id: drmConfigurationId} : {policy},
+      headers: {'Content-Type': 'application/json'},
+      query: PLUGIN_VERSION_QUERY,
+    })
+  } catch (error) {
+    throw toRobotsRequestError(error)
+  }
 }

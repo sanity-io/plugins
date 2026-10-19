@@ -141,7 +141,9 @@ export default defineConfig([
       scriptRunnerTool(),
       debugSecrets(),
       vercelProtectionBypassTool(),
-      visionTool(),
+      visionTool({
+        beta: {redesign: {enabled: true}},
+      }),
       themerExample(),
     ],
   }),

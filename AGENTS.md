@@ -51,6 +51,8 @@ pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclud
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
 
+A `name@version` pin is only enough when the bump is a one-off. Renovate's artifact update commits `pnpm-lock.yaml` alone, so the entries pnpm writes into `pnpm-workspace.yaml` during that install are discarded and CI's frozen install then rejects the lockfile with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`. For dependencies Renovate bumps regularly and forces from the Dependency Dashboard before the window closes, list the whole family by package name instead — the whole family, because each release pins its siblings and platform bindings to exact versions, so excluding only the package Renovate names leaves the rest flagged. That is why `motion`/`framer-motion`/`motion-dom`/`motion-utils`, `oxc-transform`/`oxc-transform-react` with their `@oxc-transform/*` and `@oxc-transform-react/*` bindings, `@tanstack/react-virtual`/`@tanstack/virtual-core`, and `styled-components` are listed by name.
+
 pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Commit them (or a scoped glob such as `'@yuku-core/*'` for a family of platform binaries) with a short dated comment—`pnpm install --frozen-lockfile` in CI re-verifies the lockfile against `minimumReleaseAge` and fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` if the lockfile pins a too-new version that is not excluded. `minimumReleaseAgeExcludePrune` removes the exact entries once they age out.
 
 ## Before Submitting a PR
@@ -369,7 +371,7 @@ To inspect a **new** build after making changes—while `pnpm devtools:test-stud
 pnpm devtools:test-studio:build
 ```
 
-Builds are not hooked into HMR; `sanity build` must be invoked manually (via the command above) each time you want a new session to inspect. Sessions can be compared against each other in the DevTools UI to diff bundle changes.
+Sessions can be compared against each other in the DevTools UI to diff bundle changes.
 
 How it works:
 

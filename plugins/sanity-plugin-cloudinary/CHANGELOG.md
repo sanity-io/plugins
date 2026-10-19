@@ -1,5 +1,20 @@
 # sanity-plugin-cloudinary
 
+## 2.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659)]:
+  - @sanity/studio-secrets@4.0.24
+
+## 2.1.8
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+- Updated dependencies [[`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3)]:
+  - @sanity/studio-secrets@4.0.23
+
 ## 2.1.7
 
 ### Patch Changes

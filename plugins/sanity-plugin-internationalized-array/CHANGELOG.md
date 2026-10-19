@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.6
+
+No changes in this release.
+
+## 5.3.5
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
 ## 5.3.4
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @sanity/code-input
 
+## 7.3.12
+
+### Patch Changes
+
+- [#2155](https://github.com/sanity-io/plugins/pull/2155) [`9be69f3`](https://github.com/sanity-io/plugins/commit/9be69f372b0ad6bce6a2895660c2b29c53955b24) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update codemirror
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
 ## 7.3.11
 
 ### Patch Changes

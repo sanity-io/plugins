@@ -462,6 +462,72 @@ export default defineConfig({
 - Auth: if the Studio uses token auth, the plugin sends the token as `Authorization: Bearer <token>` to `muxApiHost`. Session cookies for the Studio API host are not sent to a different host, so cookie-only auth does not work with this option. Only use a host that you trust with the token.
 - The requests use `credentials: 'include'`. The host must allow CORS from the Studio origin with `Access-Control-Allow-Credentials: true` and must not reply with `Access-Control-Allow-Origin: *`.
 
+## Mux Robots
+
+[Mux Robots](https://www.mux.com/docs/guides/robots) runs AI workflows on your videos: premium captions, caption edits and translations, dubbing, summaries, questions, key moments, thumbnails, engagement insights, chapters, scenes and moderation. Open **Robots** from a video's menu in the input, or from the **Robots** tab of a video in the Videos tool, to run a workflow, follow its jobs and read their outputs.
+
+Every run consumes Mux AI units, and the plugin asks for confirmation before each one. See [Robots pricing](https://www.mux.com/docs/pricing/overview#mux-robots-pricing).
+
+### Access token
+
+Robots needs an access token with the `robots:*` scope, and the Robots terms accepted in your Mux dashboard. The scope can't be added to an existing token: create a new one and paste it into **Configure API**. A token without the scope keeps working for everything else, and the Robots panel explains what's missing, with a **Check again** button for once it's fixed.
+
+### Who can run Robots
+
+Only administrators can start or cancel runs by default. Everyone else sees the jobs, runs and outputs, with a note instead of the run controls. Use `allowedRolesForRobots` to choose the roles, or `[]` to let every role run Robots:
+
+```js
+muxInput({
+  allowedRolesForRobots: ['administrator', 'editor'],
+})
+```
+
+This only hides controls in the Studio. It isn't a permission: any member of the project can call the Mux proxy.
+
+### Directives on upload
+
+A [directive](https://www.mux.com/docs/guides/robots-directives) runs several workflows in order. List the ones to attach to every new upload with `defaultDirectiveIds`, at the plugin level or per field in the schema `options`:
+
+```js
+muxInput({
+  defaultDirectiveIds: ['your-directive-id'],
+})
+```
+
+The upload dialog lists them, checked. With none configured, it says so and links here. People who can run Robots can uncheck one for a single upload; everyone else sees the list read-only, and the directives still attach. A configured directive the Mux account doesn't have is shown and not attached. If the token can't use Robots, the directives are still attached and the dialog warns that they won't run; the video uploads either way.
+
+With `disableUploadConfig` and `disableTextTrackConfig` both on, the upload dialog is skipped, so every configured directive attaches with no opt-out.
+
+Directives are authored in Mux. The Robots panel starts a directive on one video at a time.
+
+### Applying a summary
+
+Opened from a video field, the Robots panel has **Apply summary**: it copies the newest **Summarize** title, description and tags into fields of the document that holds the video. A preview lists each output with the field it goes to, the field's current value and the new one. Fields named `title`, `description` and `tags` are picked when they're empty; a field that already has content is only replaced when you pick it. Only top-level text fields, and arrays of text for the tags, are offered. The change is an ordinary edit, so it stays a draft until you publish, and nothing is sent to Mux.
+
+### What's stored on the video document
+
+Robots data lives at the root of each `mux.videoAsset` document, next to `data`:
+
+- `robotsJobs`: every job Mux reports for the asset, whoever started it (the Studio, a directive, the dashboard or the API). Records are only added and updated, so the history outlives Mux, which deletes jobs after 30 days.
+- `robotsOutputs`: the newest completed `summarize` (title, description, tags) and `moderate` (threshold result, highest scores) outputs. Every other output is read from Mux while the job exists.
+- `robotsDirectiveRuns`: directive runs started from the Studio.
+- `robotsPendingCreates`: runs requested but not yet confirmed by Mux. They keep a second run from starting by accident, and clear themselves once Mux confirms.
+
+```groq
+*[_type == "mux.videoAsset" && defined(robotsOutputs.summarize)]{
+  assetId,
+  "title": robotsOutputs.summarize.title,
+  "tags": robotsOutputs.summarize.tags,
+  "flagged": robotsOutputs.moderate.exceedsThreshold
+}
+```
+
+Workflows that write to the Mux asset are picked up when their job finishes: new caption and audio tracks, the chapters track from **Generate chapters**, and the thumbnail from **Find best thumbnails** when it's asked to set it, which the plugin also copies into `thumbTime`. The Studio player reloads once a new track is ready, so it plays without a page refresh. A chapters track is listed apart from the captions and never counts as one.
+
+**Moderate** can delete every playback ID on the asset when it flags content. The video then can't play anywhere, and the Studio player offers to create a new playback ID, signed by default when signed URLs are set up. The document's `playbackId` then points at the new one. A resync also points `playbackId` at a playback ID the asset still has, for one added in the Mux dashboard.
+
+While a job, directive run or unconfirmed run is in progress, the plugin checks Mux every 6 seconds, including when the Robots panel is closed, as long as the document is open. A Studio that never opens Robots and configures no directives makes no Robots requests.
+
 ## Contributing
 
 This plugin lives in the [`sanity-io/plugins`](https://github.com/sanity-io/plugins) monorepo. Issues and pull requests are welcome — see the monorepo [CONTRIBUTING guide](https://github.com/sanity-io/plugins/blob/main/CONTRIBUTING.md) for development, testing, and release instructions.
