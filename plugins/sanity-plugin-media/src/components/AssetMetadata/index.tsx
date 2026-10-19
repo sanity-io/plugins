@@ -30,7 +30,7 @@ const Row = ({label, value, wrap = false}: {label: string; value: ReactNode; wra
       <Text
         size={1}
         style={{
-          opacity: wrap ? 0.9 : 0.4,
+          opacity: 0.4,
           overflowWrap: wrap ? 'anywhere' : undefined,
           textAlign: 'right',
           userSelect: wrap ? 'all' : undefined,
@@ -60,12 +60,12 @@ const AssetMetadata = (props: Props) => {
       {/* Base */}
       <Box>
         <Stack gap={3}>
-          <Row label="Asset ID" value={asset._id} wrap />
           <Row label="Size" value={filesize(asset?.size, {base: 10, round: 0})} />
           <Row label="MIME type" value={asset?.mimeType} />
           <Row label="Extension" value={asset?.extension?.toUpperCase()} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
           <Row label="Uploaded" value={format(new Date(asset._createdAt), 'PPp')} />
+          <Row label="Asset ID" value={asset._id} wrap />
         </Stack>
       </Box>
       {/* EXIF */}
