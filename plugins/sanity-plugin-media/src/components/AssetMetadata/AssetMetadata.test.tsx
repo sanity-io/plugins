@@ -46,16 +46,12 @@ afterEach(() => {
 })
 
 describe('AssetMetadata', () => {
-  it('shows the image asset id and copies it', async () => {
-    const user = userEvent.setup()
+  it('shows the image asset id without a copy-id button', () => {
     renderWithProviders(<AssetMetadata asset={imageAsset} item={item(imageAsset)} />)
 
     expect(screen.getByText('Asset ID')).toBeInTheDocument()
     expect(screen.getByText(imageAsset._id)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', {name: 'Copy ID'}))
-    expect(copy).toHaveBeenCalledWith(imageAsset._id)
-    expect(await screen.findByRole('button', {name: 'Copied!'})).toBeInTheDocument()
+    expect(screen.queryByRole('button', {name: 'Copy ID'})).not.toBeInTheDocument()
   })
 
   it('shows the file asset id and still copies the asset url', async () => {
@@ -73,7 +69,7 @@ describe('AssetMetadata', () => {
       <AssetMetadata asset={imageAsset} item={item(imageAsset, {updating: true})} />,
     )
 
-    expect(screen.getByRole('button', {name: 'Copy ID'})).toBeDisabled()
+    expect(screen.queryByRole('button', {name: 'Copy ID'})).not.toBeInTheDocument()
     expect(screen.getByRole('button', {name: 'Copy URL'})).toBeDisabled()
     expect(screen.getByRole('button', {name: 'Download'})).toBeDisabled()
   })
