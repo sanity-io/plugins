@@ -142,7 +142,6 @@ export default defineConfig([
       debugSecrets(),
       vercelProtectionBypassTool(),
       visionTool({
-        // @ts-expect-error -- `beta` is added in sanity-io/sanity#14894, not yet in the installed typings
         beta: {redesign: {enabled: true}},
       }),
       themerExample(),
