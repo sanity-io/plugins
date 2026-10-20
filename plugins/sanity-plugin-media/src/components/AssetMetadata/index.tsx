@@ -116,8 +116,8 @@ const AssetMetadata = (props: Props) => {
             onClick={handleDownload}
             text="Download"
           />
-          {/* Copy URL */}
-          <ButtonAssetCopy disabled={!item || item?.updating} value={asset.url} />
+          {/* Copy to clipboard */}
+          <ButtonAssetCopy disabled={!item || item?.updating} url={asset.url} />
         </Inline>
       </Box>
     </Box>
