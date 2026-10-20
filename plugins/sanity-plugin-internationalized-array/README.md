@@ -97,7 +97,7 @@ defineField({
 
 `languages`, `apiVersion`, and `select` belong to the plugin and are not copied. Options already set on the type in `fieldTypes` stay in place, and options on an individual field override them.
 
-Studio also reads `collapsed` from the array field itself, so that option collapses the internationalized array as well as each value field.
+`collapsed` is copied with the other options. It does not collapse the language row, because Studio decides that before these options are applied.
 
 ## Loading languages
 
