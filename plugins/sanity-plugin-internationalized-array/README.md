@@ -60,7 +60,7 @@ This will register two new fields to the schema, based on the settings passed in
 - `internationalizedArrayString` an array field of:
 - `internationalizedArrayStringValue` an object field, with a single `string` field inside called `value`
 
-The above config will also create an empty array item in new documents for each language in `defaultLanguages`. This is configured globally for all internationalized array fields.
+The above config will also create an empty array item for each language in `defaultLanguages` once the document exists in the dataset. Opening a new unsaved document does not create a draft on its own — default languages are added after the first edit. Deleted documents are not recreated.
 
 You can pass in more registered schema-type names to generate more internationalized arrays. Use them in your schema like this:
 
