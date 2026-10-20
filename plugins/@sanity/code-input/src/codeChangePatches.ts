@@ -10,25 +10,24 @@ const PATH_LANGUAGE = ['language']
  * `selectedLanguage` is the language the control is showing: the stored value,
  * `options.language`, or plain text when neither is set.
  *
- * Studio prepends its own `setIfMissing({_type})` before these patches. A
- * language nested inside another `setIfMissing` is then ignored, because the
- * object already exists. Set the language on its own when it is not stored yet.
+ * Studio prepends `setIfMissing({_type})` before these patches, so a language
+ * nested inside that object is ignored once the object exists. A field-level
+ * `setIfMissing` still fills `language` when it is absent, and leaves a value
+ * already present when the patch is applied.
  */
 export function codeChangePatches({
   code,
   typeName,
-  storedLanguage,
   selectedLanguage,
 }: {
   code: string
   typeName: string
-  storedLanguage: string | undefined
   selectedLanguage: string
 }): FormPatch[] {
   const patches: FormPatch[] = [setIfMissing({_type: typeName})]
 
-  if (storedLanguage === undefined && selectedLanguage) {
-    patches.push(set(selectedLanguage, PATH_LANGUAGE))
+  if (selectedLanguage) {
+    patches.push(setIfMissing(selectedLanguage, PATH_LANGUAGE))
   }
 
   patches.push(code ? set(code, PATH_CODE) : unset(PATH_CODE))

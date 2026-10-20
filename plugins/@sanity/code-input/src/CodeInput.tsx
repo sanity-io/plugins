@@ -53,12 +53,11 @@ export function CodeInput(props: CodeInputProps): React.JSX.Element {
         codeChangePatches({
           code,
           typeName: type.name,
-          storedLanguage: value?.language,
           selectedLanguage: language,
         }),
       )
     },
-    [language, onChange, type.name, value?.language],
+    [language, onChange, type.name],
   )
 
   const mounted = useMounted()

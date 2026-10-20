@@ -89,7 +89,6 @@ describe('code field language', () => {
     const patches = codeChangePatches({
       code: 'const answer = 42',
       typeName: 'code',
-      storedLanguage: undefined,
       selectedLanguage: 'javascript',
     })
 
@@ -106,7 +105,6 @@ describe('code field language', () => {
     const patches = codeChangePatches({
       code: 'hello',
       typeName: 'code',
-      storedLanguage: undefined,
       selectedLanguage: 'text',
     })
 
@@ -116,12 +114,11 @@ describe('code field language', () => {
     })
   })
 
-  test('keeps a language that is already stored', () => {
+  test('does not overwrite a language stored before the patch is applied', () => {
     const patches = codeChangePatches({
       code: 'h1 { color: red }',
       typeName: 'code',
-      storedLanguage: 'css',
-      selectedLanguage: 'css',
+      selectedLanguage: 'javascript',
     })
 
     expect(
@@ -143,7 +140,6 @@ describe('code field language', () => {
     const patches = codeChangePatches({
       code: '',
       typeName: 'code',
-      storedLanguage: undefined,
       selectedLanguage: 'javascript',
     })
 
