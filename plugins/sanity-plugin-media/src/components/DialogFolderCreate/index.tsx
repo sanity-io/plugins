@@ -63,7 +63,8 @@ const DialogFolderCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Element, not an inner component. See DialogTagCreate.
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
         <FormSubmitButton
@@ -76,15 +77,7 @@ const DialogFolderCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Create Folder"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Folder" id={id} onClose={handleClose} width={1}>
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 

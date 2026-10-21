@@ -49,6 +49,7 @@ export default defineConfig({
         {id: 'fr', title: 'French'},
       ],
       defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true, // default false
       fieldTypes: ['string'],
     }),
   ],
@@ -61,6 +62,8 @@ This will register two new fields to the schema, based on the settings passed in
 - `internationalizedArrayStringValue` an object field, with a single `string` field inside called `value`
 
 The above config will also create an empty array item in new documents for each language in `defaultLanguages`. This is configured globally for all internationalized array fields.
+
+Those rows cannot be removed, and a missing row is inserted again while the document is open. Set `allowRemovingDefaultLanguages: true` to treat them as initial values instead: they are still added on a new document, and editors can remove them afterwards. A removed row stays removed once the document has history, including when removing the last row clears the field.
 
 You can pass in more registered schema-type names to generate more internationalized arrays. Use them in your schema like this:
 

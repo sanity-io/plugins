@@ -14,9 +14,9 @@ type Props = {
   item?: AssetItem
 }
 
-const Row = ({label, value}: {label: string; value: ReactNode}) => {
+const Row = ({label, value, wrap = false}: {label: string; value: ReactNode; wrap?: boolean}) => {
   return (
-    <Flex justify="space-between">
+    <Flex align={wrap ? 'flex-start' : 'center'} justify="space-between">
       <Text
         size={1}
         style={{
@@ -31,10 +31,13 @@ const Row = ({label, value}: {label: string; value: ReactNode}) => {
         size={1}
         style={{
           opacity: 0.4,
+          overflowWrap: wrap ? 'anywhere' : undefined,
           textAlign: 'right',
+          userSelect: wrap ? 'all' : undefined,
           width: '60%',
         }}
-        textOverflow="ellipsis"
+        textOverflow={wrap ? undefined : 'ellipsis'}
+        title={typeof value === 'string' ? value : undefined}
       >
         {value}
       </Text>
@@ -62,6 +65,7 @@ const AssetMetadata = (props: Props) => {
           <Row label="Extension" value={asset?.extension?.toUpperCase()} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
           <Row label="Uploaded" value={format(new Date(asset._createdAt), 'PPp')} />
+          <Row label="Asset ID" value={asset._id} wrap />
         </Stack>
       </Box>
       {/* EXIF */}

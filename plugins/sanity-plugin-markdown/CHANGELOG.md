@@ -1,5 +1,11 @@
 # sanity-plugin-markdown
 
+## 9.0.18
+
+### Patch Changes
+
+- [#2236](https://github.com/sanity-io/plugins/pull/2236) [`c407aaa`](https://github.com/sanity-io/plugins/commit/c407aaa3e8cac2ae6e3682e3f3222e691db13030) Thanks [@asciieyes](https://github.com/asciieyes)! - Change selected text color in markdown block for better contrast on desktop
+
 ## 9.0.17
 
 ### Patch Changes
