@@ -3263,6 +3263,14 @@
         },
         "optional": true
       },
+      "codeWithDefault": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "code"
+        },
+        "optional": false
+      },
       "codeNoFullscreen": {
         "type": "objectAttribute",
         "value": {

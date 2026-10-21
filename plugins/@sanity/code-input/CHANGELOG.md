@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.3.13
+
+### Patch Changes
+
+- [#2105](https://github.com/sanity-io/plugins/pull/2105) [`b0dcc1d`](https://github.com/sanity-io/plugins/commit/b0dcc1d5d37e36c484d5587da0d5aad445a1736b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix inline code previews overflowing the surrounding text in portable text. The inline label shows the first line of code, capped at 20 characters, and falls back to the language or UNKNOWN when that line is empty.
+
 ## 7.3.12
 
 ### Patch Changes

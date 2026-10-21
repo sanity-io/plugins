@@ -5,6 +5,7 @@ import {fileURLToPath} from 'url'
 import {execa} from 'execa'
 import {expect, test} from 'vitest'
 
+import {outdent} from '../src/util/outdent'
 import {contents, initTestArgs, normalize, runCliCommand, testFixture} from './fixture-utils'
 
 const packageDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -27,6 +28,23 @@ test(
         }
         const init = await runCliCommand('init', [outputDir, ...initTestArgs])
         expect(init.exitCode, `init failed:\n${init.stderr}`).toBe(0)
+
+        await fs.writeFile(
+          path.join(outputDir, 'src', 'Greeting.tsx'),
+          outdent`
+            import type {ReactNode} from 'react'
+
+            /** @public */
+            export function Greeting(props: {name: string}): ReactNode {
+              return <div data-greeting="">Hello {props.name}</div>
+            }
+          ` + '\n',
+        )
+        await fs.appendFile(
+          path.join(outputDir, 'src', 'index.ts'),
+          "\nexport {Greeting} from './Greeting'\n",
+        )
+
         console.error(
           `"plugin-kit init" done in ${seconds()}.\nRunning "plugin-kit verify-package"...`,
         )
@@ -77,6 +95,10 @@ test(
           await contents(path.join(outputDir, 'dist')),
           'should output expected files to dist',
         ).toEqual(['index.d.ts', 'index.js', 'index.js.map'].map(normalize))
+
+        const js = await fs.readFile(path.join(outputDir, 'dist', 'index.js'), 'utf8')
+        expect(js, 'dist should lower JSX to jsx-runtime calls').toContain('react/jsx-runtime')
+        expect(js, 'dist should not contain untranspiled JSX').not.toContain('<div')
       },
     })
   },
