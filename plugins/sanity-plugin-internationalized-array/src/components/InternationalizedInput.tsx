@@ -113,7 +113,8 @@ function RemoveButton({
  *   the language label in that state.
  * - Shows a `MenuButton` with available languages when the current key is
  *   not a valid language.
- * - Disables the remove button for languages listed in `defaultLanguages`.
+ * - Disables the remove button for languages listed in `defaultLanguages`,
+ *   unless `allowRemovingDefaultLanguages` is set.
  * - Shows a `Spinner` when languages have not been loaded yet.
  * - Applies a `CardTone` based on validation state via `getToneFromValidation`.
  */
@@ -200,7 +201,8 @@ export default function InternationalizedInput(
   )
 
   // The parent array contains the languages from the plugin config
-  const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
+  const {languages, languageDisplay, defaultLanguages, allowRemovingDefaultLanguages} =
+    useInternationalizedArrayContext()
 
   const keyIsValid = languages?.length
     ? Boolean(languages.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME]))
@@ -263,7 +265,8 @@ export default function InternationalizedInput(
     return <Spinner />
   }
 
-  const isDefault = defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
+  const isDefault =
+    !allowRemovingDefaultLanguages && defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
 
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
