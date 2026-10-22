@@ -1,4 +1,5 @@
 import type {ClientError, SanityClient} from '@sanity/client'
+import {nanoid} from 'nanoid'
 import {
   type ActorRefFrom,
   assertEvent,
@@ -152,7 +153,7 @@ export type AssetsReport =
   | {type: 'assets.deleted'; assetIds: string[]}
   | {type: 'assets.deleteFailed'; assetIds: string[]}
   | {type: 'assets.tagged'; assets: AssetItem[]; operation: TagOperation; tag: Tag}
-  | {type: 'assets.taggingFailed'; tag: Tag}
+  | {type: 'assets.taggingFailed'; error: HttpError; tag: Tag}
   | {type: 'assets.moved'; closeDialogId?: string | undefined}
   | {type: 'assets.moveFailed'; error: HttpError}
   | {type: 'assets.synced'}
@@ -845,7 +846,38 @@ export const assetsMachine = setup({
               actions: enqueueActions(({context, enqueue}) => {
                 const {assets, operation, tag} = nextMutation(context, 'tag')
                 enqueue.assign({
-                  byIds: markSettled(context.byIds, assetIdsOf(assets)),
+                  byIds: updateItems(context.byIds, assetIdsOf(assets), (item) => {
+                    const {error: _error, ...settled} = item
+                    const media = settled.asset.opt?.media ?? {}
+                    const {tags: _tags, ...restMedia} = media
+                    const tags = media.tags ?? []
+                    const hasTag = tags.some((reference) => reference._ref === tag._id)
+                    const nextTags =
+                      operation === 'add'
+                        ? hasTag
+                          ? tags
+                          : [
+                              ...tags,
+                              {
+                                _key: nanoid(),
+                                _ref: tag._id,
+                                _type: 'reference' as const,
+                                _weak: true,
+                              },
+                            ]
+                        : tags.filter((reference) => reference._ref !== tag._id)
+                    return {
+                      ...settled,
+                      asset: {
+                        ...settled.asset,
+                        opt: {
+                          ...settled.asset.opt,
+                          media: nextTags.length > 0 ? {...restMedia, tags: nextTags} : restMedia,
+                        },
+                      },
+                      updating: false,
+                    }
+                  }),
                   mutations: context.mutations.slice(1),
                 })
                 enqueue({type: 'report', params: {type: 'assets.tagged', assets, operation, tag}})
@@ -853,13 +885,14 @@ export const assetsMachine = setup({
             },
             onError: {
               target: 'idle',
-              actions: enqueueActions(({context, enqueue}) => {
+              actions: enqueueActions(({context, enqueue, event}) => {
                 const {assets, tag} = nextMutation(context, 'tag')
+                const error = toHttpError(event.error)
                 enqueue.assign({
-                  byIds: markSettled(context.byIds, assetIdsOf(assets)),
+                  byIds: markSettled(context.byIds, assetIdsOf(assets), error.message),
                   mutations: context.mutations.slice(1),
                 })
-                enqueue({type: 'report', params: {type: 'assets.taggingFailed', tag}})
+                enqueue({type: 'report', params: {type: 'assets.taggingFailed', error, tag}})
               }),
             },
           },
@@ -1002,6 +1035,14 @@ export const assetsMachine = setup({
             onDone: {
               target: 'idle',
               actions: enqueueActions(({context, enqueue, event}) => {
+                // Browse query may have changed while verifying: retry against the new filter
+                const {filter, params} = currentFilter(context)
+                if (
+                  event.output.filter !== filter ||
+                  JSON.stringify(event.output.params) !== JSON.stringify(params)
+                ) {
+                  return
+                }
                 const verified = new Set(event.output.assetIds)
                 const listed = new Set(context.allIds)
                 const inserted = event.output.matchingIds.filter((id) => !listed.has(id))

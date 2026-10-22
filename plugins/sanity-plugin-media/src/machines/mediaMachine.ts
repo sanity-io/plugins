@@ -328,10 +328,13 @@ export const mediaMachine = setup({
       ],
     },
     'assets.taggingFailed': {
-      actions: sendTo(
-        ({context}) => context.tags,
-        ({event}) => ({type: 'tag.updating.set', tagId: event.tag._id, updating: false}),
-      ),
+      actions: [
+        {type: 'notify', params: ({event}) => errorNotification(event.error)},
+        sendTo(
+          ({context}) => context.tags,
+          ({event}) => ({type: 'tag.updating.set', tagId: event.tag._id, updating: false}),
+        ),
+      ],
     },
     'assets.moved': {
       actions: [

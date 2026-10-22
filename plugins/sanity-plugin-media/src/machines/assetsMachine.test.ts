@@ -659,8 +659,10 @@ describe(assetsMachine.id, () => {
       actor.send({type: 'assets.tag.add', assets: [assetItem(asset)], tag: alpha})
       await waitForMutations(actor)
 
-      expect(actor.getSnapshot().context.byIds['a1']?.updating).toBe(false)
-      expect(events).toEqual([{type: 'assets.taggingFailed', tag: alpha}])
+      expect(actor.getSnapshot().context.byIds['a1']).toEqual(assetItem(asset, {error: 'nope'}))
+      expect(events).toEqual([
+        {type: 'assets.taggingFailed', error: {message: 'nope', statusCode: 500}, tag: alpha},
+      ])
     })
   })
 

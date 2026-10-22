@@ -62,6 +62,7 @@ export function buildAssetsQuery({
   const end = start + pageSize
   return groq`*[${filter}] {
     _id,
+    _rev,
     _type,
     _createdAt,
     _updatedAt,
@@ -214,7 +215,7 @@ export const replaceReferences = fromMutation<void, ClientInput & {asset: Asset;
 
 /** Checks which freshly uploaded assets match the current browse filter. */
 export const verifyUploads = fromRequest<
-  {assetIds: string[]; matchingIds: string[]},
+  AssetsFilter & {assetIds: string[]; matchingIds: string[]},
   ClientInput & AssetsFilter & {assetIds: string[]}
 >(async ({input, signal}) => {
   const matchingIds = await input.client.fetch<string[]>(
@@ -222,5 +223,10 @@ export const verifyUploads = fromRequest<
     {...input.params, uploadedAssetIds: input.assetIds},
     {signal},
   )
-  return {assetIds: input.assetIds, matchingIds}
+  return {
+    assetIds: input.assetIds,
+    filter: input.filter,
+    matchingIds,
+    params: input.params,
+  }
 })
