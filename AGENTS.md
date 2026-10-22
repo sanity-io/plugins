@@ -694,7 +694,7 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
 
-`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`.
+`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`. The override only helps once lefthook's hook exists in `.git/hooks`, and on a fresh VM it does not: the snapshot's `pnpm install` ran with `core.hooksPath` already pointing elsewhere, so lefthook never wrote `.git/hooks/pre-commit`. Install it there once, then restore the setting: `HOOKS=$(git config core.hooksPath); git config core.hooksPath .git/hooks && pnpm exec lefthook install --force; git config core.hooksPath "$HOOKS"`.
 
 ## Related Documentation
 
