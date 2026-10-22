@@ -1,10 +1,12 @@
-import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
+import {Box, Card, Flex, Stack, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {type CSSProperties} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {css, styled} from 'styled-components'
 
 import {foldersActions} from '../../modules/folders'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+
+import * as styles from './CardFolder.module.css'
 
 type Props = {
   folderId: string
@@ -12,72 +14,23 @@ type Props = {
   totalCount: number
 }
 
-const CardWrapper = styled(Flex)`
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-`
-
-const FolderCard = styled(Card)`
-  cursor: pointer;
-  height: 100%;
-  transition: border-color 200ms ease;
-  width: 100%;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      border-color: var(--card-border-color);
-    }
-  }
-`
-
-const FolderGlyph = styled(Box)(
-  ({theme}) => css`
-    align-items: flex-end;
-    background: linear-gradient(
-      180deg,
-      ${
-          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-          theme.sanity.color.spot.yellow
-        }
-        0%,
-      ${
-          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-          theme.sanity.color.spot.yellow
-        }
-        100%
-    );
-    border-radius: 8px;
-    display: flex;
-    height: 72px;
-    position: relative;
-    width: 96px;
-
-    &::before {
-      background: ${
-        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-        theme.sanity.color.spot.yellow
-      };
-      border-radius: 8px 8px 0 0;
-      content: '';
-      height: 18px;
-      left: 0;
-      position: absolute;
-      top: -8px;
-      width: 38px;
-    }
-  `,
-)
+interface FolderGlyphStyle extends CSSProperties {
+  '--media-folder-glyph-color'?: string
+}
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()
   const scheme = useColorSchemeValue()
+  const {color} = useThemeV2()
+
+  const folderGlyphStyle: FolderGlyphStyle = {
+    '--media-folder-glyph-color': color.avatar.yellow.bg,
+  }
 
   return (
-    <CardWrapper padding={1}>
-      <FolderCard
+    <Flex className={styles.cardWrapper} padding={1}>
+      <Card
+        className={styles.folderCard}
         onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
         padding={3}
         radius={2}
@@ -88,7 +41,7 @@ const CardFolder = ({folderId, name, totalCount}: Props) => {
       >
         <Flex direction="column" height="fill" justify="space-between">
           <Flex align="center" flex={1} justify="center">
-            <FolderGlyph />
+            <Box className={styles.folderGlyph} style={folderGlyphStyle} />
           </Flex>
 
           <Stack gap={2}>
@@ -104,8 +57,8 @@ const CardFolder = ({folderId, name, totalCount}: Props) => {
             </Text>
           </Stack>
         </Flex>
-      </FolderCard>
-    </CardWrapper>
+      </Card>
+    </Flex>
   )
 }
 

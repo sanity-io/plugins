@@ -1,7 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {Box, Inline, Text} from '@sanity/ui'
+import {Box, Inline, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {styled} from 'styled-components'
 
 type Props = {
   description?: string
@@ -10,15 +9,9 @@ type Props = {
   name: string
 }
 
-const StyledErrorOutlineIcon = styled(ErrorOutlineIcon)(({theme}) => {
-  return {
-    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-    color: theme.sanity.color.spot.red,
-  }
-})
-
 const FormFieldInputLabel = (props: Props) => {
   const {description, error, label, name} = props
+  const {color} = useThemeV2()
 
   return (
     <>
@@ -37,7 +30,9 @@ const FormFieldInputLabel = (props: Props) => {
                 content={
                   <Box padding={2}>
                     <Text muted size={1}>
-                      <StyledErrorOutlineIcon style={{marginRight: '0.1em'}} />
+                      <ErrorOutlineIcon
+                        style={{color: color.avatar.red.bg, marginRight: '0.1em'}}
+                      />
                       {error}
                     </Text>
                   </Box>
@@ -46,7 +41,7 @@ const FormFieldInputLabel = (props: Props) => {
                 placement="right"
                 portal
               >
-                <StyledErrorOutlineIcon />
+                <ErrorOutlineIcon style={{color: color.avatar.red.bg}} />
               </Tooltip>
             </Text>
           )}

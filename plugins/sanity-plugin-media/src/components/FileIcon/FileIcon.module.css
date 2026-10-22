@@ -1,0 +1,10 @@
+.container {
+  --media-file-icon-font-family: inherit;
+}
+
+/* Force react-file-icon styles */
+.container :global(text) {
+  font-family: var(--media-file-icon-font-family) !important;
+  font-size: 8px !important;
+  font-weight: 500 !important;
+}

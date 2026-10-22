@@ -1,41 +1,35 @@
 import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
-import type {MouseEvent} from 'react'
-import {styled, css} from 'styled-components'
+import {type ComponentProps, type CSSProperties} from 'react'
 
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
-type Props = {
-  onClick?: (e: MouseEvent) => void
-  $showCheckerboard?: boolean
-  $scheme?: ThemeColorSchemeKey
-  src: string
-  style?: any
+import * as styles from './Image.module.css'
+
+type Props = ComponentProps<'img'> & {
+  scheme?: ThemeColorSchemeKey
+  showCheckerboard?: boolean
 }
 
-const Image = styled.img<Props>`
-  --checkerboard-color: ${(props) =>
-    props.$scheme ? getSchemeColor(props.$scheme, 'bg2') : 'inherit'};
+interface ImageStyle extends CSSProperties {
+  '--media-checkerboard-color'?: string
+}
 
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+function Image({alt = '', className, scheme, showCheckerboard, style, ...props}: Props) {
+  const imageStyle: ImageStyle = {
+    ...style,
+    '--media-checkerboard-color': scheme ? getSchemeColor(scheme, 'bg2') : undefined,
+  }
 
-  ${(props) =>
-    props.$showCheckerboard &&
-    css`
-      background-image:
-        linear-gradient(45deg, var(--checkerboard-color) 25%, transparent 25%),
-        linear-gradient(-45deg, var(--checkerboard-color) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, var(--checkerboard-color) 75%),
-        linear-gradient(-45deg, transparent 75%, var(--checkerboard-color) 75%);
-      background-size: 20px 20px;
-      background-position:
-        0 0,
-        0 10px,
-        10px -10px,
-        -10px 0;
-    `}
-`
+  return (
+    <img
+      {...props}
+      alt={alt}
+      className={[showCheckerboard ? styles.imageCheckerboard : styles.image, className]
+        .filter(Boolean)
+        .join(' ')}
+      style={imageStyle}
+    />
+  )
+}
 
 export default Image

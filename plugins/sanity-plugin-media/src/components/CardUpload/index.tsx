@@ -3,7 +3,6 @@ import {Box, Button, Flex, Text} from '@sanity/ui'
 import filesize from 'filesize'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -12,17 +11,11 @@ import {getSchemeColor} from '../../utils/getSchemeColor'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 
+import * as styles from './CardUpload.module.css'
+
 type Props = {
   id: string
 }
-
-const CardWrapper = styled(Flex)`
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-`
 
 const CardUpload = (props: Props) => {
   const {id} = props
@@ -61,7 +54,7 @@ const CardUpload = (props: Props) => {
   }
 
   return (
-    <CardWrapper padding={1}>
+    <Flex className={styles.cardWrapper} padding={1}>
       <Flex
         direction="column"
         flex={1}
@@ -91,7 +84,7 @@ const CardUpload = (props: Props) => {
           {item.assetType === 'image' && item?.objectUrl && (
             <Image
               draggable={false}
-              $scheme={scheme}
+              scheme={scheme}
               src={item.objectUrl}
               style={{
                 opacity: 0.4,
@@ -154,7 +147,7 @@ const CardUpload = (props: Props) => {
           </Text>
         </Flex>
       </Flex>
-    </CardWrapper>
+    </Flex>
   )
 }
 

@@ -1,0 +1,32 @@
+.containerGrid {
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  pointer-events: auto;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.containerGrid[data-selected='true'] {
+  cursor: default;
+}
+
+.containerGrid[data-updating='true'] {
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .containerGrid:hover {
+    background: var(--media-row-hover-bg);
+  }
+}
+
+.contextActionContainer {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contextActionContainer:hover {
+    background: var(--media-context-action-hover-bg);
+  }
+}

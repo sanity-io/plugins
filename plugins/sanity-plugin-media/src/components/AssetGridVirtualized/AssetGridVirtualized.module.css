@@ -1,0 +1,12 @@
+.itemContainer {
+  height: 220px;
+  width: 240px;
+}
+
+.listContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 240px);
+  grid-template-rows: repeat(auto-fill, 220px);
+  justify-content: center;
+  margin: 0 auto;
+}

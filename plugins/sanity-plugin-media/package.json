@@ -30,11 +30,25 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
       "./package.json": "./package.json"
     }
   },
@@ -75,11 +89,13 @@
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "^14.6.6",
+    "@tsdown/css": "catalog:",
     "@types/pluralize": "^0.0.33",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/react-file-icon": "^1.0.5",
     "jsdom": "catalog:",
+    "lightningcss": "^1.33.0",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
