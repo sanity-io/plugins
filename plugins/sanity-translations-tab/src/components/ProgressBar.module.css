@@ -1,0 +1,18 @@
+.root {
+  width: 100%;
+  position: relative;
+}
+
+.labelOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.bar {
+  width: 100%;
+  transform: scaleX(var(--translations-tab-progress-scale));
+  transform-origin: left;
+  transition: transform 0.2s ease;
+  box-sizing: border-box;
+}

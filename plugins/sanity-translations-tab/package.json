@@ -21,19 +21,38 @@
     "dist"
   ],
   "type": "module",
+  "sideEffects": [
+    "./dist/index.js",
+    "*.css"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./bundle.css": {
+      "types": "./dist/bundle-css.d.ts",
+      "browser": "./dist/bundle.css",
+      "style": "./dist/bundle.css",
+      "node": "./dist/bundle-css.js",
+      "default": "./dist/bundle-css.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
     "exports": {
       ".": "./dist/index.js",
+      "./bundle.css": {
+        "types": "./dist/bundle-css.d.ts",
+        "browser": "./dist/bundle.css",
+        "style": "./dist/bundle.css",
+        "node": "./dist/bundle-css.js",
+        "default": "./dist/bundle-css.js"
+      },
       "./package.json": "./package.json"
     }
   },
   "scripts": {
     "build": "tsdown",
+    "prebuild": "pnpm --filter @repo/css-modules-kit run generate:translations-tab",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -47,8 +66,10 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@tsdown/css": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "lightningcss": "^1.33.0",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -59,8 +80,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
-    "styled-components": "catalog:peer"
+    "sanity": "catalog:peer"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
