@@ -1,0 +1,13 @@
+/* `Checkbox` sets its own `position: relative`; double the class to win the specificity battle. */
+.missingAssetCheckbox.missingAssetCheckbox {
+  position: static;
+}
+
+.missingAssetCheckbox input::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  display: block;
+  cursor: pointer;
+  z-index: 1000;
+}

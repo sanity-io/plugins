@@ -1,0 +1,4 @@
+/* To prevent Content Layout Shift (CLS), ensure that the dialog always occupies the entire available height. */
+.fullHeightDialog > div[data-ui='DialogCard'] > div[data-ui='Card'] {
+  height: 100%;
+}

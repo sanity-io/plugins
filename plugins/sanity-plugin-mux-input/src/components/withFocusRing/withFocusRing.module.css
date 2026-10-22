@@ -1,0 +1,14 @@
+/*
+ * The wrapped component (e.g. `Card` with its own `radius`/`shadow` props) sets its own
+ * `border-radius`/`box-shadow`; double the class to win the specificity battle, the way
+ * styled-components' CSSOM insertion order used to guarantee for free.
+ */
+.focusRing.focusRing {
+  border-radius: var(--mux-focus-radius);
+  outline: none;
+  box-shadow: var(--mux-focus-box-shadow);
+}
+
+.focusRing.focusRing:focus {
+  box-shadow: var(--mux-focus-box-shadow-focus);
+}

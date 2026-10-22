@@ -1,0 +1,26 @@
+.cardWrapper {
+  min-height: 82px;
+  box-sizing: border-box;
+}
+
+.flexWrapper {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.leftSection {
+  position: relative;
+  width: 60%;
+}
+
+.codeWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.codeWrapper code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  max-width: 200px;
+}

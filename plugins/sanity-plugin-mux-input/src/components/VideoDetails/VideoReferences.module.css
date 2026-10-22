@@ -1,0 +1,7 @@
+.container * {
+  color: var(--mux-video-references-fg);
+}
+
+.container a {
+  text-decoration: none;
+}

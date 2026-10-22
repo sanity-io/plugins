@@ -6,25 +6,13 @@ import {RetryIcon} from '@sanity/icons/Retry'
 import {Box, Button, Card, Checkbox, Dialog, Flex, Heading, Spinner, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 import {truncateString, useFormattedDuration} from 'sanity'
-import {styled} from 'styled-components'
 
 import useImportMuxAssets from '../hooks/useImportMuxAssets'
 import {DIALOGS_Z_INDEX} from '../util/constants'
 import type {MuxAsset} from '../util/types'
 import VideoThumbnail from './VideoThumbnail'
 
-const MissingAssetCheckbox = styled(Checkbox)`
-  position: static !important;
-
-  input::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    display: block;
-    cursor: pointer;
-    z-index: 1000;
-  }
-`
+import * as styles from './ImportVideosFromMux.module.css'
 
 function MissingAsset({
   asset,
@@ -48,7 +36,8 @@ function MissingAsset({
       radius={1}
     >
       <Flex align="center" gap={2}>
-        <MissingAssetCheckbox
+        <Checkbox
+          className={styles.missingAssetCheckbox}
           checked={selected}
           onChange={(e) => {
             selectAsset(e.currentTarget.checked)

@@ -1,0 +1,10 @@
+.hiddenInput {
+  position: absolute;
+  border: 0;
+  color: white;
+  opacity: 0;
+}
+
+.hiddenInput:focus {
+  outline: none;
+}

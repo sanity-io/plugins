@@ -1,0 +1,15 @@
+/* `Card` sets its own `background`; double the class to win the specificity battle. */
+.lockCard.lockCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  background: transparent;
+}
+
+/* `Button` sets its own `background`/`color`; double the class for the same reason. */
+.lockButton.lockButton {
+  background: transparent;
+  color: white;
+}
