@@ -1,31 +1,16 @@
-import {screen} from '@testing-library/react'
+import {act, fireEvent, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type {RefObject} from 'react'
-import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {Profiler} from 'react'
+import {describe, expect, it, vi} from 'vitest'
 
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {initialState as assetsInitialState} from '../../modules/assets'
-import type {AssetItem, AssetType, FileAsset, ImageAsset} from '../../types'
+import {fileAsset, imageAsset} from '../../__tests__/fixtures/documents'
+import {mockPatchChain} from '../../__tests__/fixtures/mockSanityClient'
+import {renderWithMedia} from '../../__tests__/fixtures/renderWithMedia'
+import type {MediaActors} from '../../contexts/MediaActorsContext'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {assetEditDialog, replaceAssetDialog} from '../../machines/dialogs'
+import {ASSET_DRAG_TYPE} from '../../utils/assetDrag'
 import CardAsset from './index'
-
-const SHIFT_FLAG = '__CARD_ASSET_TEST_SHIFT__'
-
-function setShiftPressed(on: boolean) {
-  const g = globalThis as unknown as Record<string, boolean | undefined>
-  if (on) {
-    g[SHIFT_FLAG] = true
-  } else {
-    delete g[SHIFT_FLAG]
-  }
-}
-
-vi.mock('../../hooks/useKeyPress', () => ({
-  default: (): RefObject<boolean> => ({
-    get current() {
-      return Boolean((globalThis as unknown as Record<string, unknown>)[SHIFT_FLAG])
-    },
-  }),
-}))
 
 vi.mock('../Image', () => ({
   default: () => <div data-testid="card-image" />,
@@ -37,391 +22,333 @@ vi.mock('../FileIcon', () => ({
   ),
 }))
 
-vi.mock('sanity', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('sanity')>()
-  return {
-    ...actual,
-    useColorSchemeValue: () => 'light',
-  }
-})
+const photo = imageAsset('img-1', {originalFilename: 'photo.png'})
+const replacement = imageAsset('img-2', {originalFilename: 'replacement.png'})
+const pdf = fileAsset('file-1', {originalFilename: 'doc.pdf'})
 
-const imageAsset = {
-  _id: 'img-1',
-  _type: 'sanity.imageAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'photo.png',
-  size: 1,
-  mimeType: 'image/png',
-  url: 'https://example.com/photo.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
-} as ImageAsset
+const preview = (assetId: string) => screen.getByTestId(`media-asset-card-${assetId}`)
+const footer = (filename: string) => screen.getByText(filename)
 
-const fileAsset = {
-  _id: 'file-1',
-  _type: 'sanity.fileAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'doc.pdf',
-  extension: 'pdf',
-  size: 1,
-  mimeType: 'application/pdf',
-  url: 'https://example.com/doc.pdf',
-} as FileAsset
-
-function assetItem(asset: ImageAsset | FileAsset, partial?: Partial<AssetItem>): AssetItem {
-  return {
-    _type: 'asset',
-    asset,
-    picked: false,
-    updating: false,
-    ...partial,
-  }
-}
-
-function assetsState(byIds: Record<string, AssetItem>, extra?: Partial<typeof assetsInitialState>) {
-  return {
-    ...assetsInitialState,
-    assetTypes: ['file', 'image'] as AssetType[],
-    allIds: Object.keys(byIds),
-    byIds,
-    ...extra,
-  }
-}
-
-function clickPreview() {
-  const imgs = screen.getAllByTestId('card-image')
-  const img = imgs.at(-1)
-  if (!img) {
-    throw new Error('card-image missing')
-  }
-  const target = img.parentElement
-  if (!target) {
-    throw new Error('preview wrapper missing')
-  }
-  return target
-}
-
-function clickFooterFilename(text: string) {
-  const nodes = screen.getAllByText(text)
-  const el = nodes.at(-1)
-  if (!el) {
-    throw new Error(`footer text missing: ${text}`)
-  }
-  return el
-}
-
-beforeEach(() => {
-  setShiftPressed(false)
-})
+const pickedIds = ({assets}: MediaActors) =>
+  selectPickedAssets(assets.getSnapshot()).map((item) => item.asset._id)
+const dialogItems = ({dialogs}: MediaActors) => dialogs.getSnapshot().context.items
 
 describe('CardAsset', () => {
-  it('renders nothing when the asset id is not in the store', () => {
-    renderWithProviders(<CardAsset id="missing" selected={false} />, {
-      preloaded: {
-        assets: assetsState({}),
-      },
-    })
-    expect(screen.queryAllByTestId('card-image')).toHaveLength(0)
-    expect(screen.queryAllByTestId('card-file-icon')).toHaveLength(0)
+  it('renders nothing when the asset is not listed', async () => {
+    await renderWithMedia(<CardAsset id="missing" selected={false} />, {assets: [photo]})
+
+    expect(screen.queryByTestId('card-image')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('card-file-icon')).not.toBeInTheDocument()
   })
 
-  it('renders image preview and original filename for an image asset', () => {
-    renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)}),
-      },
-    })
-    expect(screen.getAllByTestId('card-image').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('photo.png').length).toBeGreaterThan(0)
+  it('renders the image preview and original filename of images', async () => {
+    await renderWithMedia(<CardAsset id="img-1" selected={false} />, {assets: [photo]})
+
+    expect(screen.getByTestId('card-image')).toBeInTheDocument()
+    expect(screen.getByText('photo.png')).toBeInTheDocument()
   })
 
-  it('renders file icon with extension for a file asset', () => {
-    renderWithProviders(<CardAsset id="file-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'file-1': assetItem(fileAsset)}),
-      },
-    })
-    const icon = screen.getAllByTestId('card-file-icon').at(-1)!
-    expect(icon).toHaveAttribute('data-extension', 'pdf')
-    expect(screen.getAllByText('doc.pdf').length).toBeGreaterThan(0)
+  it('renders the extension icon of files', async () => {
+    await renderWithMedia(<CardAsset id="file-1" selected={false} />, {assets: [pdf]})
+
+    expect(screen.getByTestId('card-file-icon')).toHaveAttribute('data-extension', 'pdf')
+    expect(screen.getByText('doc.pdf')).toBeInTheDocument()
   })
 
-  it('opens the asset edit dialog when the preview is clicked in browse mode', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)}),
-      },
+  describe('browsing', () => {
+    it('opens the asset when the preview is clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo],
+      })
+
+      await user.click(preview('img-1'))
+
+      expect(dialogItems(actors)).toEqual([assetEditDialog('img-1')])
     })
 
-    await user.click(clickPreview())
+    it('toggles the pick when the footer is clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo],
+      })
 
-    expect(
-      store.getState().dialog.items.some((d) => d.type === 'assetEdit' && d.assetId === 'img-1'),
-    ).toBe(true)
-  })
+      await user.click(footer('photo.png'))
+      expect(pickedIds(actors)).toEqual(['img-1'])
+      expect(screen.getByRole('checkbox')).toBeChecked()
 
-  it('calls onSelect with the asset document id when the preview is clicked in picker mode', async () => {
-    const user = userEvent.setup()
-    const onSelect = vi.fn()
-    renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      onSelect,
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)}),
-      },
+      await user.click(footer('photo.png'))
+      expect(pickedIds(actors)).toEqual([])
     })
 
-    await user.click(clickPreview())
+    it('toggles the pick without opening the asset when the preview is ctrl-clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo],
+      })
 
-    expect(onSelect).toHaveBeenCalledWith([
-      {
-        kind: 'assetDocumentId',
-        value: 'img-1',
-      },
-    ])
-  })
+      await user.keyboard('{Control>}')
+      await user.click(preview('img-1'))
+      expect(pickedIds(actors)).toEqual(['img-1'])
 
-  it('toggles pick when the footer is clicked in browse mode', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
-      },
+      await user.click(preview('img-1'))
+      await user.keyboard('{/Control}')
+      expect(pickedIds(actors)).toEqual([])
+      expect(dialogItems(actors)).toEqual([])
     })
 
-    await user.click(clickFooterFilename('photo.png'))
+    it('picks the range from the last picked asset when shift-clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(
+        <>
+          <CardAsset id="prev-1" selected={false} />
+          <CardAsset id="img-1" selected={false} />
+        </>,
+        {assets: [imageAsset('prev-1'), imageAsset('between'), photo]},
+      )
+      actors.assets.send({type: 'pick.toggle', assetId: 'prev-1'})
 
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
-  })
+      await user.keyboard('{Shift>}')
+      await user.click(preview('img-1'))
+      expect(pickedIds(actors)).toEqual(['prev-1', 'between', 'img-1'])
 
-  it('opens asset edit from the footer when in picker mode', async () => {
-    const user = userEvent.setup()
-    const onSelect = vi.fn()
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      onSelect,
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset)}),
-      },
+      // Shift-clicking a picked asset unpicks it
+      await user.click(preview('img-1'))
+      await user.keyboard('{/Shift}')
+      expect(pickedIds(actors)).toEqual(['prev-1', 'between'])
     })
 
-    await user.click(clickFooterFilename('photo.png'))
+    it('picks the range from the last picked asset when the footer is shift-clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [imageAsset('anchor'), photo],
+      })
+      actors.assets.send({type: 'pick.toggle', assetId: 'anchor'})
 
-    expect(onSelect).not.toHaveBeenCalled()
-    expect(
-      store.getState().dialog.items.some((d) => d.type === 'assetEdit' && d.assetId === 'img-1'),
-    ).toBe(true)
+      await user.keyboard('{Shift>}')
+      await user.click(footer('photo.png'))
+      await user.keyboard('{/Shift}')
+
+      expect(pickedIds(actors)).toEqual(['anchor', 'img-1'])
+    })
   })
 
-  it('ctrl-clicks on preview to toggle pick without opening the asset', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
-      },
+  describe('picking assets for a field', () => {
+    it('selects the asset when the preview is clicked', async () => {
+      const user = userEvent.setup()
+      const onSelect = vi.fn()
+      await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo],
+        onSelect,
+      })
+
+      await user.click(preview('img-1'))
+
+      expect(onSelect).toHaveBeenCalledWith([{kind: 'assetDocumentId', value: 'img-1'}])
     })
 
-    await user.keyboard('{Control>}')
-    await user.click(clickPreview())
-    await user.keyboard('{/Control}')
+    it('opens the asset when the footer is clicked', async () => {
+      const user = userEvent.setup()
+      const onSelect = vi.fn()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo],
+        onSelect,
+      })
 
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
-    expect(store.getState().dialog.items).toHaveLength(0)
+      await user.click(footer('photo.png'))
 
-    await user.keyboard('{Control>}')
-    await user.click(clickPreview())
-    await user.keyboard('{/Control}')
-
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(false)
-  })
-
-  it('shift-clicks on preview to unpick when the asset is already picked', async () => {
-    const user = userEvent.setup()
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {picked: true})}),
-      },
+      expect(onSelect).not.toHaveBeenCalled()
+      expect(dialogItems(actors)).toEqual([assetEditDialog('img-1')])
     })
 
-    setShiftPressed(true)
-    await user.click(clickPreview())
-    setShiftPressed(false)
+    it('does nothing when the asset is already selected in the field', async () => {
+      const user = userEvent.setup()
+      const onSelect = vi.fn()
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected />, {
+        assets: [photo],
+        onSelect,
+      })
 
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(false)
-  })
+      await user.click(preview('img-1'))
+      await user.click(footer('photo.png'))
 
-  it('shift-clicks on preview to pick a range when not picked and lastPicked is set', async () => {
-    const user = userEvent.setup()
-    const prevAsset = {...imageAsset, _id: 'prev-1', originalFilename: 'prev.png'} as ImageAsset
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState(
-          {
-            'prev-1': assetItem(prevAsset),
-            'img-1': assetItem(imageAsset, {picked: false}),
-          },
-          {lastPicked: 'prev-1'},
-        ),
-      },
+      expect(onSelect).not.toHaveBeenCalled()
+      expect(dialogItems(actors)).toEqual([])
     })
 
-    setShiftPressed(true)
-    await user.click(clickPreview())
-    setShiftPressed(false)
-
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
-    expect(store.getState().assets.byIds['prev-1']!.picked).toBe(true)
-  })
-
-  it('shift-clicks on footer to pick a range when not picked', async () => {
-    const user = userEvent.setup()
-    const anchorAsset = {
-      ...imageAsset,
-      _id: 'anchor-9',
-      originalFilename: 'anchor.png',
-    } as ImageAsset
-    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState(
-          {
-            'anchor-9': assetItem(anchorAsset),
-            'img-1': assetItem(imageAsset, {picked: false}),
-          },
-          {lastPicked: 'anchor-9'},
-        ),
-      },
-    })
-
-    setShiftPressed(true)
-    await user.click(clickFooterFilename('photo.png'))
-    setShiftPressed(false)
-
-    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
-    expect(store.getState().assets.byIds['anchor-9']!.picked).toBe(true)
-  })
-
-  it('shows the selection checkmark when selected and not updating', () => {
-    const {container} = renderWithProviders(<CardAsset id="img-1" selected />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: false})}),
-      },
-    })
-    expect(
-      container.querySelectorAll('[data-sanity-icon="checkmark-circle"]').length,
-    ).toBeGreaterThan(0)
-  })
-
-  it('does not show the checkmark overlay while updating even if selected', () => {
-    const {container} = renderWithProviders(<CardAsset id="img-1" selected />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})}),
-      },
-    })
-    expect(container.querySelectorAll('[data-sanity-icon="checkmark-circle"]')).toHaveLength(0)
-  })
-
-  it('shows a spinner while updating', () => {
-    renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {updating: true})}),
-      },
-    })
-    expect(document.body.querySelectorAll('[data-ui="Spinner"]').length).toBeGreaterThan(0)
-  })
-
-  it('shows a warning icon when the asset item has an error', () => {
-    const {container} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
-      preloaded: {
-        assets: assetsState({'img-1': assetItem(imageAsset, {error: 'Upload failed'})}),
-      },
-    })
-    expect(
-      container.querySelectorAll('[data-sanity-icon="warning-filled"]').length,
-    ).toBeGreaterThan(0)
-  })
-
-  it('replaces via preview click in replace-asset mode using the picked asset, not lastPicked', async () => {
-    const user = userEvent.setup()
-    const replacement = {
-      ...imageAsset,
-      _id: 'img-2',
-      originalFilename: 'replacement.png',
-    } as ImageAsset
-    const {store} = renderWithProviders(
-      <CardAsset id="img-2" selected={false} source="replace-asset" />,
-      {
-        preloaded: {
-          assets: assetsState(
-            {
-              // Still picked, but lastPicked was cleared (e.g. after unpicking another asset)
-              'img-1': assetItem(imageAsset, {picked: true}),
-              'img-2': assetItem(replacement),
-            },
-            {lastPicked: undefined},
-          ),
-          dialog: {
-            items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-          },
+    it('picks assets, and ranges of assets, when the field accepts several', async () => {
+      const user = userEvent.setup()
+      const onSelect = vi.fn()
+      const {actors} = await renderWithMedia(
+        <>
+          <CardAsset id="first" selected={false} />
+          <CardAsset id="img-1" selected={false} />
+        </>,
+        {
+          assets: [imageAsset('first'), imageAsset('between'), photo],
+          isMultiSelect: true,
+          onSelect,
         },
-      },
-    )
+      )
 
-    await user.click(clickPreview())
+      await user.click(preview('first'))
+      await user.keyboard('{Shift>}')
+      await user.click(preview('img-1'))
+      await user.keyboard('{/Shift}')
 
-    expect(store.getState().assets.byIds['img-1']!.updating).toBe(true)
-    expect(store.getState().dialog.items).toHaveLength(0)
+      expect(onSelect).not.toHaveBeenCalled()
+      expect(pickedIds(actors)).toEqual(['first', 'between', 'img-1'])
+    })
   })
 
-  it('replaces via footer click in replace-asset mode', async () => {
-    const user = userEvent.setup()
-    const replacement = {
-      ...imageAsset,
-      _id: 'img-2',
-      originalFilename: 'replacement.png',
-    } as ImageAsset
-    const {store} = renderWithProviders(
-      <CardAsset id="img-2" selected={false} source="replace-asset" />,
-      {
-        preloaded: {
-          assets: assetsState({
-            'img-1': assetItem(imageAsset, {picked: true}),
-            'img-2': assetItem(replacement),
-          }),
-        },
-      },
-    )
+  describe('status', () => {
+    it('shows a check mark over assets selected in the field', async () => {
+      const {container} = await renderWithMedia(<CardAsset id="img-1" selected />, {
+        assets: [photo],
+      })
 
-    await user.click(clickFooterFilename('replacement.png'))
+      expect(container.querySelector('[data-sanity-icon="checkmark-circle"]')).toBeInTheDocument()
+    })
 
-    expect(store.getState().assets.byIds['img-1']!.updating).toBe(true)
+    it('shows a spinner instead of the check mark while the asset is updating', async () => {
+      const {actors, client, container} = await renderWithMedia(<CardAsset id="img-1" selected />, {
+        assets: [photo],
+      })
+      client.patch.mockReturnValue(mockPatchChain(new Promise(() => undefined)))
+
+      act(() => actors.assets.send({type: 'asset.update', asset: photo, formData: {}}))
+
+      expect(container.querySelector('[data-ui="Spinner"]')).toBeInTheDocument()
+      expect(
+        container.querySelector('[data-sanity-icon="checkmark-circle"]'),
+      ).not.toBeInTheDocument()
+    })
+
+    it('shows a warning when the last change to the asset failed', async () => {
+      const {actors, client, container} = await renderWithMedia(
+        <CardAsset id="img-1" selected={false} />,
+        {assets: [photo]},
+      )
+      const patch = mockPatchChain()
+      patch.commit.mockRejectedValue({message: 'Revision mismatch', statusCode: 409})
+      client.patch.mockReturnValue(patch)
+
+      act(() => actors.assets.send({type: 'asset.update', asset: photo, formData: {}}))
+
+      await waitFor(() =>
+        expect(container.querySelector('[data-sanity-icon="warning-filled"]')).toBeInTheDocument(),
+      )
+    })
   })
 
-  it('does not replace when the original asset is already updating', async () => {
-    const user = userEvent.setup()
-    const replacement = {
-      ...imageAsset,
-      _id: 'img-2',
-      originalFilename: 'replacement.png',
-    } as ImageAsset
-    const {store} = renderWithProviders(
-      <CardAsset id="img-2" selected={false} source="replace-asset" />,
-      {
-        preloaded: {
-          assets: assetsState({
-            'img-1': assetItem(imageAsset, {picked: true, updating: true}),
-            'img-2': assetItem(replacement),
-          }),
-          dialog: {
-            items: [{assetId: 'img-1', id: 'dialogAllAssets', type: 'dialogAllAssets'}],
-          },
-        },
-      },
+  describe('replacing an asset', () => {
+    const replaceEvent = {type: 'asset.references.replace', asset: replacement, targetId: 'img-1'}
+
+    it('re-points references to the asset being replaced when the preview is clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(
+        <CardAsset id="img-2" selected={false} source="replace-asset" />,
+        {assets: [photo, replacement]},
+      )
+      actors.dialogs.send({type: 'dialog.open', dialog: replaceAssetDialog('img-1')})
+      const send = vi.spyOn(actors.assets, 'send')
+
+      await user.click(preview('img-2'))
+
+      expect(send).toHaveBeenCalledExactlyOnceWith(replaceEvent)
+      expect(dialogItems(actors)).toEqual([])
+      expect(await screen.findByText(/Updating in progress/)).toBeInTheDocument()
+    })
+
+    it('replaces the only picked asset when the footer is clicked', async () => {
+      const user = userEvent.setup()
+      const {actors} = await renderWithMedia(
+        <CardAsset id="img-2" selected={false} source="replace-asset" />,
+        {assets: [photo, replacement]},
+      )
+      actors.assets.send({type: 'pick.toggle', assetId: 'img-1'})
+      const send = vi.spyOn(actors.assets, 'send')
+
+      await user.click(footer('replacement.png'))
+
+      expect(send).toHaveBeenCalledExactlyOnceWith(replaceEvent)
+    })
+
+    it('does not replace an asset that is still updating', async () => {
+      const user = userEvent.setup()
+      const {actors, client} = await renderWithMedia(
+        <CardAsset id="img-2" selected={false} source="replace-asset" />,
+        {assets: [photo, replacement]},
+      )
+      client.patch.mockReturnValue(mockPatchChain(new Promise(() => undefined)))
+      actors.assets.send({type: 'asset.update', asset: photo, formData: {}})
+      actors.dialogs.send({type: 'dialog.open', dialog: replaceAssetDialog('img-1')})
+      const send = vi.spyOn(actors.assets, 'send')
+
+      await user.click(preview('img-2'))
+
+      expect(send).not.toHaveBeenCalled()
+      expect(dialogItems(actors)).toEqual([replaceAssetDialog('img-1')])
+    })
+  })
+
+  describe('dragging', () => {
+    const dragStart = (element: HTMLElement) => {
+      const data = new Map<string, string>()
+      fireEvent.dragStart(element, {
+        dataTransfer: {setData: (type: string, value: string) => data.set(type, value)},
+      })
+      return JSON.parse(data.get(ASSET_DRAG_TYPE) ?? 'null') as string[] | null
+    }
+    const draggableOf = (assetId: string) => preview(assetId).closest<HTMLElement>('[draggable]')!
+
+    it('drags every picked asset when a picked asset is dragged', async () => {
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo, replacement],
+      })
+      act(() => {
+        actors.assets.send({type: 'pick.toggle', assetId: 'img-1'})
+        actors.assets.send({type: 'pick.toggle', assetId: 'img-2'})
+      })
+
+      expect(dragStart(draggableOf('img-1'))).toEqual(['img-1', 'img-2'])
+    })
+
+    it('drags only the asset itself when it is not picked', async () => {
+      const {actors} = await renderWithMedia(<CardAsset id="img-1" selected={false} />, {
+        assets: [photo, replacement],
+      })
+      act(() => actors.assets.send({type: 'pick.toggle', assetId: 'img-2'}))
+
+      expect(dragStart(draggableOf('img-1'))).toEqual(['img-1'])
+    })
+
+    it('cannot drag assets selected in the field', async () => {
+      await renderWithMedia(<CardAsset id="img-1" selected />, {assets: [photo]})
+
+      expect(draggableOf('img-1')).toHaveAttribute('draggable', 'false')
+    })
+  })
+
+  it('only re-renders the card of the asset that changed', async () => {
+    const renders: string[] = []
+    const onRender = (id: string) => renders.push(id)
+    const {actors} = await renderWithMedia(
+      <>
+        <Profiler id="img-1" onRender={onRender}>
+          <CardAsset id="img-1" selected={false} />
+        </Profiler>
+        <Profiler id="img-2" onRender={onRender}>
+          <CardAsset id="img-2" selected={false} />
+        </Profiler>
+      </>,
+      {assets: [photo, replacement]},
     )
+    renders.length = 0
 
-    await user.click(clickPreview())
+    act(() => actors.assets.send({type: 'pick.toggle', assetId: 'img-1'}))
+    act(() => actors.assets.send({type: 'view.set', view: 'table'}))
 
-    expect(store.getState().dialog.items).toHaveLength(1)
+    expect(renders).toEqual(['img-1', 'img-1'])
   })
 })

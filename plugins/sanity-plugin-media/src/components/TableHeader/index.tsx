@@ -1,14 +1,14 @@
 import {Checkbox, Flex, Grid, useMediaIndex} from '@sanity/ui'
 import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
+import {useSelector} from '@xstate/react'
 import {type MouseEvent} from 'react'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS, PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetsLength, selectAssetsPickedLength} from '../../modules/assets'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectIsFetching, selectPickedAssets} from '../../machines/assetsMachine'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import TableHeaderItem from '../TableHeaderItem'
 
@@ -29,11 +29,10 @@ const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey
 const TableHeader = () => {
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const dispatch = useDispatch()
-  const fetching = useTypedSelector((state) => state.assets.fetching)
-  const itemsLength = useTypedSelector(selectAssetsLength)
-  const numPickedAssets = useTypedSelector(selectAssetsPickedLength)
+  const {assets} = useMediaActors()
+  const fetching = useSelector(assets, selectIsFetching)
+  const itemsLength = useSelector(assets, (snapshot) => snapshot.context.allIds.length)
+  const numPickedAssets = useSelector(assets, (snapshot) => selectPickedAssets(snapshot).length)
 
   const mediaIndex = useMediaIndex()
   const {onSelect} = useAssetSourceActions()
@@ -44,11 +43,7 @@ const TableHeader = () => {
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
 
-    if (allSelected) {
-      dispatch(assetsActions.pickClear())
-    } else {
-      dispatch(assetsActions.pickAll())
-    }
+    assets.send({type: allSelected ? 'pick.clear' : 'pick.all'})
   }
 
   // Note that even though we hide the table header on smaller breakpoints, we never set it to

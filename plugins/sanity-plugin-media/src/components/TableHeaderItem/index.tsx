@@ -1,10 +1,9 @@
 import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
 import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
 import {Box, Label} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 
 type Props = {
   field?: string
@@ -14,9 +13,8 @@ type Props = {
 const TableHeaderItem = (props: Props) => {
   const {field, title} = props
 
-  // Redux
-  const dispatch = useDispatch()
-  const order = useTypedSelector((state) => state.assets.order)
+  const {assets} = useMediaActors()
+  const order = useSelector(assets, (snapshot) => snapshot.context.order)
 
   const isActive = order.field === field
 
@@ -28,9 +26,9 @@ const TableHeaderItem = (props: Props) => {
 
     if (isActive) {
       const direction = order.direction === 'asc' ? 'desc' : 'asc'
-      dispatch(assetsActions.orderSet({order: {field, direction}}))
+      assets.send({type: 'order.set', order: {field, direction}})
     } else {
-      dispatch(assetsActions.orderSet({order: {field, direction: 'asc'}}))
+      assets.send({type: 'order.set', order: {field, direction: 'asc'}})
     }
   }
 

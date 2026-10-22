@@ -28,6 +28,21 @@ function truncateFolderPath(path?: string): string | undefined {
   return [segments[0], '...', ...segments.slice(-2)].join('/')
 }
 
+function getFolderLabel({
+  folderId,
+  folderLoading,
+  folderMissing,
+  folderPath,
+}: Pick<DetailsProps, 'folderLoading' | 'folderMissing' | 'folderPath'> & {
+  folderId: string | undefined
+}): string {
+  const truncatedPath = truncateFolderPath(folderPath)
+  if (truncatedPath) return truncatedPath
+  if (!folderId) return 'No folder'
+  if (folderLoading) return 'Loading...'
+  return folderMissing ? 'Folder no longer exists' : 'Folder could not be loaded'
+}
+
 export type DetailsProps = {
   formUpdating: boolean
   handleCreateTag: (title: string) => void
@@ -38,6 +53,7 @@ export type DetailsProps = {
   assetTagOptions: TagSelectOption[] | null
   currentAsset: Asset
   folderPath?: string
+  folderLoading?: boolean
   folderMissing?: boolean
   onChangeFolder: () => void
   onRemoveFolder: () => void
@@ -58,6 +74,7 @@ export default function Details({
   assetTagOptions,
   currentAsset,
   folderPath,
+  folderLoading,
   folderMissing,
   onChangeFolder,
   onRemoveFolder,
@@ -72,8 +89,7 @@ export default function Details({
   const hasLocales = locales && locales.length > 0
   const [activeLocaleTab, setActiveLocaleTab] = useState(0)
   const folderId = currentAsset?.opt?.media?.folder?._ref
-  const folderLabel =
-    truncateFolderPath(folderPath) || (folderMissing ? 'Folder no longer exists' : 'No folder')
+  const folderLabel = getFolderLabel({folderId, folderLoading, folderMissing, folderPath})
 
   return (
     <Stack gap={3}>
@@ -101,7 +117,7 @@ export default function Details({
               style={{minWidth: 0, overflowX: 'auto', whiteSpace: 'nowrap', overflowY: 'hidden'}}
             >
               <FolderIcon />
-              <Text muted={!folderId} size={1}>
+              <Text muted={!folderId || folderLoading} size={1}>
                 {folderLabel}
               </Text>
             </Flex>

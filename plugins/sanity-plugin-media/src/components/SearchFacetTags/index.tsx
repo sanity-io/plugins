@@ -1,16 +1,15 @@
 import {SelectIcon} from '@sanity/icons/Select'
 import {Box, Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 import Select from 'react-select'
 import {useColorSchemeValue} from 'sanity'
 
 import {operators} from '../../config/searchFacets'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {searchActions} from '../../modules/search'
-import {selectTags} from '../../modules/tags'
+import {selectIsFetchingTags, selectTags} from '../../machines/tagsMachine'
 import {reactSelectComponents, reactSelectStyles} from '../../styled/react-select/single'
 import type {
   TagSelectOption,
@@ -28,35 +27,24 @@ type Props = {
 const SearchFacetTags = ({facet}: Props) => {
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const dispatch = useDispatch()
+  const {assets, tags: tagsActor} = useMediaActors()
   const {excludeTagSlugs} = useToolOptions()
-  const tagsAll = useTypedSelector((state) => selectTags(state))
+  const tagsAll = useSelector(tagsActor, selectTags)
   const tags =
     excludeTagSlugs.length > 0
       ? tagsAll.filter((t) => !excludeTagSlugs.includes(t.tag.name.current))
       : tagsAll
-  const tagsFetching = useTypedSelector((state) => state.tags.fetching)
+  const tagsFetching = useSelector(tagsActor, selectIsFetchingTags)
   const allTagOptions = getTagSelectOptions(tags)
 
   const popoverProps = usePortalPopoverProps()
 
   const handleChange = (option: TagSelectOption) => {
-    dispatch(
-      searchActions.facetsUpdateById({
-        id: facet.id,
-        value: option,
-      }),
-    )
+    assets.send({type: 'search.facet.update', facetId: facet.id, update: {value: option}})
   }
 
   const handleOperatorItemClick = (operatorType: SearchFacetOperatorType) => {
-    dispatch(
-      searchActions.facetsUpdateById({
-        id: facet.id,
-        operatorType,
-      }),
-    )
+    assets.send({type: 'search.facet.update', facetId: facet.id, update: {operatorType}})
   }
 
   const selectedOperatorType: SearchFacetOperatorType = facet.operatorType

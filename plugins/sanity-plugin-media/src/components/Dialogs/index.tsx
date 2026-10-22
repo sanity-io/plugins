@@ -1,4 +1,6 @@
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useSelector} from '@xstate/react'
+
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {Dialog} from '../../types'
 import DialogAssetEdit from '../DialogAssetEdit'
 import DialogAllAssets from '../DialogAssetsOverView'
@@ -13,8 +15,8 @@ import DialogTagEdit from '../DialogTagEdit'
 import DialogTags from '../DialogTags'
 
 const Dialogs = () => {
-  // Redux
-  const currentDialogs = useTypedSelector((state) => state.dialog.items)
+  const {dialogs} = useMediaActors()
+  const currentDialogs = useSelector(dialogs, (snapshot) => snapshot.context.items)
 
   const renderDialogs = (dialogs: Dialog[], index: number) => {
     if (dialogs.length === 0 || index >= dialogs.length) {
