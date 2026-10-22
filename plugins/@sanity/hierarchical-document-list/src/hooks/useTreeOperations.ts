@@ -1,9 +1,9 @@
 import {createContext, useContext} from 'react'
 
+import type {getTreeOperations} from '../utils/getTreeOperations'
 import type useAllItems from './useAllItems'
-import type useTreeOperationsProvider from './useTreeOperationsProvider'
 
-type ContextValue = ReturnType<typeof useTreeOperationsProvider> & {
+type ContextValue = ReturnType<typeof getTreeOperations> & {
   allItemsStatus: ReturnType<typeof useAllItems>['status']
 }
 

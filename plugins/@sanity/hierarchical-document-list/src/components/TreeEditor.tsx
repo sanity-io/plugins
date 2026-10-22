@@ -13,10 +13,10 @@ import type {PatchEvent} from 'sanity'
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
 import {TreeOperationsContext} from '../hooks/useTreeOperations'
-import useTreeOperationsProvider from '../hooks/useTreeOperationsProvider'
 import type {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
 import getCommonTreeProps from '../utils/getCommonTreeProps'
 import getTreeHeight from '../utils/getTreeHeight'
+import {getTreeOperations} from '../utils/getTreeOperations'
 import {getUnaddedItems} from '../utils/treeData'
 import type {HandleMovedNodeData} from '../utils/treePatches'
 import DocumentInNode from './DocumentInNode'
@@ -42,10 +42,14 @@ function TreeEditor(props: TreeEditorProps) {
     allItems,
   })
 
-  const operations = useTreeOperationsProvider({
-    patchPrefix: props.patchPrefix,
-    onChange: props.onChange,
-  })
+  const operations = useMemo(
+    () =>
+      getTreeOperations({
+        patchPrefix: props.patchPrefix,
+        onChange: props.onChange,
+      }),
+    [props.patchPrefix, props.onChange],
+  )
 
   const [context, setContext] = useState<HTMLElement | null>(null)
   const [treeViewHeight, setTreeViewHeight] = useState<string>('')
