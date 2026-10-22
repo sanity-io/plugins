@@ -533,6 +533,7 @@ describe(assetsMachine.id, () => {
 
       expect(actor.getSnapshot().context.allIds).toEqual(['a2'])
       expect(actor.getSnapshot().context.byIds['a1']).toBeUndefined()
+      expect(actor.getSnapshot().context.pageIndex).toBe(0)
       expect(client.fetch).not.toHaveBeenCalled()
     })
 

@@ -70,6 +70,9 @@ const DialogAssetEdit = (props: Props) => {
   )
   const tagItems = useSelector(tags, selectTags)
   const tagsById = useSelector(tags, (snapshot) => snapshot.context.byIds)
+  // -1 until the first successful fetch; missing tag/folder ids are ambiguous until then
+  const tagsCatalogReady = useSelector(tags, (snapshot) => snapshot.context.fetchCount >= 0)
+  const foldersCatalogReady = useSelector(folders, (snapshot) => snapshot.context.fetchCount >= 0)
 
   // Keep showing the last known version of the asset if it is deleted elsewhere
   const [lastKnownAsset, setLastKnownAsset] = useState(assetItem?.asset)
@@ -292,6 +295,25 @@ const DialogAssetEdit = (props: Props) => {
       sanitizedFormData['description'] = ''
     }
 
+    const mappedFormTags =
+      sanitizedFormData['opt'].media.tags
+        // Tags deleted while the dialog was open (only reliable once the catalog loaded)
+        ?.filter((tag: TagSelectOption) => tag.value in tagsById)
+        .map((tag: TagSelectOption) => ({
+          _ref: tag.value,
+          _type: 'reference' as const,
+          _weak: true,
+        })) ?? []
+
+    // Until tags have loaded (or after a failed fetch), unresolved asset refs never entered
+    // the form — keep them so a save of other fields cannot wipe every tag.
+    const tagsToSave = tagsCatalogReady
+      ? mappedFormTags
+      : [
+          ...(currentAsset?.opt?.media?.tags?.filter((ref) => !(ref._ref in tagsById)) ?? []),
+          ...mappedFormTags,
+        ]
+
     assets.send({
       type: 'asset.update',
       asset: assetItem.asset,
@@ -302,15 +324,7 @@ const DialogAssetEdit = (props: Props) => {
         opt: {
           media: {
             ...sanitizedFormData['opt'].media,
-            tags:
-              sanitizedFormData['opt'].media.tags
-                // Tags deleted while the dialog was open
-                ?.filter((tag: TagSelectOption) => tag.value in tagsById)
-                .map((tag: TagSelectOption) => ({
-                  _ref: tag.value,
-                  _type: 'reference',
-                  _weak: true,
-                })) || null,
+            tags: tagsToSave.length ? tagsToSave : null,
             // Preserve the folder reference — it is managed separately and must
             // not be wiped when patching opt.media via .set().
             ...(currentAsset?.opt?.media?.folder && {folder: currentAsset.opt.media.folder}),
@@ -378,7 +392,7 @@ const DialogAssetEdit = (props: Props) => {
     handleCreateTag,
     currentAsset,
     folderPath: currentFolderPath,
-    folderMissing: !!currentFolderId && !currentFolderPath,
+    folderMissing: !!currentFolderId && !currentFolderPath && foldersCatalogReady,
     onChangeFolder: handleChangeFolder,
     onRemoveFolder: handleRemoveFolder,
     creditLine,

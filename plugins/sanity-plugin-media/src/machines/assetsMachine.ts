@@ -798,7 +798,8 @@ export const assetsMachine = setup({
                   allIds,
                   byIds,
                   mutations: context.mutations.slice(1),
-                  pageIndex: Math.floor(allIds.length / context.pageSize) - 1,
+                  // Clamp: fewer than one page of remaining assets must not yield -1
+                  pageIndex: Math.max(0, Math.floor(allIds.length / context.pageSize) - 1),
                 })
                 enqueue({type: 'report', params: {type: 'assets.deleted', assetIds}})
                 if (allIds.length === 0) {
