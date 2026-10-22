@@ -17,7 +17,7 @@ import {resolveThemes} from './themes'
 import {TooltipButton} from './TooltipButton'
 import {useIsTooSmallForSplitScreen} from './useIsTooSmallForSplitScreen'
 
-import styles from './ThemerSidebar.module.css'
+import * as styles from './ThemerSidebar.module.css'
 
 const VIEW_TITLES = {
   list: 'Themer',

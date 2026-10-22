@@ -1,25 +1,38 @@
 // @ts-nocheck
-declare const styles = {
-  'root': '' as string,
-  'studio': '' as string,
-  'studio': '' as string,
-  'navbar': '' as string,
-  'logo': '' as string,
-  'spacer': '' as string,
-  'avatar': '' as string,
-  'body': '' as string,
-  'list': '' as string,
-  'listRow': '' as string,
-  'listRow': '' as string,
-  'pane': '' as string,
-  'form': '' as string,
-  'field': '' as string,
-  'input': '' as string,
-  'footer': '' as string,
-  'button': '' as string,
-  'line': '' as string,
-  'line': '' as string,
-  'line': '' as string,
-  'line': '' as string,
-} as const;
-export default styles;
+var _token_0: string;
+export { _token_0 as 'root' };
+var _token_1: string;
+var _token_1: string;
+export { _token_1 as 'studio' };
+var _token_2: string;
+export { _token_2 as 'navbar' };
+var _token_3: string;
+export { _token_3 as 'logo' };
+var _token_4: string;
+export { _token_4 as 'spacer' };
+var _token_5: string;
+export { _token_5 as 'avatar' };
+var _token_6: string;
+export { _token_6 as 'body' };
+var _token_7: string;
+export { _token_7 as 'list' };
+var _token_8: string;
+var _token_8: string;
+export { _token_8 as 'listRow' };
+var _token_9: string;
+export { _token_9 as 'pane' };
+var _token_10: string;
+export { _token_10 as 'form' };
+var _token_11: string;
+export { _token_11 as 'field' };
+var _token_12: string;
+export { _token_12 as 'input' };
+var _token_13: string;
+export { _token_13 as 'footer' };
+var _token_14: string;
+export { _token_14 as 'button' };
+var _token_15: string;
+var _token_15: string;
+var _token_15: string;
+var _token_15: string;
+export { _token_15 as 'line' };

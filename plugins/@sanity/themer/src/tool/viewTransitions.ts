@@ -1,6 +1,6 @@
 import type {ViewTransitionClass} from 'react'
 
-import styles from './viewTransitions.module.css'
+import * as styles from './viewTransitions.module.css'
 
 /**
  * The transition type of the layout's motions — what `ThemerLayout` adds to

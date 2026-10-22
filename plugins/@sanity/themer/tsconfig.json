@@ -12,6 +12,9 @@
   "cmkOptions": {
     "enabled": true,
     // Lightning CSS exports container names along with the class and keyframes names
-    "container": true
+    "container": true,
+    // Named exports only, no default: the typings then match the `import * as styles` / named
+    // imports that Lightning CSS tree-shakes (`plugin-kit/no-css-module-default-import`)
+    "namedExports": true
   }
 }

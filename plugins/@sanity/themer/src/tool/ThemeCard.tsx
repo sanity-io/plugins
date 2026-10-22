@@ -18,7 +18,7 @@ import {displayTitle, type ThemerTheme} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {useThemeCodes} from './useThemeCodes'
 
-import styles from './ThemeCard.module.css'
+import * as styles from './ThemeCard.module.css'
 
 /**
  * Scrolls the applied theme's card into view when it is not already, as a

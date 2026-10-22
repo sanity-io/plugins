@@ -7,7 +7,7 @@ import {ScrollArea} from './ScrollArea'
 import {displayTitle} from './themes'
 import {ThemeThumbnail} from './ThemeThumbnail'
 
-import styles from './RemovedThemes.module.css'
+import * as styles from './RemovedThemes.module.css'
 
 /**
  * The flow for restoring removed themes: the presets and custom themes the

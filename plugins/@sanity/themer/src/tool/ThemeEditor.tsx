@@ -31,7 +31,7 @@ import {ScrollArea, ScrollAreaBleed} from './ScrollArea'
 import {ThemeThumbnail} from './ThemeThumbnail'
 import {TooltipButton} from './TooltipButton'
 
-import styles from './ThemeEditor.module.css'
+import * as styles from './ThemeEditor.module.css'
 
 const SCHEME_TITLES: Record<ThemeColorSchemeKey, string> = {
   dark: 'Dark mode',

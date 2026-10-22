@@ -15,7 +15,7 @@ import type {readPersistedSnapshot} from './storage'
 import {ThemerNavbarProvider} from './ThemerNavbar'
 import {viewTransitionClasses} from './viewTransitions'
 
-import styles from './ThemerLayout.module.css'
+import * as styles from './ThemerLayout.module.css'
 
 /**
  * The sidebar — everything in it, from the theme list to the snippet dialog —

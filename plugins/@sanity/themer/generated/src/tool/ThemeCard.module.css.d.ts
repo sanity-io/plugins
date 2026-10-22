@@ -1,21 +1,23 @@
 // @ts-nocheck
-declare const styles = {
-  'root': '' as string,
-  'pickButton': '' as string,
-  'pickButton': '' as string,
-  'frame': '' as string,
-  'pickButton': '' as string,
-  'frame': '' as string,
-  'pickButton': '' as string,
-  'frame': '' as string,
-  'pickButton': '' as string,
-  'frame': '' as string,
-  'menuSlot': '' as string,
-  'root': '' as string,
-  'menuSlot': '' as string,
-  'root': '' as string,
-  'menuSlot': '' as string,
-  'menuSlot': '' as string,
-  'menuCard': '' as string,
-} as const;
-export default styles;
+var _token_0: string;
+var _token_0: string;
+var _token_0: string;
+export { _token_0 as 'root' };
+var _token_1: string;
+var _token_1: string;
+var _token_1: string;
+var _token_1: string;
+var _token_1: string;
+export { _token_1 as 'pickButton' };
+var _token_2: string;
+var _token_2: string;
+var _token_2: string;
+var _token_2: string;
+export { _token_2 as 'frame' };
+var _token_3: string;
+var _token_3: string;
+var _token_3: string;
+var _token_3: string;
+export { _token_3 as 'menuSlot' };
+var _token_4: string;
+export { _token_4 as 'menuCard' };

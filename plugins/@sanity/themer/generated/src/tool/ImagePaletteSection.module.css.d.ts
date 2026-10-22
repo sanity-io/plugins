@@ -1,20 +1,24 @@
 // @ts-nocheck
-declare const styles = {
-  'paletteGrid': '' as string,
-  'paletteGrid': '' as string,
-  'imageTile': '' as string,
-  'tile': '' as string,
-  'tile': '' as string,
-  'variantRow': '' as string,
-  'variantButton': '' as string,
-  'variantButton': '' as string,
-  'variantFrame': '' as string,
-  'variantButton': '' as string,
-  'variantFrame': '' as string,
-  'variantButton': '' as string,
-  'variantFrame': '' as string,
-  'variantButton': '' as string,
-  'variantFrame': '' as string,
-  'variantScaleBox': '' as string,
-} as const;
-export default styles;
+var _token_0: string;
+var _token_0: string;
+export { _token_0 as 'paletteGrid' };
+var _token_1: string;
+export { _token_1 as 'imageTile' };
+var _token_2: string;
+var _token_2: string;
+export { _token_2 as 'tile' };
+var _token_3: string;
+export { _token_3 as 'variantRow' };
+var _token_4: string;
+var _token_4: string;
+var _token_4: string;
+var _token_4: string;
+var _token_4: string;
+export { _token_4 as 'variantButton' };
+var _token_5: string;
+var _token_5: string;
+var _token_5: string;
+var _token_5: string;
+export { _token_5 as 'variantFrame' };
+var _token_6: string;
+export { _token_6 as 'variantScaleBox' };

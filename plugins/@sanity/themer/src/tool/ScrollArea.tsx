@@ -1,7 +1,7 @@
 import {Box, useTheme_v2} from '@sanity/ui'
 import {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
-import styles from './ScrollArea.module.css'
+import * as styles from './ScrollArea.module.css'
 
 /** How far the content of a scroll area sits from its edges, in pixels */
 interface ScrollAreaInset {

@@ -1,22 +1,33 @@
 // @ts-nocheck
-declare const styles = {
-  'navbarButtonUpdate': '' as string,
-  'navbarButtonUpdate': '' as string,
-  'resizeStudio': '' as string,
-  'resizeStudio': '' as string,
-  'splitStudio': '' as string,
-  'splitStudio': '' as string,
-  'splitStudio': '' as string,
-  'blurPeak': '' as string,
-  'fadeOut': '' as string,
-  'fadeIn': '' as string,
-  'panelSlideIn': '' as string,
-  'panelSlideOut': '' as string,
-  'slideInFromEdge': '' as string,
-  'slideOutToEdge': '' as string,
-  'splitScreenSlideIn': '' as string,
-  'splitScreenSlideOut': '' as string,
-  'splitSlideIn': '' as string,
-  'splitSlideOut': '' as string,
-} as const;
-export default styles;
+var _token_0: string;
+var _token_0: string;
+export { _token_0 as 'navbarButtonUpdate' };
+var _token_1: string;
+var _token_1: string;
+export { _token_1 as 'resizeStudio' };
+var _token_2: string;
+var _token_2: string;
+var _token_2: string;
+export { _token_2 as 'splitStudio' };
+var _token_3: string;
+export { _token_3 as 'blurPeak' };
+var _token_4: string;
+export { _token_4 as 'fadeOut' };
+var _token_5: string;
+export { _token_5 as 'fadeIn' };
+var _token_6: string;
+export { _token_6 as 'panelSlideIn' };
+var _token_7: string;
+export { _token_7 as 'panelSlideOut' };
+var _token_8: string;
+export { _token_8 as 'slideInFromEdge' };
+var _token_9: string;
+export { _token_9 as 'slideOutToEdge' };
+var _token_10: string;
+export { _token_10 as 'splitScreenSlideIn' };
+var _token_11: string;
+export { _token_11 as 'splitScreenSlideOut' };
+var _token_12: string;
+export { _token_12 as 'splitSlideIn' };
+var _token_13: string;
+export { _token_13 as 'splitSlideOut' };

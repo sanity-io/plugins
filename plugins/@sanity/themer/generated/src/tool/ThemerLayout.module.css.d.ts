@@ -1,5 +1,3 @@
 // @ts-nocheck
-declare const styles = {
-  'root': '' as string,
-} as const;
-export default styles;
+var _token_0: string;
+export { _token_0 as 'root' };

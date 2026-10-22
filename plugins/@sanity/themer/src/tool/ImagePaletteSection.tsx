@@ -19,7 +19,7 @@ import {ThemeThumbnail} from './ThemeThumbnail'
 import {TooltipButton} from './TooltipButton'
 import {useImagePalette} from './useImagePalette'
 
-import styles from './ImagePaletteSection.module.css'
+import * as styles from './ImagePaletteSection.module.css'
 
 /** The swatches on display: the vibrant family over the muted one */
 const TILES: ImagePaletteKey[] = [

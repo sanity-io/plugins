@@ -4,7 +4,7 @@ import {type CSSProperties, useMemo} from 'react'
 import type {BuildThemeOptions} from '../theme/options'
 import {type PreviewColors, previewColors} from './previewColors'
 
-import styles from './ThemePreview.module.css'
+import * as styles from './ThemePreview.module.css'
 
 /** The document rows in the list pane — the widths of their title lines */
 const LIST_ROWS = ['62%', '46%', '70%', '52%']

@@ -6,7 +6,7 @@ import type {ThemerProps} from '#types'
 import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
 import {ThemerSidebar} from './ThemerSidebar'
 
-import styles from './ResizableSidebar.module.css'
+import * as styles from './ResizableSidebar.module.css'
 
 /** How far one arrow key press resizes the sidebar */
 const KEYBOARD_STEP = 16

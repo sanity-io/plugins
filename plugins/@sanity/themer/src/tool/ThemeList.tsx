@@ -25,7 +25,7 @@ import {ThemeSnippetDialog} from './ThemeSnippetDialog'
 import {useImagePalette} from './useImagePalette'
 import {usePasteThemeCodes, useThemeCodes} from './useThemeCodes'
 
-import styles from './ThemeList.module.css'
+import * as styles from './ThemeList.module.css'
 
 /**
  * The flow for picking a theme: a grid of theme cards — the configured theme,
