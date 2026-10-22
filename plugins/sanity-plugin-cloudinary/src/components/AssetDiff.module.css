@@ -1,0 +1,10 @@
+.videoDiff {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.previewImage {
+  max-width: 100%;
+  height: auto;
+}

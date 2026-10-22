@@ -1,0 +1,15 @@
+.setupButtonContainer {
+  position: relative;
+  display: block;
+  font-size: 0.8em;
+  transform: translate(0%, -10%);
+}
+
+.previewFlex {
+  text-align: center;
+  width: 100%;
+}
+
+.actionGrid {
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}

@@ -1,0 +1,7 @@
+/*
+ * Match the previous inline `width: 100%` against Button's own width rules —
+ * duplicate the class for the same specificity bump vanilla-extract's `&&` gave.
+ */
+.fullWidthButton.fullWidthButton {
+  width: 100%;
+}
