@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 /**
  * Regression for the hierarchy view hanging on trees of a few dozen documents.
  *
