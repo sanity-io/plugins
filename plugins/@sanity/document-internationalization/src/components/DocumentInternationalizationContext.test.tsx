@@ -11,8 +11,10 @@ import {
   useDocumentInternationalizationContext,
 } from './DocumentInternationalizationContext'
 
-type ProviderPluginConfig = Required<Omit<PluginConfig, 'metadataInternationalization'>> &
-  Pick<PluginConfig, 'metadataInternationalization'>
+type ProviderPluginConfig = Required<
+  Omit<PluginConfig, 'metadataInternationalization' | 'metadataPreview'>
+> &
+  Pick<PluginConfig, 'metadataInternationalization' | 'metadataPreview'>
 
 let mockClient: ReturnType<typeof createMockSanityClient>
 const mockUseWorkspace = vi.fn(() => ({name: 'default'}))
