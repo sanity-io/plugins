@@ -15,7 +15,6 @@ import {Popover} from '@sanity/ui/popover'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {PatchEvent, unset} from 'sanity'
-import {styled} from 'styled-components'
 
 import {useAccessControl} from '../hooks/useAccessControl'
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
@@ -24,19 +23,7 @@ import {getPlaybackPolicy} from '../util/getPlaybackPolicy'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
 import {FileInputMenuItem} from './FileInputMenuItem'
 
-const LockCard = styled(Card)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0.6;
-  mix-blend-mode: screen;
-  background: transparent;
-`
-
-const LockButton = styled(Button)`
-  background: transparent;
-  color: white;
-`
+import * as styles from './PlayerActionsMenu.module.css'
 
 // @TODO: add support for audio type (asset._type) when uploading an audio file so we can hide the thumbnail option.
 const isVideoAsset = (asset: VideoAssetDocument) => {
@@ -94,9 +81,9 @@ function PlayerActionsMenu(
           placement="right"
           portal
         >
-          <LockCard radius={2} margin={2} scheme="dark" tone="positive">
-            <LockButton icon={LockIcon} mode="bleed" tone="positive" />
-          </LockCard>
+          <Card className={styles.lockCard} radius={2} margin={2} scheme="dark" tone="positive">
+            <Button className={styles.lockButton} icon={LockIcon} mode="bleed" tone="positive" />
+          </Card>
         </Tooltip>
       )}
       <Popover

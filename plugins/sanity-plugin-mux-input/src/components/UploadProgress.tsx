@@ -2,35 +2,46 @@
 
 import {Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
+import {type ComponentProps} from 'react'
 import {LinearProgress} from 'sanity'
-import {styled} from 'styled-components'
 
-const CardWrapper = styled(Card)`
-  min-height: 82px;
-  box-sizing: border-box;
-`
+import * as styles from './UploadProgress.module.css'
 
-const FlexWrapper = styled(Flex)`
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
+function CardWrapper({className, ...props}: ComponentProps<typeof Card>) {
+  return (
+    <Card
+      {...props}
+      className={className ? `${styles.cardWrapper} ${className}` : styles.cardWrapper}
+    />
+  )
+}
 
-const LeftSection = styled(Stack)`
-  position: relative;
-  width: 60%;
-`
+function FlexWrapper({className, ...props}: ComponentProps<typeof Flex>) {
+  return (
+    <Flex
+      {...props}
+      className={className ? `${styles.flexWrapper} ${className}` : styles.flexWrapper}
+    />
+  )
+}
 
-const CodeWrapper = styled(Code)`
-  position: relative;
-  width: 100%;
+function LeftSection({className, ...props}: ComponentProps<typeof Stack>) {
+  return (
+    <Stack
+      {...props}
+      className={className ? `${styles.leftSection} ${className}` : styles.leftSection}
+    />
+  )
+}
 
-  code {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
-    max-width: 200px;
-  }
-`
+function CodeWrapper({className, ...props}: ComponentProps<typeof Code>) {
+  return (
+    <Code
+      {...props}
+      className={className ? `${styles.codeWrapper} ${className}` : styles.codeWrapper}
+    />
+  )
+}
 
 export const UploadProgress = ({
   progress = 100,

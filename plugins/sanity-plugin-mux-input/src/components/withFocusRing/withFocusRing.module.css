@@ -1,0 +1,9 @@
+.focusRing {
+  border-radius: var(--mux-focus-radius);
+  outline: none;
+  box-shadow: var(--mux-focus-box-shadow);
+}
+
+.focusRing:focus {
+  box-shadow: var(--mux-focus-box-shadow-focus);
+}

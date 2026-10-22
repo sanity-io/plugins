@@ -1,16 +1,19 @@
 import {Dialog} from '@sanity/ui'
-import {useCallback, useId} from 'react'
-import {styled} from 'styled-components'
+import {type ComponentProps, useCallback, useId} from 'react'
 
 import type {SetDialogState} from '../hooks/useDialogState'
 import SelectAsset, {type Props as SelectAssetProps} from './SelectAsset'
 
-/** To prevent Content Layout Shift (CLS), ensure that the dialog always occupies the entire available height. */
-const StyledDialog = styled(Dialog)`
-  > div[data-ui='DialogCard'] > div[data-ui='Card'] {
-    height: 100%;
-  }
-`
+import * as styles from './InputBrowser.module.css'
+
+function StyledDialog({className, ...props}: ComponentProps<typeof Dialog>) {
+  return (
+    <Dialog
+      {...props}
+      className={className ? `${styles.fullHeightDialog} ${className}` : styles.fullHeightDialog}
+    />
+  )
+}
 
 export default function InputBrowser({
   setDialogState,
