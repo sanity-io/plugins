@@ -1,24 +1,13 @@
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 import {EditIcon} from '@sanity/icons/Edit'
 import {WarningFilledIcon} from '@sanity/icons/WarningFilled'
-import {
-  Box,
-  Checkbox,
-  Container,
-  Flex,
-  Spinner,
-  Text,
-  type Theme,
-  type ThemeColorSchemeKey,
-} from '@sanity/ui'
+import {Box, Checkbox, Container, Flex, Spinner, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
+import {type CSSProperties, type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
-import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import useKeyPress from '../../hooks/useKeyPress'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -31,81 +20,28 @@ import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 
+import * as styles from './CardAsset.module.css'
+
 type Props = {
   id: string
   selected: boolean
   source?: string
 }
 
-const CardWrapper = styled(Flex)`
-  box-sizing: border-box;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-`
+interface CardContainerStyle extends CSSProperties {
+  '--media-card-picked-border-color'?: string
+}
 
-// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-const CardContainer = styled(Flex)<{$picked?: boolean; theme: Theme; $updating?: boolean}>(({
-  $picked,
-  theme,
-  $updating,
-}) => {
-  return css`
-    border: 1px solid transparent;
-    height: 100%;
-    pointer-events: ${$updating ? 'none' : 'auto'};
-    position: relative;
-    transition: all 300ms;
-    user-select: none;
-    width: 100%;
-
-    border: ${
-      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-      $picked ? `1px solid ${theme.sanity.color.spot.orange} !important` : '1px solid inherit'
-    };
-
-    ${
-      !$updating &&
-      css`
-        @media (hover: hover) and (pointer: fine) {
-          &:hover {
-            border: 1px solid var(--card-border-color);
-          }
-        }
-      `
-    }
-  `
-})
-
-// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    height: ${PANEL_HEIGHT}px;
-    transition: all 300ms;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg')};
-      }
-    }
-  `
-})
-
-const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
-  return {
-    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-    color: theme.sanity.color.spot.red,
-  }
-})
+interface ContextActionHoverStyle extends CSSProperties {
+  '--media-context-action-hover-bg'?: string
+}
 
 const CardAsset = (props: Props) => {
   const {id, selected, source} = props
 
   const scheme = useColorSchemeValue()
   const toast = useToast()
+  const {color} = useThemeV2()
 
   // Refs
   const shiftPressed: RefObject<boolean> = useKeyPress('shift')
@@ -234,14 +170,23 @@ const CardAsset = (props: Props) => {
   const opacityContainer = updating ? 0.5 : 1
   const opacityPreview = selected || updating ? 0.25 : 1
 
+  const cardContainerStyle: CardContainerStyle = {
+    '--media-card-picked-border-color': color.avatar.orange.bg,
+  }
+  const contextActionHoverStyle: ContextActionHoverStyle = {
+    '--media-context-action-hover-bg': getSchemeColor(scheme, 'bg'),
+  }
+
   return (
-    <CardWrapper padding={1}>
-      <CardContainer
+    <Flex className={styles.cardWrapper} padding={1}>
+      <Flex
+        className={styles.cardContainer}
+        data-picked={picked}
+        data-updating={item.updating}
         direction="column"
         draggable={draggable}
         onDragStart={draggable ? handleDragStart : undefined}
-        $picked={picked}
-        $updating={item.updating}
+        style={cardContainerStyle}
       >
         {/* Image */}
         <Box
@@ -263,11 +208,10 @@ const CardAsset = (props: Props) => {
             {isImageAsset(asset) && (
               <Image
                 draggable={false}
-                $scheme={scheme}
-                $showCheckerboard={!isOpaque}
+                scheme={scheme}
+                showCheckerboard={!isOpaque}
                 src={imageDprUrl(asset, {height: 250, width: 250})}
                 style={{
-                  draggable: false,
                   transition: 'opacity 1000ms',
                 }}
               />
@@ -313,12 +257,12 @@ const CardAsset = (props: Props) => {
         </Box>
 
         {/* Footer */}
-        <ContextActionContainer
+        <Flex
           align="center"
+          className={styles.contextActionContainer}
           onClick={handleContextActionClick}
           paddingX={1}
-          $scheme={scheme}
-          style={{opacity: opacityContainer}}
+          style={{...contextActionHoverStyle, opacity: opacityContainer}}
         >
           {onSelect && !isMultiSelect ? (
             <EditIcon
@@ -344,7 +288,7 @@ const CardAsset = (props: Props) => {
               {asset.originalFilename}
             </Text>
           </Box>
-        </ContextActionContainer>
+        </Flex>
 
         {/* TODO: DRY */}
         {/* Error button */}
@@ -368,13 +312,13 @@ const CardAsset = (props: Props) => {
               portal
             >
               <Text size={1}>
-                <StyledWarningOutlineIcon color="critical" />
+                <WarningFilledIcon color="critical" style={{color: color.avatar.red.bg}} />
               </Text>
             </Tooltip>
           </Box>
         )}
-      </CardContainer>
-    </CardWrapper>
+      </Flex>
+    </Flex>
   )
 }
 

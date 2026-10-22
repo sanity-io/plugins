@@ -1,5 +1,5 @@
-import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
-import {styled, css} from 'styled-components'
+import {Box, Flex, Inline, rem, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {type CSSProperties} from 'react'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import SearchFacetNumber from '../SearchFacetNumber'
@@ -7,24 +7,20 @@ import SearchFacetSelect from '../SearchFacetSelect'
 import SearchFacetString from '../SearchFacetString'
 import SearchFacetTags from '../SearchFacetTags'
 
+import * as styles from './SearchFacets.module.css'
+
 type Props = {
   layout?: 'inline' | 'stack'
 }
 
-// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
-  return css`
-    > * {
-      margin-bottom: ${rem(
-        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-        theme.sanity.space[2]!,
-      )};
-    }
-  `
-})
+interface StackContainerStyle extends CSSProperties {
+  '--media-stack-gap'?: string
+}
 
 const SearchFacets = (props: Props) => {
   const {layout = 'inline'} = props
+
+  const {space} = useThemeV2()
 
   // Redux
   const searchFacets = useTypedSelector((state) => state.search.facets)
@@ -63,10 +59,19 @@ const SearchFacets = (props: Props) => {
   }
 
   if (layout === 'stack') {
+    const stackContainerStyle: StackContainerStyle = {
+      '--media-stack-gap': `${rem(space[2]!)}`,
+    }
+
     return (
-      <StackContainer align="flex-start" direction="column">
+      <Flex
+        align="flex-start"
+        className={styles.stackContainer}
+        direction="column"
+        style={stackContainerStyle}
+      >
         {Items}
-      </StackContainer>
+      </Flex>
     )
   }
 

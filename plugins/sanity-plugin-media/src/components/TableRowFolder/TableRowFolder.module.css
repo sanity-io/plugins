@@ -1,0 +1,32 @@
+.containerGrid {
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  user-select: none;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .containerGrid:hover {
+    background: var(--card-bg-color);
+  }
+}
+
+.folderBadge {
+  background: var(--media-folder-glyph-color);
+  border-radius: 6px;
+  height: 42px;
+  position: relative;
+  width: 52px;
+}
+
+.folderBadge::before {
+  background: var(--media-folder-glyph-color);
+  border-radius: 6px 6px 0 0;
+  content: '';
+  height: 12px;
+  left: 0;
+  position: absolute;
+  top: -6px;
+  width: 18px;
+}

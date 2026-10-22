@@ -1,0 +1,9 @@
+.contextActionContainer {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contextActionContainer:hover {
+    background: var(--media-hover-bg);
+  }
+}

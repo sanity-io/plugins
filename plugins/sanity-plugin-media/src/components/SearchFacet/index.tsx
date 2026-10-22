@@ -1,9 +1,8 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {Box, Flex, Label, rem, Text, type ThemeColorSchemeKey} from '@sanity/ui'
+import {Box, Flex, Label, rem, Text, useTheme_v2 as useThemeV2} from '@sanity/ui'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {searchActions} from '../../modules/search'
 import type {SearchFacetInputProps, WithId} from '../../types'
@@ -14,21 +13,11 @@ type Props = {
   facet: WithId<SearchFacetInputProps>
 }
 
-// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-const Container = styled<typeof Box, {$scheme: ThemeColorSchemeKey}>(Box)(({$scheme, theme}) => {
-  return css`
-    background: ${getSchemeColor($scheme, 'bg')};
-    border-radius: ${
-      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-      rem(theme.sanity.radius[2]!)
-    };
-  `
-})
-
 const SearchFacet = (props: Props) => {
   const {children, facet} = props
 
   const scheme = useColorSchemeValue()
+  const {radius} = useThemeV2()
 
   // Redux
   const dispatch = useDispatch()
@@ -38,7 +27,13 @@ const SearchFacet = (props: Props) => {
   }
 
   return (
-    <Container padding={[2, 2, 1]} $scheme={scheme}>
+    <Box
+      padding={[2, 2, 1]}
+      style={{
+        background: getSchemeColor(scheme, 'bg'),
+        borderRadius: rem(radius[2]!),
+      }}
+    >
       <Flex align={['flex-start', 'flex-start', 'center']} direction={['column', 'column', 'row']}>
         {/* Title */}
         <Box paddingBottom={[3, 3, 0]} paddingLeft={1} paddingRight={2} paddingTop={[1, 1, 0]}>
@@ -63,7 +58,7 @@ const SearchFacet = (props: Props) => {
           </Box>
         </Flex>
       </Flex>
-    </Container>
+    </Box>
   )
 }
 

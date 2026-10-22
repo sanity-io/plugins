@@ -8,10 +8,8 @@ import {Box, Button, Container, Flex, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {type ReactNode} from 'react'
 import {useDispatch} from 'react-redux'
-import {styled} from 'styled-components'
 
 import {inputs} from '../../config/searchFacets'
-import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
@@ -19,26 +17,12 @@ import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {searchActions, selectIsSearchFacetTag} from '../../modules/search'
 import type {SearchFacetInputSearchableProps, TagActions, TagItem} from '../../types'
 
+import * as styles from './Tag.module.css'
+
 type Props = {
   actions?: TagActions[]
   tag: TagItem
 }
-
-const TagContainer = styled(Flex)`
-  height: ${PANEL_HEIGHT}px;
-`
-
-const ButtonContainer = styled(Flex)`
-  @media (pointer: fine) {
-    visibility: hidden;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    ${TagContainer}:hover & {
-      visibility: visible;
-    }
-  }
-`
 
 type TagButtonProps = {
   disabled?: boolean
@@ -130,7 +114,13 @@ const Tag = (props: Props) => {
   }
 
   return (
-    <TagContainer align="center" flex={1} justify="space-between" paddingLeft={3}>
+    <Flex
+      align="center"
+      className={styles.tagContainer}
+      flex={1}
+      justify="space-between"
+      paddingLeft={3}
+    >
       <Box flex={1}>
         <Text
           muted
@@ -145,7 +135,7 @@ const Tag = (props: Props) => {
         </Text>
       </Box>
 
-      <ButtonContainer align="center" style={{flexShrink: 0}}>
+      <Flex align="center" className={styles.buttonContainer} style={{flexShrink: 0}}>
         {/* Search facet toggle */}
         {actions?.includes('search') && (
           <TagButton
@@ -198,8 +188,8 @@ const Tag = (props: Props) => {
             tooltip="Delete tag"
           />
         )}
-      </ButtonContainer>
-    </TagContainer>
+      </Flex>
+    </Flex>
   )
 }
 
