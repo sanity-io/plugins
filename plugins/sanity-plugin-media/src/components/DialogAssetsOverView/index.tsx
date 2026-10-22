@@ -1,8 +1,7 @@
 import {Box} from '@sanity/ui'
-import {type ReactNode, useCallback} from 'react'
-import {useDispatch} from 'react-redux'
+import {type ReactNode} from 'react'
 
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {DialogAllAssetsProps} from '../../types'
 import Dialog from '../Dialog'
 import ReplaceAssetsOverview from '../ReplaceAssetsOverView'
@@ -18,13 +17,11 @@ const DialogAllAssets = (props: Props) => {
     dialog: {id},
   } = props
 
-  // Redux
-  const dispatch = useDispatch()
+  const {dialogs} = useMediaActors()
 
-  // Callbacks
-  const handleClose = useCallback(() => {
-    dispatch(dialogActions.clear())
-  }, [dispatch])
+  const handleClose = () => {
+    dialogs.send({type: 'dialogs.clear'})
+  }
 
   return (
     <Dialog header="Choose a replacement image" id={id} onClose={handleClose} width={3}>

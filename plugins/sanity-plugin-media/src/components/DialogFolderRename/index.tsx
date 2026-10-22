@@ -1,12 +1,12 @@
 import {Box, Flex, Text} from '@sanity/ui'
-import {type ReactNode, useEffect} from 'react'
+import {useSelector} from '@xstate/react'
+import {type ReactNode} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
-import {useDispatch} from 'react-redux'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {folderFormSchema} from '../../formSchema'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {dialogActions} from '../../modules/dialog'
-import {foldersActions, selectFolderPathById} from '../../modules/folders'
+import {useServerErrors} from '../../hooks/useServerErrors'
+import {selectIsRenamingFolder} from '../../machines/foldersMachine'
 import type {DialogFolderRenameProps, FolderFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
 import zodFormResolver from '../../utils/zodFormResolver'
@@ -21,12 +21,13 @@ type Props = {
 
 const DialogFolderRename = ({children, dialog}: Props) => {
   const {folderId, id} = dialog
-  const dispatch = useDispatch()
-  const renaming = useTypedSelector((state) => state.folders.renaming)
-  const renameError = useTypedSelector((state) => state.folders.renameError)
-  const folder = useTypedSelector((state) => state.folders.byId[folderId])
-  const folderPath = useTypedSelector((state) => selectFolderPathById(state, folderId))
-  const currentName = folder?.name || ''
+  const {dialogs, folders} = useMediaActors()
+  const renaming = useSelector(folders, selectIsRenamingFolder)
+  const renameError = useSelector(folders, (snapshot) => snapshot.context.renameError)
+  const folder = useSelector(folders, (snapshot) => snapshot.context.byId[folderId])
+  const serverErrors = useServerErrors<FolderFormData>('name', renameError)
+
+  const folderPath = folder?.path ?? ''
   const parentPath = folderPath.includes('/')
     ? folderPath.slice(0, folderPath.lastIndexOf('/'))
     : null
@@ -35,34 +36,23 @@ const DialogFolderRename = ({children, dialog}: Props) => {
     formState: {errors, isDirty, isValid},
     handleSubmit,
     register,
-    setError,
   } = useForm<FolderFormData>({
     defaultValues: {
-      name: currentName,
+      name: folder?.name || '',
     },
+    errors: serverErrors,
     mode: 'onChange',
     resolver: zodFormResolver<FolderFormData>(folderFormSchema),
   })
 
   const handleClose = () => {
-    dispatch(dialogActions.remove({id}))
+    dialogs.send({type: 'dialog.close', id})
   }
 
   const onSubmit: SubmitHandler<FolderFormData> = (formData) => {
     const sanitizedFormData = sanitizeFormData(formData)
-    dispatch(
-      foldersActions.renameRequest({
-        name: sanitizedFormData['name'],
-        folderId,
-      }),
-    )
+    folders.send({type: 'folder.rename', folderId, name: sanitizedFormData['name']})
   }
-
-  useEffect(() => {
-    if (renameError) {
-      setError('name', {message: renameError.message})
-    }
-  }, [renameError, setError])
 
   return (
     <Dialog

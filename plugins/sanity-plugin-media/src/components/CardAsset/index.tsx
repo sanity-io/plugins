@@ -13,17 +13,16 @@ import {
 } from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
+import {type DragEvent, memo, type MouseEvent} from 'react'
 import {useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
-import useKeyPress from '../../hooks/useKeyPress'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {assetEditDialog} from '../../machines/dialogs'
 import {setDragAssetIds} from '../../utils/assetDrag'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import imageDprUrl from '../../utils/imageDprUrl'
@@ -107,39 +106,14 @@ const CardAsset = (props: Props) => {
   const scheme = useColorSchemeValue()
   const toast = useToast()
 
-  // Refs
-  const shiftPressed: RefObject<boolean> = useKeyPress('shift')
-
-  // Redux
-  const dispatch = useDispatch()
-  const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
-  const assetsPicked = useTypedSelector(selectAssetsPicked)
-  const item = useTypedSelector((state) => selectAssetById(state, id))
-  // Dialog carries the replace target so search refetch (which clears allIds/picks) is safe.
-  const dialogReplaceAssetId = useTypedSelector((state) => {
-    if (source !== 'replace-asset') {
-      return undefined
-    }
-    const dialog = state.dialog.items.find((d) => d.type === 'dialogAllAssets')
-    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
-  })
+  const {assets, dialogs} = useMediaActors()
+  const item = useSelector(assets, (snapshot) => snapshot.context.byIds[id])
 
   const asset = item?.asset
   const error = item?.error
   const isOpaque = item?.asset?.metadata?.isOpaque
   const picked = item?.picked
   const updating = item?.updating
-
-  // Prefer dialog assetId; fall back to the single currently-picked asset (not lastPicked).
-  const assetToReplaceId =
-    dialogReplaceAssetId ??
-    (source === 'replace-asset' && assetsPicked.length === 1
-      ? assetsPicked[0]?.asset._id
-      : undefined)
-
-  const assetToReplace = useTypedSelector((state) =>
-    assetToReplaceId ? selectAssetById(state, assetToReplaceId) : undefined,
-  )
 
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
@@ -149,18 +123,29 @@ const CardAsset = (props: Props) => {
   }
 
   const handleReplaceAsset = () => {
-    if (!assetToReplaceId || !isImageAsset(asset) || assetToReplace?.updating) {
+    // Resolved on click, so the replace target never re-renders the card
+    const snapshot = assets.getSnapshot()
+    const pickedAssets = selectPickedAssets(snapshot)
+    const targetId =
+      snapshot.context.replace?.assetId ??
+      (pickedAssets.length === 1 ? pickedAssets[0]?.asset._id : undefined)
+    if (!targetId || !isImageAsset(asset) || snapshot.context.byIds[targetId]?.updating) {
       return
     }
 
-    dispatch(assetsActions.updateImageReferences({asset, id: assetToReplaceId}))
+    assets.send({type: 'asset.references.replace', asset, targetId})
     toast.push({
       status: 'info',
       title:
         'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
     })
-    dispatch(dialogActions.clear())
+    dialogs.send({type: 'dialogs.clear'})
   }
+
+  const togglePick = () => assets.send({type: 'pick.toggle', assetId: asset._id})
+  // Picks every asset between the last picked asset and this one
+  const pickRange = () => assets.send({type: 'pick.range', assetId: asset._id})
+  const openAsset = () => dialogs.send({type: 'dialog.open', dialog: assetEditDialog(asset._id)})
 
   // Callbacks
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -183,22 +168,22 @@ const CardAsset = (props: Props) => {
         },
       ])
     } else if (onSelect && isMultiSelect) {
-      if (shiftPressed.current && !picked) {
-        dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+      if (e.shiftKey && !picked) {
+        pickRange()
       } else {
-        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+        togglePick()
       }
     } else if (e.ctrlKey || e.metaKey) {
       // Ctrl/Cmd-click toggles a single pick without opening the asset
-      dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
-    } else if (shiftPressed.current) {
+      togglePick()
+    } else if (e.shiftKey) {
       if (picked) {
-        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+        togglePick()
       } else {
-        dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+        pickRange()
       }
     } else {
-      dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
+      openAsset()
     }
   }
 
@@ -215,11 +200,11 @@ const CardAsset = (props: Props) => {
     }
 
     if (onSelect && !isMultiSelect) {
-      dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
-    } else if (shiftPressed.current && !picked) {
-      dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+      openAsset()
+    } else if (e.shiftKey && !picked) {
+      pickRange()
     } else {
-      dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+      togglePick()
     }
   }
 
@@ -227,7 +212,9 @@ const CardAsset = (props: Props) => {
   const draggable = !selected && !updating && source !== 'replace-asset'
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
-    const assetIds = picked ? assetsPicked.map((pickedItem) => pickedItem.asset._id) : [asset._id]
+    const assetIds = picked
+      ? selectPickedAssets(assets.getSnapshot()).map((pickedItem) => pickedItem.asset._id)
+      : [asset._id]
     setDragAssetIds(e, assetIds)
   }
 

@@ -4,18 +4,21 @@ import {FolderIcon} from '@sanity/icons/Folder'
 import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Button, Container, Flex, Inline, Label, Text, Tree, TreeItem} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
+import {useSelector} from '@xstate/react'
 import {type DragEvent, type ReactNode, useEffect, useMemo, useRef, useState} from 'react'
-import {useDispatch} from 'react-redux'
 import {styled} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
-import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
-import {foldersActions, selectCanDeleteFolder, selectFolderTree} from '../../modules/folders'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {
+  confirmDeleteFolderDialog,
+  folderCreateDialog,
+  folderRenameDialog,
+} from '../../machines/dialogs'
+import {selectFolderTreeStatus, selectIsFetchingFolders} from '../../machines/foldersMachine'
 import type {AssetItem, FolderTreeNode} from '../../types'
 import {getDragAssetIds, isAssetDrag} from '../../utils/assetDrag'
+import FoldersFetchFailed from '../FoldersFetchFailed'
 
 const getExpandedIdSet = (
   folderId: string | null,
@@ -204,13 +207,12 @@ const FolderNode = ({
 }
 
 const FolderView = () => {
-  const dispatch = useDispatch()
-  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
-  const assetsById = useTypedSelector((state) => state.assets.byIds)
-  const byId = useTypedSelector((state) => state.folders.byId)
-  const canDeleteFolder = useTypedSelector(selectCanDeleteFolder)
-  const fetching = useTypedSelector((state) => state.folders.fetching)
-  const folderTree = useTypedSelector(selectFolderTree)
+  const {assets, dialogs, folders} = useMediaActors()
+  const currentFolderId = useSelector(assets, (snapshot) => snapshot.context.currentFolderId)
+  const byId = useSelector(folders, (snapshot) => snapshot.context.byId)
+  const fetching = useSelector(folders, selectIsFetchingFolders)
+  const folderTreeStatus = useSelector(folders, selectFolderTreeStatus)
+  const folderTree = useSelector(folders, (snapshot) => snapshot.context.tree)
   const currentFolder = currentFolderId ? byId[currentFolderId] : null
   const expandedIds = useMemo(
     () => getExpandedIdSet(currentFolderId, byId),
@@ -237,8 +239,8 @@ const FolderView = () => {
     return () => window.removeEventListener('dragend', handleDragEnd)
   }, [])
 
-  const handleFolderSelect = (folderId: string) => {
-    dispatch(foldersActions.currentFolderSet({folderId}))
+  const openFolder = (folderId: string | null) => {
+    assets.send({type: 'folder.open', folderId})
   }
 
   /**
@@ -284,15 +286,16 @@ const FolderView = () => {
         dragDepth.current.clear()
         setDropTargetId(null)
 
-        const assets = getDragAssetIds(e)
-          .map((assetId) => assetsById[assetId])
+        const {byIds} = assets.getSnapshot().context
+        const droppedAssets = getDragAssetIds(e)
+          .map((assetId) => byIds[assetId])
           .filter((item): item is AssetItem => Boolean(item))
           // Skip assets already in the target folder
           .filter((item) => (item.asset.opt?.media?.folder?._ref ?? null) !== folderId)
 
-        if (assets.length === 0) return
+        if (droppedAssets.length === 0) return
 
-        dispatch(assetsActions.folderSetRequest({assets, folderId}))
+        assets.send({type: 'assets.folder.set', assets: droppedAssets, folderId})
       },
     }
   }
@@ -302,12 +305,10 @@ const FolderView = () => {
       return
     }
 
-    dispatch(
-      dialogActions.showConfirmDeleteFolder({
-        folderId: currentFolderId,
-        folderName: currentFolder.name,
-      }),
-    )
+    dialogs.send({
+      type: 'dialog.open',
+      dialog: confirmDeleteFolderDialog(currentFolderId, currentFolder.name),
+    })
   }
 
   return (
@@ -337,7 +338,9 @@ const FolderView = () => {
           {currentFolderId && (
             <FolderHeaderAction
               icon={<EditIcon />}
-              onClick={() => dispatch(DIALOG_ACTIONS.showFolderRename({folderId: currentFolderId}))}
+              onClick={() =>
+                dialogs.send({type: 'dialog.open', dialog: folderRenameDialog(currentFolderId)})
+              }
               tone="primary"
               tooltip="Rename folder"
             />
@@ -346,13 +349,13 @@ const FolderView = () => {
           <FolderHeaderAction
             icon={<AddIcon />}
             onClick={() =>
-              dispatch(DIALOG_ACTIONS.showFolderCreate({parentFolderId: currentFolderId || null}))
+              dialogs.send({type: 'dialog.open', dialog: folderCreateDialog(currentFolderId)})
             }
             tone="primary"
             tooltip="Create folder"
           />
 
-          {currentFolderId && canDeleteFolder && (
+          {currentFolderId && (
             <FolderHeaderAction
               icon={<TrashIcon />}
               onClick={handleFolderDelete}
@@ -369,7 +372,7 @@ const FolderView = () => {
             <TreeItem
               data-drop-target={dropTargetId === ROOT_DROP_TARGET_ID ? '' : undefined}
               id={ROOT_DROP_TARGET_ID}
-              onClick={() => dispatch(foldersActions.currentFolderClear())}
+              onClick={() => openFolder(null)}
               selected={currentFolderId === null}
               text="All assets"
               weight={currentFolderId === null ? 'semibold' : 'medium'}
@@ -384,12 +387,18 @@ const FolderView = () => {
                 getDropTargetHandlers={getDropTargetHandlers}
                 key={node.id}
                 node={node}
-                onSelect={handleFolderSelect}
+                onSelect={openFolder}
               />
             ))}
           </DropTree>
 
-          {!hasFolders && !fetching && (
+          {folderTreeStatus === 'failed' && (
+            <Box marginTop={3} paddingX={1}>
+              <FoldersFetchFailed />
+            </Box>
+          )}
+
+          {folderTreeStatus === 'loaded' && !hasFolders && !fetching && (
             <Box marginTop={3} paddingX={1}>
               <Text muted size={1}>
                 <em>No folders</em>

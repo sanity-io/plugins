@@ -1,51 +1,26 @@
-import {Box, Text, useMediaIndex} from '@sanity/ui'
-import {useEffect} from 'react'
-import {useDispatch} from 'react-redux'
+import {Box, Text} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
-import {foldersActions} from '../../modules/folders'
-import {selectCombinedItems} from '../../modules/selectors'
-import {tagsActions} from '../../modules/tags'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {useBrowserItems} from '../../hooks/useBrowserItems'
+import {selectIsFetching} from '../../machines/assetsMachine'
 import AssetGridVirtualized from '../AssetGridVirtualized'
 import AssetTableVirtualized from '../AssetTableVirtualized'
 
 const Items = () => {
-  // Redux
-  const dispatch = useDispatch()
-  const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
-  const fetching = useTypedSelector((state) => state.assets.fetching)
-  const foldersPanelVisible = useTypedSelector((state) => state.folders.panelVisible)
-  const tagsPanelVisible = useTypedSelector((state) => state.tags.panelVisible)
-  const view = useTypedSelector((state) => state.assets.view)
-  const combinedItems = useTypedSelector(selectCombinedItems)
-
-  const mediaIndex = useMediaIndex()
+  const {assets} = useMediaActors()
+  const fetchCount = useSelector(assets, (snapshot) => snapshot.context.fetchCount)
+  const fetching = useSelector(assets, selectIsFetching)
+  const view = useSelector(assets, (snapshot) => snapshot.context.view)
+  const items = useBrowserItems()
 
   const hasFetchedOnce = fetchCount >= 0
-  const hasItems = combinedItems.length > 0
+  const isEmpty = items.length === 0 && hasFetchedOnce && !fetching
 
-  // Only load 1 page of items at a time.
+  // Only loads another page when idle and the last page was full
   const handleLoadMoreItems = () => {
-    if (!fetching) {
-      dispatch(assetsActions.loadNextPage())
-    }
+    assets.send({type: 'load.more'})
   }
-
-  // Effects
-
-  // - Hide folders/tags panels on smaller breakpoints
-  useEffect(() => {
-    if (mediaIndex <= 1 && foldersPanelVisible) {
-      dispatch(foldersActions.panelVisibleSet({panelVisible: false}))
-    }
-
-    if (mediaIndex <= 1 && tagsPanelVisible) {
-      dispatch(tagsActions.panelVisibleSet({panelVisible: false}))
-    }
-  }, [dispatch, foldersPanelVisible, mediaIndex, tagsPanelVisible])
-
-  const isEmpty = !hasItems && hasFetchedOnce && !fetching
 
   return (
     <Box flex={1} style={{width: '100%'}}>
@@ -58,11 +33,11 @@ const Items = () => {
       ) : (
         <>
           {view === 'grid' && (
-            <AssetGridVirtualized items={combinedItems} onLoadMore={handleLoadMoreItems} />
+            <AssetGridVirtualized items={items} onLoadMore={handleLoadMoreItems} />
           )}
 
           {view === 'table' && (
-            <AssetTableVirtualized items={combinedItems} onLoadMore={handleLoadMoreItems} />
+            <AssetTableVirtualized items={items} onLoadMore={handleLoadMoreItems} />
           )}
         </>
       )}

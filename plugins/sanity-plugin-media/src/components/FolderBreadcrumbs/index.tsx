@@ -1,13 +1,15 @@
 import {Box, Button, Inline, Text} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
+import {useSelector} from '@xstate/react'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {foldersActions, selectCurrentFolderSegments} from '../../modules/folders'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectFolderAncestry} from '../../machines/foldersMachine'
 
 const FolderBreadcrumbs = () => {
-  const dispatch = useDispatch()
-  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
-  const segments = useTypedSelector(selectCurrentFolderSegments)
+  const {assets, folders} = useMediaActors()
+  const currentFolderId = useSelector(assets, (snapshot) => snapshot.context.currentFolderId)
+  const segments = useSelector(folders, (snapshot) =>
+    selectFolderAncestry(snapshot, currentFolderId),
+  )
 
   if (!currentFolderId) {
     return null
@@ -20,7 +22,7 @@ const FolderBreadcrumbs = () => {
           fontSize={1}
           padding={2}
           mode="bleed"
-          onClick={() => dispatch(foldersActions.currentFolderClear())}
+          onClick={() => assets.send({type: 'folder.open', folderId: null})}
           text="All assets"
         />
 
@@ -33,7 +35,7 @@ const FolderBreadcrumbs = () => {
               fontSize={1}
               padding={2}
               mode={currentFolderId === segment.id ? 'default' : 'bleed'}
-              onClick={() => dispatch(foldersActions.currentFolderSet({folderId: segment.id}))}
+              onClick={() => assets.send({type: 'folder.open', folderId: segment.id})}
               text={segment.name}
             />
           </Inline>

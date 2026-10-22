@@ -1,23 +1,24 @@
 import {LayerProvider, ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
-import {cleanup, render, screen, waitFor} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {of, Subject} from 'rxjs'
 import {type AssetSourceComponentProps, ColorSchemeProvider} from 'sanity'
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
+import {describe, expect, it, vi} from 'vitest'
+
+import {imageAsset, tag, tagReference} from '../../__tests__/fixtures/documents'
+import {createMediaFetchMock} from '../../__tests__/fixtures/mediaFetchMock'
+import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
+import {withinDialog} from '../../__tests__/fixtures/withinDialog'
+import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
+import useVersionedClient from '../../hooks/useVersionedClient'
+import type {Asset} from '../../types'
+import EditAssetTool from './index'
 
 vi.mock('../Image', () => ({default: () => null}))
 vi.mock('../FileAssetPreview', () => ({default: () => null}))
 vi.mock('../DocumentList', () => ({default: () => null}))
 vi.mock('../AssetMetadata', () => ({default: () => null}))
-
-import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'
-import {withinDialog} from '../../__tests__/fixtures/withinDialog'
-import {ToolOptionsProvider} from '../../contexts/ToolOptionsContext'
-import useVersionedClient from '../../hooks/useVersionedClient'
-import type {ImageAsset} from '../../types'
-import EditAssetTool from './index'
 
 vi.mock('../../hooks/useVersionedClient', () => ({
   default: vi.fn(),
@@ -33,29 +34,23 @@ vi.mock('sanity', async (importOriginal) => {
       children({isLoading: false, referringDocuments: []}),
   }
 })
-const asset = {
-  _id: 'a1',
-  _type: 'sanity.imageAsset',
-  _createdAt: '',
-  _updatedAt: '',
-  _rev: 'r1',
-  originalFilename: 'x.png',
-  size: 1,
-  mimeType: 'image/png',
-  url: 'https://example.com/x.png',
-  metadata: {dimensions: {width: 100, height: 100}, isOpaque: true},
-} as ImageAsset
 
+const product = tag('t1', 'product')
+const asset = imageAsset('a1', {opt: {media: {tags: [tagReference('t1')]}}})
 const studioTheme = buildTheme()
 
-function renderTool(overrides: Record<string, unknown> = {}) {
+function renderTool(selectedAssets: Asset[] = [asset]) {
+  const client = createMockSanityClient({
+    fetch: createMediaFetchMock({assets: [asset, imageAsset('a2')], tags: [product]}),
+  })
+  vi.mocked(useVersionedClient).mockReturnValue(client)
+  const onClose = vi.fn()
   const props = {
     assetType: 'image',
-    onClose: vi.fn(),
+    onClose,
     onSelect: vi.fn(),
-    selectedAssets: [asset],
-    ...overrides,
-  }
+    selectedAssets,
+  } as unknown as AssetSourceComponentProps
 
   render(
     <ColorSchemeProvider scheme="light">
@@ -63,7 +58,7 @@ function renderTool(overrides: Record<string, unknown> = {}) {
         <ToastProvider>
           <LayerProvider>
             <ToolOptionsProvider options={{creditLine: {enabled: false}}}>
-              <EditAssetTool {...(props as unknown as AssetSourceComponentProps)} />
+              <EditAssetTool {...props} />
             </ToolOptionsProvider>
           </LayerProvider>
         </ToastProvider>
@@ -71,69 +66,71 @@ function renderTool(overrides: Record<string, unknown> = {}) {
     </ColorSchemeProvider>,
   )
 
-  return props
+  return {client, onClose}
 }
 
-let fetch: ReturnType<typeof vi.fn>
+const editDialog = () => withinDialog(/asset details/i, screen)
+
+/** Resolves once the edit dialog shows the tags of the asset, which load after it opens. */
+const waitForEditDialog = async () => {
+  await screen.findByRole('dialog', {name: /asset details/i})
+  await editDialog().findByText('product')
+}
 
 describe('EditAssetTool', () => {
-  beforeEach(() => {
-    // Return a shape appropriate to each query (folders vs assets/tags) so the
-    // corresponding epics don't choke while reducing store state.
-    fetch = vi.fn((query: string) => {
-      if (query.includes('media.folder')) {
-        return of({folders: [], unfiledCount: 0})
-      }
-      return of({items: [asset]})
-    })
-    vi.mocked(useVersionedClient).mockReturnValue(
-      createMockSanityClient({listen: vi.fn(() => new Subject()), observable: {fetch}}),
+  it('opens the edit dialog of the selected asset, with its tags', async () => {
+    const {client} = renderTool()
+
+    await waitForEditDialog()
+
+    expect(client.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('_id == $assetId'),
+      expect.objectContaining({assetId: 'a1'}),
+      expect.anything(),
     )
+    expect(client.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('"media.folder"'),
+      expect.anything(),
+      expect.anything(),
+    )
+    expect(client.listen).not.toHaveBeenCalled()
   })
 
-  afterEach(() => {
-    cleanup()
+  it('closes right away when no asset is selected', () => {
+    const {client, onClose} = renderTool([])
+
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(client.fetch).not.toHaveBeenCalled()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('opens the asset edit dialog for the selected asset', async () => {
-    renderTool()
-
-    await waitFor(() => {
-      expect(withinDialog(/asset details/i, screen).getByText('Asset details')).toBeInTheDocument()
-    })
-  })
-
-  it('fetches tags and folders so saving does not wipe existing tags/folder', async () => {
-    renderTool()
-
-    await waitFor(() => {
-      expect(withinDialog(/asset details/i, screen).getByText('Asset details')).toBeInTheDocument()
-    })
-
-    const queries = fetch.mock.calls.map((call) => String(call[0]))
-    expect(queries.some((q) => q.includes('media.tag'))).toBe(true)
-    expect(queries.some((q) => q.includes('media.folder'))).toBe(true)
-  })
-
-  it('closes the source immediately when no asset is selected', async () => {
-    const {onClose} = renderTool({selectedAssets: []})
-
-    await waitFor(() => expect(onClose).toHaveBeenCalled())
-    expect(screen.queryByText('Asset details')).not.toBeInTheDocument()
-  })
-
-  it('closes the source after the edit dialog is dismissed', async () => {
+  it('closes once the edit dialog is dismissed', async () => {
     const user = userEvent.setup()
     const {onClose} = renderTool()
+    await waitForEditDialog()
 
-    await waitFor(() => {
-      expect(withinDialog(/asset details/i, screen).getByText('Asset details')).toBeInTheDocument()
-    })
+    await user.click(editDialog().getByRole('button', {name: /close dialog/i}))
 
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('stays open while confirming the deletion, and closes once the asset is deleted', async () => {
+    const user = userEvent.setup()
+    const {client, onClose} = renderTool()
+    await waitForEditDialog()
+
+    await user.click(editDialog().getByRole('button', {name: /^delete$/i}))
+    expect(onClose).not.toHaveBeenCalled()
     await user.click(
-      withinDialog(/asset details/i, screen).getByRole('button', {name: /close dialog/i}),
+      withinDialog(/confirm deletion/i, screen).getByRole('button', {name: 'Yes, delete 1 asset'}),
     )
 
-    await waitFor(() => expect(onClose).toHaveBeenCalled())
+    expect(onClose).toHaveBeenCalledTimes(1)
+    await waitFor(() =>
+      expect(client.delete).toHaveBeenCalledWith({
+        params: {assetIds: ['a1']},
+        query: '*[_id in $assetIds]',
+      }),
+    )
   })
 })

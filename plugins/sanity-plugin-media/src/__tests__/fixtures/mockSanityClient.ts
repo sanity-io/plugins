@@ -1,103 +1,105 @@
 import type {SanityClient} from '@sanity/client'
-import {Subject, of} from 'rxjs'
-import {vi} from 'vitest'
+import {of, Subject} from 'rxjs'
+import {type Mock, vi} from 'vitest'
+
+export type MockPatchChain = {
+  append: Mock
+  commit: Mock
+  ifRevisionId: Mock
+  set: Mock
+  setIfMissing: Mock
+  unset: Mock
+}
+
+export type MockTransaction = {
+  commit: Mock
+  delete: Mock
+  patch: Mock
+  /** The chain passed to every `patch(id, ops)` callback. */
+  patchChain: MockPatchChain
+}
 
 export type MockSanityClient = {
+  create: Mock
+  delete: Mock
+  fetch: Mock
+  listen: Mock
   observable: {
-    fetch: ReturnType<typeof vi.fn>
-    delete: ReturnType<typeof vi.fn>
-    create: ReturnType<typeof vi.fn>
-    assets: {upload: ReturnType<typeof vi.fn>}
+    assets: {upload: Mock}
+    fetch: Mock
   }
-  fetch: ReturnType<typeof vi.fn>
-  create: ReturnType<typeof vi.fn>
-  listen: ReturnType<typeof vi.fn>
-  patch: ReturnType<typeof vi.fn>
-  transaction: ReturnType<typeof vi.fn>
+  patch: Mock
+  transaction: Mock
 }
 
-export function createMockSanityClient(
-  overrides: Partial<Omit<MockSanityClient, 'observable'>> & {
-    observable?: Partial<MockSanityClient['observable']> & {
-      assets?: Partial<MockSanityClient['observable']['assets']>
-    }
-  } = {},
-): SanityClient {
-  const {observable: observableOverrides, ...restOverrides} = overrides
-
-  const observableBase: MockSanityClient['observable'] = {
-    fetch: vi.fn(() => of({items: []})),
-    delete: vi.fn(() => of({})),
-    create: vi.fn(() => of({_id: 'new'})),
-    assets: {
-      upload: vi.fn(() => of({type: 'complete', body: {document: {_id: 'up'}}})),
-    },
-  }
-
-  const observable: MockSanityClient['observable'] = {
-    ...observableBase,
-    ...observableOverrides,
-    assets: {
-      ...observableBase.assets,
-      ...observableOverrides?.assets,
-    },
-  }
-
-  const client: MockSanityClient = {
-    observable,
-    fetch: vi.fn(() => Promise.resolve(0)),
-    create: vi.fn(() => Promise.resolve({_id: 'new'})),
-    listen: vi.fn(() => new Subject()),
-    patch: vi.fn(),
-    transaction: vi.fn(),
-    ...restOverrides,
-  }
-
-  return client as unknown as SanityClient
-}
-
-export function mockPatchChain(result: unknown): {
-  append: ReturnType<typeof vi.fn>
-  ifRevisionId: ReturnType<typeof vi.fn>
-  set: ReturnType<typeof vi.fn>
-  setIfMissing: ReturnType<typeof vi.fn>
-  unset: ReturnType<typeof vi.fn>
-  commit: ReturnType<typeof vi.fn>
-} {
-  const commit = vi.fn().mockResolvedValue(result)
-  const chain = {
+export function mockPatchChain(result?: unknown): MockPatchChain {
+  const chain: MockPatchChain = {
     append: vi.fn(),
+    commit: vi.fn(() => Promise.resolve(result)),
     ifRevisionId: vi.fn(),
     set: vi.fn(),
     setIfMissing: vi.fn(),
     unset: vi.fn(),
-    commit,
   }
-  chain.append.mockImplementation(() => chain)
-  chain.ifRevisionId.mockImplementation(() => chain)
-  chain.set.mockImplementation(() => chain)
-  chain.setIfMissing.mockImplementation(() => chain)
-  chain.unset.mockImplementation(() => chain)
+  chain.append.mockReturnValue(chain)
+  chain.ifRevisionId.mockReturnValue(chain)
+  chain.set.mockReturnValue(chain)
+  chain.setIfMissing.mockReturnValue(chain)
+  chain.unset.mockReturnValue(chain)
   return chain
 }
 
-export function mockTransactionCommit(resolved?: unknown): {
-  patch: ReturnType<typeof vi.fn>
-  delete: ReturnType<typeof vi.fn>
-  commit: ReturnType<typeof vi.fn>
-  patchChain: ReturnType<typeof mockPatchChain>
-} {
-  const patchChain = mockPatchChain(resolved)
-  const tx = {
-    patch: vi.fn((_id: string, ops?: (patch: typeof patchChain) => unknown) => {
-      if (typeof ops === 'function') {
-        ops(patchChain)
+export function mockTransaction(result?: unknown): MockTransaction {
+  const patchChain = mockPatchChain(result)
+  const transaction: MockTransaction = {
+    commit: vi.fn(() => Promise.resolve(result)),
+    delete: vi.fn(),
+    patch: vi.fn((_id: string, operations?: unknown) => {
+      if (typeof operations === 'function') {
+        operations(patchChain)
       }
-      return tx
+      return transaction
     }),
-    delete: vi.fn().mockReturnThis(),
-    commit: vi.fn().mockResolvedValue(resolved),
     patchChain,
   }
-  return tx
+  transaction.delete.mockReturnValue(transaction)
+  return transaction
+}
+
+export function createMockSanityClient(
+  overrides: Partial<Omit<MockSanityClient, 'observable'>> & {
+    observable?: Partial<MockSanityClient['observable']>
+  } = {},
+): SanityClient & MockSanityClient {
+  const {observable, ...rest} = overrides
+  const client: MockSanityClient = {
+    create: vi.fn((document: {_id?: string}) => Promise.resolve({_id: 'new', ...document})),
+    delete: vi.fn(() => Promise.resolve({})),
+    fetch: vi.fn(() => Promise.resolve([])),
+    listen: vi.fn(() => new Subject()),
+    patch: vi.fn(() => mockPatchChain({})),
+    transaction: vi.fn(() => mockTransaction({})),
+    ...rest,
+    observable: {
+      assets: {upload: vi.fn(() => of({type: 'response', body: {document: {_id: 'up'}}}))},
+      fetch: vi.fn(() => of(null)),
+      ...observable,
+    },
+  }
+  return client as unknown as SanityClient & MockSanityClient
+}
+
+/** A promise that the test settles explicitly, to observe in-flight states. */
+export function deferred<T = void>(): {
+  promise: Promise<T>
+  reject: (error: unknown) => void
+  resolve: (value: T) => void
+} {
+  let resolve!: (value: T) => void
+  let reject!: (error: unknown) => void
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+  return {promise, reject, resolve}
 }

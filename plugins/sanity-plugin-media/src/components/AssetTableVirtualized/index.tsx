@@ -2,7 +2,7 @@ import {Box} from '@sanity/ui'
 import {memo} from 'react'
 import {GroupedVirtuoso} from 'react-virtuoso'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaConfig} from '../../contexts/MediaActorsContext'
 import type {CardAssetData, CardFolderData, CardUploadData} from '../../types'
 import TableHeader from '../TableHeader'
 import TableRowAsset from '../TableRowAsset'
@@ -53,10 +53,7 @@ const VirtualRow = memo(
 const AssetTableVirtualized = (props: Props) => {
   const {items, onLoadMore} = props
 
-  // Redux
-  const selectedAssets = useTypedSelector((state) => state.selected.assets)
-
-  const selectedIds = (selectedAssets && selectedAssets.map((asset) => asset._id)) || []
+  const {selectedAssetIds} = useMediaConfig()
   const totalCount = items?.length
 
   if (totalCount === 0) {
@@ -77,7 +74,7 @@ const AssetTableVirtualized = (props: Props) => {
       }}
       itemContent={(index) => {
         const item = items[index]
-        const selected = selectedIds.includes(item?.id || '')
+        const selected = selectedAssetIds.includes(item?.id || '')
         return <VirtualRow item={item!} selected={selected} />
       }}
       style={{overflowX: 'hidden'}}
