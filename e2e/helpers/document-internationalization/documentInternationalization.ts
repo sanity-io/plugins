@@ -133,16 +133,31 @@ export async function openLessonDocument(page: Page, documentId: string): Promis
   await expect(page.getByTestId('form-view').first()).toBeVisible()
 }
 
+/**
+ * The Translations popover. It is portaled out of the document pane, so it is
+ * identified by its "Manage Translations" button rather than by ancestry.
+ */
+function translationsMenu(page: Page) {
+  return page
+    .locator('[data-ui="Popover"]')
+    .filter({has: page.getByRole('button', {name: 'Manage Translations'})})
+}
+
 export async function openTranslationsMenu(page: Page) {
   const menuButton = page.getByTestId('document-internationalization-menu')
   await expect(menuButton).toBeVisible()
   await expect(menuButton).toBeEnabled()
   await menuButton.click()
-  await expect(page.getByRole('button', {name: 'Manage Translations'})).toBeVisible()
+  await expect(translationsMenu(page)).toBeVisible()
   return menuButton
 }
 
 export function languageOption(page: Page, languageTitle: string) {
-  // Language buttons render title text + language id badge.
-  return page.getByRole('button', {name: new RegExp(`^${languageTitle}\\b`, 'i')})
+  // Language buttons render title text + language id badge ("English en").
+  // Scoped to the popover: the Studio pane header also renders the document
+  // title as a button, so a page-wide `^English` would match a lesson titled
+  // "English source lesson" too.
+  return translationsMenu(page).getByRole('button', {
+    name: new RegExp(`^${languageTitle}\\b`, 'i'),
+  })
 }
