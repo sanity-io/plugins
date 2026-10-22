@@ -1,0 +1,4 @@
+/* The Dialog's own `height="100%"` prop does not cascade to its internal DialogCard/Card wrapper */
+.unsplashDialog > [data-ui='DialogCard'] > [data-ui='Card'] {
+  height: 100%;
+}
