@@ -197,9 +197,16 @@ export function parseThemerState(input: unknown): ThemerState | null {
   return result.success ? result.output : null
 }
 
-/** The machine's state value, as persisted — only what the machine has states for restores @internal */
+/** The flows a session restores to */
+const flowSchema = v.picklist(['list', 'edit', 'removed'])
+
+/**
+ * The machine's state value, as persisted — only what the machine has states
+ * for restores. The list's dialogs are states of the list, so a snapshot
+ * written while one was open names it; the dialog does not reopen
+ */
 const snapshotValueSchema = v.object({
-  flow: v.picklist(['list', 'edit', 'removed']),
+  flow: v.union([flowSchema, v.object({list: v.picklist(['idle', 'pasting', 'snippet'])})]),
   theme: v.picklist(['applied', 'switching']),
 })
 
@@ -214,7 +221,7 @@ export interface PersistedThemerSnapshot {
   status: 'active'
   output: undefined
   error: undefined
-  value: v.InferOutput<typeof snapshotValueSchema>
+  value: {flow: v.InferOutput<typeof flowSchema>; theme: 'applied' | 'switching'}
   context: ThemerMachineContext
   historyValue: Record<string, never>
   children: Record<string, never>
@@ -248,8 +255,9 @@ export function snapshotFromState(
 /**
  * The machine's snapshot as the last session persisted it, made fit for this
  * one: the themes are parsed like any persisted state, the flow keeps its
- * subject or falls back to the list, a switch that was under way is over,
- * and the image URLs of the last session are gone with it.
+ * subject or falls back to the list, a dialog that was open is closed, a
+ * switch that was under way is over, and the image URLs of the last session
+ * are gone with it.
  *
  * @internal
  */
@@ -278,6 +286,7 @@ export const persistedSnapshotSchema = v.pipe(
         ? context.editing
         : null
     const flow =
+      typeof value.flow !== 'string' ||
       (value.flow === 'edit' && editing === null) ||
       (value.flow === 'removed' && state.removed.length === 0)
         ? 'list'

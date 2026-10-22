@@ -99,7 +99,9 @@ const AssetGridVirtualized = (props: Props) => {
         return <VirtualCell item={item} selected={selected} source={source} />
       }}
       overscan={48}
-      style={{overflowX: 'hidden', overflowY: 'scroll'}}
+      // VirtuosoGrid, unlike Virtuoso's lists and tables, doesn't opt out of browser scroll
+      // anchoring, which fights its own positioning and can make the grid jump after scrolling
+      style={{overflowAnchor: 'none', overflowX: 'hidden', overflowY: 'scroll'}}
       totalCount={totalCount}
     />
   )

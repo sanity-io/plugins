@@ -1,5 +1,29 @@
 # sanity-plugin-markdown
 
+## 9.0.18
+
+### Patch Changes
+
+- [#2236](https://github.com/sanity-io/plugins/pull/2236) [`c407aaa`](https://github.com/sanity-io/plugins/commit/c407aaa3e8cac2ae6e3682e3f3222e691db13030) Thanks [@asciieyes](https://github.com/asciieyes)! - Change selected text color in markdown block for better contrast on desktop
+
+## 9.0.17
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 9.0.16
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 9.0.15
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
 ## 9.0.14
 
 ### Patch Changes

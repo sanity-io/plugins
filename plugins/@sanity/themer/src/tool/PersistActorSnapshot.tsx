@@ -3,35 +3,18 @@ import {useEffect} from 'react'
 import type {ThemerProps} from '#types'
 
 import {writePersistedSnapshot} from './storage'
+import {syncThemer} from './sync'
 
+/**
+ * Persists the machine's snapshot for the next session, and keeps the themes
+ * in step with the other tabs of the Studio — from the one tab holding the
+ * Web Lock, when the browser is idle; see `sync.ts`. Rendered by the layout,
+ * outside the sidebar's `Activity`, so that it runs while the sidebar is
+ * closed too: other tabs change the themes whether this one shows them or
+ * not.
+ */
 export function PersistActorSnapshot({actorRef}: Pick<ThemerProps, 'actorRef'>) {
-  useEffect(() => {
-    let cancel: any
-    function cancelOrClear() {
-      if ('cancelIdleCallback' in window) {
-        cancelIdleCallback(cancel)
-      } else {
-        clearTimeout(cancel)
-      }
-    }
-
-    // @TODO use a selector or similar to only subscribe to changes that are relevant to the persisted snapshot
-    // @TODO use WebLocks and BroadcastChannel to ensure the snapshot is persisted in a consistent way cross tabs
-    // @TODO actually only run this when the document is visible or has lock or something?
-    const subscription = actorRef.subscribe(() => {
-      cancelOrClear()
-      const callback = () => {
-        const persistedSnapshot = actorRef.getPersistedSnapshot()
-        writePersistedSnapshot(persistedSnapshot)
-      }
-      cancel =
-        'cancelIdleCallback' in window ? requestIdleCallback(callback) : setTimeout(callback, 1_000)
-    })
-    return () => {
-      subscription.unsubscribe()
-      cancelOrClear()
-    }
-  }, [actorRef])
+  useEffect(() => syncThemer(actorRef, {persist: writePersistedSnapshot}), [actorRef])
 
   return null
 }

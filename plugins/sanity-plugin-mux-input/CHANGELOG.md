@@ -1,5 +1,51 @@
 # sanity-plugin-mux-input
 
+## 5.2.0
+
+### Minor Changes
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Attach Mux Robots directives to every upload with `defaultDirectiveIds` and run a directive on a video from its Robots panel. The upload dialog shows the directives that will run, or how to set them up when none are configured
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Run Mux Robots workflows from the Studio: open Robots from a video's menu or from its tab in the Videos tool to run any of the twelve workflows, follow and cancel jobs, and read their outputs. Every job on the video and the newest summarize and moderate outputs are recorded on the `mux.videoAsset` document, and **Apply summary** copies the summary's title, description and tags into the document that holds the video, after a preview. Only administrators can run Robots by default; set `allowedRolesForRobots` to choose the roles. Chapters tracks are now listed apart from captions and no longer count as captions.
+
+### Patch Changes
+
+- [#2209](https://github.com/sanity-io/plugins/pull/2209) [`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-rx to ^7.1.0
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - The Studio player picks up new caption and audio tracks without a page refresh, and a signed video no longer reloads when an unrelated field of its document changes. A video without playback IDs can get a new one from its player instead of showing a bare error, and resyncing a video now also points `playbackId` at a playback ID the asset still has.
+
+- [#2143](https://github.com/sanity-io/plugins/pull/2143) [`b8dd2cd`](https://github.com/sanity-io/plugins/commit/b8dd2cdc4343dbeb1018e650a27bfa738c2c3d27) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Update the video document in place when a file upload finishes, instead of replacing it, so fields written in the meantime are kept
+
+## 5.1.3
+
+### Patch Changes
+
+- [#2158](https://github.com/sanity-io/plugins/pull/2158) [`53590bf`](https://github.com/sanity-io/plugins/commit/53590bff68d6c255b19a464cd18bcc2ec2d594de) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player-react to ^3.14.0
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 5.1.2
+
+### Patch Changes
+
+- [#2157](https://github.com/sanity-io/plugins/pull/2157) [`22cddf3`](https://github.com/sanity-io/plugins/commit/22cddf3e3d83a1901e1a148e7dbadbabbe62b3ab) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @mux/mux-player to ^3.14.0
+
+- [#2150](https://github.com/sanity-io/plugins/pull/2150) [`9a107b5`](https://github.com/sanity-io/plugins/commit/9a107b5085be23d0d0fd6531fe2dac16108f6f22) Thanks [@stipsan](https://github.com/stipsan)! - Update `react-rx` to v7. The document list preview now renders its loading placeholder on the first paint and subscribes to the preview state once mounted, matching the Studio's own pane item preview. `react-rx` v7 requires React `^19.2` (already required) and declares Node `>=22.12`.
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 5.1.1
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+## 5.1.0
+
+### Minor Changes
+
+- [#2085](https://github.com/sanity-io/plugins/pull/2085) [`3a5e335`](https://github.com/sanity-io/plugins/commit/3a5e335238844f54058973dba4bea87e4fdd8707) Thanks [@sjelfull](https://github.com/sjelfull)! - Add the `muxApiHost` option. It sends only Mux addon requests to a different host, for example a local development server. Other Studio requests do not change.
+
 ## 5.0.13
 
 ### Patch Changes

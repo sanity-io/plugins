@@ -1,7 +1,16 @@
 import {ColorWheelIcon} from '@sanity/icons/ColorWheel'
-import {Box, Button, Text} from '@sanity/ui'
+import {Box, Button, Text, usePrefersReducedMotion} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {lazy, startTransition, Suspense, use, useRef, useTransition, ViewTransition} from 'react'
+import {
+  lazy,
+  startTransition,
+  Suspense,
+  use,
+  useRef,
+  useTransition,
+  ViewTransition,
+  useMemo,
+} from 'react'
 import {type NavbarProps} from 'sanity'
 import type {NavbarAction} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
@@ -34,6 +43,7 @@ function ThemerNavbarButton() {
 
   const [busy, startBusyTransition] = useTransition()
   const iconRef = useRef<{spin: () => void}>(null)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   const handleOpen = () =>
     startBusyTransition(() => {
@@ -98,10 +108,15 @@ function ThemerNavbarButton() {
               // cover it with a spinner
               icon={
                 // The animated wheel needs `motion/react`, which is heavy, so it
-                // loads lazily — behind the plain icon it reimplements
-                <Suspense fallback={<ColorWheelIcon />}>
-                  <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
-                </Suspense>
+                // loads lazily — behind the plain icon it reimplements, which is
+                // all there is to show with `prefers-reduced-motion: reduce`
+                prefersReducedMotion ? (
+                  <ColorWheelIcon />
+                ) : (
+                  <Suspense fallback={<ColorWheelIcon />}>
+                    <AnimatedColorWheelIcon busy={busy} ref={iconRef} />
+                  </Suspense>
+                )
               }
               mode="bleed"
               onClick={open ? handleClose : handleOpen}
@@ -119,19 +134,20 @@ function ThemerNavbarButton() {
   )
 }
 
-// This component isn't auto identified by react compiler as a react component,
-// the 'use memo' directive opts it in
 export function ThemerNavbar(props: NavbarProps) {
-  'use memo'
-  const button = {
-    location: 'topbar',
-    name: 'themer-topbar',
-    // The component itself rather than a `() => <ThemerNavbarButton />`
-    // wrapper: the Studio renders `render` as a component, and a wrapper
-    // made anew on every render would remount the button each time —
-    // resetting its animation
-    render: ThemerNavbarButton,
-  } satisfies NavbarAction
+  const button = useMemo(
+    () =>
+      ({
+        location: 'topbar',
+        name: 'themer-topbar',
+        // The component itself rather than a `() => <ThemerNavbarButton />`
+        // wrapper: the Studio renders `render` as a component, and a wrapper
+        // made anew on every render would remount the button each time —
+        // resetting its animation
+        render: ThemerNavbarButton,
+      }) satisfies NavbarAction,
+    [],
+  )
   return props.renderDefault({
     ...props,
     __internal_actions: [...(props.__internal_actions ?? []), button],

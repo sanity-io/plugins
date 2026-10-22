@@ -9,7 +9,7 @@ import {Box, Button, Card, Text, useRootTheme} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {Reorder, useDragControls} from 'motion/react'
-import {useRef, useState} from 'react'
+import {useId, useRef, useState} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 
 import type {ThemerProps} from '#types'
@@ -48,6 +48,7 @@ export function ThemeCard({
   const {scheme} = useRootTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const dragControls = useDragControls()
+  const menuId = useId()
   // Letting go of a drag also clicks the card, and that click must not pick
   const dragged = useRef(false)
   const title = displayTitle(theme.title)
@@ -128,7 +129,7 @@ export function ThemeCard({
                   radius={2}
                 />
               }
-              id={`themer-theme-${theme.slug}`}
+              id={menuId}
               menu={
                 <Menu>
                   {listed && (

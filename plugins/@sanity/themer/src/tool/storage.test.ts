@@ -110,6 +110,24 @@ describe('themer storage', () => {
       expect(runMachine(snapshot).getSnapshot().matches({flow: 'list'})).toBe(true)
     })
 
+    it('closes a dialog that was open when the session ended', () => {
+      const actor = runMachine()
+      actor.send({type: 'dialog.paste'})
+
+      expect(actor.getPersistedSnapshot()).toMatchObject({value: {flow: {list: 'pasting'}}})
+
+      writePersistedSnapshot(actor.getPersistedSnapshot())
+
+      const snapshot = readPersistedSnapshot()
+
+      expect(snapshot?.value).toEqual({flow: 'list', theme: 'applied'})
+      expect(
+        runMachine(snapshot)
+          .getSnapshot()
+          .matches({flow: {list: 'idle'}}),
+      ).toBe(true)
+    })
+
     it('keeps the themes of a snapshot the machine has no states for', () => {
       localStorage.setItem(
         SNAPSHOT_STORAGE_KEY,

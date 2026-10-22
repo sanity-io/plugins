@@ -21,8 +21,8 @@ npm install @sanity/code-input
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```js
-import {defineConfig} from 'sanity'
 import {codeInput} from '@sanity/code-input'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   // ...

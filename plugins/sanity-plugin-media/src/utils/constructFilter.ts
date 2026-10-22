@@ -1,6 +1,6 @@
 import groq from 'groq'
 
-import {operators} from '../config/searchFacets'
+import {groqWildcardMatch, operators} from '../config/searchFacets'
 import {MEDIA_LIBRARY_REF_PREFIX, MEDIA_LIBRARY_SOURCE_NAME, TAG_DOCUMENT_NAME} from '../constants'
 import type {AssetType, SearchFacetInputProps} from '../types'
 
@@ -131,10 +131,10 @@ const constructFilter = ({
     // Search query (if present)
     // NOTE: Currently this only searches direct fields on sanity.fileAsset/sanity.imageAsset and NOT referenced tags
     // It's possible to add this by adding the following line to the searchQuery, but it's quite slow
-    // references(*[_type == "media.tag" && name.current == "${searchQuery.trim()}"]._id)
+    // references(*[_type == "media.tag" && name.current == ${JSON.stringify(searchQuery.trim())}]._id)
     ...(searchQuery
       ? [
-          groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match '*${searchQuery.trim()}*'`,
+          groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match ${groqWildcardMatch(searchQuery.trim())}`,
         ]
       : []),
     ...(folderFilter ? [folderFilter] : []),

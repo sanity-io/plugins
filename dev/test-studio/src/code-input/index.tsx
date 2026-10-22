@@ -35,6 +35,17 @@ const codeTest = defineType({
       },
     },
     {
+      name: 'codeWithDefault',
+      title: 'Code with a default language',
+      description:
+        'JavaScript is selected by default. Typing in the editor stores language: "javascript" without changing the dropdown.',
+      type: 'code',
+      options: {
+        language: 'javascript',
+      },
+      validation: (Rule) => Rule.required().error('Please select a language'),
+    },
+    {
       name: 'codeNoFullscreen',
       title: 'Code with fullscreen disabled',
       description: 'A code input with the fullscreen toggle button hidden',
@@ -58,6 +69,18 @@ const codeTest = defineType({
       of: [
         {
           type: 'code',
+        },
+      ],
+    },
+    {
+      name: 'inlineCode',
+      title: 'Portable text with inline code',
+      description: 'Code inserted from the inline object menu of a text block',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          of: [{type: 'code', title: 'Inline code'}],
         },
       ],
     },

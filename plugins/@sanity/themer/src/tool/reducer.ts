@@ -2,6 +2,17 @@ import {dequal} from 'dequal/lite'
 
 import type {BuildThemeOptions} from '../theme/options'
 
+/**
+ * What the layout shows, owned by the `useReducer` in `ThemerProvider` and
+ * never persisted — it is each tab's own — handed down to the layout and the
+ * sidebar as props and to the navbar toggle through the `Tool*Context`s:
+ * whether the sidebar is open and whether the Studio shows twice, whether
+ * either has been prerendered yet — they mount ahead of their first showing,
+ * so that the code loads and the tree is warm before the transition — the
+ * options of the applied theme, as the machine publishes them, and the
+ * height of the Studio navbar, as the navbar toggle measures it, for the
+ * sidebar's header to match.
+ */
 export type ToolReducerState = {
   navbarHeight: number | null
   open: boolean
@@ -10,6 +21,7 @@ export type ToolReducerState = {
   split: boolean
   theme: BuildThemeOptions | null
 }
+
 export type ToolReducerAction =
   | {type: 'set-navbar-height'; height: number}
   | {type: 'prerender'}
@@ -20,6 +32,7 @@ export type ToolReducerAction =
   | {type: 'split-screen:close'}
   | {type: 'set-theme'; theme: BuildThemeOptions}
   | {type: 'unset-theme'}
+
 export function toolReducer(state: ToolReducerState, action: ToolReducerAction): ToolReducerState {
   switch (action.type) {
     case 'set-navbar-height':
@@ -48,6 +61,12 @@ export function toolReducer(state: ToolReducerState, action: ToolReducerAction):
     }
   }
 }
+
+/**
+ * Where a tab starts: closed, nothing prerendered, no theme applied —
+ * `ThemerProvider` seeds only the applied theme, from the machine's restored
+ * snapshot
+ */
 export const initialToolState = {
   navbarHeight: null,
   open: false,

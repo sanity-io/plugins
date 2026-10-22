@@ -375,7 +375,7 @@ describe('themerMachine', () => {
       // What there is to persist is a plain snapshot of the machine
       expect(JSON.parse(JSON.stringify(actor.getPersistedSnapshot()))).toMatchObject({
         status: 'active',
-        value: {flow: 'list'},
+        value: {flow: {list: 'idle'}},
         context: selectStoredState(actor.getSnapshot()),
       })
     })
@@ -482,6 +482,47 @@ describe('themerMachine', () => {
       })
       expect(stored.active).toBe(stored.custom[0].slug)
       expect(snapshot.context.editing).toBeNull()
+    })
+  })
+
+  describe("the list's dialogs", () => {
+    it('opens and closes the paste dialog, in the list', () => {
+      const actor = start()
+
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+
+      actor.send({type: 'dialog.paste'})
+      expect(actor.getSnapshot().matches({flow: {list: 'pasting'}})).toBe(true)
+      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+
+      actor.send({type: 'dialog.close'})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+    })
+
+    it('shows the snippet of the applied theme only — the configured theme has none', () => {
+      const actor = startWithCustom()
+
+      actor.send({type: 'dialog.snippet'})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+
+      actor.send({type: 'theme.pick', slug: 'custom-1'})
+      actor.send({type: 'dialog.snippet'})
+      expect(actor.getSnapshot().matches({flow: {list: 'snippet'}})).toBe(true)
+
+      // The applied theme goes away under the dialog — removed from another tab
+      actor.send({type: 'themes.sync', state: {...initialThemerState, custom: [custom]}})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+    })
+
+    it('closes a dialog by leaving the list', () => {
+      const actor = startWithCustom()
+
+      actor.send({type: 'dialog.paste'})
+      actor.send({type: 'theme.add'})
+      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+
+      actor.send({type: 'flow.list'})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
     })
   })
 

@@ -81,6 +81,12 @@ export type ThemerEvent =
   | {type: 'flow.list'}
   /** On to restoring removed themes */
   | {type: 'flow.removed'}
+  /** Opens the dialog for adding a shared theme code by hand, from the list */
+  | {type: 'dialog.paste'}
+  /** Opens the dialog with the applied theme's `buildTheme` snippet, from the list */
+  | {type: 'dialog.snippet'}
+  /** Closes whichever dialog is open */
+  | {type: 'dialog.close'}
   /**
    * Takes over the persisted state as another tab of the same Studio changed
    * it, so that every tab shows the same themes (see `sync.ts`)
@@ -99,18 +105,20 @@ function revokeObjectUrl(url: string) {
 
 /**
  * The themes of the themer tool and the sidebar's way through them: which
- * `flow` the sidebar is in — picking a theme from the `list`, `edit`ing one of
- * the user's own themes, or restoring `removed` ones — and, in a parallel
- * `theme` region, whether another theme was just applied. The context carries
- * the persisted state (the applied theme, the user's themes and what was
- * removed) alongside what the flows need. Whether the sidebar is open and
- * whether the Studio shows twice is not the machine's: the tool reducer in
- * `ThemerProvider` owns that, so that the navbar toggle and the sidebar can
- * change it in transitions of their own. Nor is persisting: the machine
- * never touches storage and takes no input — it starts from no themes, and a
- * session with something to pick up from restores its persisted snapshot
- * instead (see `storage.ts` and `sync.ts`), while the persisted state of
- * other tabs reaches it as a `themes.sync` event like any other.
+ * `flow` the sidebar is in — picking a theme from the `list`, with its
+ * dialogs for pasting a shared code and for the applied theme's snippet,
+ * `edit`ing one of the user's own themes, or restoring `removed` ones — and,
+ * in a parallel `theme` region, whether another theme was just applied. The
+ * context carries the persisted state (the applied theme, the user's themes
+ * and what was removed) alongside what the flows need. Whether the sidebar is
+ * open and whether the Studio shows twice is not the machine's: the tool
+ * reducer in `ThemerProvider` owns that, so that the navbar toggle and the
+ * sidebar can change it in transitions of their own. Nor is persisting: the
+ * machine never touches storage and takes no input — it starts from no
+ * themes, and a session with something to pick up from restores its
+ * persisted snapshot instead (see `storage.ts` and `sync.ts`), while the
+ * persisted state of other tabs reaches it as a `themes.sync` event like any
+ * other.
  *
  * The `theme` region is `switching` (its tag) right after an event that
  * applies another theme — picking one, adding, duplicating, importing or
@@ -144,6 +152,8 @@ export const themerMachine = setup({
         (theme) => theme.slug === context.editing?.slug && theme.source === 'custom',
       ),
     hasRemovedThemes: ({context}) => themesOf(context).removed.length > 0,
+    // The configured theme has no code to show — it is the Studio's own
+    hasAppliedTheme: ({context}) => themesOf(context).active !== undefined,
     // Only another theme than the applied one changes anything to cross-fade to
     isAnotherTheme: ({context}, params: {slug: string}) =>
       params.slug !== (context.active ?? CONFIG_SLUG),
@@ -473,7 +483,28 @@ export const themerMachine = setup({
         },
       },
       states: {
-        list: {},
+        list: {
+          initial: 'idle',
+          // The list's dialogs — for a shared code pasted by hand, and for the
+          // applied theme's snippet — are states of the list, so that leaving
+          // it, as adding a theme does for the editor, closes them
+          states: {
+            idle: {
+              on: {
+                'dialog.paste': 'pasting',
+                'dialog.snippet': {guard: 'hasAppliedTheme', target: 'snippet'},
+              },
+            },
+            pasting: {
+              on: {'dialog.close': 'idle'},
+            },
+            snippet: {
+              on: {'dialog.close': 'idle'},
+              // The applied theme can go away meanwhile — removed from another tab
+              always: {guard: not('hasAppliedTheme'), target: 'idle'},
+            },
+          },
+        },
         edit: {
           exit: 'stopEditing',
           // The theme being edited can go away — removed from the editor, or

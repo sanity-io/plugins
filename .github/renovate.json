@@ -16,6 +16,11 @@
       "description": "Never rewrite the manually curated ranges in the pnpm `peer` catalog — they declare what consumers may use and are intentionally wider than the default catalog",
       "matchDepTypes": ["pnpm.catalog.peer"],
       "enabled": false
+    },
+    {
+      "description": "The test studio's `ui5` alias pins the exact @sanity/ui v5 alpha that `sanity` aliases as `ui5`, so that both resolve one instance and stylesheet — it moves by hand, with `sanity`",
+      "matchDepNames": ["ui5"],
+      "enabled": false
     }
   ]
 }
