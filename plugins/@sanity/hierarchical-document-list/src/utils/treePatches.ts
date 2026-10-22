@@ -25,7 +25,6 @@ export interface LocalFlatDataItem extends Omit<FlatDataItem, 'node' | 'parentNo
 export interface HandleMovedNodeData {
   treeData: TreeItem[]
   node: LocalTreeItem
-  nextParentNode?: LocalTreeItem | null
   nextPath?: number[] | null
   nextTreeIndex: number
 }
@@ -75,7 +74,6 @@ export function getRemoveItemPatch({node}: Pick<NodeProps, 'node'>): unknown[] {
 }
 
 export function getMovedNodePatch(data: HandleMovedNodeData): unknown[] {
-  const {nextParentNode} = data
   const keyPath = {_key: data.node._key}
 
   // === REMOVING NODE FROM TREE ===
@@ -86,6 +84,10 @@ export function getMovedNodePatch(data: HandleMovedNodeData): unknown[] {
 
   const nextFlatTree = getLocalFlatDataFromTree(data.treeData)
   const normalizedNode = normalizeNodeForStorage(data.node)
+
+  // react-sortable-tree 5.1.0 always reports `nextParentNode` as null for nested drops,
+  // so read the parent from the resulting tree instead.
+  const nextParentNode = nextFlatTree.find((item) => item.node._key === data.node._key)?.parentNode
 
   const {leadingNode, followingNode} = getAdjescentNodes({
     flatTree: nextFlatTree,
