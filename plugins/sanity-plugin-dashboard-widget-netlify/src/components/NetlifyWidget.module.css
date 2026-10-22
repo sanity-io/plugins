@@ -1,0 +1,7 @@
+/*
+ * Double the class so this wins over Card/Box's own `min-height: 0`
+ * (styled-components used to win via CSSOM insertion order).
+ */
+.contentCard.contentCard {
+  min-height: 66px;
+}
