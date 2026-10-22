@@ -16,8 +16,6 @@ export const TreeOperationsContext = createContext<ContextValue>({
   duplicateItem: placeholder,
   removeItem: placeholder,
   handleMovedNode: placeholder,
-  moveItemDown: placeholder,
-  moveItemUp: placeholder,
   allItemsStatus: 'loading',
 })
 

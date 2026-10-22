@@ -45,7 +45,6 @@ function TreeEditor(props: TreeEditorProps) {
   const operations = useTreeOperationsProvider({
     patchPrefix: props.patchPrefix,
     onChange: props.onChange,
-    localTree,
   })
 
   const [context, setContext] = useState<HTMLElement | null>(null)
