@@ -26,6 +26,14 @@ const config: StorybookConfig = {
         // so their vanilla-extract `.css.ts` modules must be compiled here
         vanillaExtractPlugin(),
       ],
+      // Plugins that ship `*.module.css` (e.g. `@sanity/themer`, `sanity-plugin-markdown`)
+      // are compiled here by Vite rather than by `@tsdown/css`. Lightning CSS with the
+      // same `cssModules.pattern` as those plugins' `tsdown.config.ts` keeps Storybook
+      // class names identical to the built `bundle.css` (and to the test studio).
+      css: {
+        transformer: 'lightningcss',
+        lightningcss: {cssModules: {pattern: '[content-hash]_[local]'}},
+      },
     })
   },
 }

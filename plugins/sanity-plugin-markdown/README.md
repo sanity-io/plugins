@@ -64,6 +64,7 @@ Then, make sure to add
 
 ```js
 import 'easymde/dist/easymde.min.css'
+import 'sanity-plugin-markdown/bundle.css'
 ```
 
 to the top of `pages/_app.tsx`.
