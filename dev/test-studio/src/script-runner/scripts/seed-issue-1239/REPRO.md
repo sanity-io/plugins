@@ -16,9 +16,8 @@ pnpm exec vitest run --project @sanity/hierarchical-document-list \
   plugins/@sanity/hierarchical-document-list/src/components/TreeNodeRendererScaffold.test.tsx
 ```
 
-On the first commit of this branch (`test(...): reproduce per-row scaffold
-style hang`), that test fails with `80` keyframe copies for 40 rows vs `2`
-for one row. After the fix commit it passes.
+Without the fix (see "Feel the hang" below), that test fails with `80`
+keyframe copies for 40 rows vs `2` for one row.
 
 ## End-to-end repro in the dev test-studio
 
@@ -47,35 +46,24 @@ The script creates published `hierarchyBook` documents
 `issue-1239-book-01` … `issue-1239-book-40` and writes them as a flat tree
 into `issue-1239-hierarchy`.
 
-### 3. Feel the hang (pre-fix only)
+### 3. Confirm the fix
 
-The stylesheet hoist is already on this branch tip, so switching panes should
-stay responsive. To observe the original hang:
+1. Open **Document list builders → Issue #1239 hierarchy hang**.
+2. Wait until all ~40 rows render.
+3. Click away to another structure item (for example Hierarchy Author).
 
-```bash
-git checkout e7017dc4c   # reproduction commit (before the fix)
-pnpm dev
-```
+Leaving the 40-row hierarchy should return immediately.
 
-Then:
+### 4. Feel the hang
 
-1. Run the seed script again if needed.
-2. Open **Document list builders → Issue #1239 hierarchy hang**.
-3. Wait until all ~40 rows render.
-4. Click away to another structure item (for example Hierarchy Author).
+The fix mounts `TreeScaffoldStyles` once in `TreeEditor`. To observe the
+original hang, temporarily move it back into every row: in
+`plugins/@sanity/hierarchical-document-list/src/components/TreeNodeRendererScaffold.tsx`,
+return `<>{scaffold}<TreeScaffoldStyles /></>` instead of `scaffold`, and drop
+`<TreeScaffoldStyles />` from `TreeEditor.tsx`. Then repeat the navigation.
 
 Expected without the fix: the UI freezes for multiple seconds while the pane
 unmounts. A tree with only a handful of rows does not.
-
-### 4. Confirm the fix
-
-```bash
-git checkout cursor/sieve-1239-0b07
-pnpm dev
-```
-
-Repeat the same navigation. Leaving the 40-row hierarchy should return
-immediately.
 
 ## Cleanup
 

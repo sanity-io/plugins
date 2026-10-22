@@ -11,8 +11,7 @@ import {
  * Seeds the Issue #1239 hierarchy hang case: dozens of published documents
  * arranged as visible rows in a dedicated hierarchy.tree document.
  *
- * The hang itself is only visible on the reproduction commit before the
- * stylesheet was hoisted out of each row (see REPRO.md).
+ * The hang itself is only visible with the fix reverted (see REPRO.md).
  */
 const seedIssue1239: StudioScript = {
   name: 'seed-issue-1239',
@@ -84,11 +83,9 @@ const seedIssue1239: StudioScript = {
 
     log.success(`Seeded ${documentCount} books into "${treeDocumentId}".`)
     log.info(
-      'Open Document list builders → Issue #1239 hierarchy hang, then leave that pane and watch for a multi-second freeze.',
+      'Open Document list builders → Issue #1239 hierarchy hang, then leave that pane. It should return immediately.',
     )
-    log.info(
-      'On this branch the freeze is fixed. To feel the hang, check out the reproduction commit from REPRO.md first.',
-    )
+    log.info('To feel the original multi-second freeze, revert the fix as described in REPRO.md.')
   },
 }
 
