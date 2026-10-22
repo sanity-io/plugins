@@ -1,12 +1,9 @@
 import {Box, Button, Flex, Inline, Stack, Text, Tree, TreeItem} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import pluralize from 'pluralize'
 import {type ReactNode, useMemo, useState} from 'react'
-import {useDispatch} from 'react-redux'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
-import {selectFolderTree} from '../../modules/folders'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import type {DialogFolderMoveProps, FolderTreeNode} from '../../types'
 import Dialog from '../Dialog'
 
@@ -86,16 +83,16 @@ const FolderTree = ({expandedIds, folderTree, onSelect, selectedId}: FolderTreeP
 )
 
 const DialogFolderMove = ({children, dialog}: Props) => {
-  const dispatch = useDispatch()
-  const folderTree = useTypedSelector(selectFolderTree)
-  const byId = useTypedSelector((state) => state.folders.byId)
-  const {assets, folderId, id} = dialog
+  const {assets, dialogs, folders} = useMediaActors()
+  const folderTree = useSelector(folders, (snapshot) => snapshot.context.tree)
+  const byId = useSelector(folders, (snapshot) => snapshot.context.byId)
+  const {folderId, id} = dialog
   const [selectedId, setSelectedId] = useState<string | null>(folderId || null)
   const selectedFolder = selectedId ? byId[selectedId] : null
   const expandedIds = useMemo(() => getExpandedIdSet(folderId || null, byId), [byId, folderId])
 
   const handleClose = () => {
-    dispatch(dialogActions.remove({id}))
+    dialogs.send({type: 'dialog.close', id})
   }
 
   const handleMove = () => {
@@ -103,13 +100,12 @@ const DialogFolderMove = ({children, dialog}: Props) => {
       return
     }
 
-    dispatch(
-      assetsActions.folderSetRequest({
-        assets,
-        closeDialogId: id,
-        folderId: selectedId,
-      }),
-    )
+    assets.send({
+      type: 'assets.folder.set',
+      assets: dialog.assets,
+      closeDialogId: id,
+      folderId: selectedId,
+    })
   }
 
   return (
@@ -123,7 +119,7 @@ const DialogFolderMove = ({children, dialog}: Props) => {
               disabled={!selectedId}
               mode="default"
               onClick={handleMove}
-              text={`Move ${assets.length} ${pluralize('asset', assets.length)}`}
+              text={`Move ${dialog.assets.length} ${pluralize('asset', dialog.assets.length)}`}
               tone="primary"
             />
           </Flex>
@@ -136,7 +132,7 @@ const DialogFolderMove = ({children, dialog}: Props) => {
     >
       <Stack gap={4} padding={4}>
         <Text size={1}>
-          Move {assets.length} {pluralize('asset', assets.length)} to a folder.
+          Move {dialog.assets.length} {pluralize('asset', dialog.assets.length)} to a folder.
         </Text>
 
         <Box style={{maxHeight: '22rem', overflowY: 'auto'}} paddingY={2}>

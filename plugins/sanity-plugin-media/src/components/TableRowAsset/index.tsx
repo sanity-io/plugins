@@ -13,28 +13,18 @@ import {
   useMediaIndex,
 } from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
+import {useSelector} from '@xstate/react'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
-import {
-  type DragEvent,
-  memo,
-  type MouseEvent,
-  type RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import {useDispatch} from 'react-redux'
+import {type DragEvent, memo, type MouseEvent, useEffect, useRef, useState} from 'react'
 import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
-import useKeyPress from '../../hooks/useKeyPress'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions, selectAssetById, selectAssetsPicked} from '../../modules/assets'
-import {dialogActions} from '../../modules/dialog'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {assetEditDialog} from '../../machines/dialogs'
 import {setDragAssetIds} from '../../utils/assetDrag'
 import getAssetResolution from '../../utils/getAssetResolution'
 import {getSchemeColor} from '../../utils/getSchemeColor'
@@ -104,15 +94,11 @@ const TableRowAsset = (props: Props) => {
 
   const scheme = useColorSchemeValue()
 
-  const shiftPressed: RefObject<boolean> = useKeyPress('shift')
-
   const [referenceCountVisible, setReferenceCountVisible] = useState(false)
   const refCountVisibleTimeout = useRef<ReturnType<typeof window.setTimeout>>(null)
 
-  const dispatch = useDispatch()
-  const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
-  const assetsPicked = useTypedSelector(selectAssetsPicked)
-  const item = useTypedSelector((state) => selectAssetById(state, id))
+  const {assets, dialogs} = useMediaActors()
+  const item = useSelector(assets, (snapshot) => snapshot.context.byIds[id])
 
   const mediaIndex = useMediaIndex()
 
@@ -124,64 +110,63 @@ const TableRowAsset = (props: Props) => {
 
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
-  const handleContextActionClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
+  const togglePick = (assetId: string) => assets.send({type: 'pick.toggle', assetId})
+  // Picks every asset between the last picked asset and this one
+  const pickRange = (assetId: string) => assets.send({type: 'pick.range', assetId})
+  const openAsset = (assetId: string) =>
+    dialogs.send({type: 'dialog.open', dialog: assetEditDialog(assetId)})
 
-      if (!asset) return
-      if (selected) return
-      if (onSelect && !isMultiSelect) {
-        dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
-      } else if (shiftPressed.current && !picked) {
-        dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
+  const handleContextActionClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+
+    if (!asset) return
+    if (selected) return
+    if (onSelect && !isMultiSelect) {
+      openAsset(asset._id)
+    } else if (e.shiftKey && !picked) {
+      pickRange(asset._id)
+    } else {
+      togglePick(asset._id)
+    }
+  }
+
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+
+    if (!asset) return
+    if (selected) return
+    if (onSelect && !isMultiSelect) {
+      onSelect([{kind: 'assetDocumentId', value: asset._id}])
+    } else if (onSelect && isMultiSelect) {
+      if (e.shiftKey && !picked) {
+        pickRange(asset._id)
       } else {
-        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
+        togglePick(asset._id)
       }
-    },
-    [asset, dispatch, isMultiSelect, lastPicked, onSelect, picked, selected, shiftPressed],
-  )
-
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
-
-      if (!asset) return
-      if (selected) return
-      if (onSelect && !isMultiSelect) {
-        onSelect([{kind: 'assetDocumentId', value: asset._id}])
-      } else if (onSelect && isMultiSelect) {
-        if (shiftPressed.current && !picked) {
-          dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
-        } else {
-          dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
-        }
-      } else if (e.ctrlKey || e.metaKey) {
-        // Ctrl/Cmd-click toggles a single pick without opening the asset
-        dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
-      } else if (shiftPressed.current) {
-        if (picked) {
-          dispatch(assetsActions.pick({assetId: asset._id, picked: !picked}))
-        } else {
-          dispatch(assetsActions.pickRange({startId: lastPicked || asset._id, endId: asset._id}))
-        }
+    } else if (e.ctrlKey || e.metaKey) {
+      // Ctrl/Cmd-click toggles a single pick without opening the asset
+      togglePick(asset._id)
+    } else if (e.shiftKey) {
+      if (picked) {
+        togglePick(asset._id)
       } else {
-        dispatch(dialogActions.showAssetEdit({assetId: asset._id}))
+        pickRange(asset._id)
       }
-    },
-    [asset, dispatch, isMultiSelect, lastPicked, onSelect, picked, selected, shiftPressed],
-  )
+    } else {
+      openAsset(asset._id)
+    }
+  }
 
   // Dragging a picked asset drags every picked asset; dragging an unpicked asset drags only itself.
   const draggable = !selected && !updating
 
-  const handleDragStart = useCallback(
-    (e: DragEvent<HTMLDivElement>) => {
-      if (!asset) return
-      const assetIds = picked ? assetsPicked.map((pickedItem) => pickedItem.asset._id) : [asset._id]
-      setDragAssetIds(e, assetIds)
-    },
-    [asset, assetsPicked, picked],
-  )
+  const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
+    if (!asset) return
+    const assetIds = picked
+      ? selectPickedAssets(assets.getSnapshot()).map((pickedItem) => pickedItem.asset._id)
+      : [asset._id]
+    setDragAssetIds(e, assetIds)
+  }
 
   const opacityCell = updating ? 0.5 : 1
   const opacityPreview = selected || updating ? 0.1 : 1
