@@ -1,6 +1,6 @@
 export const DEFAULT_TREE_DOCUMENT_ID = 'issue-1239-hierarchy'
 export const DEFAULT_DOCUMENT_COUNT = 40
-export const BOOK_ID_PREFIX = 'issue-1239-book-'
+const BOOK_ID_PREFIX = 'issue-1239-book-'
 
 export function parseDocumentCount(raw: string | undefined): number {
   const parsed = Number.parseInt((raw || '').trim(), 10)
