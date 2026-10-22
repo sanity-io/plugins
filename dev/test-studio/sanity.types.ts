@@ -1144,6 +1144,7 @@ export type ShopifyAssetsTest = {
   title?: string
   shopifyAsset?: ShopifyAsset
   shopifyAssetFieldDomain?: ShopifyAsset
+  shopifyAssetFieldDataset?: ShopifyAsset
 }
 
 export type ShopifyAsset = {

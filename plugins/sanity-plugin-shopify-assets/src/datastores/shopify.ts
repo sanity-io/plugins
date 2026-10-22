@@ -27,9 +27,9 @@ const fetchSearch = (props: searchProps): Observable<any> => {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
   const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
-  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
-    shop,
-  )}&query=${encodeURIComponent(query)}${cursorParam}&limit=${resultsPerPage}`
+  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${encodeURIComponent(
+    dataset,
+  )}?shop=${encodeURIComponent(shop)}&query=${encodeURIComponent(query)}${cursorParam}&limit=${resultsPerPage}`
 
   return defer(() =>
     axios.get(url, {
@@ -48,9 +48,9 @@ const fetchList = (props: listProps): Observable<any> => {
   const {projectId, dataset, shop, cursor, resultsPerPage, token} = props
 
   const cursorParam = cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''
-  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${dataset}?shop=${encodeURIComponent(
-    shop,
-  )}${cursorParam}&limit=${resultsPerPage}`
+  const url = `https://${projectId}.api.sanity.io/v1/shopify/assets/${encodeURIComponent(
+    dataset,
+  )}?shop=${encodeURIComponent(shop)}${cursorParam}&limit=${resultsPerPage}`
 
   return defer(() =>
     axios.get(url, {
