@@ -1,5 +1,11 @@
 # @sanity/language-filter
 
+## 5.0.23
+
+### Patch Changes
+
+- [#2209](https://github.com/sanity-io/plugins/pull/2209) [`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-rx to ^7.1.0
+
 ## 5.0.22
 
 ### Patch Changes

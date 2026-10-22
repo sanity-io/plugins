@@ -1,5 +1,12 @@
 # sanity-plugin-cloudinary
 
+## 2.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659)]:
+  - @sanity/studio-secrets@4.0.24
+
 ## 2.1.8
 
 ### Patch Changes

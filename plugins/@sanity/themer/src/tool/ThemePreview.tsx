@@ -1,9 +1,8 @@
-import {ThemeProvider, useTheme_v2} from '@sanity/ui'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {type CSSProperties, useMemo} from 'react'
 
-import {buildTheme} from '../theme/buildTheme'
 import type {BuildThemeOptions} from '../theme/options'
+import {type PreviewColors, previewColors} from './previewColors'
 
 import styles from './ThemePreview.module.css'
 
@@ -16,21 +15,30 @@ const FIELDS = ['32%', '24%']
 /**
  * The colors a mockup paints with — only the ones the theme options change —
  * as the custom properties `ThemePreview.module.css` reads, assigned per
- * color scheme from the theme it previews. React's `CSSProperties` does not
- * know custom properties, so the inline `style` is typed through this
- * extension of it.
+ * color scheme from the `previewColors` of the theme it previews. React's
+ * `CSSProperties` does not know custom properties, so the inline `style` is
+ * typed through this extension of it.
  */
-interface PreviewColors extends CSSProperties {
+interface PreviewColorProperties extends CSSProperties {
   '--themer-preview-bg': string
   '--themer-preview-fg': string
   '--themer-preview-muted-fg': string
   '--themer-preview-border': string
   '--themer-preview-accent': string
-  '--themer-preview-avatar': string
-  '--themer-preview-selected-bg': string
-  '--themer-preview-selected-fg': string
-  '--themer-preview-input-bg': string
   '--themer-preview-input-border': string
+  '--themer-preview-selected-fg': string
+}
+
+function toPreviewColorProperties(colors: PreviewColors): PreviewColorProperties {
+  return {
+    '--themer-preview-bg': colors.bg,
+    '--themer-preview-fg': colors.fg,
+    '--themer-preview-muted-fg': colors.mutedFg,
+    '--themer-preview-border': colors.border,
+    '--themer-preview-accent': colors.accent,
+    '--themer-preview-input-border': colors.inputBorder,
+    '--themer-preview-selected-fg': colors.selectedFg,
+  }
 }
 
 /**
@@ -46,40 +54,24 @@ interface PreviewColors extends CSSProperties {
  */
 export function ThemePreview(props: {options: BuildThemeOptions}) {
   const {options} = props
-  const theme = useMemo(() => buildTheme(options), [options])
+  // Only the handful of colors the mockup paints, rather than a whole Sanity
+  // UI theme and a `ThemeProvider` per scheme: theme lists render a preview
+  // per theme, and render them in the background before they are shown
+  const schemes = useMemo(() => previewColors(options), [options])
 
   return (
     <div aria-hidden className={styles.root}>
-      <ThemeProvider scheme="light" theme={theme} tone="default">
-        <MockStudio scheme="light" />
-      </ThemeProvider>
-      <ThemeProvider scheme="dark" theme={theme} tone="default">
-        <MockStudio scheme="dark" />
-      </ThemeProvider>
+      <MockStudio colors={schemes.light} scheme="light" />
+      <MockStudio colors={schemes.dark} scheme="dark" />
     </div>
   )
 }
 
-function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
-  const {scheme} = props
-  const {color} = useTheme_v2()
-  const selected = color.selectable.default.selected
-  const inputColor = color.input.default.enabled
-  const colors: PreviewColors = {
-    '--themer-preview-bg': color.bg,
-    '--themer-preview-fg': color.fg,
-    '--themer-preview-muted-fg': color.muted.fg,
-    '--themer-preview-border': color.border,
-    '--themer-preview-accent': color.button.default.primary.enabled.bg,
-    '--themer-preview-avatar': color.avatar.blue.bg,
-    '--themer-preview-selected-bg': selected.bg,
-    '--themer-preview-selected-fg': selected.fg,
-    '--themer-preview-input-bg': inputColor.bg,
-    '--themer-preview-input-border': inputColor.border,
-  }
+function MockStudio(props: {colors: PreviewColors; scheme: ThemeColorSchemeKey}) {
+  const {colors, scheme} = props
 
   return (
-    <div className={styles.studio} data-scheme={scheme} style={colors}>
+    <div className={styles.studio} data-scheme={scheme} style={toPreviewColorProperties(colors)}>
       <div className={styles.navbar}>
         <div className={styles.logo} />
         <Line color="fg" width="22%" />

@@ -1,5 +1,15 @@
 # sanity-plugin-media
 
+## 6.4.0
+
+### Minor Changes
+
+- [#2017](https://github.com/sanity-io/plugins/pull/2017) [`8349010`](https://github.com/sanity-io/plugins/commit/8349010f06117b839432b2b500a10ca9ed695cbb) Thanks [@trostum](https://github.com/trostum)! - Show when the asset was uploaded ("Uploaded") in the asset details metadata panel
+
+### Patch Changes
+
+- [#2231](https://github.com/sanity-io/plugins/pull/2231) [`362762b`](https://github.com/sanity-io/plugins/commit/362762b94df6f4f04bd5c6407f7465a5a5bfd523) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the asset grid jumping back and forth between two scroll positions after scrolling, by opting the grid's scroller out of browser scroll anchoring
+
 ## 6.3.5
 
 ### Patch Changes
