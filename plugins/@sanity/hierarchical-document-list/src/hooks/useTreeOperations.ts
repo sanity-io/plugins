@@ -1,9 +1,9 @@
 import {createContext, useContext} from 'react'
 
+import type {getTreeOperations} from '../utils/getTreeOperations'
 import type useAllItems from './useAllItems'
-import type useTreeOperationsProvider from './useTreeOperationsProvider'
 
-type ContextValue = ReturnType<typeof useTreeOperationsProvider> & {
+type ContextValue = ReturnType<typeof getTreeOperations> & {
   allItemsStatus: ReturnType<typeof useAllItems>['status']
 }
 
@@ -16,8 +16,6 @@ export const TreeOperationsContext = createContext<ContextValue>({
   duplicateItem: placeholder,
   removeItem: placeholder,
   handleMovedNode: placeholder,
-  moveItemDown: placeholder,
-  moveItemUp: placeholder,
   allItemsStatus: 'loading',
 })
 
