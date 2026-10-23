@@ -1,223 +1,205 @@
-import {Box, Text} from '@sanity/ui'
-import {useEffect, useRef, useState} from 'react'
-import {useDispatch, useStore} from 'react-redux'
+import {SearchIcon} from '@sanity/icons/Search'
+import {Box, Button, Card, Flex, Select, Spinner, Stack, Text, TextInput} from '@sanity/ui'
+import {type ChangeEvent, useEffect, useState} from 'react'
 
+import {useReplacementAssets} from '../../hooks/useReplacementAssets'
 import useTypedSelector from '../../hooks/useTypedSelector'
-import {assetsActions} from '../../modules/assets'
-import {foldersActions} from '../../modules/folders'
-import {searchActions} from '../../modules/search'
-import {selectCombinedItems} from '../../modules/selectors'
-import type {RootReducerState} from '../../modules/types'
-import type {SearchFacetInputProps, WithId} from '../../types'
-import {isImageAsset} from '../../utils/typeGuards'
-import AssetGridVirtualized from '../AssetGridVirtualized'
+import {selectFolderTree} from '../../modules/folders'
+import {selectTags} from '../../modules/tags'
+import type {FolderTreeNode, ImageAsset} from '../../types'
+import ReplacementAssetGrid from '../ReplacementAssetGrid'
 
-function omitFacetId(facet: WithId<SearchFacetInputProps>): SearchFacetInputProps {
-  // Strip the runtime `id` so facetsAdd can assign a fresh one on restore.
-  const {id: _id, ...withoutId} = facet
-  void _id
-  return withoutId
+const SEARCH_DEBOUNCE_MS = 300
+
+export type ReplaceAssetsFilterState = {
+  folderId: string | null
+  searchInput: string
+  tagId: string | null
 }
 
-const ReplaceAssetsOverview = () => {
-  const dispatch = useDispatch()
-  const store = useStore<RootReducerState>()
-  const combinedItems = useTypedSelector(selectCombinedItems)
-  const assetsById = useTypedSelector((state) => state.assets.byIds)
-  const fetchCount = useTypedSelector((state) => state.assets.fetchCount)
-  const fetching = useTypedSelector((state) => state.assets.fetching)
-  const fetchingError = useTypedSelector((state) => state.assets.fetchingError)
-  const pageSize = useTypedSelector((state) => state.assets.pageSize)
-  const searchQuery = useTypedSelector((state) => state.search.query)
-  const searchFacets = useTypedSelector((state) => state.search.facets)
-  const currentFolderId = useTypedSelector((state) => state.folders.currentFolderId)
-  const currentFolderUnfiled = useTypedSelector((state) => state.folders.currentFolderUnfiled)
+export const initialReplaceAssetsFilterState: ReplaceAssetsFilterState = {
+  folderId: null,
+  searchInput: '',
+  tagId: null,
+}
 
-  // Prefer the dialog's assetId — search refetch clears `allIds` / can drop picks.
-  const assetToReplaceId = useTypedSelector((state) => {
-    const dialog = state.dialog.items.find((item) => item.type === 'dialogAllAssets')
-    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
+type Props = {
+  assetToReplaceId: string
+  filterState: ReplaceAssetsFilterState
+  onFilterStateChange: (filterState: ReplaceAssetsFilterState) => void
+  onSelect: (asset: ImageAsset) => void
+}
+
+const flattenFolderTree = (nodes: FolderTreeNode[]): FolderTreeNode[] =>
+  nodes.flatMap((node) => [node, ...flattenFolderTree(node.children)])
+
+/**
+ * Lists every image that can replace `assetToReplaceId`, with its own search, tag and
+ * folder filters. It deliberately starts from a clean slate rather than the browser's
+ * current search, and never changes the browser's state.
+ */
+const ReplaceAssetsOverview = (props: Props) => {
+  const {assetToReplaceId, filterState, onFilterStateChange, onSelect} = props
+  const {folderId, searchInput, tagId} = filterState
+
+  const tags = useTypedSelector(selectTags)
+  const folderTree = useTypedSelector(selectFolderTree)
+  const folders = flattenFolderTree(folderTree)
+  const sortedTags = tags
+    .map((item) => item.tag)
+    .sort((a, b) => a.name.current.localeCompare(b.name.current))
+
+  const [searchQuery, setSearchQuery] = useState(() => searchInput.trim())
+  useEffect(() => {
+    const timeout = setTimeout(() => setSearchQuery(searchInput.trim()), SEARCH_DEBOUNCE_MS)
+    return () => clearTimeout(timeout)
+  }, [searchInput])
+
+  const {error, items, loading, loadMore, retry} = useReplacementAssets({
+    assetToReplaceId,
+    filters: {folderId, searchQuery, tagId},
   })
 
-  const savedBrowserStateRef = useRef<{
-    assetId: string | undefined
-    query: string
-    facets: WithId<SearchFacetInputProps>[]
-    folderId: string | null
-    folderUnfiled: boolean
-  } | null>(null)
+  const filtered = Boolean(searchQuery || folderId || tagId)
+  const pendingSearch = searchInput.trim() !== searchQuery
 
-  // Clearing the search only triggers a refetch after `assetsSearchEpic`'s debounce, so the
-  // stale results stay in the store for a moment. Track that gap to avoid rendering the
-  // empty state before the unscoped results arrive.
-  const [awaitingRefetch, setAwaitingRefetch] = useState(
-    () =>
-      searchQuery.length > 0 ||
-      searchFacets.length > 0 ||
-      Boolean(currentFolderId) ||
-      currentFolderUnfiled,
-  )
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onFilterStateChange({...filterState, searchInput: event.currentTarget.value})
+  }
+  const handleSearchClear = () => {
+    onFilterStateChange({...filterState, searchInput: ''})
+  }
+  const handleTagChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    onFilterStateChange({...filterState, tagId: event.currentTarget.value || null})
+  }
+  const handleFolderChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    onFilterStateChange({...filterState, folderId: event.currentTarget.value || null})
+  }
+  const handleClearFilters = () => {
+    onFilterStateChange(initialReplaceAssetsFilterState)
+  }
 
-  // Clear the browser search, facets and folder scope so the picker is not limited to the
-  // result set the user used to find the asset. Restore them when the dialog closes.
-  useEffect(() => {
-    const {dialog, folders, search} = store.getState()
-    const {query, facets} = search
-    const dialogItem = dialog.items.find((item) => item.type === 'dialogAllAssets')
-
-    savedBrowserStateRef.current = {
-      assetId: dialogItem?.type === 'dialogAllAssets' ? dialogItem.assetId : undefined,
-      query,
-      facets,
-      folderId: folders.currentFolderId,
-      folderUnfiled: folders.currentFolderUnfiled,
+  const renderBody = () => {
+    if (error && items.length === 0) {
+      return (
+        <Card padding={4} radius={2} tone="critical">
+          <Stack gap={3}>
+            <Text size={1}>Could not load images: {error}</Text>
+            <Box>
+              <Button fontSize={1} mode="ghost" onClick={retry} text="Try again" />
+            </Box>
+          </Stack>
+        </Card>
+      )
     }
 
-    if (query.length > 0) {
-      dispatch(searchActions.querySet({searchQuery: ''}))
+    if (items.length === 0 && !loading && !pendingSearch) {
+      return (
+        <Box padding={5}>
+          <Stack gap={3}>
+            <Text size={1} weight="semibold">
+              {filtered ? 'No images match your search' : 'There are no replacement images'}
+            </Text>
+            {filtered && (
+              <Box>
+                <Button
+                  fontSize={1}
+                  mode="ghost"
+                  onClick={handleClearFilters}
+                  text="Clear search and filters"
+                />
+              </Box>
+            )}
+          </Stack>
+        </Box>
+      )
     }
-    if (facets.length > 0) {
-      dispatch(searchActions.facetsClear())
+
+    if (items.length === 0) {
+      return (
+        <Flex align="center" justify="center" padding={5}>
+          <Spinner muted />
+        </Flex>
+      )
     }
-    if (folders.currentFolderId || folders.currentFolderUnfiled) {
-      dispatch(foldersActions.currentFolderClear())
-    }
 
-    return () => {
-      const saved = savedBrowserStateRef.current
-      if (!saved) {
-        return
-      }
-
-      const hadScope =
-        saved.query.length > 0 ||
-        saved.facets.length > 0 ||
-        Boolean(saved.folderId) ||
-        saved.folderUnfiled
-
-      if (saved.query.length > 0) {
-        dispatch(searchActions.querySet({searchQuery: saved.query}))
-      }
-      for (const facet of saved.facets) {
-        dispatch(searchActions.facetsAdd({facet: omitFacetId(facet)}))
-      }
-      if (saved.folderId) {
-        dispatch(foldersActions.currentFolderSet({folderId: saved.folderId}))
-      } else if (saved.folderUnfiled) {
-        dispatch(foldersActions.currentFolderShowUnfiled())
-      }
-
-      // Changing the search or folder runs epics that clear picks — put the asset being
-      // replaced back so closing the dialog keeps the browser selection.
-      if (hadScope && saved.assetId) {
-        dispatch(assetsActions.pick({assetId: saved.assetId, picked: true}))
-      }
-    }
-  }, [dispatch, store])
-
-  // Every rescoped refetch is preceded by `assetsActions.clear()`, so wait for the asset
-  // list to be emptied and the following fetch to settle. Watching `fetching` alone is not
-  // enough: `assetsFetchEpic` uses `switchMap`, so replacing an in-flight request leaves
-  // `fetching` true throughout. Clearing a folder scope and a search at the same time
-  // produces two refetches (the folder one immediately, the search one after its debounce),
-  // so each list clear re-arms the wait rather than resolving it for good.
-  useEffect(() => {
-    let previousIds = store.getState().assets.allIds
-    let awaitingSettle = false
-
-    return store.subscribe(() => {
-      const {allIds, fetching: isFetching} = store.getState().assets
-      const listCleared = allIds !== previousIds && allIds.length === 0
-      previousIds = allIds
-
-      if (listCleared) {
-        awaitingSettle = true
-        setAwaitingRefetch(true)
-        return
-      }
-      if (awaitingSettle && !isFetching) {
-        awaitingSettle = false
-        setAwaitingRefetch(false)
-      }
-    })
-  }, [store])
-
-  const scopeActive =
-    searchQuery.length > 0 ||
-    searchFacets.length > 0 ||
-    Boolean(currentFolderId) ||
-    currentFolderUnfiled
-
-  // Only image assets can replace image refs; exclude uploads and the asset being replaced.
-  const reducedItems = combinedItems.filter((item) => {
-    if (item.type !== 'asset' || item.id === assetToReplaceId) {
-      return false
-    }
-    const asset = assetsById[item.id]?.asset
-    return asset ? isImageAsset(asset) : false
-  })
-
-  const hasFetchedOnce = fetchCount >= 0
-  const hasMorePages = fetchCount === pageSize
-  // Don't treat a scoped / stale / mid-fetch / incomplete page as "no replacements".
-  const isEmpty =
-    reducedItems.length === 0 &&
-    hasFetchedOnce &&
-    !fetching &&
-    !scopeActive &&
-    !awaitingRefetch &&
-    !hasMorePages
-
-  // Keep loading pages until we find image candidates or exhaust results. A failed fetch
-  // leaves `fetchCount` untouched, so stop paging on error instead of retrying forever.
-  useEffect(() => {
-    if (
-      scopeActive ||
-      fetching ||
-      awaitingRefetch ||
-      fetchingError ||
-      reducedItems.length > 0 ||
-      !hasFetchedOnce ||
-      !hasMorePages
-    ) {
-      return
-    }
-    dispatch(assetsActions.loadNextPage())
-  }, [
-    dispatch,
-    scopeActive,
-    fetching,
-    awaitingRefetch,
-    fetchingError,
-    reducedItems.length,
-    hasFetchedOnce,
-    hasMorePages,
-  ])
-
-  const handleLoadMoreItems = () => {
-    if (!fetching) {
-      dispatch(assetsActions.loadNextPage())
-    }
+    return <ReplacementAssetGrid items={items} onLoadMore={loadMore} onSelect={onSelect} />
   }
 
   return (
-    <Box height="fill">
-      {isEmpty ? (
-        <Box padding={5}>
-          <Text size={1} weight="semibold">
-            There are no replacement images
-          </Text>
-        </Box>
-      ) : (
-        <Box height="fill">
-          <AssetGridVirtualized
-            items={reducedItems}
-            onLoadMore={handleLoadMoreItems}
-            source="replace-asset"
+    <Flex direction="column" gap={3} style={{height: '100%'}}>
+      <Flex align="center" gap={2} wrap="wrap">
+        <Box flex={2} style={{minWidth: '200px'}}>
+          <TextInput
+            aria-label="Search images"
+            autoFocus
+            clearButton={searchInput.length > 0}
+            fontSize={1}
+            icon={SearchIcon}
+            onChange={handleSearchChange}
+            onClear={handleSearchClear}
+            placeholder="Search by filename, title, alt text or description"
+            radius={2}
+            value={searchInput}
           />
         </Box>
+
+        {sortedTags.length > 0 && (
+          <Box flex={1} style={{minWidth: '160px'}}>
+            <Select
+              aria-label="Filter by tag"
+              fontSize={1}
+              onChange={handleTagChange}
+              radius={2}
+              value={tagId ?? ''}
+            >
+              <option value="">All tags</option>
+              {sortedTags.map((tag) => (
+                <option key={tag._id} value={tag._id}>
+                  {tag.name.current}
+                </option>
+              ))}
+            </Select>
+          </Box>
+        )}
+
+        {folders.length > 0 && (
+          <Box flex={1} style={{minWidth: '160px'}}>
+            <Select
+              aria-label="Filter by folder"
+              fontSize={1}
+              onChange={handleFolderChange}
+              radius={2}
+              value={folderId ?? ''}
+            >
+              <option value="">All folders</option>
+              {folders.map((folder) => (
+                <option key={folder.id} value={folder.id}>
+                  {folder.path}
+                </option>
+              ))}
+            </Select>
+          </Box>
+        )}
+
+        <Box style={{visibility: loading || pendingSearch ? 'visible' : 'hidden'}}>
+          <Spinner muted aria-label="Loading images" />
+        </Box>
+      </Flex>
+
+      {error && items.length > 0 && (
+        <Card padding={3} radius={2} tone="critical">
+          <Flex align="center" gap={3} justify="space-between">
+            <Text size={1}>Could not load more images: {error}</Text>
+            <Button fontSize={1} mode="ghost" onClick={retry} text="Try again" />
+          </Flex>
+        </Card>
       )}
-    </Box>
+
+      <Box flex={1} style={{minHeight: 0}}>
+        {renderBody()}
+      </Box>
+    </Flex>
   )
 }
 

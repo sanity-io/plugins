@@ -139,7 +139,7 @@ export type Dialog =
   | DialogTagsProps
 
 export type DialogAllAssetsProps = {
-  /** Asset id being replaced — kept on the dialog so search refetch can clear picks. */
+  /** Id of the image asset being replaced. */
   assetId: string
   closeDialogId?: string
   id: string
