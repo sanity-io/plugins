@@ -1,0 +1,20 @@
+.creditLineLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.creditLine {
+  -webkit-user-drag: none;
+  position: absolute;
+  background-color: var(--creditline-bg);
+  bottom: 0;
+}
+
+.creditLine [data-ui='Text'] {
+  color: var(--creditline-fg);
+}
+
+.creditLineLink:hover [data-ui='Text'],
+.creditLineLink:focus [data-ui='Text'] {
+  text-decoration: underline;
+}
