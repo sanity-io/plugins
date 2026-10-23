@@ -1,9 +1,11 @@
-.focusRing {
+/* Double the class so border-radius/outline/box-shadow win over Card's own rules. */
+.focusRing.focusRing {
   border-radius: var(--mux-focus-radius);
   outline: none;
-  box-shadow: var(--mux-focus-box-shadow);
+  box-shadow: var(--card-focus-box-shadow);
 }
 
+/* Update the variable Card (and our box-shadow) already consume — do not fight with a separate property. */
 .focusRing:focus {
-  box-shadow: var(--mux-focus-box-shadow-focus);
+  --card-focus-box-shadow: var(--mux-focus-box-shadow-focus);
 }

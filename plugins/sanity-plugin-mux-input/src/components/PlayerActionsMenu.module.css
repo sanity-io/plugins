@@ -4,10 +4,15 @@
   left: 0;
   opacity: 0.6;
   mix-blend-mode: screen;
+}
+
+/* Card's tone fills background; double the class to override (same pattern as missingAssetCheckbox). */
+.lockCard.lockCard {
   background: transparent;
 }
 
-.lockButton {
+/* Button's bleed/tone styles set background and color; double the class to win. */
+.lockButton.lockButton {
   background: transparent;
   color: white;
 }
