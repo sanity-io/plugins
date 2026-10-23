@@ -1,0 +1,4 @@
+/* Doubled class raises specificity so this wins over Button's own width. */
+.importButton.importButton {
+  width: 100%;
+}
