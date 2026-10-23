@@ -4,7 +4,7 @@ Playwright smoke tests for the dedicated [e2e studio](../dev/e2e-studio). Auth f
 
 ## The e2e studio
 
-`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema), `sanity-plugin-internationalized-array` (`i18nPost` schema), `sanity-plugin-media` (Media tool + `mediaProduct` schema with `mediaField`), plus a shared `smokeTestDocument` type for the smoke suite.
+`dev/e2e-studio` is a **bare-bones studio used only for e2e testing** — separate from `dev/test-studio` (normal development work). It has two workspaces, `/chromium` and `/firefox`, each pointed at that browser’s ephemeral dataset. Plugins (and their schema types) are added one by one together with the e2e tests that cover them. Currently wired: `@sanity/document-internationalization` (`lesson` schema), `@sanity/hierarchical-document-list` (`hierarchyBook` schema + a **Hierarchy** structure item for the `hierarchy-e2e-tree` document), `sanity-plugin-internationalized-array` (`i18nPost` schema), `sanity-plugin-media` (Media tool + `mediaProduct` schema with `mediaField`), plus a shared `smokeTestDocument` type for the smoke suite.
 
 ## Test layout
 
@@ -16,6 +16,8 @@ e2e/
 │   ├── smoke.spec.ts                          # studio-wide smoke (auth precheck)
 │   ├── document-internationalization/         # one folder per plugin
 │   │   └── document-internationalization.spec.ts
+│   ├── hierarchical-document-list/
+│   │   └── hierarchical-document-list.spec.ts
 │   ├── internationalized-array/
 │   │   └── internationalized-array.spec.ts
 │   └── media/
@@ -24,6 +26,8 @@ e2e/
     ├── env.ts, e2eClient.ts, …                # shared infrastructure
     ├── document-internationalization/         # plugin-specific helpers
     │   └── documentInternationalization.ts
+    ├── hierarchical-document-list/
+    │   └── hierarchicalDocumentList.ts
     ├── internationalized-array/
     │   └── internationalizedArray.ts
     └── media/
