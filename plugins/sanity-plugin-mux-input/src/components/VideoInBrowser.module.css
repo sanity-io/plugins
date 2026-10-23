@@ -1,0 +1,59 @@
+.playButton {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0.1875rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.playButton::after {
+  content: '';
+  background: var(--card-fg-color);
+  opacity: 0;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  transition: 0.15s ease-out;
+  border-radius: inherit;
+}
+
+.playButton > div[data-play] {
+  z-index: 11;
+  opacity: 0;
+  transition: 0.15s 0.05s ease-out;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--card-fg-color);
+  background: var(--card-bg-color);
+  width: auto;
+  height: 30%;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Visual balance to center-align the icon */
+.playButton > div[data-play] > svg {
+  display: block;
+  width: 70%;
+  height: auto;
+  transform: translateX(5%);
+}
+
+.playButton:hover::after,
+.playButton:focus::after {
+  opacity: 0.3;
+}
+
+.playButton:hover > div[data-play],
+.playButton:focus > div[data-play] {
+  opacity: 1;
+}

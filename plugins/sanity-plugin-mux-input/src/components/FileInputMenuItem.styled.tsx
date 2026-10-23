@@ -1,38 +1,31 @@
+import {useTheme_v2 as useThemeV2} from '@sanity/ui'
 import {MenuItem} from '@sanity/ui/menu'
-import {css, styled} from 'styled-components'
+import {type ComponentProps, type CSSProperties} from 'react'
 
 import {focusRingStyle} from './withFocusRing/helpers'
 
-export const FileButton = styled(MenuItem)(({theme}) => {
-  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-  const {focusRing} = theme.sanity
-  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-  const base = theme.sanity.color.base
+import * as styles from './FileInputMenuItem.module.css'
+
+interface FileButtonStyle extends CSSProperties {
+  '--mux-file-button-focus-box-shadow': string
+}
+
+export function FileButton({className, style, ...props}: ComponentProps<typeof MenuItem>) {
+  const theme = useThemeV2()
   const border = {width: 1, color: 'var(--card-border-color)'}
+  const focusButtonStyle: FileButtonStyle = {
+    '--mux-file-button-focus-box-shadow': focusRingStyle({
+      base: theme.color,
+      border,
+      focusRing: theme.card.focusRing,
+    }),
+  }
 
-  return css`
-    position: relative;
-
-    &:not([data-disabled='true']) {
-      &:focus-within {
-        box-shadow: ${focusRingStyle({base, border, focusRing})};
-      }
-    }
-
-    & input {
-      overflow: hidden;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      min-width: 0;
-      display: block;
-      appearance: none;
-      padding: 0;
-      margin: 0;
-      border: 0;
-      opacity: 0;
-    }
-  `
-})
+  return (
+    <MenuItem
+      {...props}
+      className={className ? `${styles.fileButton} ${className}` : styles.fileButton}
+      style={{...focusButtonStyle, ...style}}
+    />
+  )
+}
