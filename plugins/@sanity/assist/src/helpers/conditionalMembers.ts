@@ -123,7 +123,10 @@ function extractConditionalPaths(
     } else if (member.kind === 'fieldSet') {
       // oxlint-disable-next-line no-unsafe-type-assertion
       const conditionalFieldset = !!(node as ObjectFormNode).schemaType?.fieldsets?.some(
-        (f) => !f.single && f.name === member.fieldSet.name && typeof f.hidden === 'function',
+        (f) =>
+          !f.single &&
+          f.name === member.fieldSet.name &&
+          (typeof f.hidden === 'function' || typeof f.readOnly === 'function'),
       )
       // oxlint-disable-next-line no-map-spread
       const innerFields = extractConditionalPaths(member.fieldSet, maxDepth).map((f) => ({
