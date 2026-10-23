@@ -2,6 +2,10 @@ import {defineConfig, defineField, defineType, type WorkspaceOptions} from 'sani
 import {structureTool} from 'sanity/structure'
 
 import {documentInternationalizationExample} from './src/documentInternationalization'
+import {
+  hierarchicalDocumentListExample,
+  hierarchicalDocumentListStructureItems,
+} from './src/hierarchicalDocumentList'
 import {internationalizedArrayExample} from './src/internationalizedArray'
 import {mediaExample} from './src/media'
 
@@ -29,9 +33,19 @@ function createWorkspace(name: string, title: string, dataset: string): Workspac
     projectId,
     dataset,
     plugins: [
-      structureTool(),
+      structureTool({
+        structure: (S, context) =>
+          S.list()
+            .title('Content')
+            .items([
+              ...S.documentTypeListItems(),
+              S.divider(),
+              ...hierarchicalDocumentListStructureItems(S, context),
+            ]),
+      }),
       documentInternationalizationExample(),
       internationalizedArrayExample(),
+      hierarchicalDocumentListExample(),
       mediaExample(),
     ],
     schema: {types: [smokeTestDocument]},
