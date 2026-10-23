@@ -9,7 +9,7 @@
 .cardContainer {
   border-width: 1px;
   border-style: solid;
-  border-color: inherit;
+  border-color: transparent;
   height: 100%;
   pointer-events: auto;
   position: relative;
