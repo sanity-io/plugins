@@ -1,6 +1,6 @@
 import {addTransitionType} from 'react'
 
-import {layoutTransitionType, viewTransitionTypes} from './ViewTransitions.css'
+import {layoutTransitionType, viewTransitionTypes} from './viewTransitions'
 
 /**
  * Adds the default sanity-themer transition type, which allows custom view transition overrides, as well as customization in userland

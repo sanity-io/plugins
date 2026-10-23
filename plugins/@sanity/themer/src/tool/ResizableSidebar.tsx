@@ -6,7 +6,7 @@ import type {ThemerProps} from '#types'
 import {MAXIMUM_WIDTH, MINIMUM_WIDTH} from './sidebarWidth'
 import {ThemerSidebar} from './ThemerSidebar'
 
-import {content, frame, resizeHandle, sidebar} from './ResizableSidebar.css'
+import * as styles from './ResizableSidebar.module.css'
 
 /** How far one arrow key press resizes the sidebar */
 const KEYBOARD_STEP = 16
@@ -104,10 +104,10 @@ export default function ResizableSidebar({
   const [boundaryElement, setBoundaryElement] = useState<HTMLDivElement | null>(null)
 
   return (
-    <Layer className={sidebar} style={{width}} zOffset={100}>
+    <Layer className={styles.sidebar} style={{width}} zOffset={100}>
       <Card
         borderLeft
-        className={frame}
+        className={styles.frame}
         height="fill"
         ref={(boundaryElement) => {
           startTransition(() => setBoundaryElement(boundaryElement))
@@ -117,7 +117,7 @@ export default function ResizableSidebar({
       >
         <div
           aria-label="Resize the themer"
-          className={resizeHandle}
+          className={styles.resizeHandle}
           aria-orientation="vertical"
           aria-valuemax={MAXIMUM_WIDTH}
           aria-valuemin={MINIMUM_WIDTH}
@@ -133,7 +133,7 @@ export default function ResizableSidebar({
           role="separator"
           tabIndex={0}
         />
-        <Box className={content} height="fill" overflow="hidden">
+        <Box height="fill" overflow="hidden">
           <BoundaryElementProvider element={boundaryElement}>
             <ThemerSidebar
               split={split}

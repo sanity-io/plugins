@@ -25,8 +25,7 @@ import {
 import type {ThemerProps} from '#types'
 
 import {addThemerTransitionType} from './addThemerTransitionType'
-
-import {viewTransitionClasses} from './ViewTransitions.css'
+import {viewTransitionClasses} from './viewTransitions'
 
 const AnimatedColorWheelIcon = lazy(() => import('./AnimatedColorWheelIcon'))
 

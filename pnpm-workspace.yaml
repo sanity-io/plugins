@@ -2,6 +2,7 @@ packages:
   - dev/*
   - e2e
   - packages/*
+  - packages/@repo/*
   - packages/@sanity/*
   - plugins/*
   - plugins/@sanity/*
@@ -47,6 +48,8 @@ catalog:
   '@sanity/vision': ^6.19.0
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
+  # Pins its `tsdown` peer to the exact release it ships with, so bump it together with `tsdown`
+  '@tsdown/css': ^0.23.1
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.19.2
   '@types/react': ^19.3.0
@@ -81,6 +84,7 @@ catalog:
   sanity: ^6.19.0
   scroll-into-view-if-needed: ^3.1.0
   styled-components: ^6.6.0
+  stylelint: ^17.16.0
   suspend-react: ^0.1.3
   tsdown: ^0.23.1
   tsx: ^4.23.15
@@ -270,6 +274,9 @@ trustPolicyExclude:
   - '@vercel/rust@12.0.1'
   - '@vercel/static-build@13.0.1'
   - '@vercel/static-config@3.4.3'
+  # `@css-modules-kit/codegen` needs chokidar ^4.0.3; 4.0.2 and 4.0.3 were published without the
+  # provenance attestations 4.0.0 and 4.0.1 had
+  - chokidar@4.0.3
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - undici@5.29.0

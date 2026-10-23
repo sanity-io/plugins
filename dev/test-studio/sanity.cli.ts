@@ -36,6 +36,17 @@ export default defineCliConfig({
   vite(viteConfig, {command}): UserConfig {
     let nextConfig = mergeConfig(viteConfig, {
       plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],
+      // `@sanity/themer` resolves to its source here, so its `*.module.css` files are compiled by
+      // Vite rather than by the plugin's build (`@tsdown/css`, Lightning CSS). Compiling them with
+      // Lightning CSS here too keeps the two alike: it scopes `view-transition-class`es,
+      // `container-name`s and `@keyframes` along with the classes, where PostCSS modules would
+      // leave the first two global, and with the pattern of the plugin's `tsdown.config.ts`
+      // (`generateScopedName`, hashing each stylesheet's content) the studio renders the very names
+      // the build ships. The CLI's own `lightningcss.exclude` (`Features.LightDark`) survives the merge.
+      css: {
+        transformer: 'lightningcss',
+        lightningcss: {cssModules: {pattern: '[content-hash]_[local]'}},
+      },
       // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
       build: isViteDevToolsEnabled ? {rolldownOptions: {devtools: {}}} : {},
     } satisfies UserConfig)

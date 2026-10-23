@@ -20,6 +20,12 @@ test('package exports', {timeout: 30_000}, async () => {
       "./oxlint": {
         "default": "object",
       },
+      "./oxlint-plugin": {
+        "default": "object",
+      },
+      "./stylelint": {
+        "default": "object",
+      },
     }
   `)
 })
