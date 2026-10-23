@@ -1,5 +1,13 @@
 # @sanity/plugin-kit
 
+## 10.1.0
+
+### Minor Changes
+
+- [#2202](https://github.com/sanity-io/plugins/pull/2202) [`f9f61af`](https://github.com/sanity-io/plugins/commit/f9f61afdf3c13234490a67b709f9a0d4bf92b421) Thanks [@stipsan](https://github.com/stipsan)! - Adds an oxlint JS plugin, exported as `@sanity/plugin-kit/oxlint-plugin`, with the rule `plugin-kit/no-css-module-default-import`. It reports `import styles from './X.module.css'`, since Lightning CSS can only tree-shake a CSS module through `import * as styles` or named imports, and `oxlint --fix` rewrites a lone default import to the namespace import. The shared `@sanity/plugin-kit/oxlint` config loads the plugin and turns the rule on.
+
+- [#2202](https://github.com/sanity-io/plugins/pull/2202) [`f9f61af`](https://github.com/sanity-io/plugins/commit/f9f61afdf3c13234490a67b709f9a0d4bf92b421) Thanks [@stipsan](https://github.com/stipsan)! - Adds a shared stylelint config, exported as `@sanity/plugin-kit/stylelint`: `stylelint-config-recommended` plus `stylelint-config-css-modules`, with the one formatting rule the latter brings along turned off since formatting is oxfmt's job. Both configs are dependencies of the plugin-kit, so a plugin only installs `stylelint` and re-exports the preset from a `stylelint.config.mjs` (`.mjs`, because stylelint loads TypeScript configs through the TypeScript compiler API, which TypeScript 7 no longer ships).
+
 ## 10.0.15
 
 ### Patch Changes
