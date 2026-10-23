@@ -21,6 +21,5 @@
 # The Media asset browser plugin
 /plugins/sanity-plugin-media/ @sanity-io/media-library
 
-# AI Assist plugin. Content Agent owns the product, triage and issues.
-# Studio keeps the package compatible with Studio and React upgrades.
-/plugins/@sanity/assist/ @sanity-io/content-agent @sanity-io/studio
+# AI Assist plugin
+/plugins/@sanity/assist/ @sanity-io/content-agent
