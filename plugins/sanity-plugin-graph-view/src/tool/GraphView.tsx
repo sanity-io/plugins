@@ -561,12 +561,13 @@ export default function GraphView({
             </LegendRow>
           ))}
         </Legend>
-        {hoverNode && <HoverNode theme={theme}>{labelFor(hoverNode.doc)}</HoverNode>}
         <div
           ref={(element) => {
             if (element) setContainer(element)
           }}
         />
+        {/* After the canvas host so toggling hover does not remount it (index reconciliation). */}
+        {hoverNode && <HoverNode theme={theme}>{labelFor(hoverNode.doc)}</HoverNode>}
       </GraphRoot>
     </GraphWrapper>
   )
