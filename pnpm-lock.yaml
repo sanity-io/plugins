@@ -1528,8 +1528,8 @@ importers:
   plugins/@sanity/hierarchical-document-list:
     dependencies:
       '@nosferatu500/react-sortable-tree':
-        specifier: ^5.1.0
-        version: 5.1.0(react-dnd-html5-backend@16.0.1)(react-dnd@16.0.1)(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)
+        specifier: 5.0.0
+        version: 5.0.0(react-dnd-html5-backend@16.0.1)(react-dnd@16.0.1)(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)
       '@sanity/color':
         specifier: 'catalog:'
         version: 3.0.9
@@ -6254,8 +6254,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@nosferatu500/react-sortable-tree@5.1.0':
-    resolution: {integrity: sha512-2lSs2FXMoDgFXXzzOjAjcWqll930cShZlFhV7v9GEFdSMwgC+hEEMmAXKmOWffo66wLQSGQZCCS4+vw6jV+fUg==}
+  '@nosferatu500/react-sortable-tree@5.0.0':
+    resolution: {integrity: sha512-1pcjXUiX3hNO2PKlBhtB1lFYHWD1xsRtLjBXrakPhGU9JGrTzuXDWM2Nwy1u5VAkyWK1GbgQMUCw80uh8fN1zA==}
     engines: {node: '>=24.11'}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
@@ -16117,21 +16117,15 @@ packages:
   videojs-vtt.js@0.15.5:
     resolution: {integrity: sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==}
 
-  virtua@0.50.6:
-    resolution: {integrity: sha512-qUKjFytyy5hd5yxOuZFXYcBQX/UshlyWmf0KOZ3wTbEYQJfxiv7DOXBuSAYXlKRySdcdA3ScNbXjQXlStfdjOQ==}
+  virtua@0.48.8:
+    resolution: {integrity: sha512-jpsxOw5V4B6hg44JePRLo9DL0TV7N1lBEVtPjKpAJebXyhI2s9lfiXJESaLapNtr3vtiSk/pWHiLf7B2a6UcgQ==}
     peerDependencies:
-      '@angular/common': '>=20.0.0'
-      '@angular/core': '>=20.0.0'
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
       solid-js: '>=1.0'
       svelte: '>=5.0'
       vue: '>=3.2'
     peerDependenciesMeta:
-      '@angular/common':
-        optional: true
-      '@angular/core':
-        optional: true
       react:
         optional: true
       react-dom:
@@ -20676,17 +20670,15 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.3
 
-  '@nosferatu500/react-sortable-tree@5.1.0(react-dnd-html5-backend@16.0.1)(react-dnd@16.0.1)(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)':
+  '@nosferatu500/react-sortable-tree@5.0.0(react-dnd-html5-backend@16.0.1)(react-dnd@16.0.1)(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)':
     dependencies:
       immer: 11.1.18
       react: 19.3.1
       react-dnd: 16.0.1(@types/node@24.19.2)(@types/react@19.3.0)(react@19.3.1)
       react-dnd-html5-backend: 16.0.1
       react-dom: 19.3.1(react@19.3.1)
-      virtua: 0.50.6(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)
+      virtua: 0.48.8(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43)
     transitivePeerDependencies:
-      - '@angular/common'
-      - '@angular/core'
       - solid-js
       - svelte
       - vue
@@ -32705,7 +32697,7 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  virtua@0.50.6(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43):
+  virtua@0.48.8(react-dom@19.3.1)(react@19.3.1)(vue@3.5.43):
     optionalDependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)

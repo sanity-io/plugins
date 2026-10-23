@@ -179,11 +179,11 @@ function TreeEditor(props: TreeEditorProps) {
   )
 }
 
+// Paths hold row `_key`s (see `getNodeKey`), so a row keeps the same path when it moves within
+// its level. Only a drop below the dragged row itself would put it inside its own subtree.
 function canDrop({nextPath, prevPath}: {nextPath: number[]; prevPath: number[]}) {
-  const insideItself =
-    nextPath.length >= prevPath.length &&
-    prevPath.every((pathIndex, index) => nextPath[index] === pathIndex)
-  return !insideItself
+  const draggedKey = prevPath.at(-1)
+  return !nextPath.slice(0, -1).includes(draggedKey as number)
 }
 
 const doNothingOnChange = () => {
