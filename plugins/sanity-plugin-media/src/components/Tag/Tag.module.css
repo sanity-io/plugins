@@ -1,0 +1,16 @@
+/* Mirrors the `PANEL_HEIGHT` constant in `constants.ts`. */
+.tagContainer {
+  height: 32px;
+}
+
+@media (pointer: fine) {
+  .buttonContainer {
+    visibility: hidden;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tagContainer:hover .buttonContainer {
+    visibility: visible;
+  }
+}

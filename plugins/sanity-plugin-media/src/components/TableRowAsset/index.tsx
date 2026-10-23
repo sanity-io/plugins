@@ -9,13 +9,14 @@ import {
   Grid,
   Spinner,
   Text,
-  type ThemeColorSchemeKey,
   useMediaIndex,
+  useTheme_v2 as useThemeV2,
 } from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {formatRelative} from 'date-fns/formatRelative'
 import filesize from 'filesize'
 import {
+  type CSSProperties,
   type DragEvent,
   memo,
   type MouseEvent,
@@ -27,7 +28,6 @@ import {
 } from 'react'
 import {useDispatch} from 'react-redux'
 import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
@@ -44,6 +44,8 @@ import {isFileAsset, isImageAsset} from '../../utils/typeGuards'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 
+import * as styles from './TableRowAsset.module.css'
+
 // Duration (ms) to wait before reference counts (and associated listeners) are rendered
 const REFERENCE_COUNT_VISIBILITY_DELAY = 750
 
@@ -52,57 +54,16 @@ type Props = {
   selected: boolean
 }
 
-const ContainerGrid = styled<
-  typeof Grid,
-  // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-  {$selected?: boolean; $scheme: ThemeColorSchemeKey; $updating?: boolean}
->(Grid)(({$scheme, $selected, $updating}) => {
-  return css`
-    align-items: center;
-    cursor: ${$selected ? 'default' : 'pointer'};
-    height: 100%;
-    pointer-events: ${$updating ? 'none' : 'auto'};
-    user-select: none;
-    white-space: nowrap;
-
-    ${
-      !$updating &&
-      css`
-        @media (hover: hover) and (pointer: fine) {
-          &:hover {
-            background: ${getSchemeColor($scheme, 'bg')};
-          }
-        }
-      `
-    }
-  `
-})
-
-// oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg2')};
-      }
-    }
-  `
-})
-
-const StyledWarningIcon = styled(WarningFilledIcon)(({theme}) => {
-  return {
-    // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-    color: theme.sanity.color.spot.red,
-  }
-})
+interface RowHoverStyle extends CSSProperties {
+  '--media-row-hover-bg'?: string
+  '--media-context-action-hover-bg'?: string
+}
 
 const TableRowAsset = (props: Props) => {
   const {id, selected} = props
 
   const scheme = useColorSchemeValue()
+  const {color} = useThemeV2()
 
   const shiftPressed: RefObject<boolean> = useKeyPress('shift')
 
@@ -204,27 +165,36 @@ const TableRowAsset = (props: Props) => {
     return null
   }
 
+  const rowHoverStyle: RowHoverStyle = {
+    '--media-row-hover-bg': getSchemeColor(scheme, 'bg'),
+  }
+  const contextActionHoverStyle: RowHoverStyle = {
+    '--media-context-action-hover-bg': getSchemeColor(scheme, 'bg2'),
+  }
+
   return (
-    <ContainerGrid
+    <Grid
+      className={styles.containerGrid}
+      data-selected={selected}
+      data-updating={item.updating}
       draggable={draggable}
       onClick={selected ? undefined : handleClick}
       onDragStart={draggable ? handleDragStart : undefined}
-      $scheme={scheme}
-      $selected={selected}
       style={{
+        ...rowHoverStyle,
         columnGap: mediaIndex < 3 ? 0 : '16px',
         rowGap: 0,
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
       }}
-      $updating={item.updating}
     >
       {/* Picked checkbox */}
-      <ContextActionContainer
+      <Flex
+        className={styles.contextActionContainer}
         onClick={handleContextActionClick}
-        $scheme={scheme}
         style={{
+          ...contextActionHoverStyle,
           alignItems: 'center',
           gridColumn: 1,
           gridRowStart: 1,
@@ -252,7 +222,7 @@ const TableRowAsset = (props: Props) => {
             }}
           />
         )}
-      </ContextActionContainer>
+      </Flex>
 
       {/* Preview image + spinner */}
       <Box
@@ -273,8 +243,8 @@ const TableRowAsset = (props: Props) => {
             {isImageAsset(asset) && (
               <Image
                 draggable={false}
-                $scheme={scheme}
-                $showCheckerboard={!isOpaque}
+                scheme={scheme}
+                showCheckerboard={!isOpaque}
                 src={imageDprUrl(asset, {height: 100, width: 100})}
               />
             )}
@@ -444,13 +414,13 @@ const TableRowAsset = (props: Props) => {
               portal
             >
               <Text size={1}>
-                <StyledWarningIcon color="critical" />
+                <WarningFilledIcon color="critical" style={{color: color.avatar.red.bg}} />
               </Text>
             </Tooltip>
           </Box>
         )}
       </Flex>
-    </ContainerGrid>
+    </Grid>
   )
 }
 

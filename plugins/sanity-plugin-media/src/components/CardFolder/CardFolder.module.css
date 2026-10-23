@@ -1,0 +1,45 @@
+.cardWrapper {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.folderCard {
+  cursor: pointer;
+  height: 100%;
+  transition: border-color 200ms ease;
+  width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .folderCard:hover {
+    border-color: var(--card-border-color);
+  }
+}
+
+.folderGlyph {
+  align-items: flex-end;
+  background: linear-gradient(
+    180deg,
+    var(--media-folder-glyph-color) 0%,
+    var(--media-folder-glyph-color) 100%
+  );
+  border-radius: 8px;
+  display: flex;
+  height: 72px;
+  position: relative;
+  width: 96px;
+}
+
+.folderGlyph::before {
+  background: var(--media-folder-glyph-color);
+  border-radius: 8px 8px 0 0;
+  content: '';
+  height: 18px;
+  left: 0;
+  position: absolute;
+  top: -8px;
+  width: 38px;
+}

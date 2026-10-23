@@ -1,11 +1,13 @@
-import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
+import {Box, Flex, Grid, Stack, Text, useMediaIndex, useTheme_v2 as useThemeV2} from '@sanity/ui'
+import {type CSSProperties} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {css, styled} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import {foldersActions} from '../../modules/folders'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+
+import * as styles from './TableRowFolder.module.css'
 
 type Props = {
   folderId: string
@@ -13,63 +15,27 @@ type Props = {
   totalCount: number
 }
 
-const ContainerGrid = styled(Grid)(
-  ({theme}) => css`
-    align-items: center;
-    cursor: pointer;
-    height: 100%;
-    user-select: none;
-    white-space: nowrap;
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${
-          // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-          theme.sanity.color.card.enabled.bg
-        };
-      }
-    }
-  `,
-)
-
-const FolderBadge = styled(Box)(
-  ({theme}) => css`
-    background: ${
-      // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-      theme.sanity.color.spot.yellow
-    };
-    border-radius: 6px;
-    height: 42px;
-    position: relative;
-    width: 52px;
-
-    &::before {
-      background: ${
-        // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-        theme.sanity.color.spot.yellow
-      };
-      border-radius: 6px 6px 0 0;
-      content: '';
-      height: 12px;
-      left: 0;
-      position: absolute;
-      top: -6px;
-      width: 18px;
-    }
-  `,
-)
+interface FolderGlyphStyle extends CSSProperties {
+  '--media-folder-glyph-color'?: string
+}
 
 const TableRowFolder = ({folderId, name, totalCount}: Props) => {
   const dispatch = useDispatch()
   const mediaIndex = useMediaIndex()
   const scheme = useColorSchemeValue()
+  const {color} = useThemeV2()
+
+  const folderGlyphStyle: FolderGlyphStyle = {
+    '--media-folder-glyph-color': color.avatar.yellow.bg,
+  }
 
   return (
-    <ContainerGrid
+    <Grid
+      className={styles.containerGrid}
       onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
       style={{
         background: getSchemeColor(scheme, 'bg'),
-        gridColumnGap: mediaIndex < 3 ? 0 : '16px',
+        columnGap: mediaIndex < 3 ? 0 : '16px',
         gridTemplateColumns:
           mediaIndex < 3 ? GRID_TEMPLATE_COLUMNS.SMALL : GRID_TEMPLATE_COLUMNS.LARGE,
         gridTemplateRows: mediaIndex < 3 ? 'auto' : '1fr',
@@ -77,7 +43,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
     >
       <Box />
       <Flex align="center" justify="center" style={{gridColumn: 2, height: '90px', width: '100px'}}>
-        <FolderBadge />
+        <Box className={styles.folderBadge} style={folderGlyphStyle} />
       </Flex>
       <Box
         marginLeft={mediaIndex < 3 ? 3 : 0}
@@ -103,7 +69,7 @@ const TableRowFolder = ({folderId, name, totalCount}: Props) => {
         </Text>
       </Box>
       <Box />
-    </ContainerGrid>
+    </Grid>
   )
 }
 

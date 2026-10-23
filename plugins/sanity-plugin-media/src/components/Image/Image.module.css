@@ -1,0 +1,21 @@
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.imageCheckerboard {
+  composes: image;
+  background-image:
+    linear-gradient(45deg, var(--media-checkerboard-color, inherit) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--media-checkerboard-color, inherit) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--media-checkerboard-color, inherit) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--media-checkerboard-color, inherit) 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0;
+}

@@ -1,9 +1,7 @@
 import {Checkbox, Flex, Grid, useMediaIndex} from '@sanity/ui'
-import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
-import {type MouseEvent} from 'react'
+import {type CSSProperties, type MouseEvent} from 'react'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
-import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS, PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
@@ -12,19 +10,11 @@ import {assetsActions, selectAssetsLength, selectAssetsPickedLength} from '../..
 import {getSchemeColor} from '../../utils/getSchemeColor'
 import TableHeaderItem from '../TableHeaderItem'
 
-// TODO: DRY
-const ContextActionContainer = styled<typeof Flex, {$scheme: ThemeColorSchemeKey}>(Flex)(({
-  $scheme,
-}) => {
-  return css`
-    cursor: pointer;
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: ${getSchemeColor($scheme, 'bg')};
-      }
-    }
-  `
-})
+import * as styles from './TableHeader.module.css'
+
+interface ContextActionHoverStyle extends CSSProperties {
+  '--media-hover-bg'?: string
+}
 
 const TableHeader = () => {
   const scheme = useColorSchemeValue()
@@ -39,6 +29,12 @@ const TableHeader = () => {
   const {onSelect} = useAssetSourceActions()
 
   const allSelected = numPickedAssets === itemsLength
+
+  const contextActionHoverStyle: ContextActionHoverStyle = {
+    'height': '100%',
+    'position': 'relative',
+    '--media-hover-bg': getSchemeColor(scheme, 'bg'),
+  }
 
   // Callbacks
   const handleContextActionClick = (e: MouseEvent) => {
@@ -75,15 +71,12 @@ const TableHeader = () => {
       {onSelect ? (
         <TableHeaderItem />
       ) : (
-        <ContextActionContainer
+        <Flex
           align="center"
+          className={styles.contextActionContainer}
           justify="center"
           onClick={handleContextActionClick}
-          $scheme={scheme}
-          style={{
-            height: '100%',
-            position: 'relative',
-          }}
+          style={contextActionHoverStyle}
         >
           <Checkbox
             checked={!fetching && allSelected}
@@ -93,7 +86,7 @@ const TableHeader = () => {
               transform: 'scale(0.8)',
             }}
           />
-        </ContextActionContainer>
+        </Flex>
       )}
 
       <TableHeaderItem />

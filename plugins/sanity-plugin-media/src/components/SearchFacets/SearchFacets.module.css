@@ -1,0 +1,3 @@
+.stackContainer > * {
+  margin-bottom: var(--media-stack-gap);
+}
