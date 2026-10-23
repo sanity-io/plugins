@@ -202,7 +202,6 @@ minimumReleaseAgeExclude:
   - yuku-codegen
   - yuku-parser
   - cac@7.1.0
-  - i18next@26.4.4
 
 overrides:
   '@types/node': 'catalog:'
@@ -222,6 +221,15 @@ overrides:
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
+  # tsdown 0.23.2 depends on rolldown-plugin-dts ^0.29.0-beta.2, which refuses to
+  # emit declarations under TypeScript 7 (no classic tsc API). Stay on 0.23.1,
+  # the release main already builds with, until that plugin works with tsgo again.
+  tsdown: 0.23.1
+  # A clean resolve pulls oxlint-tsgolint 7.0.2005, which reports
+  # typescript/no-unsafe-type-assertion on the `as` token, so existing
+  # disable-next-line comments no longer apply. Keep 7.0.2003, the version main
+  # already lints with, until those disables are migrated.
+  oxlint-tsgolint: 7.0.2003
 
 publicHoistPattern:
   # Allows setting vite/client in dev/test-studio/tsconfig.json without installing vite
@@ -248,6 +256,7 @@ trustPolicyExclude:
   - '@vercel/cervel@0.1.70'
   - '@vercel/cli-auth@0.3.9'
   - '@vercel/cli-config@0.3.0'
+  - '@vercel/cli-config@0.3.1'
   - '@vercel/cli-exec@1.0.1'
   - '@vercel/container@11.0.1'
   - '@vercel/detect-agent@1.2.5'
@@ -265,7 +274,7 @@ trustPolicyExclude:
   - '@vercel/nestjs@11.0.1'
   - '@vercel/next@15.0.1'
   - '@vercel/node@16.0.1'
-  - '@vercel/oidc@3.8.9'
+  - '@vercel/oidc@3.8.10'
   - '@vercel/python-analysis@0.14.0'
   - '@vercel/python@17.0.1'
   - '@vercel/redwood@13.0.1'
@@ -277,10 +286,18 @@ trustPolicyExclude:
   # `@css-modules-kit/codegen` needs chokidar ^4.0.3; 4.0.2 and 4.0.3 were published without the
   # provenance attestations 4.0.0 and 4.0.1 had
   - chokidar@4.0.3
+  # `lefthook@^2.1.14` resolves to 2.2.2. 2.2.0 and 2.2.1 were published from GitHub Actions
+  # with provenance; 2.2.2 was published by the maintainer without it.
+  - lefthook@2.2.2
   - rxjs@7.8.2
   - semver@5.7.2 || 6.3.1
   - undici@5.29.0
   - vercel@60.1.3
+  - '@vercel/vc-native-darwin-arm64@60.1.3'
+  - '@vercel/vc-native-darwin-x64@60.1.3'
+  - '@vercel/vc-native-linux-arm64@60.1.3'
+  - '@vercel/vc-native-linux-x64@60.1.3'
+  - '@vercel/vc-native-win32-x64@60.1.3'
   # @sanity/vision's result diff (@pierre/diffs) depends on it. 1.0.0 was published with
   # provenance; 1.1.0 and 2.0.0 without it, by a listed maintainer who also publishes
   # @pierre/diffs (which has never shipped provenance)
