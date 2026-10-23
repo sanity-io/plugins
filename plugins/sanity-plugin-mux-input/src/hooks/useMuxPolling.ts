@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import {useClient} from '../hooks/useClient'
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
+import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 import type {MuxAsset, VideoAssetDocument} from '../util/types'
 
@@ -41,7 +42,7 @@ export const useMuxPolling = (asset?: VideoAssetDocument) => {
     shouldFetch ? `/${projectId}/addons/mux/assets/${dataset}/data/${asset?.assetId}` : null,
     async () => {
       try {
-        const {data} = await client.request<{data: MuxAsset}>({
+        const {data} = await getMuxAddonClient(client).request<{data: MuxAsset}>({
           url: `/addons/mux/assets/${dataset}/data/${asset!.assetId}`,
           withCredentials: true,
           method: 'GET',

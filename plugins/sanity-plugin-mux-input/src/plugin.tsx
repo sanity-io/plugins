@@ -1,12 +1,15 @@
 import Input from './components/Input'
 import VideoThumbnail from './components/VideoThumbnail'
+import {MuxApiHostProvider} from './context/MuxApiHostContext'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from './util/types'
 
 export function muxVideoCustomRendering(config: PluginConfig) {
   return {
     components: {
       input: (props: MuxInputProps) => (
-        <Input config={{...config, ...props.schemaType.options}} {...props} />
+        <MuxApiHostProvider muxApiHost={config.muxApiHost}>
+          <Input config={{...config, ...props.schemaType.options}} {...props} />
+        </MuxApiHostProvider>
       ),
     },
     preview: {

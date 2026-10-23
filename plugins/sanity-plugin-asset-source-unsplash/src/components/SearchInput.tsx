@@ -40,7 +40,7 @@ export function SearchInput({
       icon={SearchIcon}
       onChange={(event) => handleChange(event.currentTarget.value)}
       onClear={() => handleChange('')}
-      placeholder="Search by topics or colors"
+      placeholder="Search by topics, colors, or image ID"
       value={inputValue}
       iconRight={isPending && AnimatedSpinnerIcon}
     />

@@ -1,7 +1,6 @@
 import type {BuildThemeOptions} from '../theme/options'
 import {presets} from '../theme/presets'
 import type {ImagePalette} from './imagePalette'
-import {sameOptions} from './options'
 
 /**
  * Where a theme in the themer list comes from: the theme the Studio config
@@ -52,7 +51,7 @@ export interface ThemerState {
 export const CONFIG_SLUG = 'config'
 
 /** The title of the theme the Studio config was generated from */
-const CONFIG_TITLE = 'Studio config'
+export const CONFIG_TITLE = 'Studio config'
 
 /** The title new themes start out with @internal */
 export const UNTITLED_THEME = 'Untitled theme'
@@ -67,35 +66,26 @@ export interface ResolvedThemes {
   /** The removed themes, which can be restored */
   removed: ThemerTheme[]
   /** The applied theme */
-  active: ThemerTheme
+  active: ThemerTheme | undefined
 }
 
+const presetsWithSource = presets.map((preset) =>
+  Object.assign({}, preset, {source: 'preset' as const}),
+)
+
 /**
- * Resolves the list of themes: the configured theme first, then the presets
- * (minus the ones that would only repeat the configured theme), then the
- * user's own themes — rearranged into the order the user dragged them into,
- * with themes that order does not know about kept in that default order after
- * the ones it does. Removed themes are set aside so they can be restored, and
- * the active theme falls back to the configured one when its slug no longer
- * resolves.
+ * Resolves the list of themes: the presets, then the user's own themes —
+ * rearranged into the order the user dragged them into, with themes that
+ * order does not know about kept in that default order after the ones it
+ * does. Removed themes are set aside so they can be restored. The configured
+ * theme is not in the list — `ThemeList` shows it ahead of it — and it is
+ * what applies when no listed theme does: `active` is `undefined` for it, and
+ * for an applied slug that no longer resolves.
  *
  * @internal
  */
-export function resolveThemes(state: ThemerState, baseOptions: BuildThemeOptions): ResolvedThemes {
-  const config: ThemerTheme = {
-    slug: CONFIG_SLUG,
-    title: CONFIG_TITLE,
-    options: baseOptions,
-    source: 'config',
-  }
-
-  const all: ThemerTheme[] = [config]
-
-  for (const preset of presets) {
-    if (!sameOptions(preset.options, baseOptions)) {
-      all.push({slug: preset.slug, title: preset.title, options: preset.options, source: 'preset'})
-    }
-  }
+export function resolveThemes(state: ThemerState): ResolvedThemes {
+  const all: ThemerTheme[] = [...presetsWithSource]
 
   for (const theme of state.custom) {
     all.push({
@@ -116,7 +106,7 @@ export function resolveThemes(state: ThemerState, baseOptions: BuildThemeOptions
   const removedSlugs = new Set(state.removed)
   const themes = all.filter((theme) => !removedSlugs.has(theme.slug))
   const removed = all.filter((theme) => removedSlugs.has(theme.slug))
-  const active = themes.find((theme) => theme.slug === state.active) ?? config
+  const active = themes.find((theme) => theme.slug === state.active)
 
   return {themes, removed, active}
 }

@@ -29,8 +29,8 @@ yarn add @sanity/studio-secrets
 Quick example of both using the secrets and putting up a dialog to let user enter them.
 
 ```javascript
-import {useEffect, useState} from 'react'
 import {useSecrets, SettingsView} from '@sanity/studio-secrets'
+import {useEffect, useState} from 'react'
 
 const namespace = 'myPlugin'
 

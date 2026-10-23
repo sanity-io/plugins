@@ -1,5 +1,39 @@
 # sanity-plugin-media
 
+## 6.4.0
+
+### Minor Changes
+
+- [#2017](https://github.com/sanity-io/plugins/pull/2017) [`8349010`](https://github.com/sanity-io/plugins/commit/8349010f06117b839432b2b500a10ca9ed695cbb) Thanks [@trostum](https://github.com/trostum)! - Show when the asset was uploaded ("Uploaded") in the asset details metadata panel
+
+### Patch Changes
+
+- [#2231](https://github.com/sanity-io/plugins/pull/2231) [`362762b`](https://github.com/sanity-io/plugins/commit/362762b94df6f4f04bd5c6407f7465a5a5bfd523) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the asset grid jumping back and forth between two scroll positions after scrolling, by opting the grid's scroller out of browser scroll anchoring
+
+## 6.3.5
+
+### Patch Changes
+
+- [#2170](https://github.com/sanity-io/plugins/pull/2170) [`ea794b7`](https://github.com/sanity-io/plugins/commit/ea794b7181eb3f36348529d1a566f79bfff82eb2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.90.0
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 6.3.4
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 6.3.3
+
+### Patch Changes
+
+- [#1947](https://github.com/sanity-io/plugins/pull/1947) [`2d83ac7`](https://github.com/sanity-io/plugins/commit/2d83ac79cad3d8946b09fa06efa7d94de3370ff6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.89.0
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2134](https://github.com/sanity-io/plugins/pull/2134) [`d3ceaaa`](https://github.com/sanity-io/plugins/commit/d3ceaaad3f943a886dc412138eaa73e07cc98182) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^6.0.2
+
 ## 6.3.2
 
 ### Patch Changes

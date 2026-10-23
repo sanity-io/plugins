@@ -1,10 +1,9 @@
-import {ThemeProvider, useTheme_v2} from '@sanity/ui'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {assignInlineVars} from '@vanilla-extract/dynamic'
 import {useMemo} from 'react'
 
-import {buildTheme} from '../theme/buildTheme'
 import type {BuildThemeOptions} from '../theme/options'
+import {type PreviewColors, previewColors} from './previewColors'
 
 import {
   avatar,
@@ -45,42 +44,24 @@ const FIELDS = ['32%', '24%']
  */
 export function ThemePreview(props: {options: BuildThemeOptions}) {
   const {options} = props
-  const theme = useMemo(() => buildTheme(options), [options])
+  // Only the handful of colors the mockup paints, rather than a whole Sanity
+  // UI theme and a `ThemeProvider` per scheme: theme lists render a preview
+  // per theme, and render them in the background before they are shown
+  const schemes = useMemo(() => previewColors(options), [options])
 
   return (
     <div aria-hidden className={root}>
-      <ThemeProvider scheme="light" theme={theme} tone="default">
-        <MockStudio scheme="light" />
-      </ThemeProvider>
-      <ThemeProvider scheme="dark" theme={theme} tone="default">
-        <MockStudio scheme="dark" />
-      </ThemeProvider>
+      <MockStudio colors={schemes.light} scheme="light" />
+      <MockStudio colors={schemes.dark} scheme="dark" />
     </div>
   )
 }
 
-function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
+function MockStudio(props: {colors: PreviewColors; scheme: ThemeColorSchemeKey}) {
   const {scheme} = props
-  const {color} = useTheme_v2()
-  const selected = color.selectable.default.selected
-  const inputColor = color.input.default.enabled
 
   return (
-    <div
-      className={studio[scheme]}
-      style={assignInlineVars({
-        [colors.bg]: color.bg,
-        [colors.fg]: color.fg,
-        [colors.mutedFg]: color.muted.fg,
-        [colors.border]: color.border,
-        [colors.accent]: color.button.default.primary.enabled.bg,
-        [colors.avatar]: color.avatar.blue.bg,
-        [colors.selectedBg]: selected.bg,
-        [colors.selectedFg]: selected.fg,
-        [colors.inputBg]: inputColor.bg,
-        [colors.inputBorder]: inputColor.border,
-      })}
-    >
+    <div className={studio[scheme]} style={assignInlineVars(colors, props.colors)}>
       <div className={navbar}>
         <div className={logo} />
         <div className={line.fg} style={{width: '22%'}} />
@@ -94,7 +75,7 @@ function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
             const isSelected = index === 1
 
             return (
-              <div className={listRow} data-selected={isSelected} key={width}>
+              <div key={width} className={listRow} data-selected={isSelected}>
                 <div className={isSelected ? line.selected : line.muted} style={{width}} />
               </div>
             )
@@ -105,7 +86,7 @@ function MockStudio(props: {scheme: ThemeColorSchemeKey}) {
           <div className={form}>
             <div className={line.fg} style={{width: '45%'}} />
             {FIELDS.map((width) => (
-              <div className={field} key={width}>
+              <div key={width} className={field}>
                 <div className={line.muted} style={{width}} />
                 <div className={input} />
               </div>

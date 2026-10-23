@@ -12,7 +12,7 @@ const LINE = 4
 
 /**
  * The colors a mockup paints with — only the ones the theme options change —
- * assigned per color scheme from the theme it previews
+ * assigned per color scheme from the `previewColors` of the theme it previews
  */
 export const colors = {
   bg: createVar(),
@@ -20,11 +20,8 @@ export const colors = {
   mutedFg: createVar(),
   border: createVar(),
   accent: createVar(),
-  avatar: createVar(),
-  selectedBg: createVar(),
-  selectedFg: createVar(),
-  inputBg: createVar(),
   inputBorder: createVar(),
+  selectedFg: createVar(),
 }
 
 export const root = style({
@@ -73,7 +70,7 @@ export const avatar = style({
   width: 8,
   height: 8,
   borderRadius: '50%',
-  background: colors.avatar,
+  background: colors.accent,
 })
 
 export const body = style({
@@ -98,7 +95,7 @@ export const listRow = style({
   padding: '0 9%',
   selectors: {
     "&[data-selected='true']": {
-      background: colors.selectedBg,
+      background: colors.accent,
     },
   },
 })
@@ -130,7 +127,7 @@ export const field = style({
 export const input = style({
   height: 12,
   borderRadius: 3,
-  background: colors.inputBg,
+  background: colors.bg,
   boxShadow: `inset 0 0 0 1px ${colors.inputBorder}`,
 })
 

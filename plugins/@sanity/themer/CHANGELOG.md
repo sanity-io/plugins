@@ -1,5 +1,57 @@
 # @sanity/themer
 
+## 0.10.4
+
+### Patch Changes
+
+- [#2198](https://github.com/sanity-io/plugins/pull/2198) [`c905155`](https://github.com/sanity-io/plugins/commit/c905155393631a2d2468ae160037c81588e45069) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.2.0
+
+## 0.10.3
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - Build the vanilla-extract styles with `identifiers: 'safe'`, so every release gets its own class names. The previous hash covered only the package name and file path, so a release that reordered a file's styles reused the class names of the previous release for different rules, and a page that loaded the stylesheets of both releases styled elements with the wrong rules.
+
+## 0.10.2
+
+### Patch Changes
+
+- [#2164](https://github.com/sanity-io/plugins/pull/2164) [`222ad55`](https://github.com/sanity-io/plugins/commit/222ad55b7cb8a42c19b830b59f70612778e36de8) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency motion to ^14.1.0
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 0.10.1
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2109](https://github.com/sanity-io/plugins/pull/2109) [`5bd1c62`](https://github.com/sanity-io/plugins/commit/5bd1c621dd7d4b150be1fbdfd527c11ca348b848) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to v14
+
+- [#2118](https://github.com/sanity-io/plugins/pull/2118) [`2212443`](https://github.com/sanity-io/plugins/commit/2212443ab5e26e212fe53bd50a121cbc00737db3) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @sanity/themer-legacy to ^0.2.2
+
+## 0.10.0
+
+### Minor Changes
+
+- [#2066](https://github.com/sanity-io/plugins/pull/2066) [`d51f2d2`](https://github.com/sanity-io/plugins/commit/d51f2d234eb83deea20723bcf3fb264f5d20d01a) Thanks [@stipsan](https://github.com/stipsan)! - Your themes stay the same across the Studio's tabs: a theme picked, edited, added or removed in one tab shows in the others right away, while which tab has the sidebar open, or the split preview on, stays each tab's own. The tool picks up where you left off after a reload, and what it keeps in `localStorage` is validated as it is read back — what earlier versions stored is migrated — and written from one tab at a time.
+  
+  The sidebar's footers follow the Studio's document footer: one primary action — `Edit` for your own applied theme, `Duplicate & Edit` for a preset or the configured theme, `Done` in the editor and among the removed themes — with the other actions (adding a theme, from an image or from a shared code, the applied theme's code, removing the theme being edited) behind the menu button next to it. The header keeps the split preview toggle and the close button.
+  
+  `themerTool` takes a `title` option — what the tool goes by in the navbar toggle's label and tooltip, `Themer` by default. On small screens the sidebar stays closed for now, and the navbar toggle stays away, until a mobile layout returns. The navbar toggle's color wheel keeps still with `prefers-reduced-motion: reduce`.
+
+### Patch Changes
+
+- [#2091](https://github.com/sanity-io/plugins/pull/2091) [`45a16d9`](https://github.com/sanity-io/plugins/commit/45a16d9d21ef05f351f7bb380cc4b7865be8641b) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Make the README easier to scan with quick-start links, short sections, and step-by-step Studio tool guidance.
+
+## 0.9.0
+
+### Minor Changes
+
+- [#2065](https://github.com/sanity-io/plugins/pull/2065) [`e1c357b`](https://github.com/sanity-io/plugins/commit/e1c357b612641bae98f9a5fcb80b37b6de41d2bc) Thanks [@stipsan](https://github.com/stipsan)! - Adopt <Activity>, <ViewTransition> and React.lazy APIs according to best practice. Removes the top-level default theme config, it will be added back again later
+
 ## 0.8.1
 
 ### Patch Changes

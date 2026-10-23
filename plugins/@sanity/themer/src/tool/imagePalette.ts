@@ -31,17 +31,6 @@ export type ImagePaletteKey =
  */
 export type ImagePalette = Record<ImagePaletteKey, string | null>
 
-/** @internal */
-export const IMAGE_PALETTE_KEYS: ImagePaletteKey[] = [
-  'vibrant',
-  'lightVibrant',
-  'darkVibrant',
-  'muted',
-  'lightMuted',
-  'darkMuted',
-  'dominant',
-]
-
 /**
  * The swatches a theme can be built around — every swatch but the dominant
  * one, which only repeats one of them.

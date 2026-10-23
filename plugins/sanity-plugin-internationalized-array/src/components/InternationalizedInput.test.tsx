@@ -1,6 +1,6 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import type {ReactNode} from 'react'
-import {set} from 'sanity'
+import {set, unset} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -139,6 +139,35 @@ describe('InternationalizedInput', () => {
     )
     expect(removeButton).toBeTruthy()
     expect(removeButton).toHaveAttribute('data-disabled', 'true')
+  })
+
+  test('enables remove button for default languages when allowRemovingDefaultLanguages is set', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const props = createMockProps('en')
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const buttons = screen.getAllByRole('button')
+    const removeButton = buttons.find(
+      (btn) => btn.querySelector('[data-sanity-icon="remove-circle"]') !== null,
+    )
+    expect(removeButton).toBeTruthy()
+    expect(removeButton).toHaveAttribute('data-disabled', 'false')
+
+    if (!removeButton) {
+      throw new Error('Expected a remove button')
+    }
+    fireEvent.click(removeButton)
+    expect(props.inputProps.onChange).toHaveBeenCalledWith(unset())
   })
 
   test('enables remove button for non-default languages', () => {

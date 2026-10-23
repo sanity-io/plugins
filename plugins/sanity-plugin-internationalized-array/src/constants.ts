@@ -35,6 +35,7 @@ export const CONFIG_DEFAULT: Required<PluginConfig> = {
   languages: [],
   select: {},
   defaultLanguages: [],
+  allowRemovingDefaultLanguages: false,
   fieldTypes: [],
   apiVersion: '2025-10-15',
   buttonLocations: ['field'],

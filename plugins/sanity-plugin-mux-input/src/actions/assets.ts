@@ -1,11 +1,13 @@
 import type {SanityClient} from 'sanity'
 
+import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
-import type {MuxAsset, VideoAssetDocument} from '../util/types'
+import type {MuxAsset, MuxPlaybackId, PlaybackPolicy, VideoAssetDocument} from '../util/types'
+import {toRobotsRequestError} from './robots'
 
 export function deleteAssetOnMux(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
-  return client.request<void>({
+  return getMuxAddonClient(client).request<void>({
     url: `/addons/mux/assets/${dataset}/${assetId}`,
     withCredentials: true,
     method: 'DELETE',
@@ -43,7 +45,7 @@ export async function deleteAsset({
 
 export function getAsset(client: SanityClient, assetId: string) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/data/${assetId}`,
     withCredentials: true,
     method: 'GET',
@@ -65,7 +67,7 @@ export function listAssets(
     query.cursor = options.cursor
   }
 
-  return client.request<{data: MuxAsset[]; next_cursor?: string | null}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset[]; next_cursor?: string | null}>({
     url: `/addons/mux/assets/${dataset}/data/list`,
     withCredentials: true,
     method: 'GET',
@@ -83,12 +85,12 @@ export function addTextTrackFromUrl(
   options: {
     language_code: string
     name: string
-    text_type?: 'subtitles'
+    text_type?: 'subtitles' | 'chapters'
   },
 ) {
   const {dataset} = client.config()
 
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks`,
     withCredentials: true,
     method: 'POST',
@@ -119,7 +121,7 @@ export function generateSubtitles(
   },
 ) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks/${audioTrackId}/generate-subtitles`,
     withCredentials: true,
     method: 'POST',
@@ -143,7 +145,7 @@ export function generateSubtitles(
  */
 export function deleteTextTrack(client: SanityClient, assetId: string, trackId: string) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/tracks/${trackId}`,
     withCredentials: true,
     method: 'DELETE',
@@ -161,7 +163,7 @@ export function updateMasterAccess(
   masterAccess: 'temporary' | 'none',
 ) {
   const {dataset} = client.config()
-  return client.request<{data: MuxAsset}>({
+  return getMuxAddonClient(client).request<{data: MuxAsset}>({
     url: `/addons/mux/assets/${dataset}/${assetId}/master-access`,
     withCredentials: true,
     method: 'PUT',
@@ -171,4 +173,30 @@ export function updateMasterAccess(
     },
     query: PLUGIN_VERSION_QUERY,
   })
+}
+
+/**
+ * Creates a playback ID, e.g. after Robots `moderate` deleted them all. The proxy answers like
+ * the Robots routes, so failures are `RobotsRequestError`s; a 404 without `mux` means the proxy
+ * doesn't have the route yet.
+ */
+export async function createPlaybackId(
+  client: SanityClient,
+  assetId: string,
+  policy: PlaybackPolicy,
+  drmConfigurationId?: string,
+) {
+  const {dataset} = client.config()
+  try {
+    return await getMuxAddonClient(client).request<{data: MuxPlaybackId}>({
+      url: `/addons/mux/assets/${dataset}/${assetId}/playback-ids`,
+      withCredentials: true,
+      method: 'POST',
+      body: policy === 'drm' ? {policy, drm_configuration_id: drmConfigurationId} : {policy},
+      headers: {'Content-Type': 'application/json'},
+      query: PLUGIN_VERSION_QUERY,
+    })
+  } catch (error) {
+    throw toRobotsRequestError(error)
+  }
 }

@@ -6,7 +6,10 @@ import {useAssetDocumentValues} from '../hooks/useAssetDocumentValues'
 import {useClient} from '../hooks/useClient'
 import {useDialogState} from '../hooks/useDialogState'
 import {useMuxPolling} from '../hooks/useMuxPolling'
+import {useRobotsSync} from '../hooks/useRobotsSync'
+import {useRobotsUploadCheck} from '../hooks/useRobotsUploadCheck'
 import {useSecretsDocumentValues} from '../hooks/useSecretsDocumentValues'
+import {hasUnfinishedRobotsWork} from '../robots/records'
 import type {MuxInputProps, PluginConfig} from '../util/types'
 import {ConfigureApiDialog} from './ConfigureApi'
 import ErrorBoundaryCard from './ErrorBoundaryCard'
@@ -22,6 +25,14 @@ const Input = (props: InputProps) => {
   const secretDocumentValues = useSecretsDocumentValues()
   const assetDocumentValues = useAssetDocumentValues(props.value?.asset)
   const poll = useMuxPolling(props.readOnly ? undefined : assetDocumentValues?.value || undefined)
+  // Polls unfinished Robots work even with the panel closed, so its results reach the document.
+  const asset = assetDocumentValues?.value
+  useRobotsSync(asset, {
+    enabled: !props.readOnly && !!asset && hasUnfinishedRobotsWork(asset),
+    defaultDirectiveIds: props.config.defaultDirectiveIds,
+  })
+  // Here and not in Uploader, which unmounts while the new asset's document loads.
+  const checkRobotsAfterUpload = useRobotsUploadCheck(asset)
   const [dialogState, setDialogState] = useDialogState()
   const {hasConfigAccess} = useAccessControl(props.config)
 
@@ -58,6 +69,7 @@ const Input = (props: InputProps) => {
                   dialogState={dialogState}
                   setDialogState={setDialogState}
                   needsSetup={secretDocumentValues.value.needsSetup}
+                  onUploadWithDirectives={checkRobotsAfterUpload}
                 />
               )}
 
