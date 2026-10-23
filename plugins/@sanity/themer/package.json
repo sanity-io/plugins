@@ -65,6 +65,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "prebuild": "pnpm --filter @repo/css-modules-kit run generate:themer",
     "prepack": "turbo run build"
   },
   "dependencies": {

@@ -5,7 +5,9 @@
   "description": "Runs css-modules-kit's codegen for the CSS modules in the monorepo. Its own package because css-modules-kit needs the TypeScript 6 compiler API (`@typescript/typescript6`, aliased as `typescript` here), which the TypeScript 7 the rest of the repo runs on does not ship.",
   "type": "module",
   "scripts": {
-    "generate": "cmk --clean --project ../../../plugins/@sanity/themer"
+    "generate": "pnpm run generate:themer",
+    "generate:themer": "cmk --clean --project ../../../plugins/@sanity/themer",
+    "prepare": "pnpm run generate"
   },
   "devDependencies": {
     "@css-modules-kit/codegen": "^1.4.0",

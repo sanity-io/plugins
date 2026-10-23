@@ -12,7 +12,3 @@ pre-commit:
       glob: '*.{md,yml,yaml,css,json,jsonc}'
       stage_fixed: true
       run: node_modules/.bin/oxfmt --no-error-on-unmatched-pattern {staged_files}
-
-    - name: css-module-types
-      glob: '*.module.css'
-      run: pnpm --config.verify-deps-before-run=false css:types && git add '*.module.css.d.ts'

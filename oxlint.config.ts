@@ -20,7 +20,7 @@ export default defineConfig({
     'packages/@sanity/plugin-kit/test/fixtures/**',
     // AILF reference solutions - graded artefacts, not part of the plugins build
     'plugins/**/.ailf/tasks/**/*.reference.ts',
-    // The CSS module typings css-modules-kit writes (`pnpm css:types`): generated, `@ts-nocheck`ed
+    // The CSS module typings css-modules-kit writes (`pnpm css:types`): gitignored, `@ts-nocheck`ed
     // declarations the type checker still reads through `rootDirs`
     '**/generated/**/*.module.css.d.ts',
   ],

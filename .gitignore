@@ -169,3 +169,6 @@ __screenshots__
 
 # Vercel CLI (pulled project settings + prebuilt output)
 .vercel
+
+# CSS module typings css-modules-kit writes (`pnpm css:types`)
+**/generated/**/*.module.css.d.ts
