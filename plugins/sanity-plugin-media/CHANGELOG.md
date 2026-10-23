@@ -1,5 +1,17 @@
 # sanity-plugin-media
 
+## 6.5.0
+
+### Minor Changes
+
+- [#2233](https://github.com/sanity-io/plugins/pull/2233) [`71cc47d`](https://github.com/sanity-io/plugins/commit/71cc47de9c7768eac42eb9c8e1ef1d52871ec46b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Show the asset document ID in the asset details panel
+
+### Patch Changes
+
+- [#2075](https://github.com/sanity-io/plugins/pull/2075) [`dad9ada`](https://github.com/sanity-io/plugins/commit/dad9ada4fe44d69b8b8d531d6f3815d6efff2dbf) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Save and close ignoring the click when creating or editing a tag, or creating a folder, from the media browser
+
+- [#2082](https://github.com/sanity-io/plugins/pull/2082) [`d0cd298`](https://github.com/sanity-io/plugins/commit/d0cd298e526c09acefddd87ab69a4a46c8592f02) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Media search failing when the query contains an apostrophe, such as `don't`
+
 ## 6.4.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.7
+
+### Patch Changes
+
+- [#2106](https://github.com/sanity-io/plugins/pull/2106) [`5b4dd26`](https://github.com/sanity-io/plugins/commit/5b4dd2682911fcbc5ab048fd5892d49c168cc00d) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add `allowRemovingDefaultLanguages` so configured default languages can be removed. They are still added on a new document, and are not inserted again once that document has history.
+
 ## 5.3.6
 
 No changes in this release.

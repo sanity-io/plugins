@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.30
+
+### Patch Changes
+
+- [#2103](https://github.com/sanity-io/plugins/pull/2103) [`fb0f0a5`](https://github.com/sanity-io/plugins/commit/fb0f0a55529da559cbb5292d4f85fd5ded282de8) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Find an image when the search query is an Unsplash photo ID or photo page URL
+
 ## 7.0.29
 
 ### Patch Changes
