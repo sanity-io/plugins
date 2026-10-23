@@ -1,7 +1,8 @@
 import {Box, Flex, Inline, rem, type Theme} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import {styled, css} from 'styled-components'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import SearchFacetNumber from '../SearchFacetNumber'
 import SearchFacetSelect from '../SearchFacetSelect'
 import SearchFacetString from '../SearchFacetString'
@@ -26,8 +27,8 @@ const StackContainer = styled(Flex)(({theme}: {theme: Theme}) => {
 const SearchFacets = (props: Props) => {
   const {layout = 'inline'} = props
 
-  // Redux
-  const searchFacets = useTypedSelector((state) => state.search.facets)
+  const {assets} = useMediaActors()
+  const searchFacets = useSelector(assets, (snapshot) => snapshot.context.searchFacets)
 
   const Items = searchFacets.map((facet) => {
     const key = facet.id

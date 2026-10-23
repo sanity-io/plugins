@@ -1,16 +1,15 @@
-import {cleanup, screen} from '@testing-library/react'
-import {afterEach, describe, expect, it} from 'vitest'
+import {screen} from '@testing-library/react'
+import {describe, expect, it} from 'vitest'
 
-import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
+import {imageAsset} from '../../__tests__/fixtures/documents'
+import {renderWithMedia} from '../../__tests__/fixtures/renderWithMedia'
 import AssetGridVirtualized from './index'
 
 describe('AssetGridVirtualized', () => {
-  afterEach(() => {
-    cleanup()
-  })
-
-  it('opts the grid scroller out of browser scroll anchoring', () => {
-    renderWithProviders(<AssetGridVirtualized items={[{id: 'img-1', type: 'asset'}]} />)
+  it('opts the grid scroller out of browser scroll anchoring', async () => {
+    await renderWithMedia(<AssetGridVirtualized items={[{id: 'img-1', type: 'asset'}]} />, {
+      assets: [imageAsset('img-1')],
+    })
 
     expect(screen.getByTestId('virtuoso-scroller').style.overflowAnchor).toBe('none')
   })

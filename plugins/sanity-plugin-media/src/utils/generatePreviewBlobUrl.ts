@@ -1,6 +1,3 @@
-import {Observable, from, of} from 'rxjs'
-import {mergeMap} from 'rxjs/operators'
-
 const PREVIEW_WIDTH = 180 // px
 
 const createBlob = (img: HTMLImageElement): Promise<Blob | null> => {
@@ -37,7 +34,8 @@ const createImageEl = (file: File): Promise<HTMLImageElement> => {
   })
 }
 
-const generatePreviewBlobUrl = async (file: File): Promise<string> => {
+/** Creates a low resolution preview of an image file, as an object URL the caller must revoke. */
+export const generatePreviewBlobUrl = async (file: File): Promise<string> => {
   const imageEl = await createImageEl(file)
   const blob = await createBlob(imageEl)
 
@@ -46,8 +44,4 @@ const generatePreviewBlobUrl = async (file: File): Promise<string> => {
   }
 
   return window.URL.createObjectURL(blob)
-}
-
-export const generatePreviewBlobUrl$ = (file: File): Observable<string> => {
-  return of(null).pipe(mergeMap(() => from(generatePreviewBlobUrl(file))))
 }

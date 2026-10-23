@@ -6,8 +6,8 @@ import pluralize from 'pluralize'
 
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import {useDropzoneActions} from '../../contexts/DropzoneDispatchContext'
+import {useMediaConfig} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
-import useTypedSelector from '../../hooks/useTypedSelector'
 
 type Props = {
   onClose?: () => void
@@ -19,9 +19,7 @@ const Header = (props: Props) => {
   const {open} = useDropzoneActions()
   const {onSelect} = useAssetSourceActions()
 
-  // Redux
-  const assetTypes = useTypedSelector((state) => state.assets.assetTypes)
-  const selectedDocument = useTypedSelector((state) => state.selected.document)
+  const {assetTypes, document: selectedDocument} = useMediaConfig()
 
   const {directUploads} = useToolOptions()
 

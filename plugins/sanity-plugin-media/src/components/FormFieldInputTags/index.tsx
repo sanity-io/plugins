@@ -1,9 +1,15 @@
 import {Box} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 import {Controller} from 'react-hook-form'
 import CreatableSelect from 'react-select/creatable'
 import {useColorSchemeValue} from 'sanity'
 
-import useTypedSelector from '../../hooks/useTypedSelector'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
+import {
+  selectIsCreatingTag,
+  selectIsFetchingTags,
+  selectTagsStatus,
+} from '../../machines/tagsMachine'
 import {reactSelectComponents, reactSelectStyles} from '../../styled/react-select/creatable'
 import type {TagSelectOption} from '../../types'
 import FormFieldInputLabel from '../FormFieldInputLabel'
@@ -40,9 +46,18 @@ const FormFieldInputTags = (props: Props) => {
 
   const scheme = useColorSchemeValue()
 
-  // Redux
-  const creating = useTypedSelector((state) => state.tags.creating)
-  const tagsFetching = useTypedSelector((state) => state.tags.fetching)
+  const {tags} = useMediaActors()
+  const creating = useSelector(tags, selectIsCreatingTag)
+  const tagsFetching = useSelector(tags, selectIsFetchingTags)
+  const tagsStatus = useSelector(tags, selectTagsStatus)
+  // Until tags load, the field can't show the tags already set, so it can't change them either
+  const tagsReady = tagsStatus === 'loaded' && !tagsFetching
+  let selectPlaceholder = placeholder
+  if (tagsStatus === 'failed') {
+    selectPlaceholder = 'Tags could not be loaded'
+  } else if (!tagsReady) {
+    selectPlaceholder = 'Loading...'
+  }
 
   return (
     <Box
@@ -75,7 +90,7 @@ const FormFieldInputTags = (props: Props) => {
               components={reactSelectComponents}
               instanceId="tags"
               isClearable={false} // TODO: re-enable when we're able to correctly (manually) re-validate on clear
-              isDisabled={creating || disabled || tagsFetching}
+              isDisabled={creating || disabled || !tagsReady}
               isLoading={creating}
               isMulti
               name={name}
@@ -84,7 +99,7 @@ const FormFieldInputTags = (props: Props) => {
               onChange={onChange}
               onCreateOption={onCreateTag}
               options={options}
-              placeholder={tagsFetching ? 'Loading...' : placeholder}
+              placeholder={selectPlaceholder}
               styles={reactSelectStyles(scheme)}
               value={controllerValue}
             />

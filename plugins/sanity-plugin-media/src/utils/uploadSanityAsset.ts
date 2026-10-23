@@ -2,9 +2,10 @@
 // https://github.com/sanity-io/sanity/blob/ccb777e115a8cdf20d81a9a2bc9d8c228568faff/packages/%40sanity/form-builder/src/sanity/inputs/client-adapters/assets.ts
 
 import type {SanityAssetDocument, SanityClient, SanityImageAssetDocument} from '@sanity/client'
-import {Observable, of, throwError} from 'rxjs'
+import {of, throwError} from 'rxjs'
 import {map, mergeMap} from 'rxjs/operators'
 
+import {createHttpError} from '../machines/utils'
 import type {HttpError} from '../types'
 import {withMaxConcurrency} from './withMaxConcurrency'
 
@@ -15,22 +16,13 @@ const fetchExisting$ = (client: SanityClient, type: string, hash: string) => {
   })
 }
 
-const readFile$ = (file: File): Observable<ArrayBuffer> => {
-  return new Observable((subscriber) => {
+const readFile = (file: File): Promise<ArrayBuffer> =>
+  new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.onload = () => {
-      subscriber.next(reader.result as ArrayBuffer)
-      subscriber.complete()
-    }
-    reader.onerror = (err) => {
-      subscriber.error(err)
-    }
+    reader.onload = () => resolve(reader.result as ArrayBuffer)
+    reader.onerror = () => reject(reader.error)
     reader.readAsArrayBuffer(file)
-    return () => {
-      reader.abort()
-    }
   })
-}
 
 const hexFromBuffer = (buffer: ArrayBuffer): string => {
   return Array.prototype.map
@@ -38,17 +30,16 @@ const hexFromBuffer = (buffer: ArrayBuffer): string => {
     .join('')
 }
 
-export const hashFile$ = (file: File): Observable<string> => {
+/** SHA-1 of the file contents, which Sanity uses to dedupe assets. */
+export const hashFile = async (file: File): Promise<string> => {
   if (!window.crypto || !window.crypto.subtle || !window.FileReader) {
-    return throwError(() => ({
-      message: 'Unable to generate hash: uploads are only allowed in secure contexts',
-      statusCode: 500,
-    }))
+    throw createHttpError(
+      'Unable to generate hash: uploads are only allowed in secure contexts',
+      500,
+    )
   }
-  return readFile$(file).pipe(
-    mergeMap((arrayBuffer) => window.crypto.subtle.digest('SHA-1', arrayBuffer)),
-    map(hexFromBuffer),
-  )
+  const arrayBuffer = await readFile(file)
+  return hexFromBuffer(await window.crypto.subtle.digest('SHA-1', arrayBuffer))
 }
 
 const uploadSanityAsset$ = (

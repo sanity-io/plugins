@@ -1,9 +1,8 @@
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
-import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 import {css, styled} from 'styled-components'
 
-import {foldersActions} from '../../modules/folders'
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {getSchemeColor} from '../../utils/getSchemeColor'
 
 type Props = {
@@ -72,13 +71,13 @@ const FolderGlyph = styled(Box)(
 )
 
 const CardFolder = ({folderId, name, totalCount}: Props) => {
-  const dispatch = useDispatch()
+  const {assets} = useMediaActors()
   const scheme = useColorSchemeValue()
 
   return (
     <CardWrapper padding={1}>
       <FolderCard
-        onClick={() => dispatch(foldersActions.currentFolderSet({folderId}))}
+        onClick={() => assets.send({type: 'folder.open', folderId})}
         padding={3}
         radius={2}
         style={{

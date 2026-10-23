@@ -1,22 +1,24 @@
 import {Box, Flex, Text} from '@sanity/ui'
+import {useSelector} from '@xstate/react'
 
+import {useMediaActors} from '../../contexts/MediaActorsContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
-import useTypedSelector from '../../hooks/useTypedSelector'
-import {selectAssetsPickedLength} from '../../modules/assets'
-import {selectTags} from '../../modules/tags'
+import {selectPickedAssets} from '../../machines/assetsMachine'
+import {selectIsFetchingTags, selectTags} from '../../machines/tagsMachine'
 import TagsVirtualized from '../TagsVirtualized'
 import TagViewHeader from '../TagViewHeader'
 
 const TagView = () => {
-  const numPickedAssets = useTypedSelector(selectAssetsPickedLength)
+  const {assets, tags: tagsActor} = useMediaActors()
+  const numPickedAssets = useSelector(assets, (snapshot) => selectPickedAssets(snapshot).length)
   const {excludeTagSlugs} = useToolOptions()
-  const tagsAll = useTypedSelector(selectTags)
+  const tagsAll = useSelector(tagsActor, selectTags)
   const tags =
     excludeTagSlugs.length > 0
       ? tagsAll.filter((t) => !excludeTagSlugs.includes(t.tag.name.current))
       : tagsAll
-  const fetching = useTypedSelector((state) => state.tags.fetching)
-  const fetchCount = useTypedSelector((state) => state.tags.fetchCount)
+  const fetching = useSelector(tagsActor, selectIsFetchingTags)
+  const fetchCount = useSelector(tagsActor, (snapshot) => snapshot.context.fetchCount)
   const fetchComplete = fetchCount !== -1
   const hasTags = !fetching && tags?.length > 0
   const hasPicked = !!(numPickedAssets > 0)
