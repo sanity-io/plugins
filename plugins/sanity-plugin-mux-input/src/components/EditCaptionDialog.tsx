@@ -71,7 +71,6 @@ export default function EditCaptionDialog({asset, track, onUpdate, onClose}: Pro
     )
     const foundByName = track.name ? LANGUAGE_OPTIONS.find((opt) => opt.label === track.name) : null
     setSelectedLanguage(foundByCode || foundByName || null)
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [track, asset, client])
 
   const handleDownloadCurrentFile = async () => {
