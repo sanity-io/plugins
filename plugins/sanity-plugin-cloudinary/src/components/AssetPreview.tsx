@@ -7,12 +7,14 @@ import {assetUrl} from '../utils'
 import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
 
-interface ComponentProps {
+import * as styles from './AssetPreview.module.css'
+
+interface AssetPreviewProps {
   layout?: 'default' | 'block'
   value: CloudinaryAsset | undefined
 }
 
-const AssetPreview = ({value, layout}: ComponentProps) => {
+const AssetPreview = ({value, layout}: AssetPreviewProps) => {
   const {secrets} = useSecrets<Secrets>(namespace)
   const cloudName = secrets?.cloudName
 
@@ -30,9 +32,7 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
       return (
         <Flex
           align="center"
-          style={{
-            maxWidth: layout === 'default' ? '80px' : '100%',
-          }}
+          className={layout === 'default' ? styles.videoPreviewDefault : styles.videoPreviewBlock}
         >
           <VideoPlayer src={url} kind="player" />
         </Flex>
@@ -41,7 +41,7 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
       return (
         <Flex align="center">
           <DocumentIcon />
-          <Text size={1} style={{marginLeft: '0.5em'}}>
+          <Text className={styles.rawFileLabel} size={1}>
             {value.display_name ?? 'Raw file'}
           </Text>
         </Flex>
@@ -59,20 +59,12 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
           : url
 
       return layout === 'default' ? (
-        <Flex align="center" justify="center" style={{width: '100%'}}>
-          <img
-            alt="preview"
-            src={previewSrc}
-            style={{maxWidth: '80px', height: 'auto', display: 'block'}}
-          />
+        <Flex align="center" className={styles.thumbnailFlex} justify="center">
+          <img alt="preview" className={styles.thumbnailImage} src={previewSrc} />
         </Flex>
       ) : (
-        <div style={{width: '100%'}}>
-          <img
-            alt="preview"
-            src={previewSrc}
-            style={{width: '100%', height: 'auto', display: 'block'}}
-          />
+        <div className={styles.fullWidthPreview}>
+          <img alt="preview" className={styles.fullWidthImage} src={previewSrc} />
         </div>
       )
     }

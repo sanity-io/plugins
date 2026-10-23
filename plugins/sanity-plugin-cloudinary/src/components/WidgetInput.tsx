@@ -2,17 +2,11 @@ import {PlugIcon} from '@sanity/icons/Plug'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {useCallback} from 'react'
 import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
-import {styled} from 'styled-components'
 
 import type {CloudinaryAsset} from '../types'
 import AssetPreview from './AssetPreview'
 
-const SetupButtonContainer = styled.div`
-  position: relative;
-  display: block;
-  font-size: 0.8em;
-  transform: translate(0%, -10%);
-`
+import * as styles from './WidgetInput.module.css'
 
 type WidgetInputProps = ObjectInputProps & {openMediaSelector: () => void; onSetup: () => void}
 
@@ -25,7 +19,7 @@ const WidgetInput = (props: WidgetInputProps) => {
 
   return (
     <Stack>
-      <SetupButtonContainer>
+      <div className={styles.setupButtonContainer}>
         <Flex flex={1} justify="flex-end">
           <Button
             color="primary"
@@ -36,13 +30,13 @@ const WidgetInput = (props: WidgetInputProps) => {
             tabIndex={0}
           />
         </Flex>
-      </SetupButtonContainer>
+      </div>
 
-      <Flex style={{textAlign: 'center', width: '100%'}} marginBottom={2}>
+      <Flex className={styles.previewFlex} marginBottom={2}>
         <AssetPreview value={value as CloudinaryAsset} />
       </Flex>
 
-      <Grid gap={1} style={{gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))'}}>
+      <Grid className={styles.actionGrid} gap={1}>
         <Button
           disabled={readOnly}
           mode="ghost"
