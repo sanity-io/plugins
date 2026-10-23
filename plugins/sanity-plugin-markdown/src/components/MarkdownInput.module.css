@@ -1,0 +1,62 @@
+/*
+ * Theme colors come in as namespaced custom properties, assigned from
+ * `useTheme_v2()` in `MarkdownInput.tsx`. EasyMDE / CodeMirror class names stay
+ * global — they come from `easymde`'s stylesheet — so they are marked
+ * `:global()` under the local root.
+ */
+.root :global(.CodeMirror.CodeMirror) {
+  color: var(--markdown-fg);
+  border-color: var(--markdown-border);
+  background-color: inherit;
+}
+
+.root :global(.cm-s-easymde .CodeMirror-cursor) {
+  border-color: var(--markdown-fg);
+}
+
+.root :global(.editor-toolbar),
+.root :global(.editor-preview-side) {
+  border-color: var(--markdown-border);
+}
+
+.root :global(.CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected) {
+  background-color: var(--markdown-selection-hovered-bg);
+}
+
+.root :global(.CodeMirror-selected.CodeMirror-selected.CodeMirror-selected) {
+  background-color: var(--markdown-bg);
+}
+
+.root :global(.editor-toolbar > *) {
+  color: var(--markdown-fg);
+}
+
+.root :global(.editor-toolbar > .active),
+.root :global(.editor-toolbar > button:hover),
+.root :global(.editor-preview pre),
+.root :global(.cm-s-easymde .cm-comment) {
+  background-color: var(--markdown-bg);
+}
+
+.root :global(.editor-preview) {
+  background-color: var(--markdown-bg);
+}
+
+.root :global(.editor-preview h1),
+.root :global(.editor-preview h2),
+.root :global(.editor-preview h3),
+.root :global(.editor-preview h4),
+.root :global(.editor-preview h5),
+.root :global(.editor-preview h6) {
+  font-size: revert;
+}
+
+.root :global(.editor-preview ul),
+.root :global(.editor-preview li) {
+  list-style: revert;
+  padding: revert;
+}
+
+.root :global(.editor-preview a) {
+  text-decoration: revert;
+}
