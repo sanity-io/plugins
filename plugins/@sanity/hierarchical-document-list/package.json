@@ -37,14 +37,14 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@nosferatu500/react-sortable-tree": "5.0.0",
+    "@nosferatu500/react-dnd": "^19.2.0",
+    "@nosferatu500/react-dnd-html5-backend": "^19.2.0",
+    "@nosferatu500/react-sortable-tree": "^7.1.0",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/mutator": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
-    "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1"
+    "@sanity/util": "catalog:"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",

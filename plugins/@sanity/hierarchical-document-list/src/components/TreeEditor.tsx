@@ -1,19 +1,16 @@
-import {
-  SortableTreeWithoutDndContext as SortableTree,
-  type TreeItem,
-} from '@nosferatu500/react-sortable-tree'
+import {DndProvider} from '@nosferatu500/react-dnd'
+import {HTML5Backend} from '@nosferatu500/react-dnd-html5-backend'
+import {SortableTreeWithoutDndContext as SortableTree} from '@nosferatu500/react-sortable-tree'
 import {AddCircleIcon} from '@sanity/icons/AddCircle'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 import type {PatchEvent} from 'sanity'
 
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
 import {TreeOperationsContext} from '../hooks/useTreeOperations'
-import type {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
+import type {LocalTreeItem, Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
 import getCommonTreeProps from '../utils/getCommonTreeProps'
 import getTreeHeight from '../utils/getTreeHeight'
 import {getTreeOperations} from '../utils/getTreeOperations'
@@ -190,6 +187,6 @@ const doNothingOnChange = () => {
   // Do nothing. onMoveNode will do all the work
 }
 
-const getNodeKey = (data: {node: TreeItem}) => data.node['_key'] as string
+const getNodeKey = (data: {node: LocalTreeItem}) => data.node._key
 
 export default TreeEditor
