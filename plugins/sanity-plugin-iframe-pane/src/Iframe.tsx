@@ -290,6 +290,7 @@ const IframeInner = memo(function IframeInner(props: IframeInnerProps) {
               loading={loading}
               reloading={reloading}
               iframeSize={iframeSize}
+              prefersReducedMotion={prefersReducedMotion}
               setReloading={setReloading}
               setLoading={setLoading}
               url={url}
@@ -308,6 +309,7 @@ interface FrameProps extends Required<Pick<IframeOptions, 'attributes'>> {
   setLoading: (loading: boolean) => void
   setReloading: (reloading: boolean) => void
   iframeSize: IframeSizeKey
+  prefersReducedMotion: boolean
   url: URL | undefined
 }
 function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
@@ -319,6 +321,7 @@ function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
     reloading,
     url,
     setReloading,
+    prefersReducedMotion,
     ref: iframe,
   } = props
 
@@ -356,8 +359,13 @@ function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
           frameBorder="0"
           style={{maxHeight: '100%'}}
           src={url.toString()}
-          initial={['background', iframeSize]}
+          // Motion replays `initial` → `animate` whenever React re-attaches the element, which
+          // the Studio does every time it shows a tool it kept mounted behind an `<Activity>`
+          // boundary. Starting in the `animate` state leaves a loaded preview as it is on reveal
+          // (its first state is `background`, the same as the old `initial`).
+          initial={false}
           variants={iframeVariants}
+          custom={prefersReducedMotion}
           animate={[
             loading ? 'background' : 'active',
             reloading ? 'reloading' : 'idle',
@@ -397,10 +405,16 @@ const iframeVariants = {
   reloading: {
     scale: [1, 1, 1, 0.98],
   },
-  active: {
-    opacity: [0, 0, 1],
+  // Hold while the spinner fades out, then fade in: the choreography of the `[0, 0, 1]` opacity
+  // keyframes this variant used to have, which a replay would run from 0 again. The transition
+  // lives on the variant so the size, shadow and reload pulse keep Motion's defaults (a
+  // `transition` prop would replace them for every value). It also replaces the `MotionConfig`
+  // one, so with reduced motion it is left out to fall back to that `{duration: 0}`.
+  active: (prefersReducedMotion: boolean) => ({
+    opacity: 1,
     scale: 1,
-  },
+    transition: prefersReducedMotion ? undefined : {opacity: {delay: 0.4, duration: 0.4}},
+  }),
 }
 
 function Loading({iframeSize}: {iframeSize: IframeSizeKey}) {
