@@ -30,6 +30,9 @@ function LoadingIcon(): JSX.Element {
       <SpinnerIcon
         style={{
           animation: 'spin 2s linear infinite',
+          // Prevents a wobbly spinner on Safari
+          height: 'round(1em, 2px)',
+          width: 'round(1em, 2px)',
         }}
       />
     </>
