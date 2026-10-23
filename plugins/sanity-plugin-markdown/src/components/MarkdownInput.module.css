@@ -19,8 +19,21 @@
   border-color: var(--markdown-border);
 }
 
+/* Native selection (CodeMirror also paints .CodeMirror-selected; both need the theme color) */
+.root :global(.CodeMirror-line)::selection,
+.root :global(.CodeMirror-line > span)::selection,
+.root :global(.CodeMirror-line > span > span)::selection {
+  background-color: var(--markdown-selection-bg);
+}
+
+.root :global(.CodeMirror-line)::-moz-selection,
+.root :global(.CodeMirror-line > span)::-moz-selection,
+.root :global(.CodeMirror-line > span > span)::-moz-selection {
+  background-color: var(--markdown-selection-bg);
+}
+
 .root :global(.CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected) {
-  background-color: var(--markdown-selection-hovered-bg);
+  background-color: var(--markdown-selection-bg);
 }
 
 .root :global(.CodeMirror-selected.CodeMirror-selected.CodeMirror-selected) {

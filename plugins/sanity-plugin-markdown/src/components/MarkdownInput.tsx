@@ -1,4 +1,5 @@
 import {Box, Text, useTheme_v2} from '@sanity/ui'
+import {rgba} from '@sanity/ui/theme'
 // `import type` (not an inline type specifier) so the bundle keeps no side-effect
 // `import 'easymde'`, which would break SSR/Node (easymde touches `document` on load)
 import type {Options as EasyMdeOptions} from 'easymde'
@@ -34,7 +35,7 @@ interface MarkdownThemeProperties extends CSSProperties {
   '--markdown-fg': string
   '--markdown-border': string
   '--markdown-bg': string
-  '--markdown-selection-hovered-bg': string
+  '--markdown-selection-bg': string
 }
 
 function MarkdownInputStyles({
@@ -48,7 +49,9 @@ function MarkdownInputStyles({
     '--markdown-fg': color.fg,
     '--markdown-border': color.border,
     '--markdown-bg': color.bg,
-    '--markdown-selection-hovered-bg': color.selectable.primary.hovered.bg,
+    // Match pre-migration EasyMDE selection: translucent focus ring for both
+    // CodeMirror's overlay and the browser's native ::selection highlight.
+    '--markdown-selection-bg': rgba(color.focusRing, 0.3),
   }
 
   return (
