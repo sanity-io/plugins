@@ -142,7 +142,14 @@ export async function openTranslationsMenu(page: Page) {
   return menuButton
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 export function languageOption(page: Page, languageTitle: string) {
-  // Language buttons render title text + language id badge.
-  return page.getByRole('button', {name: new RegExp(`^${languageTitle}\\b`, 'i')})
+  // Accessible name is the language title plus the id badge ("English en").
+  // A prefix match also hits document title buttons ("English source lesson").
+  return page.getByRole('button', {
+    name: new RegExp(`^${escapeRegExp(languageTitle)}\\s+\\S+$`, 'i'),
+  })
 }
