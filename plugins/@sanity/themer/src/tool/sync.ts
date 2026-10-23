@@ -63,12 +63,21 @@ export interface SyncLocks {
 export interface ThemerSyncOptions {
   /** Persists the machine's snapshot — from the one tab that holds the lock */
   persist: (snapshot: Snapshot<unknown>) => void
+  /**
+   * Reads the themes the last persist wrote — what a tab back from the
+   * back/forward cache catches up on when no other tab is left to tell it
+   * what changed. Without it, such a tab persists nothing until it hears
+   * from another tab or changes something of its own
+   */
+  restore?: () => ThemerState | undefined
   /** Opens the channel to the other tabs, or `null` where there is none */
   openChannel?: () => SyncChannel | null
   /** Elects the tab that persists, or `undefined` where there is no lock manager */
   locks?: SyncLocks | undefined
   /** Defers a persist to an idle moment; returns what cancels it */
   schedule?: (callback: () => void) => () => void
+  /** The page whose `pagehide`/`pageshow` the sync follows — the window, or a stand-in */
+  page?: Pick<EventTarget, 'addEventListener' | 'removeEventListener'>
 }
 
 function openBroadcastChannel(): SyncChannel | null {
@@ -124,10 +133,15 @@ function parseMessage(data: unknown): SyncMessage | null {
     const from: unknown = Reflect.get(data, 'from')
     const to: unknown = Reflect.get(data, 'to')
 
-    if (!state || typeof revision !== 'number' || !Number.isFinite(revision)) return null
+    // Revisions count up by one, so only a whole number that can keep doing so orders anything
+    if (!state || typeof revision !== 'number' || !Number.isSafeInteger(revision) || revision < 0) {
+      return null
+    }
     if (typeof from !== 'string') return null
+    // A recipient that is not a tab's id must not turn an answer into a broadcast
+    if (to !== undefined && typeof to !== 'string') return null
 
-    return {type, state, revision, from, ...(typeof to === 'string' ? {to} : {})}
+    return {type, state, revision, from, ...(to === undefined ? {} : {to})}
   }
 
   return null
@@ -148,16 +162,20 @@ function tabId(): string {
  * around to the other tabs on a `BroadcastChannel` as it changes, where it
  * reaches their machines as a `themes.sync` event: the same themes
  * everywhere, with the flow each tab is in, the tool's open and split state
- * (the reducer's, in `plugin.tsx`) and the images of this session staying
+ * (the reducer's, in `ThemerProvider`) and the images of this session staying
  * the tab's own. A tab that starts asks the others for the current state,
  * in case what it read from storage was not written yet.
  *
  * Persisting is the business of one tab at a time: the one holding the Web
- * Lock, which it keeps for as long as it lives. The others queue for it, so
+ * Lock, which it keeps for as long as it shows. The others queue for it, so
  * the next tab takes over as the holder goes away, and a tab that takes
  * over persists right away, in case the last one left with a write pending.
- * Writes happen when the browser is idle — a run of edits is written once —
- * and as the page hides, so that nothing pending is lost.
+ * A page going into the back/forward cache lets go of the lock too — frozen,
+ * it could neither persist nor answer — and queues for it again, asking the
+ * others what changed, as it comes back; the lock coming to it before any
+ * tab answered, no other tab is left to, and it reads what the last one
+ * wrote instead. Writes happen when the browser is idle — a run of edits is
+ * written once — and as the page hides, so that nothing pending is lost.
  *
  * Returns what stops the sync: it lets go of the lock, which hands the
  * persisting on, and closes the channel.
@@ -168,15 +186,38 @@ export function syncThemer(
   actorRef: ActorRefFrom<typeof themerMachine>,
   options: ThemerSyncOptions,
 ): () => void {
-  const {persist, openChannel = openBroadcastChannel, schedule = scheduleIdle} = options
-  const channel = openChannel()
+  const {
+    persist,
+    restore,
+    openChannel = openBroadcastChannel,
+    schedule = scheduleIdle,
+    page = typeof window === 'undefined' ? undefined : window,
+  } = options
+  /**
+   * The channel to the other tabs — closed as the page goes into the
+   * back/forward cache and opened anew as it comes back: a message on its
+   * way to this tab as it froze is delivered as it thaws, and would pass for
+   * news of what the others did meanwhile, ahead of what they wrote; a
+   * closed channel delivers nothing (HTML, `BroadcastChannel`'s message
+   * steps check the closed flag as the message arrives)
+   */
+  let channel = openChannel()
   // Without a channel the tabs cannot hear of each other's changes, so each
   // persists its own — a lock would only silence the tabs not holding it.
   // Given as `undefined` means no lock manager, not the browser's: Node has
   // one too these days
   const locks = channel ? ('locks' in options ? options.locks : browserLocks()) : undefined
-  const id = tabId()
-  const abort = new AbortController()
+  /** Whether the page is in the back/forward cache, its channel closed */
+  let cached = false
+  /**
+   * What the other tabs know this tab as — new as it starts and again as it
+   * comes back from the back/forward cache, so that an answer to the hello it
+   * said before it was cached, still on its way, is not taken for an answer
+   * to the one it says coming back
+   */
+  let id = tabId()
+  /** Cancels the pending lock request, or lets a held lock go */
+  let abort = new AbortController()
   let leader = false
   let cancelPersist: (() => void) | undefined
   /** Whether another tab's state is being sent into the machine, which is nothing to pass on */
@@ -190,6 +231,11 @@ export function syncThemer(
   let unchanged = true
   /** The tabs that said hello before this one held the lock, to answer once it does */
   const unanswered = new Set<string>()
+  /**
+   * Whether this tab is back from the back/forward cache without having heard
+   * what changed meanwhile — not the state to persist over the others' yet
+   */
+  let restored = false
 
   const isNewer = (message: {revision: number; from: string}) =>
     message.revision > revision || (message.revision === revision && message.from > origin)
@@ -206,112 +252,182 @@ export function syncThemer(
   const answer = (to: string) => {
     channel?.post({type: 'state', state: shared, revision, from: origin, to} satisfies SyncMessage)
   }
+  /** Sends another source's state into the machine, as nothing to pass on */
+  const apply = (state: ThemerState) => {
+    shared = state
+    applying = true
+    try {
+      actorRef.send({type: 'themes.sync', state})
+    } finally {
+      applying = false
+    }
+  }
   const becomeLeader = () => {
+    // Back from the cache and the lock this tab's before any answer came: no
+    // other tab is left to say what changed, so what the last one wrote did
+    if (restored && restore) {
+      const stored = restore()
+
+      restored = false
+      if (stored && !dequal(stored, shared)) apply(stored)
+    }
     leader = true
-    persistNow()
+    if (!restored) persistNow()
     // Tabs that started alongside this one asked before anyone held the lock
     for (const from of unanswered) answer(from)
     unanswered.clear()
   }
 
-  if (locks) {
+  const queueForLock = () => {
+    if (!locks) {
+      becomeLeader()
+
+      return
+    }
+
+    const {signal} = abort
+
     locks
-      .request(LOCK_NAME, {signal: abort.signal}, () => {
+      .request(LOCK_NAME, {signal}, () => {
         becomeLeader()
 
-        // Held until the sync stops, which hands the lock to the next tab in line
+        // Held until the sync stops or the page is cached, which hands the
+        // lock to the next tab in line
         return new Promise<void>((resolve) => {
-          abort.signal.addEventListener('abort', () => resolve(), {once: true})
+          signal.addEventListener('abort', () => resolve(), {once: true})
         })
       })
       .catch(() => {
-        // The sync stopped before the lock was granted — nothing to let go of
+        // The request was cancelled before the lock was granted — nothing to let go of
       })
-  } else {
-    becomeLeader()
   }
+
+  queueForLock()
 
   const subscription = actorRef.subscribe((snapshot) => {
-    if (leader) persistSoon()
-    if (applying) return
+    if (!applying) {
+      const state = selectStoredState(snapshot)
 
-    const state = selectStoredState(snapshot)
+      // Only changes to what is persisted concern the other tabs — the flow is this tab's
+      if (!dequal(state, shared)) {
+        shared = state
+        unchanged = false
+        restored = false
+        revision += 1
+        origin = id
+        channel?.post({type: 'state', state, revision, from: id} satisfies SyncMessage)
+      }
+    }
 
-    // Only changes to what is persisted concern the other tabs — the flow is this tab's
-    if (dequal(state, shared)) return
-
-    shared = state
-    unchanged = false
-    revision += 1
-    origin = id
-    channel?.post({type: 'state', state, revision, from: id} satisfies SyncMessage)
+    if (leader && !restored) persistSoon()
   })
 
-  if (channel) {
-    channel.listen((data) => {
-      const message = parseMessage(data)
+  const receive = (data: unknown) => {
+    const message = parseMessage(data)
 
-      if (!message) return
+    if (!message) return
 
-      if (message.type === 'hello') {
-        // The tab that persists speaks for all, so that the newcomer hears one
-        // answer — or hears it once a tab holds the lock
-        if (leader) {
-          answer(message.from)
-        } else {
-          unanswered.add(message.from)
+    if (message.type === 'hello') {
+      // The tab that persists speaks for all, so that the newcomer hears one
+      // answer — or hears it once a tab holds the lock
+      if (leader) {
+        answer(message.from)
+      } else {
+        unanswered.add(message.from)
+      }
+
+      return
+    }
+
+    if (message.to !== undefined) {
+      if (message.to !== id) return
+
+      // An answer is the holder's current state: whether it is ahead of
+      // this tab or not, what this tab has is current once it is in
+      restored = false
+
+      if (!unchanged) {
+        // Asked before this tab changed anything, answered after: the change
+        // is the later one, and goes around again ahead of the answer
+        if (origin === id) {
+          revision = Math.max(revision, message.revision) + 1
+          channel?.post({type: 'state', state: shared, revision, from: id} satisfies SyncMessage)
+
+          return
         }
 
-        return
+        // Answered twice — without a lock manager every tab answers — the
+        // answers are ordered like any other state
+        if (!isNewer(message)) return
       }
+    } else if (!isNewer(message)) {
+      return
+    }
 
-      if (message.to !== undefined) {
-        if (message.to !== id) return
+    revision = message.revision
+    origin = message.from
+    // Even an answer that only confirms what this tab had settles what it
+    // is at: the answers that may follow are ordered like any other state
+    unchanged = false
+    restored = false
+    if (!dequal(message.state, shared)) apply(message.state)
+  }
+  /** Listens on the channel and asks the other tabs for the current state */
+  const join = () => {
+    if (!channel) return
 
-        if (!unchanged) {
-          // Asked before this tab changed anything, answered after: the change
-          // is the later one, and goes around again ahead of the answer
-          if (origin === id) {
-            revision = Math.max(revision, message.revision) + 1
-            channel.post({type: 'state', state: shared, revision, from: id} satisfies SyncMessage)
-
-            return
-          }
-
-          // Answered twice — without a lock manager every tab answers — the
-          // answers are ordered like any other state
-          if (!isNewer(message)) return
-        }
-      } else if (!isNewer(message)) {
-        return
-      }
-
-      revision = message.revision
-      origin = message.from
-      if (dequal(message.state, shared)) return
-
-      shared = message.state
-      unchanged = false
-      applying = true
-      try {
-        actorRef.send({type: 'themes.sync', state: message.state})
-      } finally {
-        applying = false
-      }
-    })
+    channel.listen(receive)
     channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
+
+  join()
 
   const flush = () => {
     if (leader && cancelPersist) persistNow()
   }
-  const page = typeof window === 'undefined' ? undefined : window
+  const hide = (event: Event) => {
+    flush()
 
-  page?.addEventListener('pagehide', flush)
+    // Into the back/forward cache: frozen, this tab can neither persist nor
+    // answer, so the lock goes to the next tab in line until it shows again,
+    // and the channel closes, so that nothing on its way to this tab now is
+    // delivered as it comes back (see `channel`)
+    if ('persisted' in event && event.persisted === true && channel) {
+      cached = true
+      leader = false
+      if (locks) abort.abort()
+      channel.close()
+      channel = null
+    }
+  }
+  const show = (event: Event) => {
+    if (!('persisted' in event) || event.persisted !== true || !cached) return
+
+    // What changed meanwhile comes back as an answer, ordered like any other
+    // state — until it does, this tab's state is not the one to persist. The
+    // answer is as welcome as to a tab that just started: what this tab
+    // changed before it was cached went around then, and the answer has it
+    // — taken for a late reply to that change, it would be answered with the
+    // frozen state as the newest. Without a lock manager this tab persists
+    // for itself and is its own leader at once, which reads what was written
+    // meanwhile before it writes again
+    cached = false
+    restored = true
+    unchanged = true
+    id = tabId()
+    abort = new AbortController()
+    channel = openChannel()
+    queueForLock()
+    join()
+  }
+
+  page?.addEventListener('pagehide', hide)
+  page?.addEventListener('pageshow', show)
 
   return () => {
     subscription.unsubscribe()
-    page?.removeEventListener('pagehide', flush)
+    page?.removeEventListener('pagehide', hide)
+    page?.removeEventListener('pageshow', show)
     flush()
     abort.abort()
     channel?.close()
