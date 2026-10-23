@@ -1,7 +1,8 @@
 // @vitest-environment node
 
-import {of} from 'rxjs'
-import {describe, expect, it, vi} from 'vitest'
+import {combineEpics} from 'redux-observable'
+import {of, Subject} from 'rxjs'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {createEpicTestStore} from '../../__tests__/fixtures/createEpicTestStore'
 import {
@@ -9,7 +10,16 @@ import {
   mockTransactionCommit,
 } from '../../__tests__/fixtures/mockSanityClient'
 import type {Tag} from '../../types'
-import {tagsCreateEpic, tagsDeleteEpic, tagsFetchEpic, tagsUpdateEpic, tagsActions} from './index'
+import {
+  tagsActions,
+  tagsCreateEpic,
+  tagsDeleteEpic,
+  tagsFetchEpic,
+  tagsListenEpic,
+  tagsListenerCreateQueueEpic,
+  tagsListenerDeleteQueueEpic,
+  tagsUpdateEpic,
+} from './index'
 
 const sampleTag: Tag = {
   _id: 't1',
@@ -182,5 +192,36 @@ describe('tagsUpdateEpic', () => {
       expect(store.getState().tags.byIds['t1']?.error?.statusCode).toBe(409)
       expect(client.patch).not.toHaveBeenCalled()
     })
+  })
+})
+
+describe('tagsListenEpic', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('feeds tag mutations into the listener queues', async () => {
+    const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
+    const listen = vi.fn((_query: string) => events)
+    const store = createEpicTestStore(
+      combineEpics(tagsListenEpic, tagsListenerCreateQueueEpic, tagsListenerDeleteQueueEpic),
+      createMockSanityClient({listen}),
+    )
+
+    store.dispatch(tagsActions.listenRequest())
+    expect(listen).toHaveBeenCalledTimes(1)
+    expect(listen.mock.calls[0]![0]).toContain('media.tag')
+
+    events.next({documentId: 't1', result: sampleTag, transition: 'appear'})
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().tags.byIds['t1']!.tag).toEqual(sampleTag)
+
+    events.next({documentId: 't1', transition: 'disappear'})
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().tags.byIds['t1']).toBeUndefined()
   })
 })
