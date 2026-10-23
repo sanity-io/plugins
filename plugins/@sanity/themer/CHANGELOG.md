@@ -1,5 +1,13 @@
 # @sanity/themer
 
+## 0.10.5
+
+### Patch Changes
+
+- [#2220](https://github.com/sanity-io/plugins/pull/2220) [`567479a`](https://github.com/sanity-io/plugins/commit/567479a4cf58665c1a195307226b5a91e118ec47) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.3.0
+
+- [#2241](https://github.com/sanity-io/plugins/pull/2241) [`4d05795`](https://github.com/sanity-io/plugins/commit/4d057951ac12514834ecef30d331c7bf9d4df5bb) Thanks [@stipsan](https://github.com/stipsan)! - Render the theme thumbnails from the handful of colors they paint, instead of building a whole Sanity UI theme and two `ThemeProvider`s per thumbnail, so the theme list renders much faster when the navbar button prerenders it
+
 ## 0.10.4
 
 ### Patch Changes

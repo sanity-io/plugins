@@ -1,5 +1,11 @@
 # @sanity/sanity-plugin-async-list
 
+## 3.1.0
+
+### Minor Changes
+
+- [#2073](https://github.com/sanity-io/plugins/pull/2073) [`b2824b6`](https://github.com/sanity-io/plugins/commit/b2824b63c05ecb8e7132349de3ff72ed5b0acf59) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add an option type argument to `asyncList` and `createAsyncListInput` so `renderOption`, `renderValue`, and `filterOption` are typed without a cast
+
 ## 3.0.9
 
 ### Patch Changes
