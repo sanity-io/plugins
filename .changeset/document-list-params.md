@@ -2,4 +2,4 @@
 'sanity-plugin-dashboard-widget-document-list': patch
 ---
 
-Pass the documented `params` option through to custom document list queries. `queryParams` still works as an alias.
+Document `queryParams` as the option that supplies parameters to a custom document list query.
