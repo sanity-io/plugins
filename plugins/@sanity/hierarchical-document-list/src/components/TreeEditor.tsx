@@ -13,14 +13,15 @@ import type {PatchEvent} from 'sanity'
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
 import {TreeOperationsContext} from '../hooks/useTreeOperations'
-import useTreeOperationsProvider from '../hooks/useTreeOperationsProvider'
 import type {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
 import getCommonTreeProps from '../utils/getCommonTreeProps'
 import getTreeHeight from '../utils/getTreeHeight'
+import {getTreeOperations} from '../utils/getTreeOperations'
 import {getUnaddedItems} from '../utils/treeData'
 import type {HandleMovedNodeData} from '../utils/treePatches'
 import DocumentInNode from './DocumentInNode'
 import {TreeEditorErrorBoundary} from './TreeEditorErrorBoundary'
+import {TreeScaffoldStyles} from './TreeNodeRendererScaffold'
 
 interface TreeEditorProps {
   tree: StoredTreeItem[]
@@ -41,11 +42,14 @@ function TreeEditor(props: TreeEditorProps) {
     allItems,
   })
 
-  const operations = useTreeOperationsProvider({
-    patchPrefix: props.patchPrefix,
-    onChange: props.onChange,
-    localTree,
-  })
+  const operations = useMemo(
+    () =>
+      getTreeOperations({
+        patchPrefix: props.patchPrefix,
+        onChange: props.onChange,
+      }),
+    [props.patchPrefix, props.onChange],
+  )
 
   const [context, setContext] = useState<HTMLElement | null>(null)
   const [treeViewHeight, setTreeViewHeight] = useState<string>('')
@@ -87,6 +91,7 @@ function TreeEditor(props: TreeEditorProps) {
 
   return (
     <TreeEditorErrorBoundary>
+      <TreeScaffoldStyles />
       {/*Use this Box-wrapper to get a context Element to prevent DndProvider to have to HTML% backend at the same time https://github.com/react-dnd/react-dnd/issues/186#issuecomment-978206387 */}
       <Box id={documentId} ref={setContext}>
         {context ? (

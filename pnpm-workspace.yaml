@@ -33,7 +33,7 @@ catalog:
   '@sanity/icons': ^5.2.3
   '@sanity/image-url': ^2.1.1
   '@sanity/mutator': ^6.19.0
-  '@sanity/pkg-utils': ^13.0.11
+  '@sanity/pkg-utils': ^13.0.12
   '@sanity/preview-url-secret': ^4.1.5
   '@sanity/schema': ^6.19.0
   '@sanity/telemetry': '^1.1.0'
@@ -64,7 +64,7 @@ catalog:
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
-  motion: ^14.2.0
+  motion: ^14.3.0
   nanoid: ^6.0.2
   oxc-transform-react: ^0.154.0
   oxfmt: ^0.73.0
@@ -145,6 +145,7 @@ minimumReleaseAgeExclude:
   - '@portabletext/*'
   - '@publint/*'
   - '@rollup/*'
+  - '@rolldown/*'
   - '@sanity/*'
   - '@sanity-labs/*'
   - '@tanstack/react-virtual'
@@ -184,6 +185,7 @@ minimumReleaseAgeExclude:
   - react
   - react-dom
   - react-is
+  - rolldown
   - react-rx
   - rolldown-plugin-dts
   - sanity
