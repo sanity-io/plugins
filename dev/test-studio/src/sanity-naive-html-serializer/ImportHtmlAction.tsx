@@ -1,7 +1,7 @@
 import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {Box, Button, Card, Flex, Stack, Text, TextArea} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
-import {useCallback, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {type DocumentActionComponent, useDocumentOperation} from 'sanity'
 
 import {articleFromHtml, type ArticleImport} from './articleFromHtml'
@@ -10,27 +10,38 @@ const ImportHtmlAction: DocumentActionComponent = (props) => {
   const {patch} = useDocumentOperation(props.id, props.type)
   const {push: pushToast} = useToast()
   const [open, setOpen] = useState(false)
-  const [html, setHtml] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const patchRef = useRef(patch)
+  const pushToastRef = useRef(pushToast)
+
+  patchRef.current = patch
+  pushToastRef.current = pushToast
 
   const close = useCallback(() => {
     setOpen(false)
-    setHtml('')
-    setError(null)
   }, [])
 
-  const applyImport = useCallback(
-    (fields: ArticleImport) => {
-      patch.execute([{set: fields}])
-      close()
-      pushToast({
-        closable: true,
-        status: 'success',
-        title: 'Imported HTML into this article',
-      })
-    },
-    [close, patch, pushToast],
-  )
+  const onImported = useCallback((fields: ArticleImport) => {
+    patchRef.current.execute([{set: fields}])
+    setOpen(false)
+    pushToastRef.current({
+      closable: true,
+      status: 'success',
+      title: 'Imported HTML into this article',
+    })
+  }, [])
+
+  // The studio compares this dialog with ===. A new object on each keystroke
+  // rebuilds the modal and moves the textarea caret to the end.
+  const dialog = useMemo(() => {
+    if (!open) return false
+    return {
+      type: 'dialog' as const,
+      header: 'Import translated HTML',
+      width: 'large' as const,
+      onClose: close,
+      content: <ImportHtmlDialog onImported={onImported} />,
+    }
+  }, [close, onImported, open])
 
   return {
     label: 'Import HTML',
@@ -40,41 +51,23 @@ const ImportHtmlAction: DocumentActionComponent = (props) => {
     onHandle: () => {
       setOpen(true)
     },
-    dialog: open && {
-      type: 'dialog',
-      header: 'Import translated HTML',
-      width: 'large',
-      onClose: close,
-      content: (
-        <ImportHtmlDialog
-          error={error}
-          html={html}
-          patchDisabled={Boolean(patch.disabled)}
-          onChange={(value) => {
-            setHtml(value)
-            setError(null)
-          }}
-          onImport={() => {
-            const result = articleFromHtml(html)
-            if (!result.ok) {
-              setError(result.message)
-              return
-            }
-            applyImport(result.fields)
-          }}
-        />
-      ),
-    },
+    dialog,
   }
 }
 
-function ImportHtmlDialog(props: {
-  html: string
-  error: string | null
-  patchDisabled: boolean
-  onChange: (value: string) => void
-  onImport: () => void
-}) {
+function ImportHtmlDialog(props: {onImported: (fields: ArticleImport) => void}) {
+  const [html, setHtml] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  const handleImport = () => {
+    const result = articleFromHtml(html)
+    if (!result.ok) {
+      setError(result.message)
+      return
+    }
+    props.onImported(result.fields)
+  }
+
   return (
     <Box padding={4}>
       <Stack gap={4}>
@@ -84,20 +77,23 @@ function ImportHtmlDialog(props: {
         </Text>
         <TextArea
           aria-label="Serialized HTML"
-          onChange={(event) => props.onChange(event.currentTarget.value)}
+          onChange={(event) => {
+            setHtml(event.currentTarget.value)
+            setError(null)
+          }}
           placeholder="<html>…"
           rows={14}
-          value={props.html}
+          value={html}
         />
-        {props.error ? (
+        {error ? (
           <Card padding={3} radius={2} tone="critical">
-            <Text size={1}>{props.error}</Text>
+            <Text size={1}>{error}</Text>
           </Card>
         ) : null}
         <Flex justify="flex-end">
           <Button
-            disabled={props.patchDisabled || props.html.trim().length === 0}
-            onClick={props.onImport}
+            disabled={html.trim().length === 0}
+            onClick={handleImport}
             text="Import"
             tone="primary"
           />
