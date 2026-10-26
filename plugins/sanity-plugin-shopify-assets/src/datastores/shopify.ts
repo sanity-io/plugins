@@ -1,6 +1,6 @@
 import {BehaviorSubject, Observable, concat} from 'rxjs'
 import {fromFetch} from 'rxjs/fetch'
-import {debounceTime, distinctUntilChanged, switchMap, withLatestFrom} from 'rxjs/operators'
+import {debounceTime, switchMap, withLatestFrom} from 'rxjs/operators'
 
 type SearchSubject = BehaviorSubject<string>
 type CursorSubject = BehaviorSubject<any>
@@ -79,7 +79,7 @@ export const search = (props: fetchProps): Observable<any> => {
             cursor: c,
             resultsPerPage,
             token,
-          }).pipe(distinctUntilChanged())
+          })
         }
         return fetchList({projectId, dataset, shop, cursor: c, resultsPerPage, token})
       }),
