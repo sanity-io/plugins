@@ -7,24 +7,31 @@ import {getDestinationClient} from './getDestinationClient'
 type ClientConfig = {projectId: string; dataset?: string; apiVersion?: string; token?: string}
 
 function createClient(config: ClientConfig): SanityClient {
-  return {
+  const client = {
     config: () => config,
     withConfig: (next: Partial<ClientConfig>) => createClient({...config, ...next}),
-  } as unknown as SanityClient
+  }
+
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- only config() and withConfig() are called
+  return client as unknown as SanityClient
 }
 
 // Minimal auth store whose `state` emits synchronously on subscribe, like the
 // Studio's replayed auth state
 function createAuth(state: Partial<AuthState>) {
   const unsubscribe = vi.fn()
-  const auth = {
+  const store = {
     state: {
       subscribe: ({next}: {next: (value: AuthState) => void}) => {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- only authenticated and client are read
         next(state as AuthState)
         return {unsubscribe}
       },
     },
-  } as unknown as AuthStore
+  }
+
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- only state.subscribe() is called
+  const auth = store as unknown as AuthStore
 
   return {auth, unsubscribe}
 }
