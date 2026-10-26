@@ -198,8 +198,11 @@ so it stays a `devDependency`, never a runtime `dependency`.
 **3. Register the Vite plugin in the plugin's own `vitest.config.ts`.** The package-exports test
 resolves this workspace package's own `exports` map — whose `.` entry points at `./src/index.ts` for
 monorepo-internal dev consumption, not `dist/index.js` — so it transitively imports real `.css.ts`
-source and needs the plugin to compile it. Use `@sanity/vanilla-extract-vite-plugin` instead of the
-upstream `@vanilla-extract/vite-plugin` — it's faster. The exported `vanillaExtractPlugin()` API is a
+source and needs the plugin to compile it. Any other workspace package that imports this plugin the
+same way (for example a peer that loads `LANGUAGE_FIELD_NAME` through the barrel) also needs
+`vanillaExtractPlugin()` in _its_ `vitest.config.ts`, or Vitest fails with "Styles were unable to
+be assigned to a file." Use `@sanity/vanilla-extract-vite-plugin` instead of the upstream
+`@vanilla-extract/vite-plugin` — it's faster. The exported `vanillaExtractPlugin()` API is a
 drop-in match:
 
 ```ts
