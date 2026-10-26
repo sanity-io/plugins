@@ -14,8 +14,6 @@ import {collapseFlagsForValueField, optionsForValueField} from '../utils/options
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
-import {languageRow} from './InternationalizedInput.css'
-
 function ChangeLanguageButton(props: {
   value: InternationalizedArrayItem
   path: Path
@@ -229,18 +227,6 @@ export default function InternationalizedInput(
           const schemaType = field?.schemaType
           const itemNeedsMigration = !props.value[LANGUAGE_FIELD_NAME]
 
-          const title = itemNeedsMigration ? null : keyIsValid ? (
-            <Label muted size={1}>
-              {languageTitle}
-            </Label>
-          ) : (
-            <ChangeLanguageButton
-              value={props.value}
-              path={props.path}
-              onChange={originalOnChange}
-            />
-          )
-
           // Field options compile onto the array, not the shared value type.
           // Copy them onto this language row so inputs such as file `accept` apply.
           // Object fields also need `collapsed` on the member: Studio already
@@ -254,6 +240,25 @@ export default function InternationalizedInput(
             level: field?.level,
             currentCollapsed: member.collapsed,
           })
+          const collapsible = collapse?.collapsible ?? member.collapsible
+
+          const title = itemNeedsMigration ? null : keyIsValid ? (
+            <Label
+              muted
+              size={1}
+              // Centers the label on the collapse chevron. Only collapsible rows
+              // have one; elsewhere this would shift the label down.
+              style={collapsible ? {display: 'inline-block', verticalAlign: 'middle'} : undefined}
+            >
+              {languageTitle}
+            </Label>
+          ) : (
+            <ChangeLanguageButton
+              value={props.value}
+              path={props.path}
+              onChange={originalOnChange}
+            />
+          )
 
           return Object.assign({}, member, {
             ...collapse,
@@ -293,9 +298,7 @@ export default function InternationalizedInput(
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
       <Flex align="flex-end" gap={2}>
-        <Box className={languageRow} flex={1}>
-          {props.inputProps.renderInput(inlineProps)}
-        </Box>
+        <Box flex={1}>{props.inputProps.renderInput(inlineProps)}</Box>
         <RemoveButton
           isDefault={isDefault}
           readOnly={Boolean(readOnly)}
