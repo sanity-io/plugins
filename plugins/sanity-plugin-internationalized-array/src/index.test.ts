@@ -18,6 +18,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "internationalizedArrayLanguageFilter": "function",
         "isInternationalizedArrayItemType": "function",
       },
+      "./bundle.css": {},
       "./migrations": {
         "migrateToLanguageField": "function",
       },

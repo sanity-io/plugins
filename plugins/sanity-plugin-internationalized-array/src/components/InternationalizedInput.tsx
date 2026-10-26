@@ -14,6 +14,8 @@ import {collapseFlagsForValueField, optionsForValueField} from '../utils/options
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
+import {languageRow} from './InternationalizedInput.css'
+
 function ChangeLanguageButton(props: {
   value: InternationalizedArrayItem
   path: Path
@@ -291,7 +293,9 @@ export default function InternationalizedInput(
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>
       <Flex align="flex-end" gap={2}>
-        <Box flex={1}>{props.inputProps.renderInput(inlineProps)}</Box>
+        <Box className={languageRow} flex={1}>
+          {props.inputProps.renderInput(inlineProps)}
+        </Box>
         <RemoveButton
           isDefault={isDefault}
           readOnly={Boolean(readOnly)}
