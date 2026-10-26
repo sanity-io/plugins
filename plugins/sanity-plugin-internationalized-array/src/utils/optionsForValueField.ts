@@ -67,7 +67,7 @@ function optionEquals(
   return record?.[key] === value
 }
 
-export function collapseStateFromOptions(options: unknown, level: number): CollapseFlags {
+function collapseStateFromOptions(options: unknown, level: number): CollapseFlags {
   const record = isOptionRecord(options) ? options : undefined
 
   if (optionEquals(record, 'collapsible', false) || optionEquals(record, 'collapsable', false)) {
