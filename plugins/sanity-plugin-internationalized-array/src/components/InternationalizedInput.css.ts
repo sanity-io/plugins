@@ -10,5 +10,5 @@ import {globalStyle, style} from '@vanilla-extract/css'
 export const languageRow = style({})
 
 globalStyle(`${languageRow} button:has([data-sanity-icon="toggle-arrow-right"])`, {
-  alignItems: 'center',
+  alignItems: 'flex-end',
 })
