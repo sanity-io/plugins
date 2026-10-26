@@ -7,5 +7,4 @@ export default defineConfig({
     'migrations/index': './migrations/index.ts',
   },
   reactCompiler: {transform: 'oxc'},
-  vanillaExtract: {identifiers: 'safe'},
 }) satisfies Promise<UserConfig | UserConfig[]>
