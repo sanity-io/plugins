@@ -13,7 +13,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals()
-  fetchMock.mockClear()
+  fetchMock.mockReset()
   vi.useRealTimers()
 })
 
