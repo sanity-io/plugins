@@ -669,6 +669,9 @@ export default function Duplicator(props: DuplicatorProps) {
     })
 
     if (!destinationClient) {
+      // Still list the payload so it can be duplicated elsewhere, or here once
+      // logged in, just without destination statuses
+      setPayload(payloadActual.map((item) => ({...item, status: undefined})))
       setMessage(createNotLoggedInMessage(dest))
 
       return
@@ -967,6 +970,8 @@ export default function Duplicator(props: DuplicatorProps) {
 
     if (targeted) {
       setDestination(targeted)
+      // Clear any message about the previous destination
+      setMessage(null)
       updatePayloadStatuses(payload, targeted).catch(console.error)
     }
   }
