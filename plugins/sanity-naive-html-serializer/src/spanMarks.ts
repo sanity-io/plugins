@@ -63,18 +63,20 @@ function decodeMarkPayload(encoded: string): MarkRecord | undefined {
   }
 }
 
-function markAttributes(encoded: string | undefined, id: string | undefined): string {
-  const idAttr = id ? ` id="${escapeHTML(id)}"` : ''
-  const payloadAttr = encoded ? ` ${SPAN_MARK_ATTR}="${encoded}"` : ''
-  return `${idAttr}${payloadAttr}`
+function markPayloadAttribute(encoded: string): string {
+  return ` ${SPAN_MARK_ATTR}="${encoded}"`
 }
 
+/**
+ * Mark keys are not element ids. One definition can wrap several separate
+ * anchors, and the block key already uses `id` to find its way back.
+ */
 export const linkMark: PortableTextMarkComponent = ({children, value, markKey, markType}) => {
   const href = stringField(value, 'href')
   const safeHref = href && uriLooksSafe(href) ? escapeHTML(href) : ''
   const encoded = encodeMarkPayload(value, markKey, markType)
-  const id = stringField(value, '_key') || markKey
-  return `<a href="${safeHref}"${markAttributes(encoded, id)}>${children}</a>`
+  const payload = encoded ? markPayloadAttribute(encoded) : ''
+  return `<a href="${safeHref}"${payload}>${children}</a>`
 }
 
 export const unknownAnnotationMark: PortableTextMarkComponent = ({
@@ -88,8 +90,7 @@ export const unknownAnnotationMark: PortableTextMarkComponent = ({
   if (!encoded) {
     return `<span class="${className}">${children}</span>`
   }
-  const id = stringField(value, '_key') || markKey
-  return `<span class="${className}"${markAttributes(encoded, id)}>${children}</span>`
+  return `<span class="${className}"${markPayloadAttribute(encoded)}>${children}</span>`
 }
 
 type MarkElement = {
@@ -116,15 +117,64 @@ export function deserializeSpanMark(
     return undefined
   }
 
-  const markDef = decodeMarkPayload(encoded)
-  if (!markDef) {
+  const decoded = decodeMarkPayload(encoded)
+  if (!decoded) {
     return undefined
   }
 
+  const markDef = withImportedHref(decoded, el, tag)
   const children = next(el.childNodes)
   return {
     _type: '__annotation',
     markDef,
     children: Array.isArray(children) ? children : children ? [children] : [],
   }
+}
+
+/**
+ * Translators edit the visible href. When that attribute is non-empty it
+ * replaces the payload URL, and the other mark fields stay. An empty href
+ * leaves the payload URL in place, except an unsafe one, which is removed
+ * so it cannot ride along behind a blank anchor.
+ */
+function withImportedHref(markDef: MarkRecord, el: MarkElement, tag: string): MarkRecord {
+  if (tag === 'a' && el.getAttribute) {
+    const attributeHref = el.getAttribute('href')?.trim()
+    if (attributeHref) {
+      return {...markDef, href: attributeHref}
+    }
+  }
+  return omitUnsafeHref(markDef)
+}
+
+function omitUnsafeHref(markDef: MarkRecord): MarkRecord {
+  const href = markDef.href
+  if (typeof href !== 'string' || href === '' || uriLooksSafe(href)) {
+    return markDef
+  }
+  const next = {...markDef}
+  delete next.href
+  return next
+}
+
+/**
+ * The HTML deserializer records one mark definition per element. A repeated
+ * annotation is several elements that share a key, so keep the first.
+ */
+export function dedupeMarkDefs(block: {markDefs?: unknown[] | undefined} | undefined): void {
+  if (!block || !Array.isArray(block.markDefs)) {
+    return
+  }
+  const seen = new Set<string>()
+  const markDefs = block.markDefs
+  block.markDefs = markDefs.filter((def) => {
+    if (!isRecord(def) || typeof def._key !== 'string' || def._key.length === 0) {
+      return true
+    }
+    if (seen.has(def._key)) {
+      return false
+    }
+    seen.add(def._key)
+    return true
+  })
 }
