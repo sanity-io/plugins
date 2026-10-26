@@ -53,7 +53,7 @@ export interface EnhancedTreeItem extends StoredTreeItem {
 /**
  * Tree items as found in the sortable tree itself.
  */
-export type LocalTreeItem = EnhancedTreeItem & Pick<TreeItem, 'title' | 'children'>
+export type LocalTreeItem = TreeItem<EnhancedTreeItem>
 
 export interface TreeInputOptions {
   /**
