@@ -10,7 +10,7 @@ import {set, unset} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
-import {optionsForValueField} from '../utils/optionsForValueField'
+import {collapseFlagsForValueField, optionsForValueField} from '../utils/optionsForValueField'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -241,9 +241,20 @@ export default function InternationalizedInput(
 
           // Field options compile onto the array, not the shared value type.
           // Copy them onto this language row so inputs such as file `accept` apply.
+          // Object fields also need `collapsed` on the member: Studio already
+          // computed that flag from the shared value type.
           const options = optionsForValueField(props.parentSchemaType?.options, schemaType?.options)
+          const collapse = collapseFlagsForValueField({
+            jsonType: schemaType?.jsonType,
+            arrayFieldOptions: props.parentSchemaType?.options,
+            valueFieldOptions: schemaType?.options,
+            mergedOptions: options,
+            level: field?.level,
+            currentCollapsed: member.collapsed,
+          })
 
           return Object.assign({}, member, {
+            ...collapse,
             field: Object.assign({}, field, {
               schemaType: Object.assign({}, schemaType, {
                 title,
