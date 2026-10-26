@@ -90,14 +90,13 @@ defineField({
   type: 'internationalizedArrayFile',
   options: {
     accept: '.vtt,.srt,text/vtt,application/x-subrip',
-    collapsed: true,
   },
 })
 ```
 
 `languages`, `apiVersion`, and `select` belong to the plugin and are not copied. Options already set on the type in `fieldTypes` stay in place, and options on an individual field override them.
 
-`collapsed` is copied with the other options. It does not collapse the language row, because Studio decides that before these options are applied.
+`collapsed` is not currently supported. Setting it has no effect.
 
 ## Loading languages
 
