@@ -10,6 +10,7 @@ import {definePlugin, defineType, useSchema} from 'sanity'
 import type {DefaultDocumentNodeResolver, UserViewComponent} from 'sanity/structure'
 
 import {formatHtml} from './formatHtml'
+import {ImportHtmlAction} from './ImportHtmlAction'
 import {serializeDocumentToHtml} from './serializeDocumentToHtml'
 
 const naiveHtmlSerializerArticle = defineType({
@@ -149,4 +150,12 @@ export const sanityNaiveHtmlSerializerDefaultDocumentNode: DefaultDocumentNodeRe
 export const sanityNaiveHtmlSerializerExample = definePlugin(() => ({
   name: 'sanity-naive-html-serializer-example',
   schema: {types: [naiveHtmlSerializerArticle]},
+  document: {
+    actions: (previous, {schemaType}) => {
+      if (schemaType === 'naiveHtmlSerializerArticle') {
+        return [...previous, ImportHtmlAction]
+      }
+      return previous
+    },
+  },
 }))
