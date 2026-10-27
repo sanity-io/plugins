@@ -1,8 +1,4 @@
-// TODO: when upgrading to @sanity/ui@4 start using the new tokens
-// oxlint-disable typescript/no-deprecated
-
-import {Box, Text} from '@sanity/ui'
-import {rgba} from '@sanity/ui/theme'
+import {Box, Text, useTheme_v2} from '@sanity/ui'
 // `import type` (not an inline type specifier) so the bundle keeps no side-effect
 // `import 'easymde'`, which would break SSR/Node (easymde touches `document` on load)
 import type {Options as EasyMdeOptions} from 'easymde'
@@ -15,86 +11,56 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentProps,
+  type CSSProperties,
+  type ReactNode,
 } from 'react'
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
 import {PatchEvent, set, type StringInputProps, unset, useClient} from 'sanity'
-import {styled} from 'styled-components'
 
 import type {MarkdownOptions} from '../schema'
 
+import * as styles from './MarkdownInput.module.css'
+
 const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
-const MarkdownInputStyles = styled(Box)`
-  & .CodeMirror.CodeMirror {
-    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
-    background-color: inherit;
+/**
+ * The Studio theme tokens `MarkdownInput.module.css` paints with, as the custom
+ * properties that stylesheet reads. React's `CSSProperties` does not know
+ * custom properties, so the inline `style` is typed through this extension of it.
+ */
+interface MarkdownThemeProperties extends CSSProperties {
+  '--markdown-fg': string
+  '--markdown-border': string
+  '--markdown-bg': string
+  '--markdown-selection-hovered-bg': string
+}
+
+function MarkdownInputStyles({
+  className,
+  style,
+  children,
+  ...props
+}: ComponentProps<typeof Box> & {children?: ReactNode}) {
+  const {color} = useTheme_v2()
+  const themeStyle: MarkdownThemeProperties = {
+    '--markdown-fg': color.fg,
+    '--markdown-border': color.border,
+    '--markdown-bg': color.bg,
+    '--markdown-selection-hovered-bg': color.selectable.primary.hovered.bg,
   }
 
-  & .CodeMirror-line::selection,
-  .CodeMirror-line > span::selection,
-  .CodeMirror-line > span > span::selection {
-    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
-  }
-
-  & .CodeMirror-line::-moz-selection,
-  .CodeMirror-line > span::-moz-selection,
-  .CodeMirror-line > span > span::-moz-selection {
-    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
-  }
-
-  & .cm-s-easymde .CodeMirror-cursor {
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.fg};
-  }
-
-  & .editor-toolbar,
-  .editor-preview-side {
-    border-color: ${({theme}) => theme.sanity.color.card.enabled.border};
-  }
-
-  & .CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
-  }
-
-  & .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
-  }
-
-  & .editor-toolbar > * {
-    color: ${({theme}) => theme.sanity.color.card.enabled.fg};
-  }
-
-  & .editor-toolbar > .active,
-  .editor-toolbar > button:hover,
-  .editor-preview pre,
-  .cm-s-easymde .cm-comment {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
-  }
-
-  & .editor-preview {
-    background-color: ${({theme}) => theme.sanity.color.card.enabled.bg};
-
-    & h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-size: revert;
-    }
-
-    & ul,
-    li {
-      list-style: revert;
-      padding: revert;
-    }
-
-    & a {
-      text-decoration: revert;
-    }
-  }
-`
+  return (
+    <Box
+      {...props}
+      className={className ? `${styles.root} ${className}` : styles.root}
+      style={{...themeStyle, ...style}}
+    >
+      {children}
+    </Box>
+  )
+}
 
 export interface MarkdownInputProps extends StringInputProps {
   /**
