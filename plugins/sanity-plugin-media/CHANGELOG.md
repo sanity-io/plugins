@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.6.0
+
+### Minor Changes
+
+- [#2016](https://github.com/sanity-io/plugins/pull/2016) [`c7408b1`](https://github.com/sanity-io/plugins/commit/c7408b122db8816e511e52f621482849e61537be) Thanks [@trostum](https://github.com/trostum)! - Add "Title: A to Z" and "Title: Z to A" sort options to the sort order dropdown. When `locales` are configured, title sorting coalesces through the configured locales in declared order.
+
 ## 6.5.0
 
 ### Minor Changes
