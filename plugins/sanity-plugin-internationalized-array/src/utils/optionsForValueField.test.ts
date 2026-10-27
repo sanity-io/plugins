@@ -3,7 +3,7 @@ import {describe, expect, test} from 'vitest'
 
 import arrayFactory from '../schema/array'
 import objectFactory from '../schema/object'
-import {optionsForValueField} from './optionsForValueField'
+import {collapseFlagsForValueField, optionsForValueField} from './optionsForValueField'
 
 const ACCEPT = '.vtt,.srt,text/vtt,application/x-subrip'
 
@@ -48,6 +48,73 @@ describe('optionsForValueField', () => {
   test('returns undefined when neither side has options to apply', () => {
     expect(optionsForValueField(undefined, undefined)).toBeUndefined()
     expect(optionsForValueField(null, 'nope')).toBeUndefined()
+  })
+})
+
+describe('collapseFlagsForValueField', () => {
+  test('starts an object value collapsed when the array field says so', () => {
+    expect(
+      collapseFlagsForValueField({
+        jsonType: 'object',
+        arrayFieldOptions: {collapsed: true, apiVersion: '2025-10-15'},
+        valueFieldOptions: {accept: ''},
+        mergedOptions: {accept: '', collapsed: true},
+        level: 1,
+        currentCollapsed: undefined,
+      }),
+    ).toEqual({collapsed: true, collapsible: true})
+  })
+
+  test('keeps an editor toggle that differs from the value type default', () => {
+    expect(
+      collapseFlagsForValueField({
+        jsonType: 'object',
+        arrayFieldOptions: {collapsed: true},
+        valueFieldOptions: {accept: ''},
+        mergedOptions: {accept: '', collapsed: true},
+        level: 1,
+        currentCollapsed: false,
+      }),
+    ).toEqual({collapsed: false, collapsible: true})
+  })
+
+  test('does not collapse primitive values', () => {
+    expect(
+      collapseFlagsForValueField({
+        jsonType: 'string',
+        arrayFieldOptions: {collapsed: true},
+        valueFieldOptions: undefined,
+        mergedOptions: {collapsed: true},
+        level: 1,
+        currentCollapsed: undefined,
+      }),
+    ).toBeUndefined()
+  })
+
+  test('leaves the member alone when the array field has no collapse option', () => {
+    expect(
+      collapseFlagsForValueField({
+        jsonType: 'object',
+        arrayFieldOptions: {accept: ACCEPT},
+        valueFieldOptions: {accept: ''},
+        mergedOptions: {accept: ACCEPT},
+        level: 1,
+        currentCollapsed: undefined,
+      }),
+    ).toBeUndefined()
+  })
+
+  test('honors collapsible: false by keeping the object open', () => {
+    expect(
+      collapseFlagsForValueField({
+        jsonType: 'object',
+        arrayFieldOptions: {collapsible: false, collapsed: true},
+        valueFieldOptions: undefined,
+        mergedOptions: {collapsible: false, collapsed: true},
+        level: 1,
+        currentCollapsed: undefined,
+      }),
+    ).toEqual({collapsed: false, collapsible: false})
   })
 })
 
