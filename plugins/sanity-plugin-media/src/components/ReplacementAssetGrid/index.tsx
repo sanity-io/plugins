@@ -88,7 +88,7 @@ const ReplacementAssetGrid = ({items, onLoadMore, onSelect}: Props) => (
       return asset ? <ReplacementCard asset={asset} onSelect={onSelect} /> : null
     }}
     overscan={48}
-    style={{height: '100%', overflowX: 'hidden', overflowY: 'scroll'}}
+    style={{height: '100%', overflowAnchor: 'none', overflowX: 'hidden', overflowY: 'scroll'}}
     totalCount={items.length}
   />
 )
