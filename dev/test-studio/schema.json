@@ -7117,6 +7117,14 @@
           "name": "shopify.asset"
         },
         "optional": true
+      },
+      "shopifyAssetFieldDataset": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "shopify.asset"
+        },
+        "optional": true
       }
     }
   },
