@@ -72,6 +72,33 @@ export type GeneratedColorPalettes = Record<ThemeColorSchemeKey, GeneratedColorP
  * @public
  */
 export function buildPalette(options: BuildThemeOptions = {}): GeneratedColorPalettes {
+  const base = buildBasePalettes(options)
+
+  return {
+    dark: withStockHues(base.dark),
+    light: withStockHues(base.light),
+  }
+}
+
+/**
+ * The part of a generated palette that the theme options change: the
+ * backgrounds and the `gray` and `blue` scales. Every other hue keeps its
+ * stock value.
+ *
+ * @internal
+ */
+export type GeneratedBasePalette = Pick<GeneratedColorPalette, 'black' | 'white' | 'gray' | 'blue'>
+
+/**
+ * The {@link GeneratedBasePalette} of each color scheme — what
+ * {@link buildPalette} generates, minus the stock hues it fills the rest of
+ * the palettes with.
+ *
+ * @internal
+ */
+export function buildBasePalettes(
+  options: BuildThemeOptions = {},
+): Record<ThemeColorSchemeKey, GeneratedBasePalette> {
   const resolved = resolveThemeOptions(options)
 
   return {
@@ -80,17 +107,31 @@ export function buildPalette(options: BuildThemeOptions = {}): GeneratedColorPal
   }
 }
 
+function withStockHues(base: GeneratedBasePalette): GeneratedColorPalette {
+  return {
+    ...base,
+    purple: tintHexes(color.purple),
+    magenta: tintHexes(color.magenta),
+    red: tintHexes(color.red),
+    orange: tintHexes(color.orange),
+    yellow: tintHexes(color.yellow),
+    green: tintHexes(color.green),
+    cyan: tintHexes(color.cyan),
+  }
+}
+
 /**
- * Generates the palette of one scheme. The scheme's own background takes the
- * slot the scheme paints with (`black` for dark, `white` for light), while
- * the other slot — which a scheme only touches for a few inverted details —
- * takes the other scheme's background, so the theme stays one palette.
+ * Generates the base palette of one scheme. The scheme's own background
+ * takes the slot the scheme paints with (`black` for dark, `white` for
+ * light), while the other slot — which a scheme only touches for a few
+ * inverted details — takes the other scheme's background, so the theme stays
+ * one palette.
  */
 function buildSchemePalette(
   key: ThemeColorSchemeKey,
   scheme: ResolvedSchemeOptions,
   otherBackground: string,
-): GeneratedColorPalette {
+): GeneratedBasePalette {
   const accentAnchor = clampAnchorLightness(hexToHsl(scheme.accent))
   const textAnchor = clampAnchorLightness(hexToHsl(scheme.text))
   const grayAnchor = applyContrast(textAnchor, accentAnchor, scheme.contrast)
@@ -114,13 +155,6 @@ function buildSchemePalette(
     white: lightenBackground(lightBackground, anchorLuminances),
     gray: grayTints,
     blue: blueTints,
-    purple: tintHexes(color.purple),
-    magenta: tintHexes(color.magenta),
-    red: tintHexes(color.red),
-    orange: tintHexes(color.orange),
-    yellow: tintHexes(color.yellow),
-    green: tintHexes(color.green),
-    cyan: tintHexes(color.cyan),
   }
 }
 

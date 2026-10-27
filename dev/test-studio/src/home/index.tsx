@@ -55,6 +55,7 @@ const INTERNATIONALIZATION_TYPES = [
   'i18nArrayPerformanceTest', // sanity-plugin-internationalized-array
   'i18nArrayCircularSchemaRepro', // sanity-plugin-internationalized-array
   'movieDocument', // sanity-plugin-internationalized-array
+  'issue1956Repro', // sanity-plugin-internationalized-array
   'issue520Repro', // sanity-plugin-internationalized-array
   'smartlingTest', // sanity-plugin-studio-smartling
   'transifexTest', // sanity-plugin-transifex

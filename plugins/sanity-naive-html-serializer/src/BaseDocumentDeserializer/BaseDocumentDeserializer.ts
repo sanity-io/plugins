@@ -1,6 +1,7 @@
 import {htmlToBlocks} from '@portabletext/block-tools'
 
 import {customDeserializers, customBlockDeserializers} from '../BaseSerializationConfig'
+import {dedupeMarkDefs} from '../spanMarks'
 import type {Deserializer} from '../types'
 import {blockContentType, preprocess} from './helpers'
 
@@ -25,6 +26,7 @@ const deserializeArray = (
         deserializedObject = htmlToBlocks(child.outerHTML, blockContentType, {
           rules: blockDeserializers,
         })[0]
+        dedupeMarkDefs(deserializedObject)
         deserializedObject._key = child.id
       }
     } catch (e) {

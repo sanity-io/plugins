@@ -10,6 +10,7 @@ const require = createRequire(import.meta.url)
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
 const appId = process.env.SANITY_STUDIO_APP_ID || 'bi1ktslqwmu1cawds5ce3jn6'
+const schemaExtractionExternals = ['lexorank', 'm3u8-parser', 'video.js', 'yup']
 // Enables Vite DevTools (https://devtools.vite.dev) for both `sanity dev` and `sanity build`.
 // During `sanity build` it records a Rolldown build session, which can then be inspected from
 // the DevTools dock in a running `sanity dev` server without restarting it.
@@ -36,8 +37,22 @@ export default defineCliConfig({
   vite(viteConfig, {command}): UserConfig {
     let nextConfig = mergeConfig(viteConfig, {
       plugins: [vanillaExtractPlugin(), ...(isViteDevToolsEnabled ? [DevTools()] : [])],
+      // `@sanity/themer` resolves to its source here, so its `*.module.css` files are compiled by
+      // Vite rather than by the plugin's build (`@tsdown/css`, Lightning CSS). Compiling them with
+      // Lightning CSS here too keeps the two alike: it scopes `view-transition-class`es,
+      // `container-name`s and `@keyframes` along with the classes, where PostCSS modules would
+      // leave the first two global, and with the pattern of the plugin's `tsdown.config.ts`
+      // (`generateScopedName`, hashing each stylesheet's content) the studio renders the very names
+      // the build ships. The CLI's own `lightningcss.exclude` (`Features.LightDark`) survives the merge.
+      css: {
+        transformer: 'lightningcss',
+        lightningcss: {cssModules: {pattern: '[content-hash]_[local]'}},
+      },
       // `devtools: {}` makes `sanity build` emit a Rolldown build session that the DevTools dock can inspect
       build: isViteDevToolsEnabled ? {rolldownOptions: {devtools: {}}} : {},
+      // Schema extraction loads the studio config through Vite SSR. Keep a few CJS/browser-only
+      // packages external so Node handles their interop instead of the module runner.
+      ssr: {external: schemaExtractionExternals},
     } satisfies UserConfig)
 
     // Support React production profiling on Vercel preview/production builds

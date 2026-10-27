@@ -20,6 +20,14 @@ const shopifyAssetsTest = defineType({
         shopifyDomain: 'sanity-plugins-test.myshopify.com',
       },
     }),
+    defineField({
+      type: 'shopify.asset',
+      name: 'shopifyAssetFieldDataset',
+      title: 'Shopify asset (field-level dataset)',
+      options: {
+        dataset: 'plugins',
+      },
+    }),
   ],
 })
 

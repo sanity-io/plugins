@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+      # stylelint 17 has no GitHub formatter; the matcher turns its default output into annotations
+      - run: echo "::add-matcher::.github/problem-matchers/stylelint.json"
       - run: pnpm lint --format github
 
   knip:

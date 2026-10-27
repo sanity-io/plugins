@@ -66,6 +66,9 @@ function isPristineDocument(
  *   read-only until initial value templates resolve, and the field-level
  *   `readOnly` prop can lag that document-level lock. Skipping the patch
  *   until writable avoids "Attempted to patch a read-only document" toasts.
+ *   With `allowRemovingDefaultLanguages`, those rows are initial values for a
+ *   pristine document only. Once the document has history, a removed row is
+ *   left alone, including when the field value is `undefined`.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -90,6 +93,7 @@ export default function InternationalizedArray(
     languages,
     filteredLanguages,
     defaultLanguages,
+    allowRemovingDefaultLanguages,
     buttonAddAll,
     buttonLocations,
     restoreOrder,
@@ -208,6 +212,12 @@ export default function InternationalizedArray(
   }, [languageKeysFromValue, languages])
 
   useEffect(() => {
+    if (allowRemovingDefaultLanguages && !isPristine) {
+      // A pristine document has never existed, so it still receives default languages.
+      // Once it has history, a removed row stays removed.
+      return undefined
+    }
+
     const hasAddedDefaultLanguages = defaultLanguages
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
@@ -231,6 +241,7 @@ export default function InternationalizedArray(
     }
     return undefined
   }, [
+    allowRemovingDefaultLanguages,
     isPristine,
     documentExists,
     isDeleted,

@@ -1,5 +1,11 @@
 # sanity-plugin-shopify-assets
 
+## 2.1.0
+
+### Minor Changes
+
+- [#2062](https://github.com/sanity-io/plugins/pull/2062) [`2c565d0`](https://github.com/sanity-io/plugins/commit/2c565d02c5d82968a4ca81c1641478b4b73fad3a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add an optional `dataset` setting on the plugin and on `shopify.asset` fields so asset requests can use the dataset connected to Shopify. A field value overrides the plugin value, and `dataset` and `shopifyDomain` can be overridden independently. When neither is set, requests keep using the active Studio dataset.
+
 ## 2.0.20
 
 ### Patch Changes

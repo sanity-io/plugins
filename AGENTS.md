@@ -218,13 +218,13 @@ Two things are required:
 
 The CI pipeline runs on every PR:
 
-| Job                | What it checks                                                 |
-| ------------------ | -------------------------------------------------------------- |
-| **build**          | `pnpm build` - All packages compile successfully               |
-| **lint**           | `pnpm lint --format github` - Code passes oxlint               |
-| **knip**           | `pnpm knip` - No unused files, dependencies or exports         |
-| **test**           | `pnpm test` - All tests pass (runs after build + lint)         |
-| **storybook-test** | `pnpm test:browser` - Every story renders in headless Chromium |
+| Job                | What it checks                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| **build**          | `pnpm build` - All packages compile successfully                                                       |
+| **lint**           | `pnpm lint --format github` - CSS module typings are current, CSS passes stylelint, code passes oxlint |
+| **knip**           | `pnpm knip` - No unused files, dependencies or exports                                                 |
+| **test**           | `pnpm test` - All tests pass (runs after build + lint)                                                 |
+| **storybook-test** | `pnpm test:browser` - Every story renders in headless Chromium                                         |
 
 Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUsedInFile`), so removing a type assertion or annotation that was the last reference to an exported type will make knip start flagging that export. Run `pnpm knip` after refactors that remove type references.
 
@@ -232,7 +232,8 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 - **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run natively via the [React Compiler vendored into oxlint](https://oxc.rs/blog/2026-08-18-react-compiler-support.html); the root `oxlint.config.ts` enables all of them (stricter than the plugin-kit preset) since this monorepo builds plugins with React Compiler.
 - **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
-- Run `pnpm lint:fix` to auto-fix issues when possible
+- **stylelint** lints every `*.css` file (`pnpm lint:css`, part of `pnpm lint`) with the `@sanity/plugin-kit/stylelint` preset: `stylelint-config-recommended` plus `stylelint-config-css-modules`, formatting rules off since oxfmt owns formatting. The root `stylelint.config.mjs` imports and spreads the preset; it is `.mjs` on purpose, as stylelint loads `.ts` configs through the TypeScript compiler API that TypeScript 7 does not ship. stylelint 17 has no GitHub formatter, so the CI lint job registers `.github/problem-matchers/stylelint.json` to turn its default output into annotations.
+- Run `pnpm lint:fix` to auto-fix issues when possible (regenerates the CSS module typings, then stylelint and oxlint with `--fix`)
 
 ## Testing
 
@@ -582,6 +583,16 @@ pnpm lint:fix    # Auto-fix what's possible
 
 The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
 
+### CSS modules
+
+`@sanity/themer` styles its tool with `*.module.css` files, built by `@tsdown/css` (Lightning CSS) through the `css` option of `@sanity/tsdown-config`. What to know when writing or reviewing one:
+
+- **Every CSS module gets a generated, gitignored `X.module.css.d.ts` under the plugin's `generated/` directory**, written by [css-modules-kit](https://github.com/mizdra/css-modules-kit)'s codegen. `pnpm css:types` regenerates them all: it runs the `generate` script of `packages/@repo/css-modules-kit`, a private package that exists only because css-modules-kit needs the TypeScript 6 compiler API, which it gets from `@typescript/typescript6` aliased as `typescript` there — the TypeScript 7 the rest of the repo runs on does not ship that API. That script chains one `cmk --clean --project <plugin>` script per plugin with CSS modules (`generate:themer`), and the typings are never committed: `pnpm install` generates them (the package's `prepare` script), `pnpm lint` and `pnpm lint:fix` regenerate them before oxlint type-checks, and each plugin's `build` regenerates its own first (`prebuild: pnpm --filter @repo/css-modules-kit run generate:themer`), so a fresh clone, the editor and CI see them without a checked-in copy. Keep a plugin's `prebuild` to its own `generate:<plugin>` script: `cmk --clean` wipes the output directory, so two plugins regenerating each other's typings while turbo builds them in parallel would race. A `.module.css` import that fails with TS2307 outside those commands just means the typings have not been generated yet — run `pnpm css:types`. The plugin's `tsconfig.json` carries the setup: the `*.module.css` files in `include`, `rootDirs: [".", "generated"]` so `./X.module.css` resolves to the typings, and `cmkOptions` (`enabled`, plus `container: true` so container names are exported the way Lightning CSS exports them — keyframes are on by default and custom properties off, matching Lightning CSS — and `namedExports: true`, so the typings export each name and have no default export). A typo like `styles.removedThumbnails` then fails `pnpm lint` with `TS2551 … Did you mean 'removedThumbnail'?` — there is no ambient `declare module '*.module.css'` to fall back on; keep it that way. oxfmt and oxlint skip the generated files, which carry css-modules-kit's own `// @ts-nocheck` and formatting.
+- **Import a CSS module as `import * as styles from './X.module.css'` or with named imports, never as a default import.** Lightning CSS [tree-shakes](https://parceljs.org/languages/css/#tree-shaking) the classes a module never reads, and it can only see the reads through a namespace or named import; a default import keeps the whole stylesheet. `@tsdown/css` 0.23 does not prune individual classes yet (it drops a module's stylesheet only when the whole module goes unused), so today the rule is about keeping that door open and matching the typings rather than about bundle size. The shared oxlint config loads `@sanity/plugin-kit/oxlint-plugin`, whose `plugin-kit/no-css-module-default-import` rule reports a default import from any `*.module.css` and rewrites a lone one to the namespace import under `pnpm lint:fix`. The generated typings have no default export either (`namedExports: true`), so the default import is also a type error. Vitest's stand-in for an unprocessed CSS module in jsdom is a default export only (a Proxy that answers every property), so a namespace or named import reads `undefined` from it; the themer's `vitest.config.ts` sets `css: {include: [/\.module\.css$/]}` so Vite compiles the modules and the tests read the same named exports the build emits. Copy that setting into any plugin that adds CSS modules.
+- **Lightning CSS scopes more than classes.** With `cssModules` on, `@keyframes`, `container-name`, `view-transition-class`, the classes inside `::view-transition-*(.x)` and the idents inside `:active-view-transition-type(x)` are all hashed per file, and exported alongside the classes (a container name shows up in the typings too). Keep a `@container` query in the same module as the `container-name` it queries — a shared name across two files never matches, and `@tsdown/css` sets `cssModules` itself, so `container: false` cannot be configured — and mark identifiers that must stay public with `:global()`, e.g. `:root:global(:active-view-transition-type(sanity-themer))`.
+- **The scoped names hash the stylesheet's content** (`generateScopedName: '[content-hash]_[local]'` in the plugin's `tsdown.config.ts`), so a release that changes a file's styles gets new names for them. Custom properties are not scoped (`dashedIdents` is off); namespace them, e.g. `--themer-preview-bg`, and type an inline `style` that sets them through an interface extending `CSSProperties` rather than a type assertion.
+- **The test studio compiles the same files with Vite**, so `dev/test-studio/sanity.cli.ts` sets `css.transformer: 'lightningcss'` with the same `cssModules.pattern`. The studio then renders exactly the names the build ships, which also makes `sanity dev` a faithful check of the hashing. Mirror both settings when one changes.
+
 ## Project Structure
 
 ```
@@ -602,6 +613,8 @@ plugins/
 ### Build fails with "tsgo did not generate dts file"
 
 Declarations are generated with tsgo (tsdown enables dts generation automatically — packages either declare types in `package.json` or inherit `declaration: true` from the shared `@sanity/tsconfig` presets — and picks the tsgo generator because the installed `typescript` is v7+), which requires exported types to be portable. A `TS2883` error printed above the failure means an inferred exported type references a module that is not publicly addressable (for example a deep `.pnpm` or dts-chunk path). Fix it by adding an explicit type annotation at the reported site so the emitted declaration can use a locally imported name (see the actor annotations in `plugins/sanity-plugin-dashboard-widget-vercel/src/machines/form.ts` for an example). Note that test files are part of the declaration program too, since the single `tsconfig.json` includes them.
+
+When the TS2883 is reported for `tsdown.config.ts` itself and names `UserConfig` from a `.pnpm/tsdown@…` path, the fix is in `pnpm-lock.yaml`, not in the config: the plugin's own `tsdown` entry and the `tsdown` that its `@sanity/tsdown-config` snapshot links resolve to different peer variants (`tsdown@0.23.1(@tsdown/css@0.23.1)…` versus `tsdown@0.23.1(@vitejs/devtools@0.4.12)…`), so the `UserConfig` that `defineConfig` returns lives in a `tsdown` copy the plugin cannot import. `@tsdown/css` is a devDependency of `@sanity/themer` only, so pnpm has two `tsdown` instances to choose from, and a partial re-resolution (an install after merging `main`, say) can dedupe `@sanity/tsdown-config` onto one of them while leaving other importers' `tsdown` on the other. Run `pnpm dedupe` twice (through the registry proxy when the Studio `next` overrides must stay put) until every importer's `tsdown` matches the `tsdown` dependency of its `@sanity/tsdown-config` snapshot; the only intended holdout is `turbo/generators`, which does not use `@sanity/tsdown-config`.
 
 ### Lint Errors About Missing Types
 
@@ -682,7 +695,7 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
 
-`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`.
+`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`. The override only helps once lefthook's hook exists in `.git/hooks`, and on a fresh VM it does not: the snapshot's `pnpm install` ran with `core.hooksPath` already pointing elsewhere, so lefthook never wrote `.git/hooks/pre-commit`. Install it there once, then restore the setting: `HOOKS=$(git config core.hooksPath); git config core.hooksPath .git/hooks && pnpm exec lefthook install --force; git config core.hooksPath "$HOOKS"`.
 
 ## Related Documentation
 

@@ -1,5 +1,19 @@
 # @sanity/themer
 
+## 0.10.6
+
+### Patch Changes
+
+- [#2202](https://github.com/sanity-io/plugins/pull/2202) [`f9f61af`](https://github.com/sanity-io/plugins/commit/f9f61afdf3c13234490a67b709f9a0d4bf92b421) Thanks [@stipsan](https://github.com/stipsan)! - The themer tool is styled with plain CSS modules, compiled by `@tsdown/css` with Lightning CSS, instead of vanilla-extract. The stylesheet still ships as `@sanity/themer/bundle.css` and `@sanity/themer/tool` still imports it itself, so nothing changes for a Studio that uses the plugin. Its class names are now hashed from each stylesheet's content, so a release that changes a file's styles gets new class names, and a page that loads the stylesheets of two releases can't style elements with the wrong release's rules. `@vanilla-extract/dynamic` is no longer a dependency.
+
+## 0.10.5
+
+### Patch Changes
+
+- [#2220](https://github.com/sanity-io/plugins/pull/2220) [`567479a`](https://github.com/sanity-io/plugins/commit/567479a4cf58665c1a195307226b5a91e118ec47) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.3.0
+
+- [#2241](https://github.com/sanity-io/plugins/pull/2241) [`4d05795`](https://github.com/sanity-io/plugins/commit/4d057951ac12514834ecef30d331c7bf9d4df5bb) Thanks [@stipsan](https://github.com/stipsan)! - Render the theme thumbnails from the handful of colors they paint, instead of building a whole Sanity UI theme and two `ThemeProvider`s per thumbnail, so the theme list renders much faster when the navbar button prerenders it
+
 ## 0.10.4
 
 ### Patch Changes

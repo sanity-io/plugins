@@ -1,6 +1,6 @@
 {
   "name": "@sanity/themer",
-  "version": "0.10.4",
+  "version": "0.10.6",
   "description": "Generate Sanity Studio themes, and preview them with a Studio tool.",
   "keywords": [
     "sanity",
@@ -65,6 +65,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "prebuild": "pnpm --filter @repo/css-modules-kit run generate:themer",
     "prepack": "turbo run build"
   },
   "dependencies": {
@@ -72,7 +73,6 @@
     "@sanity/icons": "catalog:",
     "@sanity/themer-legacy": "^0.2.2",
     "@sanity/ui": "catalog:",
-    "@vanilla-extract/dynamic": "catalog:",
     "@xstate/react": "catalog:",
     "dequal": "catalog:",
     "motion": "catalog:",
@@ -85,11 +85,10 @@
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@sanity/vanilla-extract-vite-plugin": "catalog:",
+    "@tsdown/css": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vanilla-extract/css": "catalog:",
     "lightningcss": "^1.33.0",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",

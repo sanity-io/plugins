@@ -1,5 +1,33 @@
 # sanity-plugin-media
 
+## 6.6.0
+
+### Minor Changes
+
+- [#2016](https://github.com/sanity-io/plugins/pull/2016) [`c7408b1`](https://github.com/sanity-io/plugins/commit/c7408b122db8816e511e52f621482849e61537be) Thanks [@trostum](https://github.com/trostum)! - Add "Title: A to Z" and "Title: Z to A" sort options to the sort order dropdown. When `locales` are configured, title sorting coalesces through the configured locales in declared order.
+
+## 6.5.0
+
+### Minor Changes
+
+- [#2233](https://github.com/sanity-io/plugins/pull/2233) [`71cc47d`](https://github.com/sanity-io/plugins/commit/71cc47de9c7768eac42eb9c8e1ef1d52871ec46b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Show the asset document ID in the asset details panel
+
+### Patch Changes
+
+- [#2075](https://github.com/sanity-io/plugins/pull/2075) [`dad9ada`](https://github.com/sanity-io/plugins/commit/dad9ada4fe44d69b8b8d531d6f3815d6efff2dbf) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Save and close ignoring the click when creating or editing a tag, or creating a folder, from the media browser
+
+- [#2082](https://github.com/sanity-io/plugins/pull/2082) [`d0cd298`](https://github.com/sanity-io/plugins/commit/d0cd298e526c09acefddd87ab69a4a46c8592f02) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Media search failing when the query contains an apostrophe, such as `don't`
+
+## 6.4.0
+
+### Minor Changes
+
+- [#2017](https://github.com/sanity-io/plugins/pull/2017) [`8349010`](https://github.com/sanity-io/plugins/commit/8349010f06117b839432b2b500a10ca9ed695cbb) Thanks [@trostum](https://github.com/trostum)! - Show when the asset was uploaded ("Uploaded") in the asset details metadata panel
+
+### Patch Changes
+
+- [#2231](https://github.com/sanity-io/plugins/pull/2231) [`362762b`](https://github.com/sanity-io/plugins/commit/362762b94df6f4f04bd5c6407f7465a5a5bfd523) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the asset grid jumping back and forth between two scroll positions after scrolling, by opting the grid's scroller out of browser scroll anchoring
+
 ## 6.3.5
 
 ### Patch Changes

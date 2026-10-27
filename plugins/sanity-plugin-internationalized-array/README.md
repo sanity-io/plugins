@@ -7,6 +7,7 @@ A plugin to register array fields with a custom input component to store field v
 - [sanity-plugin-internationalized-array](#sanity-plugin-internationalized-array)
   - [Installation](#installation)
   - [Usage for simple field types](#usage-for-simple-field-types)
+  - [Passing options to the underlying field](#passing-options-to-the-underlying-field)
   - [Loading languages](#loading-languages)
   - [Configuring the "Add translation" buttons](#configuring-the-add-translation-buttons)
   - [Using complex field configurations](#using-complex-field-configurations)
@@ -49,6 +50,7 @@ export default defineConfig({
         {id: 'fr', title: 'French'},
       ],
       defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true, // default false
       fieldTypes: ['string'],
     }),
   ],
@@ -62,6 +64,8 @@ This will register two new fields to the schema, based on the settings passed in
 
 The above config will also create an empty array item in new documents for each language in `defaultLanguages`. This is configured globally for all internationalized array fields.
 
+Those rows cannot be removed, and a missing row is inserted again while the document is open. Set `allowRemovingDefaultLanguages: true` to treat them as initial values instead: they are still added on a new document, and editors can remove them afterwards. A removed row stays removed once the document has history, including when removing the last row clears the field.
+
 You can pass in more registered schema-type names to generate more internationalized arrays. Use them in your schema like this:
 
 ```ts
@@ -74,6 +78,25 @@ fields: [
   }),
 ]
 ```
+
+## Passing options to the underlying field
+
+Options on an `internationalizedArray*` field are copied onto each language row's `value` field. Use this for settings that belong to that field type, such as which files an `internationalizedArrayFile` accepts:
+
+```ts
+defineField({
+  name: 'subtitles',
+  title: 'Subtitles/Captions',
+  type: 'internationalizedArrayFile',
+  options: {
+    accept: '.vtt,.srt,text/vtt,application/x-subrip',
+  },
+})
+```
+
+`languages`, `apiVersion`, and `select` belong to the plugin and are not copied. Options already set on the type in `fieldTypes` stay in place, and options on an individual field override them.
+
+`collapsed` is not currently supported. Setting it has no effect.
 
 ## Loading languages
 

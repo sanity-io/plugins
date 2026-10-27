@@ -57,7 +57,7 @@ export function tsconfigTemplateSettings(options: {
           "outDir": "./${outDir}",
 
           "target": "esnext",
-          "jsx": "preserve",
+          "jsx": "react-jsx",
           "module": "preserve",
           "moduleResolution": "bundler",
           "esModuleInterop": true,

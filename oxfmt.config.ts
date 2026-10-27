@@ -10,5 +10,8 @@ export default defineConfig({
     'storybook-static/**',
     'CHANGELOG.md',
     'turbo/**/*.hbs',
+    // The CSS module typings css-modules-kit writes (`pnpm css:types`): gitignored output in
+    // the generator's own formatting
+    '**/generated/**/*.module.css.d.ts',
   ],
 })

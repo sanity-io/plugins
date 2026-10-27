@@ -201,6 +201,28 @@ Provide options for the `client` passed to `loader`.
 
 `AutocompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete.
 
+`renderOption`, `renderValue`, and `filterOption` receive `{value: string}` unless you pass an option type argument. Extra fields returned by `loader` are still allowed either way.
+
+```tsx
+type Character = {value: string; name: string; imageUrl: string}
+
+asyncList<Character>({
+  schemaType: 'character',
+  loader: async () => {
+    // ...return [{value, name, imageUrl}]
+    return []
+  },
+  autocompleteProps: {
+    renderOption: (option) => {
+      return <span>{option.name}</span>
+    },
+    renderValue: (value, option) => option?.name ?? value,
+  },
+})
+```
+
+`createAsyncListInput` takes the same type argument.
+
 ## License
 
 [MIT](LICENSE) © Chris LaRocque

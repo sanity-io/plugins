@@ -25,7 +25,7 @@ import {ThemeSnippetDialog} from './ThemeSnippetDialog'
 import {useImagePalette} from './useImagePalette'
 import {usePasteThemeCodes, useThemeCodes} from './useThemeCodes'
 
-import {cardGrid} from './ThemeList.css'
+import * as styles from './ThemeList.module.css'
 
 /**
  * The flow for picking a theme: a grid of theme cards — the configured theme,
@@ -63,7 +63,8 @@ export function ThemeList({
   )
 
   return (
-    <>
+    // The list's own box is the query container of its grid (`ThemeList.module.css`)
+    <Flex className={styles.root} direction="column" flex={1}>
       <ScrollArea padding={3}>
         <Stack gap={4}>
           {/* The group tells a column from a grid by measuring the cards, and
@@ -71,7 +72,7 @@ export function ThemeList({
           <MotionConfig reducedMotion="user">
             <Reorder.Group
               as="div"
-              className={cardGrid}
+              className={styles.cardGrid}
               onReorder={(order: string[]) => actorRef.send({type: 'theme.reorder', order})}
               values={themes.map((theme) => theme.slug)}
             >
@@ -201,7 +202,7 @@ export function ThemeList({
       {dialog === 'snippet' && active && (
         <ThemeSnippetDialog onClose={() => actorRef.send({type: 'dialog.close'})} theme={active} />
       )}
-    </>
+    </Flex>
   )
 }
 

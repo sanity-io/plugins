@@ -1,0 +1,35 @@
+/*
+ * The list's box, as wide as the sidebar itself whether or not a scrollbar
+ * takes room inside the scroll area below — the container its layout queries.
+ * Lightning CSS scopes container names per CSS module (`themeList` is hashed
+ * like a class, and exported like one), so the container and the queries that
+ * name it live in this one file. It stands in for the scroll area and the
+ * footer as the sidebar column's child, so it has to let the scroll area take
+ * the remaining height and scroll: a column that may shrink below its content.
+ */
+.root {
+  container: themeList / inline-size;
+  min-height: 0;
+}
+
+/*
+ * The columns share the width equally whatever the titles: a plain `1fr` may
+ * not shrink below a card's min-content width, and a card's title does not
+ * wrap, so one long title would widen its column past the sidebar
+ */
+.cardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+/*
+ * The theme cards flow into two columns once the sidebar has been dragged
+ * 30% of the way from its narrowest to its widest (`sidebarWidth.ts`):
+ * 200 + (400 - 200) * 0.3 = 260px
+ */
+@container themeList (min-width: 260px) {
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

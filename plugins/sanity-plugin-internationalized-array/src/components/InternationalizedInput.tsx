@@ -10,6 +10,7 @@ import {set, unset} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
+import {optionsForValueField} from '../utils/optionsForValueField'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -113,7 +114,8 @@ function RemoveButton({
  *   the language label in that state.
  * - Shows a `MenuButton` with available languages when the current key is
  *   not a valid language.
- * - Disables the remove button for languages listed in `defaultLanguages`.
+ * - Disables the remove button for languages listed in `defaultLanguages`,
+ *   unless `allowRemovingDefaultLanguages` is set.
  * - Shows a `Spinner` when languages have not been loaded yet.
  * - Applies a `CardTone` based on validation state via `getToneFromValidation`.
  */
@@ -200,7 +202,8 @@ export default function InternationalizedInput(
   )
 
   // The parent array contains the languages from the plugin config
-  const {languages, languageDisplay, defaultLanguages} = useInternationalizedArrayContext()
+  const {languages, languageDisplay, defaultLanguages, allowRemovingDefaultLanguages} =
+    useInternationalizedArrayContext()
 
   const keyIsValid = languages?.length
     ? Boolean(languages.find((l) => l.id === props.value[LANGUAGE_FIELD_NAME]))
@@ -236,9 +239,16 @@ export default function InternationalizedInput(
             />
           )
 
+          // Field options compile onto the array, not the shared value type.
+          // Copy them onto this language row so inputs such as file `accept` apply.
+          const options = optionsForValueField(props.parentSchemaType?.options, schemaType?.options)
+
           return Object.assign({}, member, {
             field: Object.assign({}, field, {
-              schemaType: Object.assign({}, schemaType, {title}),
+              schemaType: Object.assign({}, schemaType, {
+                title,
+                ...(options ? {options} : {}),
+              }),
             }),
           })
         }),
@@ -249,6 +259,7 @@ export default function InternationalizedInput(
     [
       props.inputProps,
       props.value,
+      props.parentSchemaType,
       wrappedOnChange,
       languageTitle,
       keyIsValid,
@@ -263,7 +274,8 @@ export default function InternationalizedInput(
     return <Spinner />
   }
 
-  const isDefault = defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
+  const isDefault =
+    !allowRemovingDefaultLanguages && defaultLanguages.includes(value[LANGUAGE_FIELD_NAME])
 
   return (
     <Card paddingTop={2} tone={getToneFromValidation(validation)}>

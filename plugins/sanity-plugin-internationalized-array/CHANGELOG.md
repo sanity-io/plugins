@@ -1,5 +1,17 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.8
+
+### Patch Changes
+
+- [#2063](https://github.com/sanity-io/plugins/pull/2063) [`8c7098b`](https://github.com/sanity-io/plugins/commit/8c7098bb9246d38789ddfcb176bfcb85afbf7b26) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Field options such as `accept` on an internationalized array field are passed through to each language's underlying value field.
+
+## 5.3.7
+
+### Patch Changes
+
+- [#2106](https://github.com/sanity-io/plugins/pull/2106) [`5b4dd26`](https://github.com/sanity-io/plugins/commit/5b4dd2682911fcbc5ab048fd5892d49c168cc00d) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add `allowRemovingDefaultLanguages` so configured default languages can be removed. They are still added on a new document, and are not inserted again once that document has history.
+
 ## 5.3.6
 
 No changes in this release.

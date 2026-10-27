@@ -8,6 +8,7 @@ import type {PortableTextBlockStyle} from '@portabletext/types'
 import type {PortableTextTextBlock, TypedObject} from 'sanity'
 
 import {blockContentType} from './BaseDocumentDeserializer/helpers'
+import {deserializeSpanMark, linkMark, unknownAnnotationMark} from './spanMarks'
 
 export const defaultStopTypes = [
   'reference',
@@ -59,11 +60,19 @@ export const customSerializers: Record<string, any> = {
   list: defaultLists,
   listItem: defaultListItem,
   unknownBlockStyle: unknownBlockFunc,
+  marks: {
+    link: linkMark,
+  },
+  unknownMark: unknownAnnotationMark,
 }
 
 export const customDeserializers: Record<string, any> = {types: {}}
 
 export const customBlockDeserializers: Array<any> = [
+  //restore annotation mark definitions encoded by linkMark / unknownAnnotationMark
+  {
+    deserialize: deserializeSpanMark,
+  },
   //handle undeclared styles
   {
     deserialize(

@@ -1,5 +1,19 @@
 # @sanity/code-input
 
+## 7.3.14
+
+### Patch Changes
+
+- [#2133](https://github.com/sanity-io/plugins/pull/2133) [`21924a4`](https://github.com/sanity-io/plugins/commit/21924a49233da6328c6889793e98227a325862f5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Highlighted lines now move with their code when lines are added or removed above them, instead of staying on the same line numbers. Highlights also no longer disappear when the code is changed elsewhere, for example by a collaborator, right after you typed in the editor
+
+- [#2090](https://github.com/sanity-io/plugins/pull/2090) [`1497570`](https://github.com/sanity-io/plugins/commit/14975700406d6bfd80ce0203751a538604b84606) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Save the language shown in the code input when the code is edited. A configured `options.language`, or plain text when nothing is stored yet, is written onto the document instead of only appearing in the editor. A language that is already stored is left unchanged.
+
+## 7.3.13
+
+### Patch Changes
+
+- [#2105](https://github.com/sanity-io/plugins/pull/2105) [`b0dcc1d`](https://github.com/sanity-io/plugins/commit/b0dcc1d5d37e36c484d5587da0d5aad445a1736b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix inline code previews overflowing the surrounding text in portable text. The inline label shows the first line of code, capped at 20 characters, and falls back to the language or UNKNOWN when that line is empty.
+
 ## 7.3.12
 
 ### Patch Changes

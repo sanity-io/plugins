@@ -15,7 +15,14 @@
     // so it reports the entry as unused.
     "pnpm-workspace.yaml": ["catalog"],
   },
-  "ignoreDependencies": ["@vanilla-extract/css", "oxc-transform-react"],
+  "ignoreDependencies": [
+    "@vanilla-extract/css",
+    "oxc-transform-react",
+    // `stylelint.config.mjs` extends them through the `@sanity/plugin-kit/stylelint` preset, which
+    // resolves them from plugin-kit's own dependencies so plugins need not install them
+    "stylelint-config-css-modules",
+    "stylelint-config-recommended",
+  ],
   "workspaces": {
     ".": {
       "entry": ["*.{ts,mts,mjs}"],

@@ -1,6 +1,6 @@
 {
   "name": "@sanity/plugin-kit",
-  "version": "10.0.14",
+  "version": "10.1.0",
   "description": "Enhanced Sanity.io plugin development experience",
   "keywords": [
     "bootstrap",
@@ -35,6 +35,8 @@
     ".": "./src/index.ts",
     "./oxfmt": "./src/oxfmt.ts",
     "./oxlint": "./src/oxlint.ts",
+    "./oxlint-plugin": "./src/oxlint-plugin.ts",
+    "./stylelint": "./src/stylelint.ts",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -42,6 +44,8 @@
       ".": "./dist/index.js",
       "./oxfmt": "./dist/oxfmt.js",
       "./oxlint": "./dist/oxlint.js",
+      "./oxlint-plugin": "./dist/oxlint-plugin.js",
+      "./stylelint": "./dist/stylelint.js",
       "./package.json": "./package.json"
     }
   },
@@ -51,6 +55,7 @@
     "prepare": "turbo run build"
   },
   "dependencies": {
+    "@oxlint/plugins": "^1.86.0",
     "@rexxars/choosealicense-list": "^1.1.2",
     "@typescript/typescript6": "^6.0.2",
     "concurrently": "^10.0.4",
@@ -59,6 +64,8 @@
     "inquirer": "^14.0.2",
     "meow": "^14.1.0",
     "nodemon": "3.1.14",
+    "stylelint-config-css-modules": "^4.6.0",
+    "stylelint-config-recommended": "^18.0.0",
     "validate-npm-package-name": "catalog:",
     "yalc": "1.0.0-pre.53"
   },
@@ -76,19 +83,24 @@
     "react-dom": "catalog:",
     "sanity": "catalog:",
     "styled-components": "catalog:",
+    "stylelint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
     "@sanity/pkg-utils": "catalog:",
     "oxfmt": "catalog:",
-    "oxlint": "catalog:"
+    "oxlint": "catalog:",
+    "stylelint": "catalog:"
   },
   "peerDependenciesMeta": {
     "oxfmt": {
       "optional": true
     },
     "oxlint": {
+      "optional": true
+    },
+    "stylelint": {
       "optional": true
     }
   },

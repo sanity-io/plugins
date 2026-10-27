@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 5.2.1
+
+### Patch Changes
+
+- [#2074](https://github.com/sanity-io/plugins/pull/2074) [`1494069`](https://github.com/sanity-io/plugins/commit/149406933b6527438d85a79ee90df6a9ef74eec5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Show the video poster with a play button in the input and only mount the Mux player when the editor clicks it, so opening forms with several video fields no longer freezes Safari
+
 ## 5.2.0
 
 ### Minor Changes

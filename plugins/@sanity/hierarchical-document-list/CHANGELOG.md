@@ -1,5 +1,15 @@
 # @sanity/hierarchical-document-list
 
+## 4.0.9
+
+### Patch Changes
+
+- [#2246](https://github.com/sanity-io/plugins/pull/2246) [`ce73088`](https://github.com/sanity-io/plugins/commit/ce7308820dec81bfd83632543fc7fab469df0fca) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Dragging an item up or down within the same level moves it again. Previously the drop was rejected and the item snapped back to where it was.
+
+- [#2097](https://github.com/sanity-io/plugins/pull/2097) [`3ced124`](https://github.com/sanity-io/plugins/commit/3ced124840ddfcc2ff577934973f47125176975c) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Opening or leaving a hierarchy with many documents no longer freezes the Studio. Drag-indicator styles are injected once for the tree instead of once per row.
+
+- [#2242](https://github.com/sanity-io/plugins/pull/2242) [`59a6310`](https://github.com/sanity-io/plugins/commit/59a63106674c5941aa0ab17538e1918351875ba0) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Tree rows no longer re-render whenever the surrounding form or structure pane re-renders. The tree's add, duplicate, remove and move actions now keep the same identity between renders.
+
 ## 4.0.8
 
 ### Patch Changes
