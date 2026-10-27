@@ -168,7 +168,9 @@ export function uploadFile({
                       if (event.type !== 'success') {
                         return of(event)
                       }
-                      return from(updateAssetDocumentFromUpload(client, uuid, watermark)).pipe(
+                      return from(
+                        updateAssetDocumentFromUpload(client, uuid, watermark, file.name),
+                      ).pipe(
                         mergeMap((doc) => of({...event, asset: doc})),
                       )
                     }),
@@ -243,6 +245,7 @@ async function updateAssetDocumentFromUpload(
   client: SanityClient,
   uuid: string,
   _watermark?: WatermarkConfig,
+  filename?: string,
 ) {
   let upload: UploadResponse
   let asset: {data: MuxAsset}
@@ -264,23 +267,29 @@ async function updateAssetDocumentFromUpload(
     playbackId: asset.data.playback_ids[0]?.id,
     uploadId: upload.data.id,
   }
-  await uploadedAssetTransaction(client, uuid, fields).commit({returnDocuments: false})
+  await uploadedAssetTransaction(client, uuid, fields, filename).commit({returnDocuments: false})
   return {_id: uuid, _type: 'mux.videoAsset', ...fields}
 }
 
 /**
  * Writes what a finished upload produced onto its asset document. A patch, not a replace, so
- * fields written since the upload was created (`filename`, Robots data) are kept.
+ * fields written since the upload was created (`filename`, Robots data) are kept. The uploaded
+ * file's name only fills `filename` when nothing has been written there yet; without it the
+ * video is listed under a slice of its Mux asset ID.
  */
 export function uploadedAssetTransaction(
   client: Pick<SanityClient, 'transaction'>,
   uuid: string,
   fields: Record<string, unknown>,
+  filename?: string,
 ) {
   return client
     .transaction()
     .createIfNotExists({_id: uuid, _type: 'mux.videoAsset'})
-    .patch(uuid, (patch) => patch.set(fields))
+    .patch(uuid, (patch) => {
+      const withFields = patch.set(fields)
+      return filename ? withFields.setIfMissing({filename}) : withFields
+    })
 }
 
 function testFile(file: File) {

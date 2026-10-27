@@ -27,3 +27,14 @@ test('a finished upload patches its fields instead of replacing the document', (
   ])
   expect(JSON.stringify(mutations)).not.toContain('createOrReplace')
 })
+
+test('a finished upload names the asset after the file, unless it already has a name', () => {
+  const fields = {status: 'preparing', assetId: 'asset-1'}
+
+  const mutations = uploadedAssetTransaction(client, 'doc-1', fields, 'launch-film.mp4').serialize()
+
+  expect(mutations).toEqual([
+    {createIfNotExists: {_id: 'doc-1', _type: 'mux.videoAsset'}},
+    {patch: {id: 'doc-1', set: fields, setIfMissing: {filename: 'launch-film.mp4'}}},
+  ])
+})
