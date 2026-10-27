@@ -61,6 +61,7 @@ catalog:
   '@vis.gl/react-google-maps': ^1.10.1
   '@vitest/coverage-v8': ^4.1.11
   '@xstate/react': ^6.1.0
+  clsx: ^2.1.1
   date-fns: ^4.4.0
   dequal: ^2.0.3
   groq: ^6.19.0
