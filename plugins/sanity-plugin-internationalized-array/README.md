@@ -7,6 +7,7 @@ A plugin to register array fields with a custom input component to store field v
 - [sanity-plugin-internationalized-array](#sanity-plugin-internationalized-array)
   - [Installation](#installation)
   - [Usage for simple field types](#usage-for-simple-field-types)
+  - [Passing options to the underlying field](#passing-options-to-the-underlying-field)
   - [Loading languages](#loading-languages)
   - [Configuring the "Add translation" buttons](#configuring-the-add-translation-buttons)
   - [Using complex field configurations](#using-complex-field-configurations)
@@ -77,6 +78,25 @@ fields: [
   }),
 ]
 ```
+
+## Passing options to the underlying field
+
+Options on an `internationalizedArray*` field are copied onto each language row's `value` field. Use this for settings that belong to that field type, such as which files an `internationalizedArrayFile` accepts:
+
+```ts
+defineField({
+  name: 'subtitles',
+  title: 'Subtitles/Captions',
+  type: 'internationalizedArrayFile',
+  options: {
+    accept: '.vtt,.srt,text/vtt,application/x-subrip',
+  },
+})
+```
+
+`languages`, `apiVersion`, and `select` belong to the plugin and are not copied. Options already set on the type in `fieldTypes` stay in place, and options on an individual field override them.
+
+`collapsed` is not currently supported. Setting it has no effect.
 
 ## Loading languages
 

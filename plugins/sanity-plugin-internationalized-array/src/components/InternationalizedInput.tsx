@@ -10,6 +10,7 @@ import {set, unset} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
+import {optionsForValueField} from '../utils/optionsForValueField'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -238,9 +239,16 @@ export default function InternationalizedInput(
             />
           )
 
+          // Field options compile onto the array, not the shared value type.
+          // Copy them onto this language row so inputs such as file `accept` apply.
+          const options = optionsForValueField(props.parentSchemaType?.options, schemaType?.options)
+
           return Object.assign({}, member, {
             field: Object.assign({}, field, {
-              schemaType: Object.assign({}, schemaType, {title}),
+              schemaType: Object.assign({}, schemaType, {
+                title,
+                ...(options ? {options} : {}),
+              }),
             }),
           })
         }),
@@ -251,6 +259,7 @@ export default function InternationalizedInput(
     [
       props.inputProps,
       props.value,
+      props.parentSchemaType,
       wrappedOnChange,
       languageTitle,
       keyIsValid,
