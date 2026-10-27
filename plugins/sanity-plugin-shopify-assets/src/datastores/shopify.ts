@@ -1,6 +1,6 @@
-import axios from 'axios'
-import {BehaviorSubject, Observable, concat, defer} from 'rxjs'
-import {debounceTime, distinctUntilChanged, map, switchMap, withLatestFrom} from 'rxjs/operators'
+import {BehaviorSubject, Observable, concat} from 'rxjs'
+import {fromFetch} from 'rxjs/fetch'
+import {debounceTime, switchMap, withLatestFrom} from 'rxjs/operators'
 
 type SearchSubject = BehaviorSubject<string>
 type CursorSubject = BehaviorSubject<any>
@@ -23,6 +23,19 @@ interface listProps extends Omit<fetchProps, 'query' | 'cursor'> {
   cursor: string
 }
 
+const fetchAssets = (url: string, token?: string): Observable<any> =>
+  fromFetch(url, {
+    credentials: 'include',
+    headers: token ? {Authorization: `Bearer ${token}`} : {},
+    selector: async (response) => {
+      if (response.ok) {
+        return response.json()
+      }
+      const body = await response.json().catch(() => null)
+      throw new Error(body?.message || `Request failed with status code ${response.status}`)
+    },
+  })
+
 const fetchSearch = (props: searchProps): Observable<any> => {
   const {projectId, dataset, shop, query, cursor, resultsPerPage, token} = props
 
@@ -31,17 +44,7 @@ const fetchSearch = (props: searchProps): Observable<any> => {
     shop,
   )}&query=${encodeURIComponent(query)}${cursorParam}&limit=${resultsPerPage}`
 
-  return defer(() =>
-    axios.get(url, {
-      withCredentials: true,
-      method: 'GET',
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-    }),
-  ).pipe(map((result) => result.data))
+  return fetchAssets(url, token)
 }
 
 const fetchList = (props: listProps): Observable<any> => {
@@ -52,17 +55,7 @@ const fetchList = (props: listProps): Observable<any> => {
     shop,
   )}${cursorParam}&limit=${resultsPerPage}`
 
-  return defer(() =>
-    axios.get(url, {
-      withCredentials: true,
-      method: 'GET',
-      headers: token
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : {},
-    }),
-  ).pipe(map((result) => result.data))
+  return fetchAssets(url, token)
 }
 
 export const search = (props: fetchProps): Observable<any> => {
@@ -86,7 +79,7 @@ export const search = (props: fetchProps): Observable<any> => {
             cursor: c,
             resultsPerPage,
             token,
-          }).pipe(distinctUntilChanged())
+          })
         }
         return fetchList({projectId, dataset, shop, cursor: c, resultsPerPage, token})
       }),

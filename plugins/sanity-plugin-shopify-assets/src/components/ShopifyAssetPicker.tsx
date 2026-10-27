@@ -58,11 +58,7 @@ export default function ShopifyAssetPicker(props: AssetPickerProps) {
         setIsLoading(false)
       },
       error: (err) => {
-        setApiError(
-          `${
-            err.response?.data?.message || err.message || 'An error occurred'
-          } - check plugin configuration`,
-        )
+        setApiError(`${err.message || 'An error occurred'} - check plugin configuration`)
       },
     })
 
