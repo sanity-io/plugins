@@ -1,4 +1,15 @@
 import {Card, Flex, Label} from '@sanity/ui'
+import type {CSSProperties} from 'react'
+
+import * as styles from './ProgressBar.module.css'
+
+/**
+ * `CSSProperties` does not know custom properties, so the inline `style` is
+ * typed through this extension of it.
+ */
+interface ProgressBarStyle extends CSSProperties {
+  '--translations-tab-progress-scale': string
+}
 
 export default function ProgressBar({progress}: {progress: number}) {
   if (typeof progress === 'undefined') {
@@ -6,33 +17,16 @@ export default function ProgressBar({progress}: {progress: number}) {
     return null
   }
 
+  const barStyle: ProgressBarStyle = {
+    '--translations-tab-progress-scale': String(progress / 100),
+  }
+
   return (
-    <Card border radius={2} style={{width: `100%`, position: `relative`}}>
-      <Flex
-        style={{
-          position: `absolute`,
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          zIndex: 1,
-        }}
-        align="center"
-        justify="center"
-      >
+    <Card border radius={2} className={styles.root}>
+      <Flex className={styles.labelOverlay} align="center" justify="center">
         <Label size={1}>{progress}%</Label>
       </Flex>
-      <Card
-        style={{
-          width: '100%',
-          transform: `scaleX(${progress / 100})`,
-          transformOrigin: 'left',
-          transition: 'transform .2s ease',
-          boxSizing: 'border-box',
-        }}
-        padding={2}
-        tone="positive"
-      />
+      <Card className={styles.bar} style={barStyle} padding={2} tone="positive" />
     </Card>
   )
 }

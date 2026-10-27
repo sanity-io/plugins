@@ -1,0 +1,11 @@
+.wrapText {
+  white-space: normal;
+}
+
+.localeButton {
+  cursor: pointer;
+}
+
+.localeSwitch {
+  pointer-events: none;
+}
