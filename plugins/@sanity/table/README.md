@@ -1,5 +1,13 @@
 # Sanity Table Plugin
 
+> ⚠️ **Deprecation Notice**
+>
+> `@sanity/table` is deprecated and no longer maintained. **No new features or fixes will be made to this package.**
+>
+> Sanity Studio now has built-in table editing in the Portable Text Editor (Studio v6.6.0 and later). See [Table editing in the Portable Text Editor docs](https://www.sanity.io/docs/studio/portable-text-editor-configuration#tblh2) for how to add tables to Sanity Studio.
+>
+> The built-in tables store rich text in each cell, while this plugin stores plain strings, so existing `@sanity/table` content needs to be migrated to the new shape before editors can use it with the built-in table editor.
+
 This is a (triple) fork of the Sanity Plugin Table, now maintained by Sanity.io.
 
 ![example](https://user-images.githubusercontent.com/8467307/48703530-e369be00-ebeb-11e8-8299-14812461aee8.gif)
