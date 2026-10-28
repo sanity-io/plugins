@@ -235,6 +235,16 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 - **stylelint** lints every `*.css` file (`pnpm lint:css`, part of `pnpm lint`) with the `@sanity/plugin-kit/stylelint` preset: `stylelint-config-recommended` plus `stylelint-config-css-modules`, formatting rules off since oxfmt owns formatting. The root `stylelint.config.mjs` imports and spreads the preset; it is `.mjs` on purpose, as stylelint loads `.ts` configs through the TypeScript compiler API that TypeScript 7 does not ship. stylelint 17 has no GitHub formatter, so the CI lint job registers `.github/problem-matchers/stylelint.json` to turn its default output into annotations.
 - Run `pnpm lint:fix` to auto-fix issues when possible (regenerates the CSS module typings, then stylelint and oxlint with `--fix`)
 
+### `actions/github-script` majors
+
+`actions/github-script` v9 injects extra function parameters into inline `script:` bodies (`getOctokit` in addition to `github`, `context`, `core`, `require`, …). Treat major bumps as script migrations, not version-only PRs:
+
+- Do **not** `require('@actions/github')` — that package is ESM-only in the v9 toolchain and fails at runtime.
+- Do **not** `const getOctokit = …` / `let getOctokit = …` (or redeclare any other injected name) — that is a `SyntaxError`.
+- Prefer `require('node:fs')` over `require('fs')`, matching the other v9 workflows in this repo.
+- Pass GitHub Actions expressions through `env:` and `process.env`. Do not interpolate `${{ }}` into `script:` (script injection / `SyntaxError` if the value is not valid JavaScript).
+- For non-trivial scripts, extract a CommonJS module under `.github/scripts/` and `require()` it from the inline script (see `.github/scripts/post-ailf-comment.cjs` used by `ailf-eval.yml`). Those files stay CJS on purpose; `oxlint.config.ts` turns off `import/no-commonjs` and `no-console` for them.
+
 ## Testing
 
 The monorepo uses [Vitest v4](https://vitest.dev) for testing.
