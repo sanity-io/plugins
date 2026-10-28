@@ -1,5 +1,9 @@
 # @sanity/document-internationalization
 
+## 6.2.46
+
+No changes in this release.
+
 ## 6.2.45
 
 No changes in this release.

@@ -1,5 +1,11 @@
 # @sanity/assist
 
+## 6.2.6
+
+### Patch Changes
+
+- [#2240](https://github.com/sanity-io/plugins/pull/2240) [`eab1d7e`](https://github.com/sanity-io/plugins/commit/eab1d7ecefcf59e701c03d1fec00eaae7b91d6a4) Thanks [@raj-codal](https://github.com/raj-codal)! - Build the field ref lookup in linear time, so opening documents with large page-builder schemas no longer freezes the Studio
+
 ## 6.2.5
 
 ### Patch Changes
