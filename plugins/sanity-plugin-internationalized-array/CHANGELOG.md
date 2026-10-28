@@ -1,5 +1,9 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.9
+
+No changes in this release.
+
 ## 5.3.8
 
 ### Patch Changes
