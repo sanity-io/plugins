@@ -38,7 +38,13 @@
  * scaled wrongly while it resized there. One blur peaking at the cross-over,
  * where the two snapshots meet at half opacity, looks the same as the pair of
  * 12px blurs the snapshots carried before — their visible blur peaked at 6px
- * there too
+ * there too.
+ *
+ * The image pair inherits the group's duration, delay and fill mode from the
+ * UA stylesheet, but not its timing function, so without the `inherit` the
+ * blur would run on `ease` while the group runs the layout's curve, and peak
+ * off the cross-over; see
+ * https://css-tricks.com/almanac/pseudo-selectors/v/view-transition-image-pair/#default-styles
  */
 ::view-transition-image-pair(.splitStudio) {
   animation-name: blurPeak;
@@ -166,7 +172,18 @@
   }
 }
 
-/* Keeps the Studio clickable while a themer transition runs */
-:root:global(:active-view-transition-type(sanity-themer))::view-transition {
-  pointer-events: none;
-}
+/*
+ * There is no `::view-transition { pointer-events: none }` here, though the
+ * Next.js guide suggests it to keep a page clickable while a transition runs:
+ * with React 19.3 it changes nothing. What is clickable during a transition
+ * is what the transition does not capture (`viewTransitions.ts` keeps the
+ * sidebar out of the cross-fade for that reason), and React already shrinks
+ * the `::view-transition` overlay to nothing when it leaves the root out;
+ * while a boundary resizes it keeps the root in, and a captured root makes
+ * the whole page unresponsive to hit-testing whatever the overlay does.
+ * Keeping the root out of the layout's transitions by hand
+ * (`view-transition-name: none` on `:root`) would make the sidebar clickable
+ * while the split copy comes and goes, but Safari (WebKit, as of 26.6) then
+ * paints the live boxes of the captured elements under their snapshots, and
+ * the split copy and the sidebar would show up at once instead of sliding in
+ */
