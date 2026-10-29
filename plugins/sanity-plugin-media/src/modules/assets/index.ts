@@ -326,8 +326,8 @@ const assetsSlice = createSlice({
     insertUploads(state, action: PayloadAction<{results: Record<string, string | null>}>) {
       const {results} = action.payload
 
-      Object.entries(results).forEach(([hash, assetId]) => {
-        if (assetId && !state.allIds.includes(hash)) {
+      Object.entries(results).forEach(([, assetId]) => {
+        if (assetId && !state.allIds.includes(assetId)) {
           state.allIds.push(assetId)
         }
       })
