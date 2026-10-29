@@ -166,6 +166,27 @@ describe('assets listener queue epics', () => {
     })
   })
 
+  it('assetsListenerCreateQueueEpic appends assets that are not yet in the grid', async () => {
+    const store = createEpicTestStore(assetsListenerCreateQueueEpic, createMockSanityClient(), {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: [],
+        byIds: {},
+      },
+    })
+
+    const created = {...sampleAsset, _id: 'a2', title: 'New'}
+    store.dispatch(assetsActions.listenerCreateQueue({asset: created}))
+
+    await vi.advanceTimersByTimeAsync(2000)
+
+    await vi.waitFor(() => {
+      expect(store.getState().assets.allIds).toEqual(['a2'])
+      expect(store.getState().assets.byIds['a2']!.asset.title).toBe('New')
+    })
+  })
+
   it('assetsListenerDeleteQueueEpic batches deletes', async () => {
     const store = createEpicTestStore(assetsListenerDeleteQueueEpic, createMockSanityClient(), {
       assets: {
@@ -221,7 +242,12 @@ describe('assetsListenEpic', () => {
     const events = new Subject<{documentId: string; result?: unknown; transition: string}>()
     const listen = vi.fn((_query: string) => events)
     const store = createEpicTestStore(
-      combineEpics(assetsListenEpic, assetsListenerUpdateQueueEpic, assetsListenerDeleteQueueEpic),
+      combineEpics(
+        assetsListenEpic,
+        assetsListenerCreateQueueEpic,
+        assetsListenerUpdateQueueEpic,
+        assetsListenerDeleteQueueEpic,
+      ),
       createMockSanityClient({listen}),
       {
         assets: {
@@ -246,6 +272,15 @@ describe('assetsListenEpic', () => {
     })
     await vi.advanceTimersByTimeAsync(2000)
     expect(store.getState().assets.byIds['a1']!.asset.title).toBe('Listened')
+
+    events.next({
+      documentId: 'a2',
+      result: {...sampleAsset, _id: 'a2', title: 'Appeared'},
+      transition: 'appear',
+    })
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(store.getState().assets.allIds).toContain('a2')
+    expect(store.getState().assets.byIds['a2']!.asset.title).toBe('Appeared')
 
     events.next({documentId: 'a1', transition: 'disappear'})
     await vi.advanceTimersByTimeAsync(2000)

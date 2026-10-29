@@ -111,6 +111,37 @@ describe('assets slice', () => {
     expect(state.byIds['img-1']).toBeUndefined()
   })
 
+  it('listenerCreateQueueComplete updates an asset already in the grid', () => {
+    let state = stateWithOneAsset()
+    const updated = {...minimalImage, title: 'From listener'}
+    state = assetsReducer(state, assetsActions.listenerCreateQueueComplete({assets: [updated]}))
+    expect(state.byIds['img-1']!.asset.title).toBe('From listener')
+    expect(state.allIds).toEqual(['img-1'])
+  })
+
+  it('listenerCreateQueueComplete appends a new asset of the browser type', () => {
+    let state = stateWithOneAsset()
+    const created = {...minimalImage, _id: 'img-2', title: 'Created elsewhere'}
+    state = assetsReducer(state, assetsActions.listenerCreateQueueComplete({assets: [created]}))
+    expect(state.allIds).toEqual(['img-1', 'img-2'])
+    expect(state.byIds['img-2']!.asset.title).toBe('Created elsewhere')
+    expect(state.byIds['img-2']!.picked).toBe(false)
+  })
+
+  it('listenerCreateQueueComplete ignores assets outside the browser types', () => {
+    let state = stateWithOneAsset()
+    const fileAsset = {
+      ...minimalImage,
+      _id: 'file-1',
+      _type: 'sanity.fileAsset' as const,
+      originalFilename: 'doc.pdf',
+      mimeType: 'application/pdf',
+    }
+    state = assetsReducer(state, assetsActions.listenerCreateQueueComplete({assets: [fileAsset]}))
+    expect(state.allIds).toEqual(['img-1'])
+    expect(state.byIds['file-1']).toBeUndefined()
+  })
+
   it('listenerUpdateQueueComplete updates asset document', () => {
     let state = stateWithOneAsset()
     const updated = {...minimalImage, title: 'New'}

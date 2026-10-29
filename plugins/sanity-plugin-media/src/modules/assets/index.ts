@@ -341,8 +341,34 @@ const assetsSlice = createSlice({
     listenerCreateQueueComplete(state, action: PayloadAction<{assets: Asset[]}>) {
       const {assets} = action.payload
       assets?.forEach((asset) => {
-        if (state.byIds[asset?._id]?.asset) {
+        if (!asset?._id) {
+          return
+        }
+        // Update assets already in the grid (e.g. an appear after a local upload).
+        if (state.byIds[asset._id]?.asset) {
           state.byIds[asset._id]!.asset = asset
+          return
+        }
+        // Append assets created while the browser was hidden or by a collaborator —
+        // the listen query covers every image/file asset, so respect the browser's
+        // configured types (image picker vs file picker).
+        const assetType: AssetType | undefined =
+          asset._type === 'sanity.imageAsset'
+            ? 'image'
+            : asset._type === 'sanity.fileAsset'
+              ? 'file'
+              : undefined
+        if (assetType && state.assetTypes.length > 0 && !state.assetTypes.includes(assetType)) {
+          return
+        }
+        state.byIds[asset._id] = {
+          _type: 'asset',
+          asset,
+          picked: false,
+          updating: false,
+        }
+        if (!state.allIds.includes(asset._id)) {
+          state.allIds.push(asset._id)
         }
       })
     },
@@ -736,6 +762,7 @@ export const assetsSortEpic: MyEpic = (action$) =>
   action$.pipe(
     ofType(
       assetsActions.insertUploads.type,
+      assetsActions.listenerCreateQueueComplete.type,
       assetsActions.listenerUpdateQueueComplete.type,
       assetsActions.updateComplete.type,
     ),
