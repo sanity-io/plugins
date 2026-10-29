@@ -1,0 +1,31 @@
+.videoPreviewDefault {
+  max-width: 80px;
+}
+
+.videoPreviewBlock {
+  max-width: 100%;
+}
+
+.rawFileLabel {
+  margin-left: 0.5em;
+}
+
+.thumbnailFlex {
+  width: 100%;
+}
+
+.thumbnailImage {
+  max-width: 80px;
+  height: auto;
+  display: block;
+}
+
+.fullWidthPreview {
+  width: 100%;
+}
+
+.fullWidthImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}

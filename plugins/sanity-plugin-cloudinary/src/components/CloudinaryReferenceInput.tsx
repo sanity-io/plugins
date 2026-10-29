@@ -11,6 +11,8 @@ import {normalizeCloudinaryAsset, openMediaSelector} from '../utils'
 import ReferencePreview from './ReferencePreview'
 import SecretsConfigView, {namespace, type Secrets} from './SecretsConfigView'
 
+import * as styles from './CloudinaryReferenceInput.module.css'
+
 const API_VERSION = '2023-01-01'
 
 // Fallback so the button doesn't stay disabled if the media library never reports it opened
@@ -229,12 +231,12 @@ const CloudinaryReferenceInput = (props: ObjectInputProps) => {
         />
       </Flex>
 
-      <Flex marginBottom={2} style={{textAlign: 'center', width: '100%'}}>
+      <Flex className={styles.previewFlex} marginBottom={2}>
         <ReferencePreview value={reference} revision={previewRevision} />
       </Flex>
 
       <Stack gap={2}>
-        <Grid gap={1} style={{gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))'}}>
+        <Grid className={styles.actionGrid} gap={1}>
           <Button
             text={selectButtonText}
             onClick={handleOpenSelector}

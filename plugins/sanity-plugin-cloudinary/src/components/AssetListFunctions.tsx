@@ -17,6 +17,8 @@ import type {InsertHandlerParams} from '../types'
 import {openMediaSelector} from '../utils'
 import SecretsConfigView, {namespace} from './SecretsConfigView'
 
+import * as styles from './AssetListFunctions.module.css'
+
 interface ApiConfig {
   cloudName: string
   apiKey: string
@@ -83,7 +85,7 @@ export const AssetListFunctions = (
         <>
           <Box flex={1}>
             <Button
-              style={{width: '100%'}}
+              className={styles.fullWidthButton}
               disabled={props.readOnly || loading}
               mode="bleed"
               text="Add multiple"

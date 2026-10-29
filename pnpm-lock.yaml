@@ -2417,12 +2417,18 @@ importers:
       '@sanity/tsdown-config':
         specifier: 'catalog:'
         version: 0.31.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.1)(typescript@7.0.2)(vite@8.3.4)
+      '@tsdown/css':
+        specifier: 'catalog:'
+        version: 0.23.1(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.1)(tsx@4.23.15)(yaml@2.9.1)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
+      lightningcss:
+        specifier: ^1.33.0
+        version: 1.33.0
       oxc-transform-react:
         specifier: 'catalog:'
         version: 0.154.0

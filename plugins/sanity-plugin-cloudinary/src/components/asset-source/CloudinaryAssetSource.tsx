@@ -3,15 +3,12 @@ import {useSecrets} from '@sanity/studio-secrets'
 import {Box, Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {useCallback, useEffect, useRef, useState} from 'react'
 import type {AssetSourceComponentProps, ImageAsset} from 'sanity'
-import {styled} from 'styled-components'
 
 import type {CloudinaryMediaLibrary, InsertHandlerParams} from '../../types'
 import {createMediaLibrary, decodeSourceId, encodeFilename, encodeSourceId} from '../../utils'
 import SecretsConfigView, {namespace, type Secrets} from '../SecretsConfigView'
 
-const Widget = styled.div`
-  height: 70vh;
-`
+import * as styles from './CloudinaryAssetSource.module.css'
 
 export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
   const {onClose, dialogHeaderTitle} = props
@@ -147,7 +144,13 @@ export function CloudinaryAssetSource(props: AssetSourceComponentProps) {
           </Stack>
         )}
 
-        <Widget style={{visibility: 'hidden'}} ref={contentRef} id={widgetId} />
+        {/* Intentionally hidden until the media library iframe is ready */}
+        <div
+          className={styles.widget}
+          id={widgetId}
+          ref={contentRef}
+          style={{visibility: 'hidden'}}
+        />
       </Box>
     </Dialog>
   )

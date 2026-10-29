@@ -23,6 +23,7 @@ test('package exports', {timeout: 30_000}, async () => {
         "cloudinaryReferencePlugin": "function",
         "cloudinarySchemaPlugin": "function",
       },
+      "./bundle.css": {},
     }
   `)
 })
