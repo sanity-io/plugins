@@ -230,6 +230,61 @@ describe('assets listener queue epics', () => {
     expect(store.getState().assets.pageIndex).toBe(2)
   })
 
+  it('assetsListenerCreateQueueEpic does not cancel an in-flight page load', async () => {
+    const pageAsset = {...sampleAsset, _id: 'a-page', _createdAt: '2026-01-01'} as ImageAsset
+    const newer = {...sampleAsset, _id: 'a2', _createdAt: '2026-01-02'} as ImageAsset
+    const older = {...sampleAsset, _createdAt: '2026-01-01'}
+
+    const pageFetch$ = new Subject<{items: ImageAsset[]}>()
+    const fetch = vi.fn()
+    fetch.mockReturnValueOnce(pageFetch$.asObservable())
+    fetch.mockReturnValueOnce(of({items: [newer, older]}))
+
+    const client = createMockSanityClient({observable: {fetch}})
+    const store = createEpicTestStore(
+      combineEpics(assetsListenerCreateQueueEpic, assetsFetchEpic),
+      client,
+      {
+        assets: {
+          ...assetsInitialState,
+          assetTypes: ['image'],
+          allIds: ['a1'],
+          byIds: {
+            a1: {_type: 'asset', asset: older, picked: false, updating: false},
+          },
+        },
+      },
+    )
+
+    // Next page is still in flight when a colleague's upload is flushed from the create queue
+    store.dispatch(
+      assetsActions.fetchRequest({
+        params: {},
+        queryFilter: '_type == "sanity.imageAsset"',
+        selector: '[50...100]',
+        sort: 'order(_createdAt desc)',
+      }),
+    )
+    expect(store.getState().assets.fetching).toBe(true)
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    store.dispatch(assetsActions.listenerCreateQueue({asset: newer}))
+    await vi.advanceTimersByTimeAsync(2000)
+
+    // Must not switchMap-cancel the page load by issuing a competing fetchRequest
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    pageFetch$.next({items: [pageAsset]})
+    pageFetch$.complete()
+
+    await vi.waitFor(() => {
+      expect(store.getState().assets.byIds['a-page']?.asset).toEqual(pageAsset)
+      expect(store.getState().assets.allIds).toContain('a2')
+    })
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch.mock.calls[1]![0]).toContain('[0...')
+  })
+
   it('assetsListenerDeleteQueueEpic batches deletes', async () => {
     const store = createEpicTestStore(assetsListenerDeleteQueueEpic, createMockSanityClient(), {
       assets: {

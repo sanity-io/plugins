@@ -719,14 +719,34 @@ export const assetsListenerCreateQueueEpic: MyEpic = (action$, state$) =>
       // is requested directly, leaving the paging cursor where it is; without `clear()`,
       // `fetchComplete` only appends what is new and the grid stays put, and the appended ids
       // are sorted into place once that fetch has landed.
-      // Subscribed before the request is emitted, so the fetch result is not missed
-      const sorted = action$.pipe(
-        ofType(assetsActions.fetchComplete.type, assetsActions.fetchError.type),
-        take(1),
-        filter(assetsActions.fetchComplete.match),
-        map(() => assetsActions.sort()),
+      //
+      // Wait out an in-flight fetch first: `assetsFetchEpic` uses `switchMap`, so emitting
+      // `fetchRequest` now would cancel a page load the user just scrolled to, and Virtuoso
+      // would not re-fire `endReached` for the skipped page.
+      const whenIdle$ = state.assets.fetching
+        ? action$.pipe(
+            ofType(assetsActions.fetchComplete.type, assetsActions.fetchError.type),
+            take(1),
+            withLatestFrom(state$),
+            map(([, latest]) => latest),
+          )
+        : of(state)
+
+      return concat(
+        complete,
+        whenIdle$.pipe(
+          mergeMap((latest) => {
+            // Subscribed before the request is emitted, so the fetch result is not missed
+            const sorted = action$.pipe(
+              ofType(assetsActions.fetchComplete.type, assetsActions.fetchError.type),
+              take(1),
+              filter(assetsActions.fetchComplete.match),
+              map(() => assetsActions.sort()),
+            )
+            return merge(sorted, of(fetchPageRequest(latest, 0)))
+          }),
+        ),
       )
-      return merge(sorted, concat(complete, of(fetchPageRequest(state, 0))))
     }),
   )
 
