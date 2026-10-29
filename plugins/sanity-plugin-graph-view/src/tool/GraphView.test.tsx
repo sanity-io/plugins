@@ -334,4 +334,26 @@ describe('applyMutation', () => {
     expect(next).toBe(state)
     expect(docNode).toBeUndefined()
   })
+
+  // While Activity hides the tool, force-graph never rewrites string endpoints to node objects.
+  // Mutations still chain through applyMutation, so filters must match both shapes.
+  test('replaces string-endpoint links when references change before force-graph rewrites them', () => {
+    const state = {documents: [author, post], graph: new GraphData([author, post])}
+    expect(state.graph.data.links).toEqual([{source: 'b', target: 'a'}])
+
+    const other = {...stamps, _id: 'c', _type: 'author', title: 'C'} as SanityDocument
+    const withOther = applyMutation(state, mutation('appear', 'c', other)).next
+    const doc = {...stamps, _id: 'b', _type: 'post', title: 'B', author: {_ref: 'c'}}
+    const {next} = applyMutation(withOther, mutation('update', 'b', doc))
+
+    expect(next.graph.data.links).toEqual([{source: 'b', target: 'c'}])
+  })
+
+  test('removes string-endpoint links when a document disappears before force-graph rewrites them', () => {
+    const state = {documents: [author, post], graph: new GraphData([author, post])}
+    const {next} = applyMutation(state, mutation('disappear', 'b'))
+
+    expect(next.graph.data.links).toEqual([])
+    expect(next.graph.data.nodes.map((n: {id: string}) => n.id)).toEqual(['a'])
+  })
 })

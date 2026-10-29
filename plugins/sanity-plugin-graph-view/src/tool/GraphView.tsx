@@ -79,6 +79,11 @@ function stripDraftId(id: string) {
   return id.replace(/^drafts\./, '')
 }
 
+/** force-graph replaces string endpoints with node objects; mutations while hidden leave strings. */
+function linkEndpointId(endpoint: string | {id: string}): string {
+  return typeof endpoint === 'object' ? endpoint.id : endpoint
+}
+
 function deduplicateDrafts(docs: SanityDocument[]) {
   const deduped: Record<string, SanityDocument> = {}
   for (const doc of docs) {
@@ -219,7 +224,7 @@ export function applyMutation(
     let graphChanged = !dequal(oldRefs, newRefs)
     if (graphChanged) {
       newGraph.data.links = newGraph.data.links
-        .filter((l: any) => l.source.id !== doc._id)
+        .filter((l: any) => linkEndpointId(l.source) !== doc._id)
         .concat(newRefs.map((ref) => ({source: doc._id, target: ref})))
     }
 
@@ -242,7 +247,7 @@ export function applyMutation(
 
     const newGraph = graph.clone()
     newGraph.data.links = newGraph.data.links.filter(
-      (l: any) => l.source.id !== docId && l.target.id !== docId,
+      (l: any) => linkEndpointId(l.source) !== docId && linkEndpointId(l.target) !== docId,
     )
     newGraph.data.nodes = newGraph.data.nodes.filter((n: any) => n.id !== docId)
 
