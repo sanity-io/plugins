@@ -10,6 +10,7 @@ import {
   mockTransactionCommit,
 } from '../../__tests__/fixtures/mockSanityClient'
 import type {ImageAsset, Tag} from '../../types'
+import {searchActions} from '../search'
 import {ASSETS_ACTIONS} from './actions'
 import {
   assetsActions,
@@ -223,6 +224,42 @@ describe('assets listener queue epics', () => {
     expect(store.getState().assets.byIds['a1']!.picked).toBe(true)
     expect(store.getState().assets.fetching).toBe(true)
     expect(store.getState().assets.pageIndex).toBe(2)
+  })
+
+  it('assetsListenerCreateQueueEpic does not insert matches after the filter changes', async () => {
+    const refreshed = {...sampleAsset, title: 'L'}
+    const newer = {...sampleAsset, _id: 'a2', _createdAt: '2026-01-02'} as ImageAsset
+    const fetchResults = new Subject<string[]>()
+    const fetch = vi.fn((_query: string) => fetchResults.asObservable())
+    const client = createMockSanityClient({observable: {fetch}})
+    const store = createEpicTestStore(assetsListenerCreateQueueEpic, client, {
+      assets: {
+        ...assetsInitialState,
+        assetTypes: ['image'],
+        allIds: ['a1'],
+        byIds: {
+          a1: {_type: 'asset', asset: sampleAsset, picked: false, updating: false},
+        },
+      },
+    })
+
+    store.dispatch(assetsActions.listenerCreateQueue({asset: refreshed}))
+    store.dispatch(assetsActions.listenerCreateQueue({asset: newer}))
+    await vi.advanceTimersByTimeAsync(2000)
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    // A search change clears the grid while the filter check for the old view is still open
+    store.dispatch(searchActions.querySet({searchQuery: 'cats'}))
+    store.dispatch(assetsActions.clear())
+    fetchResults.next(['a2'])
+    fetchResults.complete()
+
+    await vi.waitFor(() => {
+      expect(store.getState().assets.byIds['a1']!.asset.title).toBe('L')
+    })
+    expect(store.getState().assets.allIds).toEqual([])
+    expect(store.getState().assets.byIds['a2']).toBeUndefined()
   })
 
   it('assetsListenerCreateQueueEpic still refreshes known assets when the filter check fails', async () => {

@@ -724,7 +724,7 @@ export const assetsListenerCreateQueueEpic: MyEpic = (action$, state$, {client})
       // against that filter the way uploads are, and the matches are added and sorted into
       // place. This fetch stays out of `assetsFetchEpic`, whose `switchMap` would cancel a page
       // the user is loading, and leaves `fetching` and the paging cursor alone.
-      const query = groq`*[${constructFilter({
+      const constructedFilter = constructFilter({
         assetTypes: state.assets.assetTypes,
         currentFolderId: state.folders.currentFolderId,
         excludeTagSlugs: state.assets.excludeTagSlugs,
@@ -732,12 +732,28 @@ export const assetsListenerCreateQueueEpic: MyEpic = (action$, state$, {client})
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
         showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
-      })} && _id in $ids]._id`
+      })
+      const query = groq`*[${constructedFilter} && _id in $ids]._id`
       return client.observable
         .fetch<string[]>(query, {ids: unknown.map((asset) => asset._id)})
         .pipe(
-          mergeMap((matchingIds) => {
-            const matching = unknown.filter((asset) => matchingIds.includes(asset._id))
+          withLatestFrom(state$),
+          mergeMap(([matchingIds, currentState]) => {
+            // Search / folder / facet changes clear the grid while this request can still be
+            // in flight; only insert matches when the filter is still the one we queried.
+            const filterStillCurrent =
+              constructFilter({
+                assetTypes: currentState.assets.assetTypes,
+                currentFolderId: currentState.folders.currentFolderId,
+                excludeTagSlugs: currentState.assets.excludeTagSlugs,
+                localeIds: currentState.assets.localeIds,
+                searchFacets: currentState.search.facets,
+                searchQuery: currentState.search.query,
+                showMediaLibraryAssets: currentState.assets.showMediaLibraryAssets,
+              }) === constructedFilter
+            const matching = filterStillCurrent
+              ? unknown.filter((asset) => matchingIds.includes(asset._id))
+              : []
             return of(
               assetsActions.listenerCreateQueueComplete({assets: [...known, ...matching]}),
               ...(matching.length > 0 ? [assetsActions.sort()] : []),
