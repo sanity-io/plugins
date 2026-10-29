@@ -20,3 +20,6 @@
 
 # The Media asset browser plugin
 /plugins/sanity-plugin-media/ @sanity-io/media-library
+
+# AI Assist plugin
+/plugins/@sanity/assist/ @sanity-io/content-agent
