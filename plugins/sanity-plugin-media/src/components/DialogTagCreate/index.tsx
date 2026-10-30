@@ -1,3 +1,4 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
@@ -9,7 +10,6 @@ import {dialogActions} from '../../modules/dialog'
 import {tagsActions} from '../../modules/tags'
 import type {DialogTagCreateProps, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
-import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -41,7 +41,7 @@ const DialogTagCreate = (props: Props) => {
       name: '',
     },
     mode: 'onChange',
-    resolver: zodFormResolver<TagFormData>(tagFormSchema),
+    resolver: zodResolver(tagFormSchema),
   })
 
   const formUpdating = creating

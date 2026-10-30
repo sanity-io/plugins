@@ -43,7 +43,7 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
-    "@hookform/resolvers": "catalog:",
+    "@hookform/resolvers": "catalog:media",
     "@reduxjs/toolkit": "^2.12.0",
     "@sanity/client": "catalog:",
     "@sanity/color": "catalog:",
@@ -67,7 +67,7 @@
     "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
     "rxjs": "catalog:",
-    "zod": "^3.25.76"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
