@@ -816,4 +816,38 @@ describe('serializeSchema', () => {
       },
     ])
   })
+
+  test('should overlay fieldset readOnly onto child fields', () => {
+    const schema = Schema.compile({
+      name: 'test',
+      types: [
+        defineType({
+          type: 'document',
+          name: 'article',
+          fieldsets: [
+            {name: 'locked', readOnly: true},
+            {name: 'conditional', readOnly: () => false},
+          ],
+          fields: [
+            {type: 'string', name: 'sku', fieldset: 'locked'},
+            {type: 'string', name: 'title', fieldset: 'conditional'},
+          ],
+        }),
+      ],
+    })
+
+    const serializedTypes = serializeSchema(schema, {leanFormat: true})
+
+    expect(serializedTypes).toEqual([
+      {
+        fields: [
+          {name: 'sku', readOnly: true, title: 'Sku', type: 'string'},
+          {name: 'title', readOnly: 'function', title: 'Title', type: 'string'},
+        ],
+        name: 'article',
+        title: 'Article',
+        type: 'document',
+      },
+    ])
+  })
 })
