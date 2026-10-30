@@ -101,7 +101,7 @@ Sessions can be compared in the DevTools UI to diff bundle changes between build
 | [`@sanity/sanity-plugin-async-list`](./plugins/@sanity/sanity-plugin-async-list)                         | Autocomplete string input with options loaded from an external API  |
 | [`@sanity/sfcc`](./plugins/@sanity/sfcc)                                                                 | Salesforce Commerce Cloud integration with synced product data      |
 | [`@sanity/studio-secrets`](./plugins/@sanity/studio-secrets)                                             | Manage Studio secrets at runtime                                    |
-| [`@sanity/table`](./plugins/@sanity/table)                                                               | Table schema type and input component for Sanity Studio             |
+| [`@sanity/table`](./plugins/@sanity/table)                                                               | Table schema type and input for Sanity Studio (deprecated)          |
 | [`@sanity/themer`](./plugins/@sanity/themer)                                                             | Generate Studio themes from a few colors, with a themer Studio tool |
 | [`@sanity/vercel-protection-bypass`](./plugins/@sanity/vercel-protection-bypass)                         | Setup tool for Vercel Deployment Protection in previews             |
 | [`sanity-plugin-aprimo`](./plugins/sanity-plugin-aprimo)                                                 | Aprimo asset selector integration                                   |
