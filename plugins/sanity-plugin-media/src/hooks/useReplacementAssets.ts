@@ -45,6 +45,7 @@ export function useReplacementAssets({
 } {
   const client = useVersionedClient()
   const excludeTagSlugs = useTypedSelector((state) => state.assets.excludeTagSlugs)
+  const localeIds = useTypedSelector((state) => state.assets.localeIds)
   const showMediaLibraryAssets = useTypedSelector((state) => state.assets.showMediaLibraryAssets)
 
   const {folderId, tagId} = filters
@@ -67,6 +68,7 @@ export function useReplacementAssets({
       assetToReplaceId,
       excludeTagSlugs,
       filters: {folderId, searchQuery, tagId},
+      localeIds,
       pageIndex,
       showMediaLibraryAssets,
     })
@@ -105,6 +107,7 @@ export function useReplacementAssets({
     excludeTagSlugs,
     folderId,
     key,
+    localeIds,
     pageIndex,
     searchQuery,
     showMediaLibraryAssets,

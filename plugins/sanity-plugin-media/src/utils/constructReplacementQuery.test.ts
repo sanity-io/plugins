@@ -40,6 +40,18 @@ describe('constructReplacementQuery', () => {
     expect(params.searchPattern).toBe("*o'brien*")
   })
 
+  it('matches localized alt text, title, description and credit line when locales are configured', () => {
+    const {query} = constructReplacementQuery({
+      ...base,
+      filters: {...base.filters, searchQuery: 'faucet'},
+      localeIds: ['en', 'zh-CN'],
+    })
+
+    expect(query).toContain(
+      '[_id, altText, altText["en"], altText["zh-CN"], assetId, creditLine, creditLine["en"], creditLine["zh-CN"], description, description["en"], description["zh-CN"], originalFilename, title, title["en"], title["zh-CN"], url] match $searchPattern',
+    )
+  })
+
   it('filters by tag and folder through parameters', () => {
     const {params, query} = constructReplacementQuery({
       ...base,

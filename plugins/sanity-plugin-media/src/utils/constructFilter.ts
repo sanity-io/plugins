@@ -43,7 +43,7 @@ const localizedFieldPaths = (field: string, localeIds?: string[]): string[] => {
  * `match` does not look inside objects, so the bare field alone never hits a
  * localized value.
  */
-const textSearchFieldList = (localeIds?: string[]): string =>
+export const textSearchFieldList = (localeIds?: string[]): string =>
   TEXT_SEARCH_FIELDS.flatMap((field) => [field, ...localizedFieldPaths(field, localeIds)]).join(
     ', ',
   )

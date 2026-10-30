@@ -1,6 +1,10 @@
 import groq from 'groq'
 
-import {buildExcludeMediaLibraryFragment, buildExcludeTagsFragment} from './constructFilter'
+import {
+  buildExcludeMediaLibraryFragment,
+  buildExcludeTagsFragment,
+  textSearchFieldList,
+} from './constructFilter'
 
 export const REPLACEMENT_PAGE_SIZE = 100
 
@@ -23,19 +27,22 @@ export type ReplacementFilters = {
  * Builds the query used by the replace dialog to list candidate images.
  *
  * The dialog runs its own search, independent of the browser's search, facets and
- * folder scope. Only plugin configuration (`excludeTags`, `showMediaLibraryAssets`)
- * carries over. User input is passed as query params, never interpolated.
+ * folder scope. Only plugin configuration (`excludeTags`, `locales`,
+ * `showMediaLibraryAssets`) carries over. User input is passed as query params, never interpolated.
  */
 export function constructReplacementQuery({
   assetToReplaceId,
   excludeTagSlugs,
   filters,
+  localeIds,
   pageIndex,
   showMediaLibraryAssets,
 }: {
   assetToReplaceId: string
   excludeTagSlugs: string[]
   filters: ReplacementFilters
+  /** Configured plugin locale ids, so localized text fields match like in the browser's search. */
+  localeIds?: string[]
   pageIndex: number
   showMediaLibraryAssets: boolean
 }): {params: ReplacementQueryParams; query: string} {
@@ -55,9 +62,7 @@ export function constructReplacementQuery({
 
   if (searchQuery) {
     params.searchPattern = `*${searchQuery}*`
-    fragments.push(
-      groq`[_id, altText, assetId, creditLine, description, originalFilename, title, url] match $searchPattern`,
-    )
+    fragments.push(groq`[${textSearchFieldList(localeIds)}] match $searchPattern`)
   }
   if (filters.tagId) {
     params.tagId = filters.tagId
