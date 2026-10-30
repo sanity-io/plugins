@@ -10,5 +10,6 @@ export function defineStructure<StructureType>(
   return factory
 }
 
+// oxlint-disable-next-line oxc/no-barrel-file
 export * from './categoryStructure'
 export * from './productStructure'
