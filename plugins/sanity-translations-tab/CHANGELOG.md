@@ -1,5 +1,12 @@
 # sanity-translations-tab
 
+## 6.1.26
+
+### Patch Changes
+
+- Updated dependencies [[`9b7e239`](https://github.com/sanity-io/plugins/commit/9b7e239bad85d275766e7bf1df9523194e9c0f5e)]:
+  - sanity-naive-html-serializer@5.1.16
+
 ## 6.1.25
 
 ### Patch Changes

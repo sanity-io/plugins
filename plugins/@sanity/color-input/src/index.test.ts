@@ -12,7 +12,7 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
     {
       ".": {
-        "ColorInput": "object",
+        "ColorInput": "function",
         "color": "object",
         "colorInput": "function",
         "hslaColor": "object",

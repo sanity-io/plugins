@@ -1,5 +1,11 @@
 # sanity-naive-html-serializer
 
+## 5.1.16
+
+### Patch Changes
+
+- [#2083](https://github.com/sanity-io/plugins/pull/2083) [`9b7e239`](https://github.com/sanity-io/plugins/commit/9b7e239bad85d275766e7bf1df9523194e9c0f5e) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Preserve span mark definitions, including links without an href, when converting portable text to HTML and back. An edited anchor href in the HTML replaces the stored link URL.
+
 ## 5.1.15
 
 ### Patch Changes

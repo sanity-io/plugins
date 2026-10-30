@@ -92,7 +92,7 @@ Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware
 
 ### Testing
 
-The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+The monorepo uses [Vitest v5](https://vitest.dev) for testing.
 
 ```bash
 # Run all tests (non-watch mode)

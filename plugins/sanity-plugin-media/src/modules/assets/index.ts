@@ -16,7 +16,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators'
 
-import {getOrderTitle} from '../../config/orders'
+import {getOrderField, getOrderTitle, getOrderValue} from '../../config/orders'
 import {ORDER_OPTIONS} from '../../constants'
 import debugThrottle from '../../operators/debugThrottle'
 import type {
@@ -52,6 +52,8 @@ export type AssetsReducerState = {
   fetching: boolean
   fetchingError?: HttpError
   lastPicked?: string
+  /** Configured plugin locale ids, shared by localized text search and title sort. */
+  localeIds: string[]
   order: Order
   pageIndex: number
   pageSize: number
@@ -86,6 +88,7 @@ export const initialState = {
   fetching: false,
   fetchingError: undefined,
   lastPicked: undefined,
+  localeIds: [],
   order: {
     direction: defaultOrder.direction,
     field: defaultOrder.field,
@@ -410,8 +413,9 @@ const assetsSlice = createSlice({
     },
     sort(state) {
       state.allIds.sort((a, b) => {
-        const tagA = state.byIds[a]!.asset[state.order.field]
-        const tagB = state.byIds[b]!.asset[state.order.field]
+        const {field} = state.order
+        const tagA = getOrderValue(state.byIds[a]!.asset[field], field, state.localeIds)
+        const tagB = getOrderValue(state.byIds[b]!.asset[field], field, state.localeIds)
 
         if (tagA < tagB) {
           return state.order.direction === 'asc' ? -1 : 1
@@ -537,6 +541,7 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
         assetTypes: state.assets.assetTypes,
         currentFolderId: state.folders.currentFolderId,
         excludeTagSlugs: state.assets.excludeTagSlugs,
+        localeIds: state.assets.localeIds,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
         showMediaLibraryAssets: state.assets.showMediaLibraryAssets,
@@ -552,7 +557,7 @@ export const assetsFetchPageIndexEpic: MyEpic = (action$, state$) =>
           params,
           queryFilter: constructedFilter,
           selector: groq`[${start}...${end}]`,
-          sort: groq`order(${state.assets?.order?.field} ${state.assets?.order?.direction})`,
+          sort: groq`order(${getOrderField(state.assets.order.field, state.assets.localeIds)} ${state.assets.order.direction})`,
         }),
       )
     }),

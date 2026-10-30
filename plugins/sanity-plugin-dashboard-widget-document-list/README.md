@@ -87,9 +87,9 @@ documentListWidget({
 })
 ```
 
-### `query` (string) and `params` (object)
+### `query` (string) and `queryParams` (object)
 
-Customized GROQ query with params for maximum control. If you use the query option, the `types`, `order`, and `limit` options will cease to function. You're on your own.
+Customized GROQ query with parameters for maximum control. Pass those parameters as `queryParams`. If you use the query option, the `types`, `order`, and `limit` options will cease to function. You're on your own.
 
 ```js
 documentListWidget({
@@ -102,7 +102,7 @@ documentListWidget({
 documentListWidget({
   title: 'My favorite documents',
   query: '*[_id in $ids]',
-  params: {
+  queryParams: {
     ids: ['ab2', 'c5z', '654'],
   },
 })

@@ -1,5 +1,15 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.9
+
+No changes in this release.
+
+## 5.3.8
+
+### Patch Changes
+
+- [#2063](https://github.com/sanity-io/plugins/pull/2063) [`8c7098b`](https://github.com/sanity-io/plugins/commit/8c7098bb9246d38789ddfcb176bfcb85afbf7b26) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Field options such as `accept` on an internationalized array field are passed through to each language's underlying value field.
+
 ## 5.3.7
 
 ### Patch Changes

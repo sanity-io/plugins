@@ -7,6 +7,13 @@ const colorTest = defineType({
   type: 'document',
   title: 'Color',
   icon: DropIcon,
+  // Groups sit next to a color field so the field-group tab bar can be checked
+  // when that field first loads.
+  groups: [
+    {name: 'content', title: 'Content', default: true},
+    {name: 'brand', title: 'Brand'},
+    {name: 'meta', title: 'Meta'},
+  ],
   preview: {
     select: {
       title: 'title',
@@ -48,12 +55,14 @@ const colorTest = defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
+      group: 'content',
     },
     {
       name: 'testColor1',
       title: 'Color to be used in preview',
       description: 'A color input',
       type: 'color',
+      group: 'brand',
     },
     {
       name: 'testColor2',
