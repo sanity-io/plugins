@@ -73,6 +73,28 @@ describe('DialogTagCreate', () => {
     })
   })
 
+  it('shows an error indicator and keeps Save disabled when the name is cleared', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <DialogTagCreate dialog={{id: 'dlg-1', type: 'tagCreate'}}>
+        <span />
+      </DialogTagCreate>,
+    )
+
+    const nameInput = inputByName(/create tag/i, screen, 'name')
+    await user.type(nameInput, 'a')
+    await user.clear(nameInput)
+
+    await waitFor(() => {
+      expect(
+        getDialogRoot(/create tag/i, screen).querySelector('[data-sanity-icon="error-outline"]'),
+      ).toBeTruthy()
+    })
+    expect(
+      withinDialog(/create tag/i, screen).getByRole('button', {name: /save and close/i}),
+    ).toBeDisabled()
+  })
+
   it('clears the entire dialog stack when the dialog close control is used', async () => {
     const user = userEvent.setup()
     const base = createTestRootState({

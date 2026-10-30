@@ -156,6 +156,26 @@ describe('DialogAssetEdit', () => {
     })
   })
 
+  it('shows an error indicator and keeps Save disabled when the filename is cleared', async () => {
+    const user = userEvent.setup()
+    renderAssetDialog({
+      id: 'dlg-1',
+      type: 'assetEdit',
+      assetId: 'a1',
+    })
+
+    await user.clear(inputByName(/asset details/i, screen, 'originalFilename'))
+
+    await waitFor(() => {
+      expect(
+        getDialogRoot(/asset details/i, screen).querySelector('[data-sanity-icon="error-outline"]'),
+      ).toBeTruthy()
+    })
+    expect(
+      withinDialog(/asset details/i, screen).getByRole('button', {name: /save and close/i}),
+    ).toBeDisabled()
+  })
+
   it('dispatches asset update when a field changes and the form is submitted', async () => {
     const user = userEvent.setup()
     const {store} = renderAssetDialog({
