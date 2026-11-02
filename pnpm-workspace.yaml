@@ -105,6 +105,12 @@ catalogs:
     react-dom: ^19.2
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
+  # `sanity-plugin-media` validates its forms with zod v4, which `zodResolver`
+  # only supports from @hookform/resolvers 5.1. The default catalog stays on v4
+  # for `sanity-plugin-dashboard-widget-vercel`, whose yup 0.32 schemas predate
+  # the `yup@^1` peer of newer resolvers.
+  media:
+    '@hookform/resolvers': ^6.0.2
 
 # Collapse compatible versions of the same dependency on every install, so the
 # lockfile stays deduped without waiting for the `Dedupe lockfile` workflow to
