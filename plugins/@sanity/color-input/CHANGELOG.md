@@ -1,5 +1,11 @@
 # @sanity/color-input
 
+## 6.1.9
+
+### Patch Changes
+
+- [#2273](https://github.com/sanity-io/plugins/pull/2273) [`4651c2d`](https://github.com/sanity-io/plugins/commit/4651c2d64f446563bae3beb8740b714dc18e63c2) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Keep field group tabs in place when a color field first loads. The color input now shows its own loading state instead of suspending the document form.
+
 ## 6.1.8
 
 ### Patch Changes
