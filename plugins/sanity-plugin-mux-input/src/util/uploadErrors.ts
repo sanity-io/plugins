@@ -5,7 +5,7 @@
  */
 const INVALID_CREDENTIALS_MESSAGES = [/api\.mux\.com responded with 401\b/, /No MUX secrets found/]
 
-export function isInvalidCredentialsError(error: unknown): boolean {
+function isInvalidCredentialsError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : ''
   return INVALID_CREDENTIALS_MESSAGES.some((pattern) => pattern.test(message))
 }
