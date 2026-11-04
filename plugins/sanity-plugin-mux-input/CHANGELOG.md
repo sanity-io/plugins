@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 5.2.2
+
+### Patch Changes
+
+- [#2266](https://github.com/sanity-io/plugins/pull/2266) [`d248f51`](https://github.com/sanity-io/plugins/commit/d248f5156643931e418a6fd87f0ac5df94b6d539) Thanks [@eeeurico](https://github.com/eeeurico)! - Keep the uploaded file's name as the video's `filename`, so new uploads are no longer listed under a slice of their Mux asset ID
+
 ## 5.2.1
 
 ### Patch Changes
