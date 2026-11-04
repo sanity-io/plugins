@@ -1,29 +1,27 @@
 import {BehaviorSubject} from 'rxjs'
-import {expect, test, vi} from 'vitest'
+import {afterEach, beforeEach, expect, test, vi} from 'vitest'
 
 import {search} from './datastores/shopify'
 
-const {axiosGet} = vi.hoisted(() => ({
-  axiosGet: vi.fn(() =>
-    Promise.resolve({data: {assets: [], pageInfo: {cursor: '', hasNextPage: false}}}),
-  ),
-}))
+const fetchMock = vi.fn((_url: string, _init?: RequestInit) =>
+  Promise.resolve(Response.json({assets: [], pageInfo: {cursor: '', hasNextPage: false}})),
+)
 
-vi.mock('axios', () => ({
-  default: {
-    get: axiosGet,
-  },
-}))
+beforeEach(() => {
+  vi.stubGlobal('fetch', fetchMock)
+})
 
-// The picker clears its results and sets its loading state before pushing to
-// these subjects, so `search` must emit for every push. Deduplicating repeated
-// [query, cursor] pairs would leave the picker stuck loading on an empty grid.
-test('emits again when a query settles back to the previous value', async () => {
-  vi.useFakeTimers()
+afterEach(() => {
+  vi.unstubAllGlobals()
+  fetchMock.mockReset()
+  vi.useRealTimers()
+})
 
+function searchWith(token?: string) {
   const query = new BehaviorSubject('')
   const cursor = new BehaviorSubject('')
   const emissions: unknown[] = []
+  const errors: unknown[] = []
 
   const subscription = search({
     projectId: 'project',
@@ -32,7 +30,18 @@ test('emits again when a query settles back to the previous value', async () => 
     query,
     cursor,
     resultsPerPage: 42,
-  }).subscribe((results) => emissions.push(results))
+    token,
+  }).subscribe({next: (results) => emissions.push(results), error: (err) => errors.push(err)})
+
+  return {query, cursor, emissions, errors, subscription}
+}
+
+// The picker clears its results and sets its loading state before pushing to
+// these subjects, so `search` must emit for every push. Deduplicating repeated
+// [query, cursor] pairs would leave the picker stuck loading on an empty grid.
+test('emits again when a query settles back to the previous value', async () => {
+  vi.useFakeTimers()
+  const {query, cursor, emissions, subscription} = searchWith()
 
   cursor.next('')
   query.next('abc')
@@ -49,12 +58,84 @@ test('emits again when a query settles back to the previous value', async () => 
   expect(emissions).toHaveLength(2)
 
   subscription.unsubscribe()
-  vi.useRealTimers()
+})
+
+test('sends cookies and the token to the Shopify assets endpoint', async () => {
+  vi.useFakeTimers()
+  const {query, emissions, subscription} = searchWith('secret')
+
+  query.next('shoe')
+  await vi.advanceTimersByTimeAsync(600)
+
+  expect(emissions).toEqual([{assets: [], pageInfo: {cursor: '', hasNextPage: false}}])
+  expect(fetchMock).toHaveBeenCalledTimes(1)
+  const [url, init] = fetchMock.mock.calls[0]!
+  expect(url).toBe(
+    'https://project.api.sanity.io/v1/shopify/assets/dataset?shop=example.myshopify.com&query=shoe&limit=42',
+  )
+  expect(init).toMatchObject({
+    credentials: 'include',
+    headers: {Authorization: 'Bearer secret'},
+  })
+
+  subscription.unsubscribe()
+})
+
+test('errors with the message from the API response body', async () => {
+  vi.useFakeTimers()
+  fetchMock.mockImplementationOnce(() =>
+    Promise.resolve(Response.json({message: 'Shop not connected'}, {status: 400})),
+  )
+  const {query, emissions, errors, subscription} = searchWith()
+
+  query.next('shoe')
+  await vi.advanceTimersByTimeAsync(600)
+
+  expect(emissions).toEqual([])
+  expect(errors).toEqual([new Error('Shop not connected')])
+
+  subscription.unsubscribe()
+})
+
+test('falls back to the status code when the error body has no message', async () => {
+  vi.useFakeTimers()
+  fetchMock.mockImplementationOnce(() =>
+    Promise.resolve(new Response('Bad Gateway', {status: 502})),
+  )
+  const {query, errors, subscription} = searchWith()
+
+  query.next('shoe')
+  await vi.advanceTimersByTimeAsync(600)
+
+  expect(errors).toEqual([new Error('Request failed with status code 502')])
+
+  subscription.unsubscribe()
+})
+
+test('aborts the in-flight request when a newer query supersedes it', async () => {
+  vi.useFakeTimers()
+  let firstSignal: AbortSignal | undefined
+  fetchMock.mockImplementationOnce((_url, init) => {
+    firstSignal = init?.signal ?? undefined
+    return new Promise(() => {})
+  })
+  const {query, emissions, subscription} = searchWith()
+
+  query.next('sho')
+  await vi.advanceTimersByTimeAsync(600)
+  expect(firstSignal?.aborted).toBe(false)
+
+  query.next('shoe')
+  await vi.advanceTimersByTimeAsync(600)
+
+  expect(firstSignal?.aborted).toBe(true)
+  expect(emissions).toHaveLength(1)
+
+  subscription.unsubscribe()
 })
 
 test('requests assets from the configured dataset', async () => {
   vi.useFakeTimers()
-  axiosGet.mockClear()
 
   const query = new BehaviorSubject('')
   const cursor = new BehaviorSubject('')
@@ -70,9 +151,9 @@ test('requests assets from the configured dataset', async () => {
 
   await vi.advanceTimersByTimeAsync(600)
 
-  expect(axiosGet).toHaveBeenCalledWith(
+  expect(fetchMock).toHaveBeenCalledWith(
     'https://project.api.sanity.io/v1/shopify/assets/production?shop=example.myshopify.com&limit=42',
-    expect.objectContaining({method: 'GET'}),
+    expect.objectContaining({credentials: 'include'}),
   )
 
   subscription.unsubscribe()
@@ -81,7 +162,6 @@ test('requests assets from the configured dataset', async () => {
 
 test('encodes the dataset path segment', async () => {
   vi.useFakeTimers()
-  axiosGet.mockClear()
 
   const query = new BehaviorSubject('')
   const cursor = new BehaviorSubject('')
@@ -97,9 +177,9 @@ test('encodes the dataset path segment', async () => {
 
   await vi.advanceTimersByTimeAsync(600)
 
-  expect(axiosGet).toHaveBeenCalledWith(
+  expect(fetchMock).toHaveBeenCalledWith(
     'https://project.api.sanity.io/v1/shopify/assets/prod%2Fextra?shop=example.myshopify.com&limit=42',
-    expect.objectContaining({method: 'GET'}),
+    expect.objectContaining({credentials: 'include'}),
   )
 
   subscription.unsubscribe()

@@ -1,5 +1,11 @@
 # sanity-plugin-shopify-assets
 
+## 2.1.1
+
+### Patch Changes
+
+- [#2261](https://github.com/sanity-io/plugins/pull/2261) [`854288a`](https://github.com/sanity-io/plugins/commit/854288a9f0c00263deadc58d9f7c05f1a174a673) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Replace `axios` with the native `fetch` API. In-flight asset requests are now aborted when a newer search supersedes them.
+
 ## 2.1.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 6.6.1
+
+### Patch Changes
+
+- [#2061](https://github.com/sanity-io/plugins/pull/2061) [`078ac51`](https://github.com/sanity-io/plugins/commit/078ac519789b6a95f15cc62e66a7296d5a17fe25) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Search alt text, title, description, and credit line when those fields are stored per locale
+
+- [#2276](https://github.com/sanity-io/plugins/pull/2276) [`e5b5459`](https://github.com/sanity-io/plugins/commit/e5b54597e16d1e14e1724d417c1b49fea57812b0) Thanks [@coreyward](https://github.com/coreyward)! - Update dependencies `zod` to ^4.6.7 and `@hookform/resolvers` to ^6.0.2
+
 ## 6.6.0
 
 ### Minor Changes
