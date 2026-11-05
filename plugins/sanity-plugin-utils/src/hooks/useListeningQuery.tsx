@@ -1,7 +1,6 @@
 import {dequal as isEqual} from 'dequal/lite'
-import {useEffect, useMemo, useRef, useState} from 'react'
-import type {Subscription} from 'rxjs'
-import {catchError, distinctUntilChanged} from 'rxjs/operators'
+import {useEffect, useMemo, useState} from 'react'
+import {defer, distinctUntilChanged, retry, timer} from 'rxjs'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
 interface Config<V> {
@@ -20,9 +19,19 @@ const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS = {apiVersion: `v2023-05-01`}
 const DEFAULT_INITIAL_VALUE = null
 
+const RETRY_BASE_DELAY_MS = 2000
+const RETRY_MAX_DELAY_MS = 30_000
+
 function useParams(params?: null | ListenQueryParams | ListenQueryOptions): ListenQueryParams {
   const stringifiedParams = useMemo(() => JSON.stringify(params || {}), [params])
   return useMemo(() => JSON.parse(stringifiedParams), [stringifiedParams])
+}
+
+/**
+ * Delay before reconnecting a failed listener: 2s, doubling up to 30s
+ */
+function getRetryDelay(retryCount: number): number {
+  return Math.min(RETRY_BASE_DELAY_MS * 2 ** (retryCount - 1), RETRY_MAX_DELAY_MS)
 }
 
 export function useListeningQuery<V>(
@@ -39,57 +48,45 @@ export function useListeningQuery<V>(
   const memoParams = useParams(params)
   const memoOptions = useParams(options)
 
-  const subscription = useRef<null | Subscription>(null)
   const documentStore = useDocumentStore()
 
   useEffect(() => {
-    if (query && !error && !subscription.current) {
-      try {
-        subscription.current = documentStore
-          .listenQuery(query, memoParams, memoOptions)
-          .pipe(
-            distinctUntilChanged(isEqual),
-            catchError((err) => {
-              console.error(err)
-              setError(err)
-              setLoading(false)
-              setData(null)
+    if (!query) {
+      return undefined
+    }
 
-              return err
-            }),
-          )
-          .subscribe((documents) => {
-            setData((current) => {
-              if (isEqual(current, documents)) {
-                return current
-              }
-
-              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
-              return documents as V
-            })
+    const subscription = defer(() => documentStore.listenQuery(query, memoParams, memoOptions))
+      .pipe(
+        distinctUntilChanged(isEqual),
+        // A listener can fail at any point, for instance when the browser has too many requests
+        // open to the API and the listener times out waiting for a connection. Report the error,
+        // keep the last result, and reconnect with backoff.
+        retry({
+          resetOnSuccess: true,
+          delay: (err: unknown, retryCount) => {
+            console.error(err)
+            setError(err)
             setLoading(false)
-            setError(null)
-          })
-      } catch (err) {
-        console.error(err)
-        // oxlint-disable-next-line react/set-state-in-effect
+
+            return timer(getRetryDelay(retryCount))
+          },
+        }),
+      )
+      .subscribe((documents) => {
+        setData((current) => {
+          if (isEqual(current, documents)) {
+            return current
+          }
+
+          // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
+          return documents as V
+        })
         setLoading(false)
-        setError(err)
-      }
-    }
+        setError(null)
+      })
 
-    // Unsubscribe when an error occurs
-    if (error && subscription.current) {
-      subscription.current.unsubscribe()
-    }
-
-    return () => {
-      if (subscription.current) {
-        subscription?.current?.unsubscribe()
-        subscription.current = null
-      }
-    }
-  }, [query, error, memoParams, memoOptions, documentStore])
+    return () => subscription.unsubscribe()
+  }, [query, memoParams, memoOptions, documentStore])
 
   return {data, loading, error}
 }
