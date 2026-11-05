@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.6.2
+
+### Patch Changes
+
+- [#2296](https://github.com/sanity-io/plugins/pull/2296) [`aa0cc5d`](https://github.com/sanity-io/plugins/commit/aa0cc5de119e54f4b485582cf87073edbedce1f7) Thanks [@tillschweneker](https://github.com/tillschweneker)! - Open a referring document from the asset's References tab by its published id and type, so the structure tool resolves it to its place in the desk structure even when the document has a draft
+
 ## 6.6.1
 
 ### Patch Changes
