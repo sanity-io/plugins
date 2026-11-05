@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {afterEach, describe, expect, it} from 'vitest'
 
 import type {ImageAsset} from '../types'

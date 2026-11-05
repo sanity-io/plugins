@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Button, Card, Checkbox, Dialog, Flex, Inline, Stack, Text, TextInput} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 import {

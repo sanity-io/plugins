@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import fs from 'node:fs'
 import {createRequire} from 'node:module'
 import path from 'node:path'

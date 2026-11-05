@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-restricted-imports, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 // Adapted from:
 // https://github.com/sanity-io/sanity/blob/current/packages/sanity/src/structure/components/paneItem/PaneItemPreview.tsx
 import {Inline} from '@sanity/ui'

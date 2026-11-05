@@ -1,3 +1,4 @@
+// oxlint-disable react/no-array-index-key - legacy code will be lint-cleaned in a follow-up PR
 import {SortIcon} from '@sanity/icons/Sort'
 import {Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'

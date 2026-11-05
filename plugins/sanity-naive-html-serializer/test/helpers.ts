@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion, typescript/restrict-template-expressions - legacy code will be lint-cleaned in a follow-up PR
 import clone from 'just-clone'
 import type {PortableTextBlock, SanityDocument, TypedObject} from 'sanity'
 

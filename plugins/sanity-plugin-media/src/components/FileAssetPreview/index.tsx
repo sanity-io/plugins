@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/media-has-caption - legacy code will be lint-cleaned in a follow-up PR
 import {Flex} from '@sanity/ui'
 
 import type {Asset} from '../../types'

@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread - legacy code will be lint-cleaned in a follow-up PR
 import groq from 'groq'
 
 import {groqWildcardMatch, operators} from '../config/searchFacets'
