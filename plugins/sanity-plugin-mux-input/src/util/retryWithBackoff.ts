@@ -11,9 +11,15 @@ export interface BackoffSchedule {
   timeoutMs: number
 }
 
-export interface RetryWithBackoffOptions extends BackoffSchedule {
-  /** Which errors to retry. Anything else fails straight away. */
-  isRetryableError: (error: unknown) => boolean
+export interface RetryWithBackoffOptions extends Pick<
+  BackoffSchedule,
+  'firstDelayMs' | 'timeoutMs'
+> {
+  /**
+   * How long to wait before retry number `retryCount` (starting at 1) after `error`, or
+   * `undefined` to fail with `error` straight away.
+   */
+  retryDelay: (error: unknown, retryCount: number) => number | undefined
   /** The error to fail with once `timeoutMs` has passed. */
   timeoutError: () => unknown
 }
@@ -27,27 +33,27 @@ export function backoffDelay(
 }
 
 /**
- * Subscribes to `attempt()` after `firstDelayMs` and resubscribes, waiting longer each time,
- * while it fails with an error that `isRetryableError` accepts. Emits the first value and
+ * Subscribes to `attempt()` after `firstDelayMs` and resubscribes after the wait `retryDelay`
+ * gives for each error, failing with the error when it gives none. Emits the first value and
  * completes. Fails with `timeoutError()` if nothing has been emitted after `timeoutMs`, cutting
  * off the attempt in flight. Attempts never overlap, and unsubscribing stops any pending wait.
  */
 export function retryWithBackoff<T>(
   attempt: () => Observable<T>,
-  {isRetryableError, timeoutError, ...schedule}: RetryWithBackoffOptions,
+  {firstDelayMs, timeoutMs, retryDelay, timeoutError}: RetryWithBackoffOptions,
 ): Observable<T> {
-  return timer(schedule.firstDelayMs).pipe(
+  return timer(firstDelayMs).pipe(
     concatMap(() =>
       defer(attempt).pipe(
         retry({
-          delay: (error: unknown, retryCount) =>
-            isRetryableError(error)
-              ? timer(backoffDelay(retryCount, schedule))
-              : throwError(() => error),
+          delay: (error: unknown, retryCount) => {
+            const delayMs = retryDelay(error, retryCount)
+            return delayMs === undefined ? throwError(() => error) : timer(delayMs)
+          },
         }),
       ),
     ),
     take(1),
-    timeout({first: schedule.timeoutMs, with: () => throwError(timeoutError)}),
+    timeout({first: timeoutMs, with: () => throwError(timeoutError)}),
   )
 }

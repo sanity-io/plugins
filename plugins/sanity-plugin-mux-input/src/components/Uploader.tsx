@@ -46,6 +46,8 @@ type UploadStatus = {
   file?: {name: string | undefined; type: string}
   uuid?: string
   url?: string
+  /** The file has been sent, and Mux is taking a while to turn it into an asset. */
+  processing?: boolean
 }
 
 interface State {
@@ -70,6 +72,7 @@ type UploaderStateAction =
       | Extract<UploadUrlEvent, {type: 'url'}>
     ))
   | {action: 'progress'; percent: number}
+  | {action: 'processing'}
   | {action: 'error'; error: Error; settings: MuxNewAssetSettings}
   | {action: 'complete' | 'reset'}
 
@@ -121,6 +124,14 @@ export default function Uploader(props: Props) {
             uploadStatus: {
               ...prev.uploadStatus,
               progress: action.percent,
+            },
+          } satisfies Pick<typeof prev, 'uploadStatus'>)
+        case 'processing':
+          return Object.assign({}, prev, {
+            uploadStatus: {
+              ...prev.uploadStatus,
+              progress: 100,
+              processing: true,
             },
           } satisfies Pick<typeof prev, 'uploadStatus'>)
         case 'reset':
@@ -256,6 +267,9 @@ export default function Uploader(props: Props) {
             break
           case 'progress':
             dispatch({action: 'progress', percent: event.percent})
+            break
+          case 'processing':
+            dispatch({action: 'processing'})
             break
           case 'success':
             dispatch({action: 'progress', percent: 100})
@@ -419,6 +433,7 @@ export default function Uploader(props: Props) {
         onCancel={cancelUploadButton.handleClick}
         progress={uploadStatus.progress}
         filename={uploadStatus.file?.name || uploadStatus.url}
+        text={uploadStatus.processing ? 'Processing upload…' : undefined}
       />
     )
   }

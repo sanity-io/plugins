@@ -4,7 +4,7 @@ import {TestScheduler} from 'rxjs/testing'
 import type {SanityClient} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {cancelUpload, pollUpload, uploadedAssetTransaction} from './upload'
+import {cancelUpload, pollUpload, uploadedAssetTransaction, withProcessingNotice} from './upload'
 
 const client = createClient({
   projectId: 'abc123',
@@ -44,6 +44,8 @@ test('a finished upload names the asset after the file, unless it already has a 
 
 const notFound = Object.assign(new Error('Not found'), {statusCode: 404})
 const forbidden = Object.assign(new Error('Forbidden'), {statusCode: 403})
+const badGateway = Object.assign(new Error('Bad gateway'), {statusCode: 502})
+const networkError = new Error('Request failed')
 
 /**
  * A client whose requests answer with `responses` in turn (an Error fails the request).
@@ -101,6 +103,43 @@ describe('pollUpload', () => {
     })
   })
 
+  test('retries 404s for about 5 seconds, then fails with the 404', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const {client, requests} = fakeClient(
+        scheduler,
+        Array.from({length: 100}, () => notFound),
+      )
+      expectObservable(pollUpload(client, 'uuid-1')).toBe('5200ms #', undefined, notFound)
+      scheduler.flush()
+      // The last wait is cut short so the final retry lands 5 seconds after the first 404
+      expect(requests.map(({at}) => at)).toEqual([200, 400, 800, 1600, 3200, 5200])
+    })
+  })
+
+  test.each([
+    ['5xx', badGateway],
+    ['network error', networkError],
+  ])('retries a %s twice, quickly, then fails with it', (_name, error) => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const {client, requests} = fakeClient(scheduler, [error, error, error, ready])
+      expectObservable(pollUpload(client, 'uuid-1')).toBe('1700ms #', undefined, error)
+      scheduler.flush()
+      expect(requests.map(({at}) => at)).toEqual([200, 700, 1700])
+    })
+  })
+
+  test('keeps polling a pending upload after a 5xx', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const {client, requests} = fakeClient(scheduler, [badGateway, pending, ready])
+      expectObservable(pollUpload(client, 'uuid-1')).toBe('1100ms (a|)', {a: ready})
+      scheduler.flush()
+      expect(requests.map(({at}) => at)).toEqual([200, 700, 1100])
+    })
+  })
+
   test('gives up with "Upload did not finish" after 30 seconds', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
@@ -113,6 +152,70 @@ describe('pollUpload', () => {
         undefined,
         new Error('Upload did not finish'),
       )
+    })
+  })
+  test('unsubscribing stops polling', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const {client, requests} = fakeClient(
+        scheduler,
+        Array.from({length: 100}, () => pending),
+      )
+      expectObservable(pollUpload(client, 'uuid-1'), '^ 1000ms !').toBe('')
+      scheduler.flush()
+      expect(requests.map(({at}) => at)).toEqual([200, 400, 800])
+    })
+  })
+
+  test('each poll gets its own budgets', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const {client} = fakeClient(scheduler, [
+        badGateway,
+        badGateway,
+        ready,
+        badGateway,
+        badGateway,
+        ready,
+      ])
+      const poll = pollUpload(client, 'uuid-1')
+      expectObservable(poll).toBe('1700ms (a|)', {a: ready})
+      expectObservable(poll, '2000ms ^').toBe('2000ms 1700ms (a|)', {a: ready})
+    })
+  })
+})
+
+describe('withProcessingNotice', () => {
+  test('emits a processing event when the work takes more than 3 seconds', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({cold, expectObservable}) => {
+      expectObservable(withProcessingNotice(cold('5000ms (a|)'))).toBe('3000ms p 1999ms (a|)', {
+        p: {type: 'processing'},
+        a: 'a',
+      })
+    })
+  })
+
+  test('stays quiet when the work finishes in time', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({cold, expectObservable}) => {
+      expectObservable(withProcessingNotice(cold('1000ms (a|)'))).toBe('1000ms (a|)')
+    })
+  })
+
+  test('stays quiet when the work fails in time', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({cold, expectObservable}) => {
+      expectObservable(withProcessingNotice(cold('1000ms #'))).toBe('1000ms #')
+    })
+  })
+
+  test('subscribes to the work once, and unsubscribing stops it', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({cold, expectObservable, expectSubscriptions}) => {
+      const work = cold('5000ms (a|)')
+      expectObservable(withProcessingNotice(work), '^ 1000ms !').toBe('')
+      expectSubscriptions(work.subscriptions).toBe('^ 1000ms !')
     })
   })
 })

@@ -10,10 +10,9 @@ const timedOut = new Error('Timed out')
 
 const options: RetryWithBackoffOptions = {
   firstDelayMs: 200,
-  retryDelayMs: 200,
-  maxDelayMs: 500,
   timeoutMs: 5_000,
-  isRetryableError: (error) => error === notFound,
+  retryDelay: (error, retryCount) =>
+    error === notFound ? backoffDelay(retryCount, {retryDelayMs: 200, maxDelayMs: 500}) : undefined,
   timeoutError: () => timedOut,
 }
 
@@ -69,7 +68,29 @@ describe('retryWithBackoff', () => {
     })
   })
 
-  test('fails straight away on an error that is not retryable', () => {
+  test('passes each error and the retry count to retryDelay', () => {
+    const scheduler = createScheduler()
+    scheduler.run(({expectObservable}) => {
+      const calls: [unknown, number][] = []
+      const {attempt, startedAt} = scriptedAttempt(scheduler, [notFound, forbidden])
+      const result = retryWithBackoff(attempt, {
+        ...options,
+        retryDelay: (error, retryCount) => {
+          calls.push([error, retryCount])
+          return 1_000
+        },
+      })
+      expectObservable(result).toBe('2200ms (a|)')
+      scheduler.flush()
+      expect(calls).toEqual([
+        [notFound, 1],
+        [forbidden, 2],
+      ])
+      expect(startedAt).toEqual([200, 1200, 2200])
+    })
+  })
+
+  test('fails straight away when retryDelay gives no wait', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
       const {attempt, startedAt} = scriptedAttempt(scheduler, [notFound, forbidden])

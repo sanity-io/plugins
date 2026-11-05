@@ -1,5 +1,19 @@
 import {uuid as generateUuid} from '@sanity/uuid'
-import {concat, defer, EMPTY, from, type Observable, of, throwError} from 'rxjs'
+import {
+  asyncScheduler,
+  concat,
+  connect,
+  defer,
+  EMPTY,
+  from,
+  materialize,
+  merge,
+  type Observable,
+  of,
+  takeUntil,
+  throwError,
+  timer,
+} from 'rxjs'
 import {catchError, ignoreElements, map, mergeMap, switchMap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 
@@ -7,10 +21,10 @@ import {createUpChunkObservable} from '../clients/upChunkObservable'
 import {formatDriveShareLink} from '../util/formatDriveShareLink'
 import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
-import {type BackoffSchedule, retryWithBackoff} from '../util/retryWithBackoff'
+import {backoffDelay, type BackoffSchedule, retryWithBackoff} from '../util/retryWithBackoff'
 import {roundPxString} from '../util/roundPxString'
 import type {MuxAsset, MuxNewAssetSettings, WatermarkConfig} from '../util/types'
-import {isRetryablePollError, toUploadError} from '../util/uploadErrors'
+import {retryablePollError, toUploadError} from '../util/uploadErrors'
 import {getAsset} from './assets'
 
 /**
@@ -32,6 +46,24 @@ const POLL_SCHEDULE: BackoffSchedule = {
   maxDelayMs: 4_000,
   timeoutMs: 30_000,
 }
+
+/**
+ * How long `pollUpload` keeps retrying 404s, counted from the first one. A new upload can
+ * take a moment to become available, but not this long.
+ */
+const NOT_FOUND_RETRY_LIMIT_MS = 5_000
+
+/**
+ * The waits before each retry when `pollUpload` gets a 5xx or network error. After the
+ * last one it fails with the error.
+ */
+const UNAVAILABLE_RETRY_DELAYS_MS = [500, 1_000]
+
+/**
+ * After the file has been sent, how long `uploadFile` waits for the asset before it emits
+ * a `processing` event, so the uploader can say it's still working.
+ */
+const PROCESSING_NOTICE_DELAY_MS = 3_000
 
 /**
  * How `cancelUpload` retries when the upload isn't available yet. Cancelling
@@ -98,12 +130,32 @@ export function cancelUpload(client: SanityClient, uuid: string): Observable<nev
       }),
     {
       ...CANCEL_SCHEDULE,
-      isRetryableError: isNotFoundError,
+      retryDelay: (error, retryCount) =>
+        isNotFoundError(error) ? backoffDelay(retryCount, CANCEL_SCHEDULE) : undefined,
       timeoutError: () => new Error('Could not cancel the upload'),
     },
   ).pipe(
     ignoreElements(),
     catchError(() => EMPTY),
+  )
+}
+
+/**
+ * Mirrors `work`, and emits a `processing` event first if it hasn't emitted, failed or
+ * completed after `PROCESSING_NOTICE_DELAY_MS`.
+ */
+export function withProcessingNotice<T>(work: Observable<T>): Observable<T | {type: 'processing'}> {
+  return work.pipe(
+    connect((shared) =>
+      merge(
+        timer(PROCESSING_NOTICE_DELAY_MS).pipe(
+          map(() => ({type: 'processing' as const})),
+          // `materialize` so that failing or completing also cancels the notice.
+          takeUntil(shared.pipe(materialize())),
+        ),
+        shared,
+      ),
+    ),
   )
 }
 
@@ -224,8 +276,10 @@ export function uploadFile({
                     if (event.type !== 'success') {
                       return of(event)
                     }
-                    return updateAssetDocumentFromUpload(client, uuid, watermark, file.name).pipe(
-                      map((doc) => ({...event, asset: doc})),
+                    return withProcessingNotice(
+                      updateAssetDocumentFromUpload(client, uuid, watermark, file.name).pipe(
+                        map((doc) => ({...event, asset: doc})),
+                      ),
                     )
                   }),
                   catchError((err) => {
@@ -279,30 +333,59 @@ class UploadNotReadyError extends Error {
   }
 }
 
-function isRetryableUploadPollError(error: unknown): boolean {
-  return error instanceof UploadNotReadyError || isRetryablePollError(error)
+/**
+ * Decides, for one `pollUpload`, whether and when to retry after an error. Each cause has
+ * its own budget, and running out of it fails with that error:
+ * - not ready yet: keeps polling on `POLL_SCHEDULE` until its overall limit
+ * - 404: keeps polling for up to `NOT_FOUND_RETRY_LIMIT_MS` after the first one
+ * - 5xx or network error: retries quickly, after each of `UNAVAILABLE_RETRY_DELAYS_MS`
+ * - anything else: fails straight away
+ */
+function createPollRetryDelay(): (error: unknown, retryCount: number) => number | undefined {
+  let firstNotFoundAt: number | undefined
+  let unavailableRetries = 0
+
+  return (error, retryCount) => {
+    if (error instanceof UploadNotReadyError) return backoffDelay(retryCount, POLL_SCHEDULE)
+
+    switch (retryablePollError(error)) {
+      case 'not-found': {
+        const now = asyncScheduler.now()
+        firstNotFoundAt ??= now
+        const remainingMs = firstNotFoundAt + NOT_FOUND_RETRY_LIMIT_MS - now
+        return remainingMs > 0
+          ? Math.min(backoffDelay(retryCount, POLL_SCHEDULE), remainingMs)
+          : undefined
+      }
+      case 'unavailable':
+        return UNAVAILABLE_RETRY_DELAYS_MS[unavailableRetries++]
+      default:
+        return undefined
+    }
+  }
 }
 
 /**
- * Waits for Mux to turn the finished upload into an asset, polling on
- * `POLL_SCHEDULE`. Retries while the upload has no asset yet, and on the
- * errors `isRetryablePollError` accepts, such as the 404 the API answers
- * until a new upload is available.
+ * Waits for Mux to turn the finished upload into an asset, polling on `POLL_SCHEDULE` while
+ * the upload has no asset yet, and then fails with "Upload did not finish". Errors are
+ * retried as `createPollRetryDelay` decides.
  */
 export function pollUpload(client: SanityClient, uuid: string): Observable<UploadResponse> {
-  return retryWithBackoff(
-    () =>
-      getUpload(client, uuid).pipe(
-        map((upload) => {
-          if (!upload?.data?.asset_id) throw new UploadNotReadyError()
-          return upload
-        }),
-      ),
-    {
-      ...POLL_SCHEDULE,
-      isRetryableError: isRetryableUploadPollError,
-      timeoutError: () => new Error('Upload did not finish'),
-    },
+  return defer(() =>
+    retryWithBackoff(
+      () =>
+        getUpload(client, uuid).pipe(
+          map((upload) => {
+            if (!upload?.data?.asset_id) throw new UploadNotReadyError()
+            return upload
+          }),
+        ),
+      {
+        ...POLL_SCHEDULE,
+        retryDelay: createPollRetryDelay(),
+        timeoutError: () => new Error('Upload did not finish'),
+      },
+    ),
   )
 }
 
