@@ -229,8 +229,8 @@ catalogs:
       specifier: ^16.3.3
       version: 16.3.3
     '@tsdown/css':
-      specifier: ^0.23.1
-      version: 0.23.1
+      specifier: ^0.23.5
+      version: 0.23.5
     '@types/lodash-es':
       specifier: ^4.17.12
       version: 4.17.12
@@ -825,13 +825,13 @@ importers:
     devDependencies:
       '@sanity/pkg-utils':
         specifier: 'catalog:'
-        version: 13.0.12(@babel/runtime@7.29.7)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-resolver@11.24.2)(rolldown@1.2.16)(supports-color@5.5.0)(typescript@7.0.2)(vite@8.3.4)
+        version: 13.0.12(@babel/runtime@7.29.7)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-resolver@11.24.2)(rolldown@1.2.16)(supports-color@5.5.0)(typescript@7.0.2)(vite@8.3.4)
       '@sanity/tsconfig':
         specifier: 'catalog:'
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -867,7 +867,7 @@ importers:
         version: 17.16.0(supports-color@5.5.0)(typescript@7.0.2)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -919,7 +919,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -952,7 +952,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/block-insert-picker:
     dependencies:
@@ -977,7 +977,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -1007,7 +1007,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/code-input:
     dependencies:
@@ -1071,7 +1071,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -1101,7 +1101,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/color-input:
     dependencies:
@@ -1129,7 +1129,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.3.0(babel-plugin-macros@3.1.0)(vite@8.3.4)
@@ -1156,7 +1156,7 @@ importers:
         version: 19.3.1
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/cross-dataset-duplicator:
     dependencies:
@@ -1190,7 +1190,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1211,7 +1211,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/dashboard:
     dependencies:
@@ -1236,7 +1236,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1257,7 +1257,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/debug-live-sync-tags:
     dependencies:
@@ -1276,7 +1276,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -1300,7 +1300,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/debug-preview-url-secret-plugin:
     dependencies:
@@ -1319,7 +1319,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -1331,7 +1331,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/document-internationalization:
     dependencies:
@@ -1365,7 +1365,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -1401,7 +1401,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/embeddings-index-ui:
     dependencies:
@@ -1423,7 +1423,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -1447,7 +1447,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/form-toolkit:
     dependencies:
@@ -1478,7 +1478,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -1508,7 +1508,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/google-maps-input:
     dependencies:
@@ -1530,7 +1530,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.3.0(babel-plugin-macros@3.1.0)(vite@8.3.4)
@@ -1560,7 +1560,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/hierarchical-document-list:
     dependencies:
@@ -1597,7 +1597,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1618,7 +1618,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/language-filter:
     dependencies:
@@ -1643,7 +1643,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -1676,7 +1676,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/orderable-document-list:
     dependencies:
@@ -1707,7 +1707,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1728,7 +1728,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/personalization-plugin:
     dependencies:
@@ -1762,7 +1762,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -1780,7 +1780,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/presets:
     dependencies:
@@ -1805,7 +1805,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -1838,7 +1838,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/rich-date-input:
     dependencies:
@@ -1863,7 +1863,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -1887,7 +1887,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/sanity-plugin-async-list:
     dependencies:
@@ -1912,7 +1912,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -1936,7 +1936,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/sfcc:
     dependencies:
@@ -1958,7 +1958,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -1982,7 +1982,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/studio-secrets:
     dependencies:
@@ -2004,7 +2004,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -2037,7 +2037,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/table:
     dependencies:
@@ -2059,7 +2059,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2083,7 +2083,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/themer:
     dependencies:
@@ -2132,10 +2132,10 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@tsdown/css':
         specifier: 'catalog:'
-        version: 0.23.1(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
+        version: 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2162,7 +2162,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@tsdown/css@0.23.1)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/@sanity/vercel-protection-bypass:
     dependencies:
@@ -2187,7 +2187,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2205,7 +2205,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-naive-html-serializer:
     dependencies:
@@ -2236,7 +2236,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2263,7 +2263,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-aprimo:
     dependencies:
@@ -2279,7 +2279,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2297,7 +2297,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-asset-source-unsplash:
     dependencies:
@@ -2322,7 +2322,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -2343,7 +2343,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-bynder-input:
     dependencies:
@@ -2365,7 +2365,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.3.0(babel-plugin-macros@3.1.0)(vite@8.3.4)
@@ -2395,7 +2395,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-cloudinary:
     dependencies:
@@ -2423,7 +2423,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -2444,7 +2444,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-document-list:
     dependencies:
@@ -2469,7 +2469,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -2490,7 +2490,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-netlify:
     dependencies:
@@ -2509,7 +2509,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -2530,7 +2530,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-dashboard-widget-vercel:
     dependencies:
@@ -2585,7 +2585,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/object-hash':
         specifier: ^3.0.6
         version: 3.0.6
@@ -2609,7 +2609,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-documents-pane:
     dependencies:
@@ -2643,7 +2643,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/dlv':
         specifier: ^1.1.5
         version: 1.1.5
@@ -2667,7 +2667,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-google-translate:
     dependencies:
@@ -2683,7 +2683,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -2704,7 +2704,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-graph-view:
     dependencies:
@@ -2738,7 +2738,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2756,7 +2756,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-hotspot-array:
     dependencies:
@@ -2787,7 +2787,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/lodash-es':
         specifier: 'catalog:'
         version: 4.17.12
@@ -2814,7 +2814,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-iframe-pane:
     dependencies:
@@ -2848,7 +2848,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -2872,7 +2872,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-internationalized-array:
     dependencies:
@@ -2903,7 +2903,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -2939,7 +2939,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-latex-input:
     dependencies:
@@ -2955,7 +2955,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -2973,7 +2973,7 @@ importers:
         version: 19.3.1(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-markdown:
     dependencies:
@@ -2995,7 +2995,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -3016,7 +3016,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-media:
     dependencies:
@@ -3104,7 +3104,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5)
@@ -3143,7 +3143,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-mux-input:
     dependencies:
@@ -3216,7 +3216,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@testing-library/react':
         specifier: 'catalog:'
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0)(@types/react@19.3.0)(react-dom@19.3.1)(react@19.3.1)
@@ -3252,7 +3252,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-shopify-assets:
     dependencies:
@@ -3289,7 +3289,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -3313,7 +3313,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-studio-smartling:
     dependencies:
@@ -3329,7 +3329,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -3350,7 +3350,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-transifex:
     dependencies:
@@ -3366,7 +3366,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -3387,7 +3387,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-utils:
     dependencies:
@@ -3418,7 +3418,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -3439,7 +3439,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-workflow:
     dependencies:
@@ -3473,7 +3473,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@sanity/vanilla-extract-vite-plugin':
         specifier: 'catalog:'
         version: 0.3.0(babel-plugin-macros@3.1.0)(vite@8.3.4)
@@ -3497,7 +3497,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-plugin-workspace-home:
     dependencies:
@@ -3519,7 +3519,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/node':
         specifier: ^24.19.2
         version: 24.19.2
@@ -3540,7 +3540,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   plugins/sanity-translations-tab:
     dependencies:
@@ -3571,7 +3571,7 @@ importers:
         version: 2.2.1
       '@sanity/tsdown-config':
         specifier: 'catalog:'
-        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+        version: 0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
@@ -3592,7 +3592,7 @@ importers:
         version: 6.6.0(react-dom@19.3.1)(react@19.3.1)
       tsdown:
         specifier: 'catalog:'
-        version: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+        version: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
 
   scripts/trigger-triage:
     devDependencies:
@@ -9408,8 +9408,8 @@ packages:
   '@tsconfig/vite-react@8.1.1':
     resolution: {integrity: sha512-TdLtRE9INt7aupEC2yhem6y4RN8T+B4oa2OUYsay0ioxSDl8Q4yaq0k2yc86Gb2BEHjKp4RUxgIzqOTk4IQ8dQ==}
 
-  '@tsdown/css@0.23.1':
-    resolution: {integrity: sha512-FLdllF5r22So3zwAuCRCLaxOCJqiN1SzihAncdoxHfe59Zj8nHDfaCBQBGYVDUJaHbr6fshSAcUXrgkJIr9dcA==}
+  '@tsdown/css@0.23.5':
+    resolution: {integrity: sha512-Zcobb3e4RTXcB3WijguGEXEfLJbhDxXq8Vce2PT1MR7E1JwMwwOevSXXAHFWTam5lJRBLyxrImcSQTqeZ2KCvA==}
     engines: {node: ^22.18.0 || ^24.11.0 || >=26.0.0}
     peerDependencies:
       postcss: ^8.4.0
@@ -9417,7 +9417,7 @@ packages:
       postcss-modules: ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
       sass: '*'
       sass-embedded: '*'
-      tsdown: 0.23.1
+      tsdown: 0.23.5
     peerDependenciesMeta:
       postcss:
         optional: true
@@ -23537,13 +23537,13 @@ snapshots:
     dependencies:
       zod: 4.6.7
 
-  '@sanity/pkg-utils@13.0.12(@babel/runtime@7.29.7)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-resolver@11.24.2)(rolldown@1.2.16)(supports-color@5.5.0)(typescript@7.0.2)(vite@8.3.4)':
+  '@sanity/pkg-utils@13.0.12(@babel/runtime@7.29.7)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-resolver@11.24.2)(rolldown@1.2.16)(supports-color@5.5.0)(typescript@7.0.2)(vite@8.3.4)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@5.5.0)
       '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.16)(vite@8.3.4)
       '@sanity/browserslist-config': 1.0.5
       '@sanity/parse-package-json': 2.3.7
-      '@sanity/tsdown-config': 0.30.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
+      '@sanity/tsdown-config': 0.30.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)
       '@typescript/typescript6': 6.0.2
       browserslist: 4.29.5
       browserslist-to-esbuild: 2.1.1(browserslist@4.29.5)
@@ -23562,11 +23562,13 @@ snapshots:
       publint: 0.3.25
       rxjs: 7.8.2
       treeify: 1.1.0
-      tsdown: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
       tsx: 4.23.15
       typescript: 7.0.2
       zod: 4.6.7
       zod-validation-error: 5.0.0(zod@4.6.7)
+    optionalDependencies:
+      '@tsdown/css': 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@babel/plugin-transform-runtime'
@@ -23825,7 +23827,7 @@ snapshots:
 
   '@sanity/tsconfig@2.2.1': {}
 
-  '@sanity/tsdown-config@0.30.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
+  '@sanity/tsdown-config@0.30.1(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
     dependencies:
       '@microsoft/api-extractor': 7.59.4(@types/node@24.19.2)
       '@microsoft/tsdoc-config': 0.18.3
@@ -23839,17 +23841,18 @@ snapshots:
       package-manager-detector: 1.9.0
       publint: 0.3.25
       rolldown: 1.2.16
-      tsdown: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
       typescript: 7.0.2
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@5.5.0)
       '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.16)(vite@8.3.4)
+      '@tsdown/css': 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
       - vite
 
-  '@sanity/tsdown-config@0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.1)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
+  '@sanity/tsdown-config@0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(oxc-transform-react@0.154.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
     dependencies:
       '@microsoft/api-extractor': 7.59.4(@types/node@24.19.2)
       '@microsoft/tsdoc-config': 0.18.3
@@ -23863,19 +23866,19 @@ snapshots:
       package-manager-detector: 1.9.0
       publint: 0.3.25
       rolldown: 1.2.16
-      tsdown: 0.23.5(@tsdown/css@0.23.1)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
       typescript: 7.0.2
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.16)(vite@8.3.4)
-      '@tsdown/css': 0.23.1(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
+      '@tsdown/css': 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
       oxc-transform-react: 0.154.0
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
       - vite
 
-  '@sanity/tsdown-config@0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
+  '@sanity/tsdown-config@0.31.2(@babel/core@7.29.7)(@rolldown/plugin-babel@0.2.4)(@tsdown/css@0.23.5)(@types/node@24.19.2)(babel-plugin-macros@3.1.0)(tsdown@0.23.5)(typescript@7.0.2)(vite@8.3.4)':
     dependencies:
       '@microsoft/api-extractor': 7.59.4(@types/node@24.19.2)
       '@microsoft/tsdoc-config': 0.18.3
@@ -23889,11 +23892,12 @@ snapshots:
       package-manager-detector: 1.9.0
       publint: 0.3.25
       rolldown: 1.2.16
-      tsdown: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
       typescript: 7.0.2
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@5.5.0)
       '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.2.16)(vite@8.3.4)
+      '@tsdown/css': 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -24001,7 +24005,7 @@ snapshots:
   '@sanity/vanilla-extract-tsdown-plugin@0.5.1(babel-plugin-macros@3.1.0)(rolldown@1.2.16)(tsdown@0.23.5)':
     dependencies:
       '@sanity/vanilla-extract-rolldown-plugin': 0.5.1(babel-plugin-macros@3.1.0)(rolldown@1.2.16)
-      tsdown: 0.23.5(@vitejs/devtools@0.4.12)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
     transitivePeerDependencies:
       - babel-plugin-macros
       - rolldown
@@ -24665,12 +24669,12 @@ snapshots:
 
   '@tsconfig/vite-react@8.1.1': {}
 
-  '@tsdown/css@0.23.1(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)':
+  '@tsdown/css@0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)':
     dependencies:
       lightningcss: 1.33.0
       postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.29)(tsx@4.23.15)(yaml@2.9.1)
       rolldown: 1.2.16
-      tsdown: 0.23.5(@tsdown/css@0.23.1)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
+      tsdown: 0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2)
     optionalDependencies:
       postcss: 8.5.29
     transitivePeerDependencies:
@@ -33115,7 +33119,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.23.5(@tsdown/css@0.23.1)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2):
+  tsdown@0.23.5(@tsdown/css@0.23.5)(oxc-resolver@11.24.2)(publint@0.3.25)(tsx@4.23.15)(typescript@7.0.2):
     dependencies:
       cac: 7.1.0
       defu: 6.1.7
@@ -33132,7 +33136,7 @@ snapshots:
       unconfig-core: 7.5.0
       verkit: 0.5.0
     optionalDependencies:
-      '@tsdown/css': 0.23.1(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
+      '@tsdown/css': 0.23.5(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.5)(tsx@4.23.15)(yaml@2.9.1)
       publint: 0.3.25
       tsx: 4.23.15
       typescript: 7.0.2
