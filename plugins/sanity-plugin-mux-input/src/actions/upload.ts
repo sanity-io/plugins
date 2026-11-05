@@ -1,13 +1,13 @@
 import {uuid as generateUuid} from '@sanity/uuid'
-import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
-import {catchError, mergeMap, switchMap} from 'rxjs/operators'
+import {concat, defer, EMPTY, from, type Observable, of, throwError} from 'rxjs'
+import {catchError, ignoreElements, map, mergeMap, switchMap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 
 import {createUpChunkObservable} from '../clients/upChunkObservable'
 import {formatDriveShareLink} from '../util/formatDriveShareLink'
 import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
-import {pollWithBackoff, PollTimeoutError} from '../util/pollWithBackoff'
+import {type BackoffSchedule, retryWithBackoff} from '../util/retryWithBackoff'
 import {roundPxString} from '../util/roundPxString'
 import type {MuxAsset, MuxNewAssetSettings, WatermarkConfig} from '../util/types'
 import {isRetryablePollError, toUploadError} from '../util/uploadErrors'
@@ -15,10 +15,34 @@ import {getAsset} from './assets'
 
 /**
  * API version for the upload requests. From this version on, a new upload can
- * take a moment to become available, which `pollUpload` handles by retrying
- * 404s. Other requests keep the plugin's default API version.
+ * take a moment to become available (the API answers 404 until then), and
+ * retrying is up to the plugin: see `pollUpload` and `cancelUpload`. Other
+ * requests keep the plugin's default API version.
  */
 const UPLOAD_API_VERSION = '2026-11-03'
+
+/**
+ * How `pollUpload` waits for a finished upload to become an asset. The first
+ * poll waits a moment, since the upload is rarely available right away, then
+ * the waits double up to a cap until the overall limit.
+ */
+const POLL_SCHEDULE: BackoffSchedule = {
+  firstDelayMs: 200,
+  retryDelayMs: 200,
+  maxDelayMs: 4_000,
+  timeoutMs: 30_000,
+}
+
+/**
+ * How `cancelUpload` retries when the upload isn't available yet. Cancelling
+ * is best effort, so it gives up after a few seconds.
+ */
+const CANCEL_SCHEDULE: BackoffSchedule = {
+  firstDelayMs: 0,
+  retryDelayMs: 200,
+  maxDelayMs: 1_000,
+  timeoutMs: 5_000,
+}
 
 function getUploadClient(client: SanityClient): SanityClient {
   return getMuxAddonClient(client).withConfig({apiVersion: UPLOAD_API_VERSION})
@@ -51,13 +75,36 @@ function sanitizePxStringsInJson(json: string): string {
   })
 }
 
-function cancelUpload(client: SanityClient, uuid: string) {
-  return getUploadClient(client).observable.request({
-    url: `/addons/mux/uploads/${client.config().dataset}/${uuid}`,
-    withCredentials: true,
-    method: 'DELETE',
-    query: PLUGIN_VERSION_QUERY,
-  })
+function isNotFoundError(error: unknown): boolean {
+  return (error as {statusCode?: unknown} | null)?.statusCode === 404
+}
+
+/**
+ * Deletes an upload on Mux, along with its asset document. Retries while the
+ * API answers 404, which it can do right after the upload is created. Never
+ * fails: if the upload still can't be deleted, it gives up quietly.
+ */
+export function cancelUpload(client: SanityClient, uuid: string): Observable<never> {
+  const {dataset} = client.config()
+  return retryWithBackoff(
+    () =>
+      getUploadClient(client).observable.request({
+        url: `/addons/mux/uploads/${dataset}/${uuid}`,
+        withCredentials: true,
+        method: 'DELETE',
+        query: PLUGIN_VERSION_QUERY,
+        // Retrying is done here, so turn off the client's own retries.
+        maxRetries: 0,
+      }),
+    {
+      ...CANCEL_SCHEDULE,
+      isRetryableError: isNotFoundError,
+      timeoutError: () => new Error('Could not cancel the upload'),
+    },
+  ).pipe(
+    ignoreElements(),
+    catchError(() => EMPTY),
+  )
 }
 
 export function uploadUrl({
@@ -177,13 +224,16 @@ export function uploadFile({
                     if (event.type !== 'success') {
                       return of(event)
                     }
-                    return from(
-                      updateAssetDocumentFromUpload(client, uuid, watermark, file.name),
-                    ).pipe(mergeMap((doc) => of({...event, asset: doc})))
+                    return updateAssetDocumentFromUpload(client, uuid, watermark, file.name).pipe(
+                      map((doc) => ({...event, asset: doc})),
+                    )
                   }),
                   catchError((err) => {
-                    // Delete asset document
-                    return cancelUpload(client, uuid).pipe(mergeMap(() => throwError(() => err)))
+                    // Delete the upload and its asset document, then report the original error
+                    return concat(
+                      cancelUpload(client, uuid),
+                      throwError(() => err),
+                    )
                   }),
                 )
               }),
@@ -209,62 +259,77 @@ type UploadResponse = {
     timeout: number
   }
 }
-function getUpload(client: SanityClient, assetId: string) {
+function getUpload(client: SanityClient, uuid: string) {
   const {dataset} = client.config()
-  return getUploadClient(client).request<UploadResponse>({
-    url: `/addons/mux/uploads/${dataset}/${assetId}`,
+  return getUploadClient(client).observable.request<UploadResponse>({
+    url: `/addons/mux/uploads/${dataset}/${uuid}`,
     withCredentials: true,
     method: 'GET',
     query: PLUGIN_VERSION_QUERY,
+    // Retrying is done by `pollUpload`, so turn off the client's own retries.
+    maxRetries: 0,
   })
+}
+
+/** The upload exists, but Mux hasn't created its asset yet. */
+class UploadNotReadyError extends Error {
+  constructor() {
+    super('Upload is not ready yet')
+    this.name = 'UploadNotReadyError'
+  }
+}
+
+function isRetryableUploadPollError(error: unknown): boolean {
+  return error instanceof UploadNotReadyError || isRetryablePollError(error)
 }
 
 /**
- * Waits for Mux to turn the finished upload into an asset. Mux usually has the
- * asset ID by the first poll, so poll straight away, then back off (0.5s, 1s,
- * 2s, 4s, then every 8s) for up to 30s. A 404 is retried too, because the
- * upload can take a moment to become available after it's created.
+ * Waits for Mux to turn the finished upload into an asset, polling on
+ * `POLL_SCHEDULE`. Retries while the upload has no asset yet, and on the
+ * errors `isRetryablePollError` accepts, such as the 404 the API answers
+ * until a new upload is available.
  */
-function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse> {
-  return pollWithBackoff(
-    async () => {
-      const upload = await getUpload(client, uuid)
-      return upload?.data?.asset_id ? upload : undefined
+export function pollUpload(client: SanityClient, uuid: string): Observable<UploadResponse> {
+  return retryWithBackoff(
+    () =>
+      getUpload(client, uuid).pipe(
+        map((upload) => {
+          if (!upload?.data?.asset_id) throw new UploadNotReadyError()
+          return upload
+        }),
+      ),
+    {
+      ...POLL_SCHEDULE,
+      isRetryableError: isRetryableUploadPollError,
+      timeoutError: () => new Error('Upload did not finish'),
     },
-    {isRetryableError: isRetryablePollError},
-  ).catch((error: unknown) => {
-    throw error instanceof PollTimeoutError ? new Error('Upload did not finish') : error
-  })
+  )
 }
 
-async function updateAssetDocumentFromUpload(
+function updateAssetDocumentFromUpload(
   client: SanityClient,
   uuid: string,
   _watermark?: WatermarkConfig,
   filename?: string,
 ) {
-  let upload: UploadResponse
-  let asset: {data: MuxAsset}
-  try {
-    upload = await pollUpload(client, uuid)
-  } catch (err) {
-    return Promise.reject(err)
-  }
-  try {
-    asset = await getAsset(client, upload.data.asset_id)
-  } catch (err) {
-    return Promise.reject(err)
-  }
-
-  const fields = {
-    status: asset.data.status,
-    data: asset.data,
-    assetId: asset.data.id,
-    playbackId: asset.data.playback_ids[0]?.id,
-    uploadId: upload.data.id,
-  }
-  await uploadedAssetTransaction(client, uuid, fields, filename).commit({returnDocuments: false})
-  return {_id: uuid, _type: 'mux.videoAsset', ...fields}
+  return pollUpload(client, uuid).pipe(
+    mergeMap((upload) =>
+      from(getAsset(client, upload.data.asset_id)).pipe(
+        map((asset: {data: MuxAsset}) => ({
+          status: asset.data.status,
+          data: asset.data,
+          assetId: asset.data.id,
+          playbackId: asset.data.playback_ids[0]?.id,
+          uploadId: upload.data.id,
+        })),
+      ),
+    ),
+    mergeMap((fields) =>
+      from(
+        uploadedAssetTransaction(client, uuid, fields, filename).commit({returnDocuments: false}),
+      ).pipe(map(() => ({_id: uuid, _type: 'mux.videoAsset' as const, ...fields}))),
+    ),
+  )
 }
 
 /**
