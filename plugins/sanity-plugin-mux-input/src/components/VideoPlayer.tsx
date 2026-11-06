@@ -77,18 +77,17 @@ export default function VideoPlayer({
     )
   }, [client, policy, playbackId])
 
-  const source = useMemo<MuxSource | undefined>(() => {
-    if (!playbackId || !policy) return undefined
-    const signed = policy === 'signed' || policy === 'drm'
-    if (signed && !signTokens) return undefined
-    return {
-      playbackId,
-      playback: signTokens ? {token: signTokens.playback} : undefined,
-      storyboard: signTokens ? {token: signTokens.storyboard} : undefined,
-      drm: signTokens?.drm ? {token: signTokens.drm} : undefined,
-      engine: hlsConfig ? {hlsJs: hlsConfig} : undefined,
-    }
-  }, [playbackId, policy, signTokens, hlsConfig])
+  const signed = policy === 'signed' || policy === 'drm'
+  const source: MuxSource | undefined =
+    playbackId && policy && (!signed || signTokens)
+      ? {
+          playbackId,
+          playback: signTokens ? {token: signTokens.playback} : undefined,
+          storyboard: signTokens ? {token: signTokens.storyboard} : undefined,
+          drm: signTokens?.drm ? {token: signTokens.drm} : undefined,
+          engine: hlsConfig ? {hlsJs: hlsConfig} : undefined,
+        }
+      : undefined
 
   const poster = useMemo(() => {
     if (!hasPlaybackIds) return undefined
