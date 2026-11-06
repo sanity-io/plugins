@@ -8,4 +8,5 @@ export {embeddingsIndexReferenceInput}
 
 export {embeddingsIndexDashboard}
 
+// oxlint-disable-next-line oxc/no-barrel-file
 export * from './api/embeddingsApi'

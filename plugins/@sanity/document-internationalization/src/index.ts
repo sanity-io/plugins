@@ -13,4 +13,5 @@ export {
 export {useDocumentInternationalizationContext} from './components/DocumentInternationalizationContext'
 export {DocumentInternationalizationMenu} from './components/DocumentInternationalizationMenu'
 export {documentInternationalization} from './plugin'
+// oxlint-disable-next-line oxc/no-barrel-file
 export * from './types'

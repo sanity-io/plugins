@@ -283,7 +283,6 @@ function FieldsInitializer({
     }
     onChange(event)
     initialized.current = true
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [activePath, onChange, pathKey, existingField, missingPresetInstructions])
 
   return null

@@ -140,6 +140,5 @@ export function useBrowserInit(
         }),
       )
     }
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [tagsFetchCount, hasMediaTags]) // eslint-disable-line react-hooks/exhaustive-deps
 }
