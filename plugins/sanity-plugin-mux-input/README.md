@@ -178,16 +178,14 @@ import '@videojs/react/video/skin.css'
 import {MuxData} from '@videojs/react/extensions/mux-data'
 import {MuxVideo} from '@videojs/react/media/mux-video'
 import {VideoPlayer, VideoSkin} from '@videojs/react/video'
-import {useMemo} from 'react'
 
 export default function MuxVideoPlayer({playbackId, title}: {playbackId?: string; title?: string}) {
-  const source = useMemo(() => (playbackId ? {playbackId} : null), [playbackId])
-  if (!source) return null
+  if (!playbackId) return null
 
   return (
     <VideoPlayer title={title}>
       <VideoSkin style={{aspectRatio: '16 / 9'}}>
-        <MuxVideo source={source} playsInline crossOrigin="anonymous" />
+        <MuxVideo source={{playbackId}} playsInline crossOrigin="anonymous" />
         <MuxData metadata={title ? {video_title: title} : undefined} />
       </VideoSkin>
     </VideoPlayer>
