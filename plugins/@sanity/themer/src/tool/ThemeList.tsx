@@ -5,6 +5,7 @@ import {CopyIcon} from '@sanity/icons/Copy'
 import {EditIcon} from '@sanity/icons/Edit'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {ImageIcon} from '@sanity/icons/Image'
+import {LinkIcon} from '@sanity/icons/Link'
 import {RestoreIcon} from '@sanity/icons/Restore'
 import {Button, Card, Flex, Stack} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
@@ -16,6 +17,7 @@ import type {ThemerProps} from '#types'
 
 import {ImageFileInput} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
+import {ImportThemeDialog} from './ImportThemeDialog'
 import type {ThemerSnapshot} from './machine'
 import {PasteThemeDialog} from './PasteThemeDialog'
 import {ScrollArea} from './ScrollArea'
@@ -174,6 +176,11 @@ export function ThemeList({
                   }}
                   text="Add from code"
                 />
+                <MenuItem
+                  icon={LinkIcon}
+                  onClick={() => actorRef.send({type: 'dialog.import'})}
+                  text="Add from URL"
+                />
                 {active && (
                   <>
                     <MenuDivider />
@@ -199,6 +206,13 @@ export function ThemeList({
           onClose={() => actorRef.send({type: 'dialog.close'})}
         />
       )}
+      {dialog === 'import' && (
+        <ImportThemeDialog
+          onClose={() => actorRef.send({type: 'dialog.close'})}
+          // Adding the theme opens the editor, which leaves the list and closes the dialog
+          onImport={({title, options}) => actorRef.send({type: 'theme.add', title, options})}
+        />
+      )}
       {dialog === 'snippet' && active && (
         <ThemeSnippetDialog onClose={() => actorRef.send({type: 'dialog.close'})} theme={active} />
       )}
@@ -207,8 +221,9 @@ export function ThemeList({
 }
 
 /** The dialog the list has open, if any — a state of the machine's list flow */
-function selectDialog(snapshot: ThemerSnapshot): 'paste' | 'snippet' | null {
+function selectDialog(snapshot: ThemerSnapshot): 'paste' | 'import' | 'snippet' | null {
   if (snapshot.matches({flow: {list: 'pasting'}})) return 'paste'
+  if (snapshot.matches({flow: {list: 'importing'}})) return 'import'
   if (snapshot.matches({flow: {list: 'snippet'}})) return 'snippet'
 
   return null

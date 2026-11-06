@@ -499,6 +499,23 @@ describe('themerMachine', () => {
       expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
     })
 
+    it('opens and closes the import dialog, which an import leaves for the editor', () => {
+      const actor = start()
+
+      actor.send({type: 'dialog.import'})
+      expect(actor.getSnapshot().matches({flow: {list: 'importing'}})).toBe(true)
+
+      actor.send({type: 'dialog.close'})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+
+      actor.send({type: 'dialog.import'})
+      actor.send({type: 'theme.add', title: 'Verdant', options: {light: {accent: '#1cb485'}}})
+      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+
+      actor.send({type: 'flow.list'})
+      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+    })
+
     it('shows the snippet of the applied theme only — the configured theme has none', () => {
       const actor = startWithCustom()
 
