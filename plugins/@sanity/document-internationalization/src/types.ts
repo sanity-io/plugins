@@ -2,6 +2,7 @@ import type {
   DocumentLanguageFilterContext,
   FieldDefinition,
   ObjectSchemaType,
+  PreviewConfig,
   Reference,
   SanityClient,
   SanityDocument,
@@ -53,6 +54,14 @@ export type PluginConfig = {
     'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
   >
   /**
+   * Replaces the preview of `translation.metadata` documents in reference fields, lists, and Omnisearch.
+   *
+   * Each translation entry stores its language on `language` and the document reference on `value`.
+   * Select paths are static, so read a few `translations.<index>.value.<field>` slots and choose the
+   * language inside `prepare`. Custom `metadataFields` can be selected by their field name.
+   */
+  metadataPreview?: PreviewConfig
+  /**
    * Set to false to prevent templates from being created for each schemaType and language.
    */
   addTemplates?: boolean
@@ -61,12 +70,15 @@ export type PluginConfig = {
 // Context version of config
 // should have processed the
 // supportedLanguages function
-export type PluginConfigContext = Required<Omit<PluginConfig, 'metadataInternationalization'>> & {
+export type PluginConfigContext = Required<
+  Omit<PluginConfig, 'metadataInternationalization' | 'metadataPreview'>
+> & {
   supportedLanguages: Language[]
   metadataInternationalization?: Pick<
     InternationalizedArrayPluginConfig,
     'buttonLocations' | 'buttonAddAll' | 'languageDisplay'
   >
+  metadataPreview?: PreviewConfig
 }
 
 export type TranslationReference = InternationalizedArrayItem<Reference> & {
