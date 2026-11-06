@@ -54,6 +54,11 @@ function connectionError() {
   return new Error('Could not establish EventSource connection')
 }
 
+/** Shaped like the errors `@sanity/client` emits, without depending on it */
+function clientError(name: string, props: Record<string, unknown> = {}): Error {
+  return Object.assign(new Error(`${name} from @sanity/client`), {name}, props)
+}
+
 describe('useListeningQuery', () => {
   const onUnhandledError = vi.fn()
 
@@ -146,6 +151,55 @@ describe('useListeningQuery', () => {
     act(() => getListener(2).error(connectionError()))
     advanceTimers(2000)
     expect(listenQuery).toHaveBeenCalledTimes(4)
+    unmount()
+  })
+
+  test.each([
+    ['a ChannelError', clientError('ChannelError')],
+    ['a DisconnectError', clientError('DisconnectError')],
+    ['a query parse error', clientError('ClientError', {statusCode: 400})],
+    ['a rejected listener connection', clientError('ConnectionFailedError', {status: 401})],
+  ])('stops on %s, since reconnecting would fail the same way', (_name, error) => {
+    const {result, unmount} = renderListeningQuery()
+
+    act(() => getListener(0).next([{title: 'Rex'}]))
+    act(() => getListener(0).error(error))
+    advanceTimers(60_000)
+
+    expect(listenQuery).toHaveBeenCalledTimes(1)
+    expect(onUnhandledError).not.toHaveBeenCalled()
+    expect(result.current).toEqual({data: [{title: 'Rex'}], loading: false, error})
+    unmount()
+  })
+
+  test.each([
+    ['a server error', clientError('ServerError', {statusCode: 502})],
+    ['a rate limit', clientError('ClientError', {statusCode: 429})],
+    ['a request timeout', clientError('ClientError', {statusCode: 408})],
+    ['a failed listener connection without a status', clientError('ConnectionFailedError')],
+  ])('reconnects after %s', (_name, error) => {
+    const {result, unmount} = renderListeningQuery()
+
+    act(() => getListener(0).error(error))
+    expect(result.current.error).toBe(error)
+    advanceTimers(2000)
+
+    expect(listenQuery).toHaveBeenCalledTimes(2)
+    unmount()
+  })
+
+  test('listens again when the params change after an error it stopped on', () => {
+    const {rerender, result, unmount} = renderHook(
+      ({type}) => useListeningQuery<{title: string}[]>(QUERY, {params: {type}}),
+      {initialProps: {type: 'pet'}},
+    )
+
+    act(() => getListener(0).error(clientError('ClientError', {statusCode: 400})))
+    rerender({type: 'toy'})
+    act(() => getListener(1).next([{title: 'Ball'}]))
+
+    expect(listenQuery).toHaveBeenLastCalledWith(QUERY, {type: 'toy'}, {apiVersion: 'v2023-05-01'})
+    expect(result.current).toEqual({data: [{title: 'Ball'}], loading: false, error: null})
     unmount()
   })
 
