@@ -161,6 +161,17 @@ describe('useListeningQuery', () => {
         data: {error: {type: 'queryParseError', description: 'Expected end of query'}},
       }),
     ],
+    // How the API gateway rejects a listener it can't route
+    [
+      'a ChannelError for a missing dataset',
+      clientError('ChannelError', {
+        data: {
+          statusCode: 404,
+          error: 'Dataset not found',
+          message: 'Dataset "nope" not found for project ID "abc123"',
+        },
+      }),
+    ],
     ['a DisconnectError', clientError('DisconnectError')],
     ['a query parse error', clientError('ClientError', {statusCode: 400})],
     ['a rejected listener connection', clientError('ConnectionFailedError', {status: 401})],

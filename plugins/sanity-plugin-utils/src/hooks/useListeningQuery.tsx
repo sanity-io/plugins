@@ -45,7 +45,7 @@ function isRetryableError(err: unknown): boolean {
   }
 
   if (err.name === 'ChannelError') {
-    return !hasKnownErrorType(err)
+    return !isPermanentChannelError(err)
   }
 
   // The server told the listener to go away
@@ -68,13 +68,25 @@ function isRetryableError(err: unknown): boolean {
 }
 
 /**
- * The listen endpoint sends a `channelError` both for errors it recognizes, which have a `type`
- * (like `queryParseError`), and for unexpected ones, which have the type `internalError` or no
- * type at all. Only the recognized errors would happen again on a new listener.
+ * A `channelError` can come from two places:
+ * - The API gateway, when it can't route the listener (a missing dataset, say). It only does so
+ *   for 4xx errors, and includes the status as `statusCode`.
+ * - The listen endpoint. Errors it recognizes have a `type` (like `queryParseError`), while
+ *   unexpected ones have the type `internalError` or no type at all.
+ *
+ * Only the 4xx errors and the recognized errors would happen again on a new listener.
  */
-function hasKnownErrorType(err: Error): boolean {
+function isPermanentChannelError(err: Error): boolean {
   const data: unknown = 'data' in err ? err.data : undefined
-  const error: unknown = isObject(data) && 'error' in data ? data.error : undefined
+  if (!isObject(data)) {
+    return false
+  }
+
+  if ('statusCode' in data && typeof data.statusCode === 'number') {
+    return isPermanentHttpError(data.statusCode)
+  }
+
+  const error: unknown = 'error' in data ? data.error : undefined
   const type: unknown = isObject(error) && 'type' in error ? error.type : undefined
 
   return typeof type === 'string' && type !== 'internalError'
