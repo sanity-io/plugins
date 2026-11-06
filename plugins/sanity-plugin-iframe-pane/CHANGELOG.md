@@ -1,5 +1,11 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.43
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 5.0.42
 
 ### Patch Changes

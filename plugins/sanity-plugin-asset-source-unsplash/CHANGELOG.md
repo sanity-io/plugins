@@ -1,5 +1,11 @@
 # sanity-plugin-asset-source-unsplash
 
+## 7.0.31
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 7.0.30
 
 ### Patch Changes
