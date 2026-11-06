@@ -21,10 +21,6 @@ export interface MuxMediaPlayerProps {
 
 const skinStyles = css`
   --media-border-radius: 0.1875rem;
-
-  .media-cast-button[data-availability='unavailable'] {
-    display: none;
-  }
 `
 
 const StyledVideoSkin = styled(VideoSkin)`
