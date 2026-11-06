@@ -1,4 +1,3 @@
-import {defer} from 'rxjs'
 import type {SanityClient} from 'sanity'
 
 import {getMuxAddonClient} from '../util/muxAddonClient'
@@ -96,16 +95,4 @@ export async function haveValidSigningKeys(
     console.error('Error fetching signingKeyId', signingKeyId, 'assuming it is not valid', e)
     return false
   }
-}
-
-export function testSecretsObservable(client: SanityClient) {
-  const {dataset} = client.config()
-  return defer(() =>
-    getMuxAddonClient(client).observable.request<{status: boolean}>({
-      url: `/addons/mux/secrets/${dataset}/test`,
-      withCredentials: true,
-      method: 'GET',
-      query: PLUGIN_VERSION_QUERY,
-    }),
-  )
 }
