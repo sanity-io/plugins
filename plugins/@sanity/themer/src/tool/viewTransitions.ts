@@ -60,10 +60,22 @@ export const viewTransitionClasses = {
       [viewTransitionTypes.open]: styles.panelSlideIn,
       default: 'none',
     },
+    /**
+     * The sidebar takes no part in any update, the cross-fade to a picked
+     * theme included: an element a view transition captures does not respond
+     * to hit-testing while the transition runs (CSS View Transitions Level 1,
+     * "Rendering model"), so a sidebar that faded along would drop the clicks
+     * of the next pick for the duration. Left out, it re-colors at once and
+     * stays live while the Studio fades. The Studio copies stay captured —
+     * they are what fades — and so does the whole page while the Studio
+     * resizes (opening, closing, the split copy coming and going): React
+     * keeps the root in the transition when a boundary changes size, and a
+     * captured root takes the page's hit-testing with it
+     */
     update: {
       [viewTransitionTypes['split-screen:open']]: 'none',
       [viewTransitionTypes['split-screen:close']]: 'none',
-      [viewTransitionTypes.crossfade]: 'auto',
+      [viewTransitionTypes.crossfade]: 'none',
       default: 'none',
     },
     exit: {
