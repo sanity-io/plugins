@@ -44,9 +44,12 @@ function isRetryableError(err: unknown): boolean {
     return true
   }
 
-  // The server rejected the listener's query (`ChannelError`), or told it to go away
-  // (`DisconnectError`)
-  if (err.name === 'ChannelError' || err.name === 'DisconnectError') {
+  if (err.name === 'ChannelError') {
+    return !hasKnownErrorType(err)
+  }
+
+  // The server told the listener to go away
+  if (err.name === 'DisconnectError') {
     return false
   }
 
@@ -62,6 +65,23 @@ function isRetryableError(err: unknown): boolean {
   }
 
   return true
+}
+
+/**
+ * The listen endpoint sends a `channelError` both for errors it recognizes, which have a `type`
+ * (like `queryParseError`), and for unexpected ones, which have the type `internalError` or no
+ * type at all. Only the recognized errors would happen again on a new listener.
+ */
+function hasKnownErrorType(err: Error): boolean {
+  const data: unknown = 'data' in err ? err.data : undefined
+  const error: unknown = isObject(data) && 'error' in data ? data.error : undefined
+  const type: unknown = isObject(error) && 'type' in error ? error.type : undefined
+
+  return typeof type === 'string' && type !== 'internalError'
+}
+
+function isObject(value: unknown): value is object {
+  return typeof value === 'object' && value !== null
 }
 
 /** 4xx errors fail the same way when retried, except timeouts and rate limits */

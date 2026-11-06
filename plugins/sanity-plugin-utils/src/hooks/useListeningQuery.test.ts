@@ -155,7 +155,12 @@ describe('useListeningQuery', () => {
   })
 
   test.each([
-    ['a ChannelError', clientError('ChannelError')],
+    [
+      'a ChannelError for a bad query',
+      clientError('ChannelError', {
+        data: {error: {type: 'queryParseError', description: 'Expected end of query'}},
+      }),
+    ],
     ['a DisconnectError', clientError('DisconnectError')],
     ['a query parse error', clientError('ClientError', {statusCode: 400})],
     ['a rejected listener connection', clientError('ConnectionFailedError', {status: 401})],
@@ -173,6 +178,17 @@ describe('useListeningQuery', () => {
   })
 
   test.each([
+    [
+      'a ChannelError for an internal error',
+      clientError('ChannelError', {
+        data: {error: {type: 'internalError', description: 'Internal error'}},
+      }),
+    ],
+    // How the listen endpoint sends errors it doesn't recognize
+    [
+      'a ChannelError without an error type',
+      clientError('ChannelError', {data: {error: {description: 'Internal error'}}}),
+    ],
     ['a server error', clientError('ServerError', {statusCode: 502})],
     ['a rate limit', clientError('ClientError', {statusCode: 429})],
     ['a request timeout', clientError('ClientError', {statusCode: 408})],
