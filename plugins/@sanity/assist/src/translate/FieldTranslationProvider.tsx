@@ -1,5 +1,5 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text} from '@sanity/ui'
+import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text, Card} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
@@ -293,6 +293,12 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
                 <Box marginBottom={2}>
                   <Text weight="semibold">To</Text>
                 </Box>
+                <SelectAllToLanguagesCheckbox
+                  fromLanguage={fromLanguage}
+                  toLanguages={toLanguages}
+                  setToLanguages={setToLanguages}
+                  languages={languages}
+                />
                 {languages.map((checkboxLanguage) => (
                   <ToLanguageCheckbox
                     key={checkboxLanguage.id}
@@ -313,6 +319,41 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
       ) : null}
       {props.children}
     </FieldTranslationContext.Provider>
+  )
+}
+
+function SelectAllToLanguagesCheckbox(props: {
+  fromLanguage: Language
+  toLanguages: Language[]
+  setToLanguages: any
+  languages: Language[]
+}) {
+  const {fromLanguage, toLanguages, setToLanguages, languages} = props
+  const selectable = languages.filter((l) => l.id !== fromLanguage?.id)
+  const selectedCount = selectable.filter((l) => !!toLanguages?.find((tl) => tl.id === l.id)).length
+  const allSelected = selectable.length > 0 && selectedCount === selectable.length
+  const onChange = () => {
+    if (!fromLanguage) return
+    let newToLangs = allSelected ? [] : selectable
+    setToLanguages(newToLangs)
+    setPreferredToFieldLanguages(
+      fromLanguage.id,
+      newToLangs.map((l) => l.id),
+    )
+  }
+  return (
+    <Card borderBottom={true} paddingBottom={2}>
+      <Flex gap={3} align="center" as="label">
+        <Checkbox
+          name="toLangAll"
+          checked={allSelected}
+          indeterminate={selectedCount > 0 && !allSelected}
+          onChange={onChange}
+          disabled={!selectable.length}
+        />
+        <Text weight="medium">Select all</Text>
+      </Flex>
+    </Card>
   )
 }
 
