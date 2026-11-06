@@ -349,7 +349,7 @@ catalogs:
       specifier: ^5.0.5
       version: 5.0.5
     xstate:
-      specifier: ^5.33.2
+      specifier: ^5.33.3
       version: 5.33.3
   media:
     '@hookform/resolvers':
