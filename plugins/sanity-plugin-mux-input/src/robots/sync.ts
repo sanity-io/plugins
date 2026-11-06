@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread, promise/always-return - legacy code will be lint-cleaned in a follow-up PR
 import {dequal} from 'dequal/lite'
 import type {SanityClient} from 'sanity'
 

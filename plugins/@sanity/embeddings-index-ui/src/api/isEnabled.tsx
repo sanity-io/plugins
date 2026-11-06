@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return - legacy code will be lint-cleaned in a follow-up PR
 import {Card, Text} from '@sanity/ui'
 import {createContext, type PropsWithChildren, useContext, useEffect, useState} from 'react'
 import {useProjectId} from 'sanity'

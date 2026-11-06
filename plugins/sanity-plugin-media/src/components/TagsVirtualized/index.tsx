@@ -1,3 +1,4 @@
+// oxlint-disable oxc/no-map-spread, react/no-unstable-nested-components - legacy code will be lint-cleaned in a follow-up PR
 import {Flex, Label} from '@sanity/ui'
 import {memo, useState} from 'react'
 import {Virtuoso} from 'react-virtuoso'

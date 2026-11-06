@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Badge, Box, Button, Card, Dialog, Flex, Select, Stack, Text} from '@sanity/ui'
 import {useId, useState} from 'react'
 

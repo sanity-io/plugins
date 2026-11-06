@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/control-has-associated-label, typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'

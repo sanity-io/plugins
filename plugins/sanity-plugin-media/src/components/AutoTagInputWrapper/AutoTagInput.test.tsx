@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'

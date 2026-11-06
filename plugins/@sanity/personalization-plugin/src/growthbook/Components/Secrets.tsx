@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {useEffect, useState} from 'react'
 import type {ObjectInputProps} from 'sanity'

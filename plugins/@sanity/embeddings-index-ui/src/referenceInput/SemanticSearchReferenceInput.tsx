@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
 import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Button, Flex, Spinner} from '@sanity/ui'

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {DndProvider} from '@nosferatu500/react-dnd'
 import {HTML5Backend} from '@nosferatu500/react-dnd-html5-backend'
 import {SortableTreeWithoutDndContext as SortableTree} from '@nosferatu500/react-sortable-tree'

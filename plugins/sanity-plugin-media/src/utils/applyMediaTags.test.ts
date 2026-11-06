@@ -1,3 +1,4 @@
+// oxlint-disable promise/always-return, typescript/no-unnecessary-type-conversion, typescript/unbound-method - legacy code will be lint-cleaned in a follow-up PR
 // @vitest-environment node
 
 import {beforeEach, describe, expect, it, vi} from 'vitest'

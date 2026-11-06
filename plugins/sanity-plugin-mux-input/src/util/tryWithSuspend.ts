@@ -6,6 +6,7 @@
  * @returns Whatever is returned by the block if it succeeds, otherwise whatever is resolved by onError if defined
  * @throws rethrows the caught Promise to comply with Suspense logic
  */
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 export function tryWithSuspend<T, E>(
   block: () => T,
   onError?: (error: Error) => E,
