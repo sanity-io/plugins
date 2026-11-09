@@ -8,10 +8,11 @@ import BulkPublish from './components/BulkPublish'
 import {DocumentInternationalizationProvider} from './components/DocumentInternationalizationContext'
 import {DocumentInternationalizationMenu} from './components/DocumentInternationalizationMenu'
 import OptimisticallyStrengthen from './components/OptimisticallyStrengthen'
-import {API_VERSION, DEFAULT_CONFIG, METADATA_SCHEMA_NAME} from './constants'
+import {DEFAULT_CONFIG, METADATA_SCHEMA_NAME} from './constants'
 import {documentInternationalizationUsEnglishLocaleBundle} from './i18n'
 import metadata from './schema/translation/metadata'
 import type {PluginConfig, TranslationReference} from './types'
+import {validateTranslationReferenceLanguage} from './validateTranslationReference'
 
 export const documentInternationalization = definePlugin<PluginConfig>((config) => {
   const pluginConfig = {...DEFAULT_CONFIG, ...config}
@@ -182,26 +183,9 @@ export const documentInternationalization = definePlugin<PluginConfig>((config) 
               // Reference filters don't actually enforce validation!
               validation: (Rule) =>
                 // @ts-expect-error - fix typings
-                Rule.custom(async (item: TranslationReference, context) => {
-                  if (!item?.value?._ref || !item?.[LANGUAGE_FIELD_NAME]) {
-                    return true
-                  }
-
-                  const client = context.getClient({apiVersion: API_VERSION})
-                  const valueLanguage = await client.fetch(
-                    `*[_id in [$ref, $draftRef]][0].${languageField}`,
-                    {
-                      ref: item.value._ref,
-                      draftRef: `drafts.${item.value._ref}`,
-                    },
-                  )
-
-                  if (valueLanguage && valueLanguage === item[LANGUAGE_FIELD_NAME]) {
-                    return true
-                  }
-
-                  return `Referenced document does not have the correct language value`
-                }),
+                Rule.custom((item: TranslationReference, context) =>
+                  validateTranslationReferenceLanguage(item, context, languageField),
+                ),
               options: {
                 // @ts-expect-error - Update type once it knows the values of this filter
                 filter: ({parent, document}) => {
