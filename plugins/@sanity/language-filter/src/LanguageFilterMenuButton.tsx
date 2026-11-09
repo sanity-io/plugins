@@ -16,12 +16,14 @@ import {
 } from '@sanity/ui'
 import {Popover} from '@sanity/ui/popover'
 import {type MouseEventHandler, useCallback, useState} from 'react'
-import {TextWithTone} from 'sanity'
+import {TextWithTone, useTranslation} from 'sanity'
 
+import {languageFilterLocaleNamespace} from './i18n'
 import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'
 import {usePaneLanguages} from './usePaneLanguages'
 
 export function LanguageFilterMenuButton(): React.JSX.Element {
+  const {t} = useTranslation(languageFilterLocaleNamespace)
   const {options} = useLanguageFilterStudioContext()
 
   const defaultLanguages = options.supportedLanguages.filter((l) =>
@@ -105,13 +107,13 @@ export function LanguageFilterMenuButton(): React.JSX.Element {
               )}
             </Text>
             <Box flex={1}>
-              <Text>{allSelected ? 'Hide all' : 'Show all'}</Text>
+              <Text>{allSelected ? t('hide-all') : t('show-all')}</Text>
             </Box>
           </Flex>
         </Button>
 
         {showSearch ? (
-          <TextInput onChange={handleQuery} value={query} placeholder="Filter languages" />
+          <TextInput onChange={handleQuery} value={query} placeholder={t('filter-languages')} />
         ) : (
           <Card borderTop />
         )}
@@ -138,8 +140,8 @@ export function LanguageFilterMenuButton(): React.JSX.Element {
 
   const buttonText =
     activeLanguages.length === langCount
-      ? 'Showing all'
-      : `Showing ${activeLanguages.length} / ${langCount}`
+      ? t('showing-all')
+      : t('showing-count', {selected: activeLanguages.length, total: langCount})
   return (
     <Popover animate content={content} open={open} portal ref={setPopover}>
       <Button

@@ -6,6 +6,7 @@ import {
 } from 'sanity'
 
 import {isLanguageFilterEnabled} from './filterField'
+import {languageFilterUsEnglishLocaleBundle} from './i18n'
 import {LanguageFilterMenuButton} from './LanguageFilterMenuButton'
 import {FilteredObjectWrapper} from './LanguageFilterObjectInput'
 import {defaultContextValue, LanguageFilterStudioProvider} from './LanguageFilterStudioContext'
@@ -58,6 +59,7 @@ export const languageFilter: ReturnType<typeof definePlugin<LanguageFilterConfig
 
     return {
       name: '@sanity/language-filter',
+      i18n: {bundles: [languageFilterUsEnglishLocaleBundle]},
       studio: {
         components: {
           layout: (props) => LanguageFilterStudioProvider({...props, options: pluginOptions}),
