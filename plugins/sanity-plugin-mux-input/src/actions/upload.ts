@@ -1,6 +1,5 @@
 import {uuid as generateUuid} from '@sanity/uuid'
 import {
-  asyncScheduler,
   concat,
   connect,
   defer,
@@ -12,6 +11,7 @@ import {
   of,
   takeUntil,
   throwError,
+  timeout,
   timer,
 } from 'rxjs'
 import {catchError, ignoreElements, map, mergeMap, switchMap} from 'rxjs/operators'
@@ -24,14 +24,8 @@ import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 import {backoffDelay, type BackoffSchedule, retryWithBackoff} from '../util/retryWithBackoff'
 import {roundPxString} from '../util/roundPxString'
 import type {MuxAsset, MuxNewAssetSettings, WatermarkConfig} from '../util/types'
-import {retryablePollError, toUploadError} from '../util/uploadErrors'
+import {isUnavailableError, toUploadError} from '../util/uploadErrors'
 import {getAsset} from './assets'
-
-/**
- * Used for the upload requests only. From this version a new upload answers 404 for a
- * moment, and retrying is up to the plugin (`pollUpload`, `cancelUpload`).
- */
-const UPLOAD_API_VERSION = '2026-11-03'
 
 /** The first poll waits briefly, since the asset is rarely ready right away. */
 const POLL_SCHEDULE: BackoffSchedule = {
@@ -40,9 +34,6 @@ const POLL_SCHEDULE: BackoffSchedule = {
   maxDelayMs: 4_000,
   timeoutMs: 30_000,
 }
-
-/** How long `pollUpload` retries 404s, counted from the first one. */
-const NOT_FOUND_RETRY_LIMIT_MS = 5_000
 
 /** Waits before each `pollUpload` retry on a 5xx or network error, then it fails. */
 const UNAVAILABLE_RETRY_DELAYS_MS = [500, 1_000]
@@ -53,17 +44,8 @@ const UNAVAILABLE_RETRY_DELAYS_MS = [500, 1_000]
  */
 const PROCESSING_NOTICE_DELAY_MS = 3_000
 
-/** Cancelling is best effort, so `cancelUpload` only retries 404s for a few seconds. */
-const CANCEL_SCHEDULE: BackoffSchedule = {
-  firstDelayMs: 0,
-  retryDelayMs: 200,
-  maxDelayMs: 1_000,
-  timeoutMs: 5_000,
-}
-
-function getUploadClient(client: SanityClient): SanityClient {
-  return getMuxAddonClient(client).withConfig({apiVersion: UPLOAD_API_VERSION})
-}
+/** Cancelling is best effort, so `cancelUpload` stops waiting after this long. */
+const CANCEL_TIMEOUT_MS = 5_000
 
 function sanitizeOverlaySettingsInPlace(settings: MuxNewAssetSettings) {
   const inputs = settings.input
@@ -92,33 +74,23 @@ function sanitizePxStringsInJson(json: string): string {
   })
 }
 
-function isNotFoundError(error: unknown): boolean {
-  return (error as {statusCode?: unknown} | null)?.statusCode === 404
-}
-
 /**
- * Deletes an upload and its asset document. Retries 404s, which the API answers right
- * after an upload is created, and never fails.
+ * Deletes an upload and its asset document. Tries once and never fails: a 404 means there
+ * is nothing to cancel.
  */
 export function cancelUpload(client: SanityClient, uuid: string): Observable<never> {
   const {dataset} = client.config()
-  return retryWithBackoff(
-    () =>
-      getUploadClient(client).observable.request({
-        url: `/addons/mux/uploads/${dataset}/${uuid}`,
-        withCredentials: true,
-        method: 'DELETE',
-        query: PLUGIN_VERSION_QUERY,
-        // The client's own retries would stack on ours.
-        maxRetries: 0,
-      }),
-    {
-      ...CANCEL_SCHEDULE,
-      retryDelay: (error, retryCount) =>
-        isNotFoundError(error) ? backoffDelay(retryCount, CANCEL_SCHEDULE) : undefined,
-      timeoutError: () => new Error('Could not cancel the upload'),
-    },
+  return defer(() =>
+    getMuxAddonClient(client).observable.request({
+      url: `/addons/mux/uploads/${dataset}/${uuid}`,
+      withCredentials: true,
+      method: 'DELETE',
+      query: PLUGIN_VERSION_QUERY,
+      // Best effort, so no retries that would hold up the upload's own error.
+      maxRetries: 0,
+    }),
   ).pipe(
+    timeout({first: CANCEL_TIMEOUT_MS}),
     ignoreElements(),
     catchError(() => EMPTY),
   )
@@ -173,7 +145,7 @@ export function uploadUrl({
 
           const dataset = client.config().dataset
           return defer(() =>
-            getUploadClient(client).observable.request({
+            getMuxAddonClient(client).observable.request({
               url: `/addons/mux/assets/${dataset}`,
               withCredentials: true,
               method: 'POST',
@@ -227,7 +199,7 @@ export function uploadFile({
           return concat(
             of({type: 'uuid' as const, uuid}),
             defer(() =>
-              getUploadClient(client).observable.request<{
+              getMuxAddonClient(client).observable.request<{
                 sanityAssetId: string
                 upload: {
                   cors_origin: string
@@ -296,7 +268,7 @@ type UploadResponse = {
 }
 function getUpload(client: SanityClient, uuid: string) {
   const {dataset} = client.config()
-  return getUploadClient(client).observable.request<UploadResponse>({
+  return getMuxAddonClient(client).observable.request<UploadResponse>({
     url: `/addons/mux/uploads/${dataset}/${uuid}`,
     withCredentials: true,
     method: 'GET',
@@ -315,30 +287,18 @@ class UploadNotReadyError extends Error {
 }
 
 /**
- * Retry delays for one `pollUpload`. Each cause of a retry has its own budget, and running
- * out of it fails with that error. Anything not handled here fails straight away.
+ * Retry delays for one `pollUpload`. A pending upload is polled with backoff until the
+ * timeout, and a 5xx or network error is retried a couple of times. Anything else fails
+ * straight away, including a 404: the upload's document is readable as soon as it's
+ * created, so a 404 means it doesn't exist.
  */
 function createPollRetryDelay(): (error: unknown, retryCount: number) => number | undefined {
-  let firstNotFoundAt: number | undefined
   let unavailableRetries = 0
 
   return (error, retryCount) => {
     if (error instanceof UploadNotReadyError) return backoffDelay(retryCount, POLL_SCHEDULE)
-
-    switch (retryablePollError(error)) {
-      case 'not-found': {
-        const now = asyncScheduler.now()
-        firstNotFoundAt ??= now
-        const remainingMs = firstNotFoundAt + NOT_FOUND_RETRY_LIMIT_MS - now
-        return remainingMs > 0
-          ? Math.min(backoffDelay(retryCount, POLL_SCHEDULE), remainingMs)
-          : undefined
-      }
-      case 'unavailable':
-        return UNAVAILABLE_RETRY_DELAYS_MS[unavailableRetries++]
-      default:
-        return undefined
-    }
+    if (isUnavailableError(error)) return UNAVAILABLE_RETRY_DELAYS_MS[unavailableRetries++]
+    return undefined
   }
 }
 

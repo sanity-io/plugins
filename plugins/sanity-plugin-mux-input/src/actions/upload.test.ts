@@ -1,5 +1,5 @@
 import {createClient} from '@sanity/client'
-import {defer, type Observable, of, throwError} from 'rxjs'
+import {defer, NEVER, type Observable, of, throwError} from 'rxjs'
 import {TestScheduler} from 'rxjs/testing'
 import type {SanityClient} from 'sanity'
 import {describe, expect, test} from 'vitest'
@@ -55,7 +55,6 @@ function fakeClient(scheduler: TestScheduler, responses: unknown[]) {
   const requests: {at: number; options: Record<string, unknown>}[] = []
   const client = {
     config: () => ({dataset: 'test'}),
-    withConfig: () => client,
     observable: {
       request: (options: Record<string, unknown>): Observable<unknown> =>
         defer(() => {
@@ -76,10 +75,10 @@ const pending = {data: {id: 'upload-1', status: 'waiting'}}
 const ready = {data: {id: 'upload-1', status: 'asset_created', asset_id: 'asset-1'}}
 
 describe('pollUpload', () => {
-  test('waits a moment, then retries 404s and pending uploads with backoff', () => {
+  test('waits a moment, then polls a pending upload with backoff', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client, requests} = fakeClient(scheduler, [notFound, notFound, pending, ready])
+      const {client, requests} = fakeClient(scheduler, [pending, pending, pending, ready])
       expectObservable(pollUpload(client, 'uuid-1')).toBe('1600ms (a|)', {a: ready})
       scheduler.flush()
       expect(requests.map(({at}) => at)).toEqual([200, 400, 800, 1600])
@@ -93,27 +92,26 @@ describe('pollUpload', () => {
     })
   })
 
-  test('fails straight away on an error that is not retryable', () => {
+  test.each([
+    ['404', notFound],
+    ['403', forbidden],
+  ])('fails straight away on a %s', (_name, error) => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client, requests} = fakeClient(scheduler, [notFound, forbidden])
-      expectObservable(pollUpload(client, 'uuid-1')).toBe('400ms #', undefined, forbidden)
+      const {client, requests} = fakeClient(scheduler, [error, ready])
+      expectObservable(pollUpload(client, 'uuid-1')).toBe('200ms #', undefined, error)
       scheduler.flush()
-      expect(requests).toHaveLength(2)
+      expect(requests).toHaveLength(1)
     })
   })
 
-  test('retries 404s for about 5 seconds, then fails with the 404', () => {
+  test('fails on a 404 after the upload was pending', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client, requests} = fakeClient(
-        scheduler,
-        Array.from({length: 100}, () => notFound),
-      )
-      expectObservable(pollUpload(client, 'uuid-1')).toBe('5200ms #', undefined, notFound)
+      const {client, requests} = fakeClient(scheduler, [pending, notFound, ready])
+      expectObservable(pollUpload(client, 'uuid-1')).toBe('400ms #', undefined, notFound)
       scheduler.flush()
-      // The last wait is cut short so the final retry lands 5 seconds after the first 404
-      expect(requests.map(({at}) => at)).toEqual([200, 400, 800, 1600, 3200, 5200])
+      expect(requests).toHaveLength(2)
     })
   })
 
@@ -221,40 +219,43 @@ describe('withProcessingNotice', () => {
 })
 
 describe('cancelUpload', () => {
-  test('retries 404s, then completes without emitting', () => {
+  test('deletes the upload once, then completes without emitting', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client, requests} = fakeClient(scheduler, [notFound, notFound, {}])
-      expectObservable(cancelUpload(client, 'uuid-1')).toBe('600ms |')
+      const {client, requests} = fakeClient(scheduler, [{}])
+      expectObservable(cancelUpload(client, 'uuid-1')).toBe('|')
       scheduler.flush()
-      expect(requests.map(({at}) => at)).toEqual([0, 200, 600])
-      for (const {options} of requests) {
-        expect(options).toMatchObject({
-          url: '/addons/mux/uploads/test/uuid-1',
-          method: 'DELETE',
-          maxRetries: 0,
-        })
-      }
+      expect(requests).toHaveLength(1)
+      expect(requests[0]!.options).toMatchObject({
+        url: '/addons/mux/uploads/test/uuid-1',
+        method: 'DELETE',
+        maxRetries: 0,
+      })
     })
   })
 
-  test('gives up quietly on other errors', () => {
+  test.each([
+    ['404', notFound],
+    ['403', forbidden],
+    ['5xx', badGateway],
+    ['network error', networkError],
+  ])('gives up quietly on a %s, without retrying', (_name, error) => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client, requests} = fakeClient(scheduler, [forbidden])
+      const {client, requests} = fakeClient(scheduler, [error, {}])
       expectObservable(cancelUpload(client, 'uuid-1')).toBe('|')
       scheduler.flush()
       expect(requests).toHaveLength(1)
     })
   })
 
-  test('gives up quietly after a few seconds of 404s', () => {
+  test('gives up quietly when the request hangs', () => {
     const scheduler = createScheduler()
     scheduler.run(({expectObservable}) => {
-      const {client} = fakeClient(
-        scheduler,
-        Array.from({length: 100}, () => notFound),
-      )
+      const client = {
+        config: () => ({dataset: 'test'}),
+        observable: {request: () => NEVER},
+      } as unknown as SanityClient
       expectObservable(cancelUpload(client, 'uuid-1')).toBe('5000ms |')
     })
   })

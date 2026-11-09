@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest'
 
-import {CREDENTIALS_ERROR_CODES, retryablePollError, toUploadError} from './uploadErrors'
+import {CREDENTIALS_ERROR_CODES, isUnavailableError, toUploadError} from './uploadErrors'
 
 const withStatus = (message: string, statusCode: number) =>
   Object.assign(new Error(message), {statusCode})
@@ -44,6 +44,25 @@ describe('toUploadError', () => {
     expect(toUploadError(invalidByCode)).toEqual(rejected)
   })
 
+  test('maps the codes the API sends with Mux errors', () => {
+    const rejectedByMux = withBody('Forbidden - Unauthorized request', 403, {
+      statusCode: 403,
+      error: 'Forbidden',
+      message: 'Unauthorized request',
+      code: CREDENTIALS_ERROR_CODES.invalid,
+      mux: {type: 'unauthorized', message: 'Unauthorized request'},
+    })
+    expect(toUploadError(rejectedByMux)).toEqual(rejected)
+
+    const noSecrets = withBody('Unauthorized - No MUX secrets found in this dataset', 401, {
+      statusCode: 401,
+      error: 'Unauthorized',
+      message: 'No MUX secrets found in this dataset',
+      code: CREDENTIALS_ERROR_CODES.missing,
+    })
+    expect(toUploadError(noSecrets)).toEqual(missing)
+  })
+
   test('falls back to the message when the code is unknown', () => {
     const error = withBody('api.mux.com responded with 401', 400, {code: 'something_else'})
     expect(toUploadError(error)).toEqual(rejected)
@@ -54,19 +73,25 @@ describe('toUploadError', () => {
     expect(toUploadError(error)).toBe(error)
     const withOtherCode = withBody('Bad request', 400, {code: 'something_else'})
     expect(toUploadError(withOtherCode)).toBe(withOtherCode)
+    const rejectedRequest = withBody('Bad Request - Invalid input', 400, {
+      message: 'Invalid input',
+      code: 'mux_request_rejected',
+      mux: {type: 'invalid_parameters', message: 'Invalid input'},
+    })
+    expect(toUploadError(rejectedRequest)).toBe(rejectedRequest)
   })
 })
 
-describe('retryablePollError', () => {
+describe('isUnavailableError', () => {
   test.each([
-    ['network error', new Error('Request failed'), 'unavailable'],
-    ['404', withStatus('Could not find asset', 404), 'not-found'],
-    ['500', withStatus('Internal server error', 500), 'unavailable'],
-    ['502', withStatus('Bad gateway', 502), 'unavailable'],
-    ['400', withStatus('Bad request', 400), undefined],
-    ['401', withStatus('Unauthorized', 401), undefined],
-    ['403', withStatus('Forbidden', 403), undefined],
+    ['network error', new Error('Request failed'), true],
+    ['500', withStatus('Internal server error', 500), true],
+    ['502', withStatus('Bad gateway', 502), true],
+    ['400', withStatus('Bad request', 400), false],
+    ['401', withStatus('Unauthorized', 401), false],
+    ['403', withStatus('Forbidden', 403), false],
+    ['404', withStatus('Upload not found', 404), false],
   ])('%s', (_name, error, expected) => {
-    expect(retryablePollError(error)).toBe(expected)
+    expect(isUnavailableError(error)).toBe(expected)
   })
 })

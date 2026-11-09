@@ -1,14 +1,14 @@
 type CredentialsProblem = 'missing' | 'invalid'
 
-/** Codes the Mux addon API can send in the error body's `code` when credentials can't be used. */
+/** Codes the Mux addon API sends in the error body's `code` when credentials can't be used. */
 export const CREDENTIALS_ERROR_CODES: Record<CredentialsProblem, string> = {
   missing: 'mux_credentials_missing',
   invalid: 'mux_credentials_invalid',
 }
 
 /**
- * Fallback for errors without a code: what the API answers today. A 401 when no credentials
- * are saved, a 400 or 502 passing on Mux's 401 when they're rejected.
+ * Fallback for errors without a code, from older versions of the API: a 401 when no
+ * credentials are saved, a 400 or 502 passing on Mux's 401 when they're rejected.
  */
 const CREDENTIALS_ERROR_MESSAGES: Record<CredentialsProblem, RegExp> = {
   missing: /No MUX secrets found/,
@@ -37,13 +37,8 @@ export function toUploadError(error: unknown): unknown {
   return problem ? new Error(CREDENTIALS_ERRORS[problem]) : error
 }
 
-/**
- * Whether a poll error is worth retrying: `not-found` (a 404, the upload isn't available
- * yet) or `unavailable` (a 5xx or a network error with no status code).
- */
-export function retryablePollError(error: unknown): 'not-found' | 'unavailable' | undefined {
+/** Whether a request failed with a 5xx or a network error (no status code), so may pass. */
+export function isUnavailableError(error: unknown): boolean {
   const statusCode = (error as {statusCode?: unknown} | null)?.statusCode
-  if (typeof statusCode !== 'number' || statusCode >= 500) return 'unavailable'
-  if (statusCode === 404) return 'not-found'
-  return undefined
+  return typeof statusCode !== 'number' || statusCode >= 500
 }
