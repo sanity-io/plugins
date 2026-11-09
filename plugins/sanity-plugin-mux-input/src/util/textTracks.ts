@@ -7,15 +7,26 @@ import {getPlaybackPolicy} from './getPlaybackPolicy'
 import {isCaptionTrack} from './tracks'
 import type {MuxTextTrack, VideoAssetDocument} from './types'
 
+/** How older Mux addon APIs wrapped Mux's errors: `api.mux.com responded with 400 (…)`. */
+const WRAPPED_MUX_ERROR = /api\.mux\.com responded with/
+
+/**
+ * The message to show for a failed Mux addon request: Mux's own message when the API passes
+ * it on, else the API's message, else the error's.
+ */
 export function extractErrorMessage(
   error: unknown,
   defaultMessage = 'Failed to process request',
 ): string {
-  let message = ''
+  let message: string | undefined
 
   if (error && typeof error === 'object') {
-    const err = error as {response?: {body?: {message?: string}}; message?: string}
-    message = err.response?.body?.message || err.message || ''
+    const err = error as {
+      response?: {body?: {mux?: {message?: string}; message?: string}}
+      message?: string
+    }
+    const body = typeof err.response?.body === 'object' ? err.response.body : undefined
+    message = body?.mux?.message ?? body?.message ?? err.message
   } else if (typeof error === 'string') {
     message = error
   }
@@ -24,16 +35,10 @@ export function extractErrorMessage(
     return defaultMessage
   }
 
-  const match = message.match(/\(([^)]+)\)/)
-  if (match && match[1]) {
-    return match[1]
-  }
-
-  if (message.includes('responded with')) {
-    const parts = message.split('(')
-    if (parts.length > 1) {
-      return parts[parts.length - 1]!.replace(')', '').trim()
-    }
+  // Older APIs put Mux's message in parentheses after Mux's status
+  if (WRAPPED_MUX_ERROR.test(message)) {
+    const match = message.match(/\(([^)]+)\)/)
+    if (match?.[1]) return match[1]
   }
 
   return message

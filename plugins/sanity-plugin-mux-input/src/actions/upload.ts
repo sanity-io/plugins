@@ -1,16 +1,51 @@
 import {uuid as generateUuid} from '@sanity/uuid'
-import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
-import {catchError, mergeMap, switchMap} from 'rxjs/operators'
+import {
+  concat,
+  connect,
+  defer,
+  EMPTY,
+  from,
+  materialize,
+  merge,
+  type Observable,
+  of,
+  takeUntil,
+  throwError,
+  timeout,
+  timer,
+} from 'rxjs'
+import {catchError, ignoreElements, map, mergeMap, switchMap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 
 import {createUpChunkObservable} from '../clients/upChunkObservable'
 import {formatDriveShareLink} from '../util/formatDriveShareLink'
 import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
+import {backoffDelay, type BackoffSchedule, retryWithBackoff} from '../util/retryWithBackoff'
 import {roundPxString} from '../util/roundPxString'
 import type {MuxAsset, MuxNewAssetSettings, WatermarkConfig} from '../util/types'
+import {isUnavailableError, toUploadError} from '../util/uploadErrors'
 import {getAsset} from './assets'
-import {testSecretsObservable} from './secrets'
+
+/** The first poll waits briefly, since the asset is rarely ready right away. */
+const POLL_SCHEDULE: BackoffSchedule = {
+  firstDelayMs: 200,
+  retryDelayMs: 200,
+  maxDelayMs: 4_000,
+  timeoutMs: 30_000,
+}
+
+/** Waits before each `pollUpload` retry on a 5xx or network error, then it fails. */
+const UNAVAILABLE_RETRY_DELAYS_MS = [500, 1_000]
+
+/**
+ * After the file is sent, how long `uploadFile` waits for the asset before emitting
+ * `processing`.
+ */
+const PROCESSING_NOTICE_DELAY_MS = 3_000
+
+/** Cancelling is best effort, so `cancelUpload` stops waiting after this long. */
+const CANCEL_TIMEOUT_MS = 5_000
 
 function sanitizeOverlaySettingsInPlace(settings: MuxNewAssetSettings) {
   const inputs = settings.input
@@ -39,13 +74,42 @@ function sanitizePxStringsInJson(json: string): string {
   })
 }
 
-function cancelUpload(client: SanityClient, uuid: string) {
-  return getMuxAddonClient(client).observable.request({
-    url: `/addons/mux/uploads/${client.config().dataset}/${uuid}`,
-    withCredentials: true,
-    method: 'DELETE',
-    query: PLUGIN_VERSION_QUERY,
-  })
+/**
+ * Deletes an upload and its asset document. Tries once and never fails: a 404 means there
+ * is nothing to cancel.
+ */
+export function cancelUpload(client: SanityClient, uuid: string): Observable<never> {
+  const {dataset} = client.config()
+  return defer(() =>
+    getMuxAddonClient(client).observable.request({
+      url: `/addons/mux/uploads/${dataset}/${uuid}`,
+      withCredentials: true,
+      method: 'DELETE',
+      query: PLUGIN_VERSION_QUERY,
+      // Best effort, so no retries that would hold up the upload's own error.
+      maxRetries: 0,
+    }),
+  ).pipe(
+    timeout({first: CANCEL_TIMEOUT_MS}),
+    ignoreElements(),
+    catchError(() => EMPTY),
+  )
+}
+
+/** Mirrors `work`, emitting `processing` first if it's silent for `PROCESSING_NOTICE_DELAY_MS`. */
+export function withProcessingNotice<T>(work: Observable<T>): Observable<T | {type: 'processing'}> {
+  return work.pipe(
+    connect((shared) =>
+      merge(
+        timer(PROCESSING_NOTICE_DELAY_MS).pipe(
+          map(() => ({type: 'processing' as const})),
+          // `materialize` so an error or completion also cancels the notice.
+          takeUntil(shared.pipe(materialize())),
+        ),
+        shared,
+      ),
+    ),
+  )
 }
 
 export function uploadUrl({
@@ -62,51 +126,49 @@ export function uploadUrl({
     switchMap((validUrl) => {
       return concat(
         of({type: 'url' as const, url: validUrl}),
-        testSecretsObservable(client).pipe(
-          switchMap((json) => {
-            if (!json || !json.status) {
-              return throwError(() => new Error('Invalid credentials'))
-            }
-            const uuid = generateUuid()
-            const muxBody = settings
-            if (!muxBody.input) muxBody.input = [{type: 'video'}]
-            muxBody.input[0]!.url = validUrl
-            sanitizeOverlaySettingsInPlace(muxBody)
+        // No credentials check first: this request fails on bad ones, and
+        // toUploadError says whether they're missing or rejected.
+        defer(() => {
+          const uuid = generateUuid()
+          const muxBody = settings
+          if (!muxBody.input) muxBody.input = [{type: 'video'}]
+          muxBody.input[0]!.url = validUrl
+          sanitizeOverlaySettingsInPlace(muxBody)
 
-            const query: Record<string, string> = {
-              muxBody: sanitizePxStringsInJson(JSON.stringify(muxBody)),
-            }
-            const filename = validUrl.split('/').slice(-1)[0]
-            if (filename) {
-              query['filename'] = filename
-            }
+          const query: Record<string, string> = {
+            muxBody: sanitizePxStringsInJson(JSON.stringify(muxBody)),
+          }
+          const filename = validUrl.split('/').slice(-1)[0]
+          if (filename) {
+            query['filename'] = filename
+          }
 
-            const dataset = client.config().dataset
-            return defer(() =>
-              getMuxAddonClient(client).observable.request({
-                url: `/addons/mux/assets/${dataset}`,
-                withCredentials: true,
-                method: 'POST',
-                headers: {
-                  'MUX-Proxy-UUID': uuid,
-                  'Content-Type': 'application/json',
-                },
-                query: {...query, ...PLUGIN_VERSION_QUERY},
-              }),
-            ).pipe(
-              mergeMap((result) => {
-                const asset =
-                  (result && result.results && result.results[0] && result.results[0].document) ||
-                  null
+          const dataset = client.config().dataset
+          return defer(() =>
+            getMuxAddonClient(client).observable.request({
+              url: `/addons/mux/assets/${dataset}`,
+              withCredentials: true,
+              method: 'POST',
+              headers: {
+                'MUX-Proxy-UUID': uuid,
+                'Content-Type': 'application/json',
+              },
+              query: {...query, ...PLUGIN_VERSION_QUERY},
+            }),
+          ).pipe(
+            catchError((err) => throwError(() => toUploadError(err))),
+            mergeMap((result) => {
+              const asset =
+                (result && result.results && result.results[0] && result.results[0].document) ||
+                null
 
-                if (!asset) {
-                  return throwError(() => new Error('No asset document returned'))
-                }
-                return of({type: 'success' as const, id: uuid, asset})
-              }),
-            )
-          }),
-        ),
+              if (!asset) {
+                return throwError(() => new Error('No asset document returned'))
+              }
+              return of({type: 'success' as const, id: uuid, asset})
+            }),
+          )
+        }),
       )
     }),
   )
@@ -127,63 +189,64 @@ export function uploadFile({
     switchMap((fileOptions) => {
       return concat(
         of({type: 'file' as const, file: fileOptions}),
-        testSecretsObservable(client).pipe(
-          switchMap((json) => {
-            if (!json || !json.status) {
-              return throwError(() => new Error('Invalid credentials'))
-            }
-            const uuid = generateUuid()
-            const body = settings
-            sanitizeOverlaySettingsInPlace(body)
+        // No credentials check first: this request fails on bad ones, and
+        // toUploadError says whether they're missing or rejected.
+        defer(() => {
+          const uuid = generateUuid()
+          const body = settings
+          sanitizeOverlaySettingsInPlace(body)
 
-            return concat(
-              of({type: 'uuid' as const, uuid}),
-              defer(() =>
-                getMuxAddonClient(client).observable.request<{
-                  sanityAssetId: string
-                  upload: {
-                    cors_origin: string
-                    id: string
-                    new_asset_settings: MuxNewAssetSettings
-                    status: 'waiting'
-                    timeout: number
-                    url: string
-                  }
-                }>({
-                  url: `/addons/mux/uploads/${client.config().dataset}`,
-                  withCredentials: true,
-                  method: 'POST',
-                  headers: {
-                    'MUX-Proxy-UUID': uuid,
-                    'Content-Type': 'application/json',
-                  },
-                  body,
-                  query: PLUGIN_VERSION_QUERY,
-                }),
-              ).pipe(
-                mergeMap((result) => {
-                  return createUpChunkObservable(uuid, result.upload.url, file).pipe(
-                    // @TODO type the observable events
-                    mergeMap((event) => {
-                      if (event.type !== 'success') {
-                        return of(event)
-                      }
-                      return from(
-                        updateAssetDocumentFromUpload(client, uuid, watermark, file.name),
-                      ).pipe(
-                        mergeMap((doc) => of({...event, asset: doc})),
-                      )
-                    }),
-                    catchError((err) => {
-                      // Delete asset document
-                      return cancelUpload(client, uuid).pipe(mergeMap(() => throwError(() => err)))
-                    }),
-                  )
-                }),
-              ),
-            )
-          }),
-        ),
+          return concat(
+            of({type: 'uuid' as const, uuid}),
+            defer(() =>
+              getMuxAddonClient(client).observable.request<{
+                sanityAssetId: string
+                upload: {
+                  cors_origin: string
+                  id: string
+                  new_asset_settings: MuxNewAssetSettings
+                  status: 'waiting'
+                  timeout: number
+                  url: string
+                }
+              }>({
+                url: `/addons/mux/uploads/${client.config().dataset}`,
+                withCredentials: true,
+                method: 'POST',
+                headers: {
+                  'MUX-Proxy-UUID': uuid,
+                  'Content-Type': 'application/json',
+                },
+                body,
+                query: PLUGIN_VERSION_QUERY,
+              }),
+            ).pipe(
+              catchError((err) => throwError(() => toUploadError(err))),
+              mergeMap((result) => {
+                return createUpChunkObservable(uuid, result.upload.url, file).pipe(
+                  // @TODO type the observable events
+                  mergeMap((event) => {
+                    if (event.type !== 'success') {
+                      return of(event)
+                    }
+                    return withProcessingNotice(
+                      updateAssetDocumentFromUpload(client, uuid, watermark, file.name).pipe(
+                        map((doc) => ({...event, asset: doc})),
+                      ),
+                    )
+                  }),
+                  catchError((err) => {
+                    // Clean up the upload, then report the original error
+                    return concat(
+                      cancelUpload(client, uuid),
+                      throwError(() => err),
+                    )
+                  }),
+                )
+              }),
+            ),
+          )
+        }),
       )
     }),
   )
@@ -203,72 +266,89 @@ type UploadResponse = {
     timeout: number
   }
 }
-function getUpload(client: SanityClient, assetId: string) {
+function getUpload(client: SanityClient, uuid: string) {
   const {dataset} = client.config()
-  return getMuxAddonClient(client).request<UploadResponse>({
-    url: `/addons/mux/uploads/${dataset}/${assetId}`,
+  return getMuxAddonClient(client).observable.request<UploadResponse>({
+    url: `/addons/mux/uploads/${dataset}/${uuid}`,
     withCredentials: true,
     method: 'GET',
     query: PLUGIN_VERSION_QUERY,
+    // `pollUpload` retries, so the client's own retries would stack on ours.
+    maxRetries: 0,
   })
 }
 
-function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse> {
-  const maxTries = 10
-  let pollInterval: number
-  let tries = 0
-  let assetId: string
-  let upload: UploadResponse
-  return new Promise((resolve, reject) => {
-    pollInterval = (setInterval as typeof window.setInterval)(async () => {
-      try {
-        upload = await getUpload(client, uuid)
-      } catch (err) {
-        reject(err)
-        return
-      }
-      assetId = upload && upload.data && upload.data.asset_id
-      if (assetId) {
-        clearInterval(pollInterval)
-        resolve(upload)
-      }
-      if (tries > maxTries) {
-        clearInterval(pollInterval)
-        reject(new Error('Upload did not finish'))
-      }
-      tries++
-    }, 2000)
-  })
+/** The upload exists, but Mux hasn't created its asset yet. */
+class UploadNotReadyError extends Error {
+  constructor() {
+    super('Upload is not ready yet')
+    this.name = 'UploadNotReadyError'
+  }
 }
 
-async function updateAssetDocumentFromUpload(
+/**
+ * Retry delays for one `pollUpload`. A pending upload is polled with backoff until the
+ * timeout, and a 5xx or network error is retried a couple of times. Anything else fails
+ * straight away, including a 404: the upload's document is readable as soon as it's
+ * created, so a 404 means it doesn't exist.
+ */
+function createPollRetryDelay(): (error: unknown, retryCount: number) => number | undefined {
+  let unavailableRetries = 0
+
+  return (error, retryCount) => {
+    if (error instanceof UploadNotReadyError) return backoffDelay(retryCount, POLL_SCHEDULE)
+    if (isUnavailableError(error)) return UNAVAILABLE_RETRY_DELAYS_MS[unavailableRetries++]
+    return undefined
+  }
+}
+
+/**
+ * Waits for Mux to turn the finished upload into an asset, or fails with
+ * "Upload did not finish".
+ */
+export function pollUpload(client: SanityClient, uuid: string): Observable<UploadResponse> {
+  return defer(() =>
+    retryWithBackoff(
+      () =>
+        getUpload(client, uuid).pipe(
+          map((upload) => {
+            if (!upload?.data?.asset_id) throw new UploadNotReadyError()
+            return upload
+          }),
+        ),
+      {
+        ...POLL_SCHEDULE,
+        retryDelay: createPollRetryDelay(),
+        timeoutError: () => new Error('Upload did not finish'),
+      },
+    ),
+  )
+}
+
+function updateAssetDocumentFromUpload(
   client: SanityClient,
   uuid: string,
   _watermark?: WatermarkConfig,
   filename?: string,
 ) {
-  let upload: UploadResponse
-  let asset: {data: MuxAsset}
-  try {
-    upload = await pollUpload(client, uuid)
-  } catch (err) {
-    return Promise.reject(err)
-  }
-  try {
-    asset = await getAsset(client, upload.data.asset_id)
-  } catch (err) {
-    return Promise.reject(err)
-  }
-
-  const fields = {
-    status: asset.data.status,
-    data: asset.data,
-    assetId: asset.data.id,
-    playbackId: asset.data.playback_ids[0]?.id,
-    uploadId: upload.data.id,
-  }
-  await uploadedAssetTransaction(client, uuid, fields, filename).commit({returnDocuments: false})
-  return {_id: uuid, _type: 'mux.videoAsset', ...fields}
+  return pollUpload(client, uuid).pipe(
+    mergeMap((upload) =>
+      from(getAsset(client, upload.data.asset_id)).pipe(
+        map((asset: {data: MuxAsset}) => ({
+          status: asset.data.status,
+          data: asset.data,
+          assetId: asset.data.id,
+          playbackId: asset.data.playback_ids[0]?.id,
+          uploadId: upload.data.id,
+        })),
+      ),
+    ),
+    mergeMap((fields) =>
+      from(
+        uploadedAssetTransaction(client, uuid, fields, filename).commit({returnDocuments: false}),
+      ).pipe(map(() => ({_id: uuid, _type: 'mux.videoAsset' as const, ...fields}))),
+    ),
+  )
 }
 
 /**
