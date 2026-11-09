@@ -1,11 +1,9 @@
 import {concatMap, defer, type Observable, retry, take, throwError, timeout, timer} from 'rxjs'
 
 export interface BackoffSchedule {
-  /** Wait before the first attempt. */
   firstDelayMs: number
   /** Wait before the first retry. Doubles with every further retry, up to `maxDelayMs`. */
   retryDelayMs: number
-  /** Longest wait between two attempts. */
   maxDelayMs: number
   /** Give up after this long in total, counted from subscribing. */
   timeoutMs: number
@@ -33,10 +31,9 @@ export function backoffDelay(
 }
 
 /**
- * Subscribes to `attempt()` after `firstDelayMs` and resubscribes after the wait `retryDelay`
- * gives for each error, failing with the error when it gives none. Emits the first value and
- * completes. Fails with `timeoutError()` if nothing has been emitted after `timeoutMs`, cutting
- * off the attempt in flight. Attempts never overlap, and unsubscribing stops any pending wait.
+ * Runs `attempt` after `firstDelayMs` and retries after the wait `retryDelay` gives, failing
+ * when it gives none. Emits the first value. Attempts never overlap, and after `timeoutMs`
+ * it fails with `timeoutError()`, cutting off the attempt in flight.
  */
 export function retryWithBackoff<T>(
   attempt: () => Observable<T>,

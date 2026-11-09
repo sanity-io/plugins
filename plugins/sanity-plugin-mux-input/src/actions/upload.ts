@@ -28,18 +28,12 @@ import {retryablePollError, toUploadError} from '../util/uploadErrors'
 import {getAsset} from './assets'
 
 /**
- * API version for the upload requests. From this version on, a new upload can
- * take a moment to become available (the API answers 404 until then), and
- * retrying is up to the plugin: see `pollUpload` and `cancelUpload`. Other
- * requests keep the plugin's default API version.
+ * Used for the upload requests only. From this version a new upload answers 404 for a
+ * moment, and retrying is up to the plugin (`pollUpload`, `cancelUpload`).
  */
 const UPLOAD_API_VERSION = '2026-11-03'
 
-/**
- * How `pollUpload` waits for a finished upload to become an asset. The first
- * poll waits a moment, since the upload is rarely available right away, then
- * the waits double up to a cap until the overall limit.
- */
+/** The first poll waits briefly, since the asset is rarely ready right away. */
 const POLL_SCHEDULE: BackoffSchedule = {
   firstDelayMs: 200,
   retryDelayMs: 200,
@@ -47,28 +41,19 @@ const POLL_SCHEDULE: BackoffSchedule = {
   timeoutMs: 30_000,
 }
 
-/**
- * How long `pollUpload` keeps retrying 404s, counted from the first one. A new upload can
- * take a moment to become available, but not this long.
- */
+/** How long `pollUpload` retries 404s, counted from the first one. */
 const NOT_FOUND_RETRY_LIMIT_MS = 5_000
 
-/**
- * The waits before each retry when `pollUpload` gets a 5xx or network error. After the
- * last one it fails with the error.
- */
+/** Waits before each `pollUpload` retry on a 5xx or network error, then it fails. */
 const UNAVAILABLE_RETRY_DELAYS_MS = [500, 1_000]
 
 /**
- * After the file has been sent, how long `uploadFile` waits for the asset before it emits
- * a `processing` event, so the uploader can say it's still working.
+ * After the file is sent, how long `uploadFile` waits for the asset before emitting
+ * `processing`.
  */
 const PROCESSING_NOTICE_DELAY_MS = 3_000
 
-/**
- * How `cancelUpload` retries when the upload isn't available yet. Cancelling
- * is best effort, so it gives up after a few seconds.
- */
+/** Cancelling is best effort, so `cancelUpload` only retries 404s for a few seconds. */
 const CANCEL_SCHEDULE: BackoffSchedule = {
   firstDelayMs: 0,
   retryDelayMs: 200,
@@ -112,9 +97,8 @@ function isNotFoundError(error: unknown): boolean {
 }
 
 /**
- * Deletes an upload on Mux, along with its asset document. Retries while the
- * API answers 404, which it can do right after the upload is created. Never
- * fails: if the upload still can't be deleted, it gives up quietly.
+ * Deletes an upload and its asset document. Retries 404s, which the API answers right
+ * after an upload is created, and never fails.
  */
 export function cancelUpload(client: SanityClient, uuid: string): Observable<never> {
   const {dataset} = client.config()
@@ -125,7 +109,7 @@ export function cancelUpload(client: SanityClient, uuid: string): Observable<nev
         withCredentials: true,
         method: 'DELETE',
         query: PLUGIN_VERSION_QUERY,
-        // Retrying is done here, so turn off the client's own retries.
+        // The client's own retries would stack on ours.
         maxRetries: 0,
       }),
     {
@@ -140,17 +124,14 @@ export function cancelUpload(client: SanityClient, uuid: string): Observable<nev
   )
 }
 
-/**
- * Mirrors `work`, and emits a `processing` event first if it hasn't emitted, failed or
- * completed after `PROCESSING_NOTICE_DELAY_MS`.
- */
+/** Mirrors `work`, emitting `processing` first if it's silent for `PROCESSING_NOTICE_DELAY_MS`. */
 export function withProcessingNotice<T>(work: Observable<T>): Observable<T | {type: 'processing'}> {
   return work.pipe(
     connect((shared) =>
       merge(
         timer(PROCESSING_NOTICE_DELAY_MS).pipe(
           map(() => ({type: 'processing' as const})),
-          // `materialize` so that failing or completing also cancels the notice.
+          // `materialize` so an error or completion also cancels the notice.
           takeUntil(shared.pipe(materialize())),
         ),
         shared,
@@ -173,8 +154,8 @@ export function uploadUrl({
     switchMap((validUrl) => {
       return concat(
         of({type: 'url' as const, url: validUrl}),
-        // No separate credentials check first: Mux rejects bad credentials on
-        // the request itself, and toUploadError turns that into the same error.
+        // No credentials check first: this request fails on bad ones, and
+        // toUploadError says whether they're missing or rejected.
         defer(() => {
           const uuid = generateUuid()
           const muxBody = settings
@@ -236,8 +217,8 @@ export function uploadFile({
     switchMap((fileOptions) => {
       return concat(
         of({type: 'file' as const, file: fileOptions}),
-        // No separate credentials check first: Mux rejects bad credentials on
-        // the request itself, and toUploadError turns that into the same error.
+        // No credentials check first: this request fails on bad ones, and
+        // toUploadError says whether they're missing or rejected.
         defer(() => {
           const uuid = generateUuid()
           const body = settings
@@ -283,7 +264,7 @@ export function uploadFile({
                     )
                   }),
                   catchError((err) => {
-                    // Delete the upload and its asset document, then report the original error
+                    // Clean up the upload, then report the original error
                     return concat(
                       cancelUpload(client, uuid),
                       throwError(() => err),
@@ -320,7 +301,7 @@ function getUpload(client: SanityClient, uuid: string) {
     withCredentials: true,
     method: 'GET',
     query: PLUGIN_VERSION_QUERY,
-    // Retrying is done by `pollUpload`, so turn off the client's own retries.
+    // `pollUpload` retries, so the client's own retries would stack on ours.
     maxRetries: 0,
   })
 }
@@ -334,12 +315,8 @@ class UploadNotReadyError extends Error {
 }
 
 /**
- * Decides, for one `pollUpload`, whether and when to retry after an error. Each cause has
- * its own budget, and running out of it fails with that error:
- * - not ready yet: keeps polling on `POLL_SCHEDULE` until its overall limit
- * - 404: keeps polling for up to `NOT_FOUND_RETRY_LIMIT_MS` after the first one
- * - 5xx or network error: retries quickly, after each of `UNAVAILABLE_RETRY_DELAYS_MS`
- * - anything else: fails straight away
+ * Retry delays for one `pollUpload`. Each cause of a retry has its own budget, and running
+ * out of it fails with that error. Anything not handled here fails straight away.
  */
 function createPollRetryDelay(): (error: unknown, retryCount: number) => number | undefined {
   let firstNotFoundAt: number | undefined
@@ -366,9 +343,8 @@ function createPollRetryDelay(): (error: unknown, retryCount: number) => number 
 }
 
 /**
- * Waits for Mux to turn the finished upload into an asset, polling on `POLL_SCHEDULE` while
- * the upload has no asset yet, and then fails with "Upload did not finish". Errors are
- * retried as `createPollRetryDelay` decides.
+ * Waits for Mux to turn the finished upload into an asset, or fails with
+ * "Upload did not finish".
  */
 export function pollUpload(client: SanityClient, uuid: string): Observable<UploadResponse> {
   return defer(() =>
