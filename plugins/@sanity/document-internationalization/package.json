@@ -53,6 +53,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "groq-js": "2.0.1",
     "jsdom": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
