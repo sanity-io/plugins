@@ -170,9 +170,7 @@ export function uploadFile({
                       }
                       return from(
                         updateAssetDocumentFromUpload(client, uuid, watermark, file.name),
-                      ).pipe(
-                        mergeMap((doc) => of({...event, asset: doc})),
-                      )
+                      ).pipe(mergeMap((doc) => of({...event, asset: doc})))
                     }),
                     catchError((err) => {
                       // Delete asset document
