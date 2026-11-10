@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-redundant-type-constituents - legacy code will be lint-cleaned in a follow-up PR
 import type MuxPlayerElement from '@mux/mux-player'
 import type {ObjectInputProps} from 'sanity'
 import type {PartialDeep} from 'type-fest'

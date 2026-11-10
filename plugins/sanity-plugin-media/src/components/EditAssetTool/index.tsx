@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {PortalProvider} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
 import {useDispatch} from 'react-redux'

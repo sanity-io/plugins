@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {uuid as generateUuid} from '@sanity/uuid'
 import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
 import {catchError, mergeMap, switchMap} from 'rxjs/operators'
@@ -170,9 +171,7 @@ export function uploadFile({
                       }
                       return from(
                         updateAssetDocumentFromUpload(client, uuid, watermark, file.name),
-                      ).pipe(
-                        mergeMap((doc) => of({...event, asset: doc})),
-                      )
+                      ).pipe(mergeMap((doc) => of({...event, asset: doc})))
                     }),
                     catchError((err) => {
                       // Delete asset document

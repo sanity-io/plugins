@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {Box, Portal, PortalProvider, useLayer} from '@sanity/ui'
 import {type SyntheticEvent} from 'react'
 import {type AssetSourceComponentProps, type SanityDocument, useFormValue} from 'sanity'

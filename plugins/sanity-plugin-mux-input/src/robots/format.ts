@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-base-to-string - legacy code will be lint-cleaned in a follow-up PR
 import {formatSeconds} from '../util/formatSeconds'
 import {workflowLabel} from './catalog'
 import type {RobotsDirectiveRunStatus, RobotsNodeState} from './types'

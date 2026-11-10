@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Flex, Select, Stack, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'

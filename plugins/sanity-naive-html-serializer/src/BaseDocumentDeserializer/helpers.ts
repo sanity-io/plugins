@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {htmlToBlocks} from '@portabletext/block-tools'
 import {Schema} from '@sanity/schema'
 import type {ObjectField, PortableTextSpan, PortableTextTextBlock} from 'sanity'

@@ -1,3 +1,4 @@
+// oxlint-disable jsx_a11y/control-has-associated-label - legacy code will be lint-cleaned in a follow-up PR
 import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'

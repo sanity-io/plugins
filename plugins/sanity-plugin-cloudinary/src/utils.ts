@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {CloudConfig, CloudinaryImage} from '@cloudinary/url-gen'
 import {scale} from '@cloudinary/url-gen/actions/resize'
 

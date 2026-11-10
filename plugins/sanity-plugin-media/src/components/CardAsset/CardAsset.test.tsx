@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 import {screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type {RefObject} from 'react'

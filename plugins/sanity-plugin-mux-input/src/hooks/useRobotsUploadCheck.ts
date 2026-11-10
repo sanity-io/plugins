@@ -1,3 +1,4 @@
+// oxlint-disable eslint/no-await-in-loop, promise/always-return - legacy code will be lint-cleaned in a follow-up PR
 import {useToast} from '@sanity/ui/toast'
 import {useEffect, useRef, useState} from 'react'
 

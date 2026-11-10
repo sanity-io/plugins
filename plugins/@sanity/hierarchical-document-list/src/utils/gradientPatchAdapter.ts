@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-type-assertion - legacy code will be lint-cleaned in a follow-up PR
 // Adapted from @sanity/form-builder/src/sanity/utils/gradientPatchAdapter.ts
 import {arrayToJSONMatchPath} from '@sanity/mutator'
 
