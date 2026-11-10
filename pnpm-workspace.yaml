@@ -49,7 +49,7 @@ catalog:
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
   # Pins its `tsdown` peer to the exact release it ships with, so bump it together with `tsdown`
-  '@tsdown/css': ^0.23.5
+  '@tsdown/css': ^0.23.7
   '@types/lodash-es': ^4.17.12
   '@types/node': ^24.19.2
   '@types/react': ^19.3.0
