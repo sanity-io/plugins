@@ -1,11 +1,9 @@
-import {type MuxPlayerProps, type MuxPlayerRefAttributes} from '@mux/mux-player-react'
-import MuxPlayer from '@mux/mux-player-react/lazy'
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {PlayIcon} from '@sanity/icons/Play'
 import {Card, Text} from '@sanity/ui'
-import {type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
+import type {MuxSource} from '@videojs/react/media/mux-video'
+import {lazy, type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
-import {PLUGIN_VERSION} from '../constants'
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
 import {AUDIO_ASPECT_RATIO, MIN_ASPECT_RATIO} from '../util/constants'
@@ -13,16 +11,17 @@ import {generateJwt} from '../util/generateJwt'
 import {getPlaybackId} from '../util/getPlaybackPolicy'
 import {getPlaybackPolicyById} from '../util/getPlaybackPolicy'
 import {getPosterSrc} from '../util/getPosterSrc'
-import {getVideoSrc} from '../util/getVideoSrc'
 import {readyTracksKey} from '../util/tracks'
 import {tryWithSuspend} from '../util/tryWithSuspend'
-import type {VideoAssetDocument} from '../util/types'
+import type {PluginConfig, VideoAssetDocument} from '../util/types'
 import CaptionsDialog from './CaptionsDialog'
 import EditThumbnailDialog from './EditThumbnailDialog'
 import {AudioIcon} from './icons/Audio'
 import MezzanineDialog from './MezzanineDialog'
 import {NoPlaybackIdNotice} from './NoPlaybackIdNotice'
 import {PlayButton} from './PlayButton'
+
+const MuxMediaPlayer = lazy(() => import('./MuxMediaPlayer'))
 
 export default function VideoPlayer({
   asset,
@@ -32,26 +31,25 @@ export default function VideoPlayer({
   deferPlayer = false,
   readOnly,
   ...props
-}: PropsWithChildren<
-  {
-    asset: VideoAssetDocument
-    thumbnailWidth?: number
-    forceAspectRatio?: number
-    hlsConfig?: MuxPlayerProps['_hlsConfig']
-    /**
-     * Render the poster as a play button and mount `<MuxPlayer>` only once it's clicked.
-     * Mounting the player's media-chrome controls forces many full-document layouts,
-     * which freezes Safari for seconds when a form shows several video fields.
-     */
-    deferPlayer?: boolean
-    readOnly?: boolean
-  } & Partial<Pick<MuxPlayerProps, 'autoPlay'>>
->) {
+}: PropsWithChildren<{
+  asset: VideoAssetDocument
+  thumbnailWidth?: number
+  forceAspectRatio?: number
+  hlsConfig?: PluginConfig['hlsConfig']
+  /**
+   * Render the poster as a play button and mount the player only once it's clicked.
+   * Mounting the player's controls forces many full-document layouts, which freezes Safari
+   * for seconds when a form shows several video fields.
+   */
+  deferPlayer?: boolean
+  readOnly?: boolean
+  autoPlay?: boolean
+}>) {
   const client = useClient()
   const {dialogState} = useDialogStateContext()
 
   const isAudio = assetIsAudio(asset)
-  const muxPlayer = useRef<MuxPlayerRefAttributes>(null)
+  const [media, setMedia] = useState<HTMLMediaElement | null>(null)
   const playerContainerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<Error>()
   const [playerRequested, setPlayerRequested] = useState(false)
@@ -64,16 +62,32 @@ export default function VideoPlayer({
   // Strings, so an unrelated document change doesn't sign a new token and reload the player.
   const policy = playbackId ? getPlaybackPolicyById(asset, playbackId)?.policy : undefined
 
-  const src = useMemo(() => {
-    if (!playbackId || !policy) return undefined
+  const signTokens = useMemo(() => {
+    if (!playbackId || (policy !== 'signed' && policy !== 'drm')) return undefined
     return tryWithSuspend(
-      () => getVideoSrc({muxPlaybackId: {id: playbackId, policy}, client}),
+      () => ({
+        playback: generateJwt(client, playbackId, 'v'),
+        storyboard: generateJwt(client, playbackId, 's'),
+        drm: policy === 'drm' ? generateJwt(client, playbackId, 'd') : undefined,
+      }),
       (e: Error) => {
         setError(e)
         return undefined
       },
     )
-  }, [playbackId, policy, client])
+  }, [client, policy, playbackId])
+
+  const signed = policy === 'signed' || policy === 'drm'
+  const source: MuxSource | undefined =
+    playbackId && policy && (!signed || signTokens)
+      ? {
+          playbackId,
+          playback: signTokens ? {token: signTokens.playback} : undefined,
+          storyboard: signTokens ? {token: signTokens.storyboard} : undefined,
+          drm: signTokens?.drm ? {token: signTokens.drm} : undefined,
+          engine: hlsConfig ? {hlsJs: hlsConfig} : undefined,
+        }
+      : undefined
 
   const poster = useMemo(() => {
     if (!hasPlaybackIds) return undefined
@@ -85,63 +99,6 @@ export default function VideoPlayer({
       },
     )
   }, [asset, client, thumbnailWidth, hasPlaybackIds])
-
-  const signedToken = useMemo(() => {
-    try {
-      const url = new URL(src!)
-      return url.searchParams.get('token')
-    } catch {
-      return undefined
-    }
-  }, [src])
-  const drmToken = useMemo(() => {
-    if (!playbackId) return undefined
-    if (policy !== 'drm') return undefined
-
-    return tryWithSuspend(
-      () => generateJwt(client, playbackId, 'd'),
-      (e: Error) => {
-        setError(e)
-        return undefined
-      },
-    )
-  }, [client, policy, playbackId])
-  const tokens:
-    | Partial<{
-        playback?: string
-        thumbnail?: string
-        storyboard?: string
-        drm?: string
-      }>
-    | undefined = useMemo(() => {
-    try {
-      const partialTokens: {
-        playback?: string
-        thumbnail?: string
-        storyboard?: string
-        drm?: string
-      } = {
-        playback: undefined,
-        thumbnail: undefined,
-        storyboard: undefined,
-        drm: undefined,
-      }
-
-      if (signedToken) {
-        partialTokens.playback = signedToken
-        partialTokens.thumbnail = signedToken
-        partialTokens.storyboard = signedToken
-      }
-
-      if (drmToken) {
-        partialTokens.drm = drmToken
-      }
-
-      return {...partialTokens}
-    } catch {
-      return undefined
-    }
-  }, [signedToken, drmToken])
 
   const [width, height] = (asset?.data?.aspect_ratio ?? '16:9').split(':').map(Number)
   const targetAspectRatio =
@@ -167,7 +124,7 @@ export default function VideoPlayer({
           ...(isAudio && {display: 'flex', alignItems: 'flex-end'}),
         }}
       >
-        {src && poster && (
+        {source && poster && (
           <>
             {isAudio && (
               <AudioIcon
@@ -184,34 +141,20 @@ export default function VideoPlayer({
             )}
             {showPlayer ? (
               <Suspense fallback={null}>
-                <MuxPlayer
+                <MuxMediaPlayer
                   // A new caption or audio track reaches the player only with a fresh manifest.
-                  key={readyTracksKey(asset.data?.tracks)}
+                  key={`${playbackId}:${readyTracksKey(asset.data?.tracks)}`}
+                  ref={setMedia}
+                  source={source}
                   poster={isAudio ? undefined : poster}
-                  ref={muxPlayer}
-                  {...props}
-                  autoPlay={deferPlayer || props.autoPlay}
-                  playsInline
-                  playbackId={playbackId}
-                  tokens={tokens}
-                  preload="metadata"
-                  crossOrigin="anonymous"
-                  metadata={{
-                    player_name: 'Sanity Admin Dashboard',
-                    player_version: PLUGIN_VERSION,
-                    page_type: 'Preview Player',
-                  }}
                   audio={isAudio}
-                  _hlsConfig={hlsConfig}
+                  autoPlay={deferPlayer || props.autoPlay}
                   style={{
                     ...(!isAudio && {height: '100%'}),
                     width: '100%',
-                    display: 'block',
-                    objectFit: 'contain',
                     ...(isAudio && {alignSelf: 'end'}),
                   }}
                 />
-                {children}
               </Suspense>
             ) : (
               <PlayButton
@@ -256,11 +199,7 @@ export default function VideoPlayer({
       </Card>
 
       {dialogState === 'edit-thumbnail' && (
-        <EditThumbnailDialog
-          asset={asset}
-          // oxlint-disable-next-line react/refs
-          currentTime={muxPlayer?.current?.currentTime}
-        />
+        <EditThumbnailDialog asset={asset} currentTime={media?.currentTime} />
       )}
       {dialogState === 'edit-captions' && <CaptionsDialog asset={asset} />}
       {dialogState === 'mezzanine' && <MezzanineDialog asset={asset} />}
