@@ -1,7 +1,6 @@
 import {dequal as isEqual} from 'dequal/lite'
-import {useEffect, useMemo, useRef, useState} from 'react'
-import type {Subscription} from 'rxjs'
-import {catchError, distinctUntilChanged} from 'rxjs/operators'
+import {useEffect, useMemo, useState} from 'react'
+import {defer, distinctUntilChanged, retry, throwError, timer} from 'rxjs'
 import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
 
 interface Config<V> {
@@ -20,9 +19,86 @@ const DEFAULT_PARAMS = {}
 const DEFAULT_OPTIONS = {apiVersion: `v2023-05-01`}
 const DEFAULT_INITIAL_VALUE = null
 
+const RETRY_BASE_DELAY_MS = 2000
+const RETRY_MAX_DELAY_MS = 30_000
+
 function useParams(params?: null | ListenQueryParams | ListenQueryOptions): ListenQueryParams {
   const stringifiedParams = useMemo(() => JSON.stringify(params || {}), [params])
   return useMemo(() => JSON.parse(stringifiedParams), [stringifiedParams])
+}
+
+/**
+ * Delay before reconnecting a failed listener: 2s, doubling up to 30s
+ */
+function getRetryDelay(retryCount: number): number {
+  return Math.min(RETRY_BASE_DELAY_MS * 2 ** (retryCount - 1), RETRY_MAX_DELAY_MS)
+}
+
+/**
+ * Whether reconnecting could fix the error. The errors come from `@sanity/client`, which might be
+ * a different copy than any we could import, so they are matched by name and status rather than
+ * with `instanceof`.
+ */
+function isRetryableError(err: unknown): boolean {
+  if (!(err instanceof Error)) {
+    return true
+  }
+
+  if (err.name === 'ChannelError') {
+    return !isPermanentChannelError(err)
+  }
+
+  // The server told the listener to go away
+  if (err.name === 'DisconnectError') {
+    return false
+  }
+
+  // A `ClientError` from the fetch (like a query parse error) has a `statusCode`. A
+  // `ConnectionFailedError` from the listener has a `status`, but only where the EventSource
+  // exposes it, which browsers don't.
+  if ('statusCode' in err && typeof err.statusCode === 'number') {
+    return !isPermanentHttpError(err.statusCode)
+  }
+
+  if ('status' in err && typeof err.status === 'number') {
+    return !isPermanentHttpError(err.status)
+  }
+
+  return true
+}
+
+/**
+ * A `channelError` can come from two places:
+ * - The API gateway, when it can't route the listener (a missing dataset, say). It only does so
+ *   for 4xx errors, and includes the status as `statusCode`.
+ * - The listen endpoint. Errors it recognizes have a `type` (like `queryParseError`), while
+ *   unexpected ones have the type `internalError` or no type at all.
+ *
+ * Only the 4xx errors and the recognized errors would happen again on a new listener.
+ */
+function isPermanentChannelError(err: Error): boolean {
+  const data: unknown = 'data' in err ? err.data : undefined
+  if (!isObject(data)) {
+    return false
+  }
+
+  if ('statusCode' in data && typeof data.statusCode === 'number') {
+    return isPermanentHttpError(data.statusCode)
+  }
+
+  const error: unknown = 'error' in data ? data.error : undefined
+  const type: unknown = isObject(error) && 'type' in error ? error.type : undefined
+
+  return typeof type === 'string' && type !== 'internalError'
+}
+
+function isObject(value: unknown): value is object {
+  return typeof value === 'object' && value !== null
+}
+
+/** 4xx errors fail the same way when retried, except timeouts and rate limits */
+function isPermanentHttpError(status: number): boolean {
+  return status >= 400 && status < 500 && status !== 408 && status !== 429
 }
 
 export function useListeningQuery<V>(
@@ -39,57 +115,56 @@ export function useListeningQuery<V>(
   const memoParams = useParams(params)
   const memoOptions = useParams(options)
 
-  const subscription = useRef<null | Subscription>(null)
   const documentStore = useDocumentStore()
 
   useEffect(() => {
-    if (query && !error && !subscription.current) {
-      try {
-        subscription.current = documentStore
-          .listenQuery(query, memoParams, memoOptions)
-          .pipe(
-            distinctUntilChanged(isEqual),
-            catchError((err) => {
-              console.error(err)
-              setError(err)
-              setLoading(false)
-              setData(null)
+    if (!query) {
+      return undefined
+    }
 
-              return err
-            }),
-          )
-          .subscribe((documents) => {
-            setData((current) => {
-              if (isEqual(current, documents)) {
-                return current
-              }
+    // Errors keep the last result, so a component can still show it
+    const reportError = (err: unknown) => {
+      console.error(err)
+      setError(err)
+      setLoading(false)
+    }
 
-              // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
-              return documents as V
-            })
-            setLoading(false)
-            setError(null)
+    const subscription = defer(() => documentStore.listenQuery(query, memoParams, memoOptions))
+      .pipe(
+        distinctUntilChanged(isEqual),
+        // A listener can fail at any point, for instance when the browser has too many requests
+        // open to the API and the listener times out waiting for a connection. Reconnect with
+        // backoff, unless the error would happen again.
+        retry({
+          resetOnSuccess: true,
+          delay: (err: unknown, retryCount) => {
+            if (!isRetryableError(err)) {
+              return throwError(() => err)
+            }
+
+            reportError(err)
+            return timer(getRetryDelay(retryCount))
+          },
+        }),
+      )
+      .subscribe({
+        next: (documents) => {
+          setData((current) => {
+            if (isEqual(current, documents)) {
+              return current
+            }
+
+            // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- listenQuery result is typed by caller
+            return documents as V
           })
-      } catch (err) {
-        console.error(err)
-        // oxlint-disable-next-line react/set-state-in-effect
-        setLoading(false)
-        setError(err)
-      }
-    }
+          setLoading(false)
+          setError(null)
+        },
+        error: reportError,
+      })
 
-    // Unsubscribe when an error occurs
-    if (error && subscription.current) {
-      subscription.current.unsubscribe()
-    }
-
-    return () => {
-      if (subscription.current) {
-        subscription?.current?.unsubscribe()
-        subscription.current = null
-      }
-    }
-  }, [query, error, memoParams, memoOptions, documentStore])
+    return () => subscription.unsubscribe()
+  }, [query, memoParams, memoOptions, documentStore])
 
   return {data, loading, error}
 }
