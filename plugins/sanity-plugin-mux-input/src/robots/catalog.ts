@@ -245,30 +245,45 @@ function updateAssetChaptersField(defaultValue: boolean): RobotsParamField {
   }
 }
 
+/**
+ * Where a new track's settings sit: at the top of `parameters`, or under `captions` for the
+ * subtitles Translate audio can attach next to its dub.
+ */
+interface TrackFieldsAt {
+  prefix?: string
+  label?: string
+}
+
 /** The name of a translation's new track, which Mux otherwise names after its language. */
-function translatedTrackNameField(defaultName: string): RobotsParamField {
+function translatedTrackNameField(
+  defaultName: string,
+  {prefix = '', label = 'Track name'}: TrackFieldsAt = {},
+): RobotsParamField {
   return {
     kind: 'text',
-    name: 'track_name',
-    label: 'Track name',
+    name: `${prefix}track_name`,
+    label,
     helpText:
       `Leave empty and Mux names it after the target language, e.g. "${defaultName}". A track ` +
       'with this name counts as an existing one below.',
-    showWhen: {field: 'upload_to_mux', equals: true},
+    showWhen: {field: `${prefix}upload_to_mux`, equals: true},
   }
 }
 
-function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamField {
+function replaceExistingTracksField(
+  track: 'caption' | 'audio',
+  {prefix = '', label, failLabel = 'Stop and don’t run'}: TrackFieldsAt & {failLabel?: string} = {},
+): RobotsParamField {
   const noun = track === 'audio' ? 'audio track' : 'caption track'
   const warning = (whenValue: string, which: string): RobotsConfirmWarning => ({
     whenValue,
-    title: 'This run deletes existing tracks',
+    title: `This run deletes existing ${noun}s`,
     body:
       `Any ${which}${noun} on this video in the same language, or with the same name, is ` +
       'deleted before the new one is added. Players lose that track until the job finishes.',
   })
   const options: RobotsParamOption[] = [
-    {value: 'fail', label: 'Stop and don’t run'},
+    {value: 'fail', label: failLabel},
     {value: 'replace_all', label: 'Replace every matching track'},
   ]
   const confirmWarnings = [warning('replace_all', '')]
@@ -279,8 +294,9 @@ function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamFiel
   }
   return {
     kind: 'select',
-    name: 'replace_existing_tracks',
-    label: `If ${track === 'audio' ? 'an audio' : 'a'} track in this language already exists`,
+    name: `${prefix}replace_existing_tracks`,
+    label:
+      label ?? `If ${track === 'audio' ? 'an audio' : 'a'} track in this language already exists`,
     helpText:
       'Tracks match by language, ignoring region, or by name, ignoring case.' +
       (track === 'audio'
@@ -289,7 +305,7 @@ function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamFiel
           'Robots don’t.'),
     options,
     defaultValue: 'fail',
-    showWhen: {field: 'upload_to_mux', equals: true},
+    showWhen: {field: `${prefix}upload_to_mux`, equals: true},
     confirmWarnings,
   }
 }
@@ -480,6 +496,25 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
       UPLOAD_TO_MUX,
       translatedTrackNameField('Spanish (Auto-dubbed)'),
       replaceExistingTracksField('audio'),
+      {
+        kind: 'boolean',
+        name: 'captions.upload_to_mux',
+        label: 'Also add the dub’s subtitles to the Mux video',
+        helpText:
+          'A caption track with the translated text the dub speaks. If it can’t be added, the ' +
+          'dub still completes without it.',
+        defaultValue: false,
+        omitWhenFalse: true,
+      },
+      translatedTrackNameField('Spanish (dub)', {
+        prefix: 'captions.',
+        label: 'Subtitle track name',
+      }),
+      replaceExistingTracksField('caption', {
+        prefix: 'captions.',
+        label: 'If a caption track in this language already exists',
+        failLabel: 'Don’t add the subtitles',
+      }),
     ],
   },
   {
@@ -1514,6 +1549,14 @@ function workflowErrors(
       if (illegal) errors.push(`Never translate cannot contain < or >: "${illegal}".`)
       break
     }
+    case 'translate-audio':
+      // Mux requires it off for audio-only assets, and returns the dub as a download instead.
+      if (context.isAudioOnly === true && values['upload_to_mux'] !== false) {
+        errors.push(
+          `An audio-only video can’t take a dubbed audio track. Turn off "${UPLOAD_TO_MUX.label}" to get a download link instead.`,
+        )
+      }
+      break
     default:
       break
   }

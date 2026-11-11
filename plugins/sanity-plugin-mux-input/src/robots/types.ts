@@ -216,6 +216,8 @@ export interface RobotsPendingCreate {
   directiveId?: string
   /** Unix seconds, browser clock: the unit of Mux's `created_at`. */
   requestedAt: number
+  /** Where the create went. Placeholders from before Robots v1 have none. */
+  apiVersion?: RobotsApiVersion
 }
 
 export interface RobotsFields {

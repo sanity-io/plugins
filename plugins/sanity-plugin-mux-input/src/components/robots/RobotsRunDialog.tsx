@@ -117,7 +117,7 @@ export function RobotsRunDialog({
               </a>
               .
             </Text>
-            {definition.producesTrack && (
+            {definition.producesTrack && values['upload_to_mux'] !== false && (
               <RobotsNote>
                 The result is attached to the Mux video, so it works in your players straight away.
                 The Studio picks it up when the job finishes.

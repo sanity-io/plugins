@@ -492,8 +492,9 @@ The plugin runs every workflow and directive on the Robots v1 API. Jobs and dire
 
 - **Analyze structure** replaces **Find scenes**, which v1 doesn't have. One run returns a title, summary, tags, chapters, scenes and key moments, and costs more than Find scenes did; on a video it can also generate Mux Shots, billed separately. An audio-only video is analyzed from its captions and has no scenes. It can write its title and chapters to the Mux video, both off by default.
 - **Captions to read** lists the video's own caption languages: v1 reads only a track whose language matches exactly, so `en` doesn't read an `en-US` track, and without a choice it reads the first ready track instead of preferring English.
-- **Moderate** also moderates what is said in the captions, as Robots v1 does by default, so the captions can trigger **Delete every playback ID** too. Turn off **Also moderate what is said** to moderate the sampled frames only.
+- **Moderate** also moderates what is said in the captions, as Robots v1 does by default, so the captions can trigger **Delete every playback ID** too. Turn off **Also moderate what is said** to moderate the sampled frames only. A run where Mux moderated neither says so, and isn't stored as the video's Moderate result.
 - **Edit captions** replaces the original track by default and keeps its name. To keep the original, choose so and give the edited track a different name.
+- **Translate audio** can also add the dub's subtitles to the video, with their own name. On an audio-only video, turn off **Attach the result to the Mux asset**: Mux returns the dub as a download instead.
 - Directives made with Robots v0 can't be run from the Studio. Make a v1 copy in the Mux dashboard (open the directive and choose **Create v1 copy**) and put its ID in `defaultDirectiveIds`. Until then, uploads still attach the v0 directive and Mux runs it on v0; the Robots panel and the upload dialog point out which ones. See [Migrate Robots Directives from Beta to GA](https://www.mux.com/docs/guides/robots-migrate-directives-to-v1).
 
 Studios on older plugin versions keep running on v0 until Mux retires it.
@@ -538,7 +539,7 @@ Opened from a video field, the Robots panel has **Apply summary**: it copies the
 
 Robots data lives at the root of each `mux.videoAsset` document, next to `data`:
 
-- `robotsJobs`: every job Mux reports for the asset, whoever started it (the Studio, a directive, the dashboard or the API). Records are only added and updated, so the history outlives Mux, which deletes jobs after 30 days.
+- `robotsJobs`: every job Mux reports for the asset, whoever started it (the Studio, a directive, the dashboard or the API). Records are only added and updated, so the history outlives Mux, which deletes jobs after 30 days. The Robots panel marks those jobs **Deleted by Mux**, and **View output** shows what the document kept of them.
 - `robotsOutputs`: the newest completed `summarize` (title, description, tags), `analyzeStructure` (title, summary, tags) and `moderate` (threshold result, highest scores) outputs. Every other output is read from Mux while the job exists.
 - `robotsDirectiveRuns`: directive runs started from the Studio.
 - `robotsPendingCreates`: runs requested but not yet confirmed by Mux. They keep a second run from starting by accident, and clear themselves once Mux confirms.

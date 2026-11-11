@@ -675,3 +675,46 @@ describe('workflowLabel', () => {
     expect(workflowLabel('something-new')).toBe('something-new')
   })
 })
+
+describe('translate-audio', () => {
+  const base = {output_language_code: 'es'}
+
+  test('adds the dub’s subtitles only when asked, with their own name and policy', () => {
+    expect(paramsFor('translate-audio', base)).not.toHaveProperty('captions')
+    const params = paramsFor('translate-audio', {
+      ...base,
+      'captions.upload_to_mux': true,
+      'captions.track_name': 'Español (doblaje)',
+    })
+    expect(params['captions']).toEqual({
+      upload_to_mux: true,
+      track_name: 'Español (doblaje)',
+      replace_existing_tracks: 'fail',
+    })
+  })
+
+  test('warns once per kind of track a run would delete', () => {
+    const definition = definitionOf('translate-audio')
+    const values = {
+      ...defaultParamValues(definition.params),
+      ...base,
+      'replace_existing_tracks': 'replace_all',
+      'captions.upload_to_mux': true,
+      'captions.replace_existing_tracks': 'replace_all',
+    }
+    expect(confirmWarnings(definition, values).map((warning) => warning.title)).toEqual([
+      'This run deletes existing audio tracks',
+      'This run deletes existing caption tracks',
+    ])
+  })
+
+  test('an audio-only video needs the audio upload off', () => {
+    const message =
+      'An audio-only video can’t take a dubbed audio track. Turn off "Attach the result to the Mux asset" to get a download link instead.'
+    expect(errorsFor('translate-audio', base, {isAudioOnly: true})).toEqual([message])
+    expect(
+      errorsFor('translate-audio', {...base, upload_to_mux: false}, {isAudioOnly: true}),
+    ).toEqual([])
+    expect(errorsFor('translate-audio', base, {isAudioOnly: false})).toEqual([])
+  })
+})

@@ -18,10 +18,10 @@ import {
   type PendingCreateRow,
   pendingCreateRows,
   pendingCreatesOf,
+  workflowsRunningOnV0,
 } from '../../robots/records'
 import type {RobotsToast} from '../../robots/sync'
 import type {RobotsPendingCreate} from '../../robots/types'
-import {workflowsRunningOnV0} from '../../robots/versions'
 import {hasUsableCaptionTrack, isCaptionTrack} from '../../util/tracks'
 import type {MuxInputConfig, MuxTextTrack, VideoAssetDocument} from '../../util/types'
 import {RobotsApplySummaryDialog} from './RobotsApplySummaryDialog'

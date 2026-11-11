@@ -11,6 +11,7 @@ import {
   formatScore,
   formatText,
 } from '../../robots/format'
+import {moderatedNothing} from '../../robots/records'
 import type {RobotsJobWorkflow} from '../../robots/types'
 import {RobotsJsonBlock} from './RobotsJsonBlock'
 import {RobotsNote} from './RobotsNote'
@@ -152,34 +153,47 @@ const SUMMARIZE: OutputView = {
   ),
 }
 
+interface ModeratedSurface {
+  status?: unknown
+  skip_reason?: unknown
+  skip_message?: unknown
+}
+
+function surfaceOf(outputs: Outputs, key: string): ModeratedSurface {
+  const surface = outputs[key]
+  return surface && typeof surface === 'object' ? surface : {}
+}
+
 /** Skips a reader expects (no frames on audio-only, the transcript turned off) get no note. */
 const MODERATED_SURFACES = [
   {
     key: 'thumbnail_moderation',
+    name: 'the frames',
     expectedSkip: 'no_video_track',
     skipped: 'The frames weren’t moderated',
-    failed: 'Mux couldn’t moderate the frames, so the scores come from what is said.',
   },
   {
     key: 'transcript_moderation',
+    name: 'what is said',
     expectedSkip: 'disabled',
     skipped: 'What is said wasn’t moderated',
-    failed: 'Mux couldn’t moderate what is said, so the scores come from the frames.',
   },
 ]
 
 /** v1 reports what each surface moderated; v0 reports neither. */
 function ModeratedSurfaceNotes({outputs}: {outputs: Outputs}) {
-  return MODERATED_SURFACES.map(({key, expectedSkip, skipped, failed}) => {
-    const surface = (outputs[key] ?? {}) as {
-      status?: unknown
-      skip_reason?: unknown
-      skip_message?: unknown
-    }
+  return MODERATED_SURFACES.map(({key, name, expectedSkip, skipped}) => {
+    const surface = surfaceOf(outputs, key)
     if (surface.status === 'failed') {
+      // The scores only come from the other surface when it was moderated.
+      const scoredBy = MODERATED_SURFACES.find(
+        (other) => other.key !== key && surfaceOf(outputs, other.key).status === 'completed',
+      )?.name
       return (
         <RobotsNote key={key} tone="caution">
-          {failed}
+          {scoredBy
+            ? `Mux couldn’t moderate ${name}, so the scores come from ${scoredBy}.`
+            : `Mux couldn’t moderate ${name}.`}
         </RobotsNote>
       )
     }
@@ -201,20 +215,29 @@ const MODERATE: OutputView = {
   render: (outputs) => (
     <Stack gap={3}>
       <ModeratedSurfaceNotes outputs={outputs} />
-      <Flex>
-        <Badge
-          tone={outputs['exceeds_threshold'] ? 'critical' : 'positive'}
-          fontSize={1}
-          padding={2}
-        >
-          {outputs['exceeds_threshold'] ? 'Exceeds a threshold' : 'Within thresholds'}
-        </Badge>
-      </Flex>
-      {Object.entries((outputs['max_scores'] ?? {}) as Outputs).map(([category, score]) => (
-        <Text key={category} size={1}>
-          Highest {category} score: {formatScore(score)}
-        </Text>
-      ))}
+      {moderatedNothing(outputs) ? (
+        <RobotsNote tone="caution">
+          Mux moderated nothing in this video, so this result doesn’t say whether it’s within the
+          thresholds.
+        </RobotsNote>
+      ) : (
+        <>
+          <Flex>
+            <Badge
+              tone={outputs['exceeds_threshold'] ? 'critical' : 'positive'}
+              fontSize={1}
+              padding={2}
+            >
+              {outputs['exceeds_threshold'] ? 'Exceeds a threshold' : 'Within thresholds'}
+            </Badge>
+          </Flex>
+          {Object.entries((outputs['max_scores'] ?? {}) as Outputs).map(([category, score]) => (
+            <Text key={category} size={1}>
+              Highest {category} score: {formatScore(score)}
+            </Text>
+          ))}
+        </>
+      )}
     </Stack>
   ),
 }
@@ -478,15 +501,27 @@ const ENGAGEMENT_INSIGHTS: OutputView = {
   },
 }
 
-/** The result is a track on the Mux video; the payload shows its ids and any temporary URLs. */
+/**
+ * The new track's id: `track_id` in v1 and premium captions, `uploaded_track_id` in v0, and
+ * `caption_track_id` for the dub's subtitles.
+ */
+const ATTACHED_TRACK_KEYS = ['track_id', 'uploaded_track_id', 'caption_track_id']
+
+/** The payload shows the new track's ids, or the temporary URLs when nothing was attached. */
 const TRACK_PRODUCING: OutputView = {
   hasContent: () => true,
   render: (outputs) => (
     <Stack gap={3}>
-      <RobotsNote tone="positive">
-        The generated track is on the Mux video. The Studio picks it up when the job finishes;
-        resync the video if it hasn’t shown up yet.
-      </RobotsNote>
+      {ATTACHED_TRACK_KEYS.some((key) => typeof outputs[key] === 'string') ? (
+        <RobotsNote tone="positive">
+          The generated track is on the Mux video. The Studio picks it up when the job finishes;
+          resync the video if it hasn’t shown up yet.
+        </RobotsNote>
+      ) : (
+        <RobotsNote>
+          Nothing was attached to the Mux video. The temporary download links below expire.
+        </RobotsNote>
+      )}
       <RobotsJsonBlock value={outputs} what="this output" />
     </Stack>
   ),

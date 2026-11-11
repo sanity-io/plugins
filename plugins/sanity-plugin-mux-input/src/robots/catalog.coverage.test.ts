@@ -133,8 +133,6 @@ const SPEC_PARAMETER_PATHS: Record<RobotsWorkflow, string[]> = {
 const LEFT_OUT: Partial<Record<RobotsWorkflow, RegExp[]>> = {
   // One value, the default.
   'edit-captions': [/^auto_censor_profanity\.detection_method$/],
-  // Not offered yet: the dub's subtitles, documented after these forms were built.
-  'translate-audio': [/^captions\./],
 }
 
 describe.each(ROBOTS_WORKFLOWS)('%s', (workflow) => {

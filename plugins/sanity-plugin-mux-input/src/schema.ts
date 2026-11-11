@@ -255,6 +255,7 @@ const muxRobotsPendingCreate = {
     {type: 'string', name: 'workflow'},
     {type: 'string', name: 'directiveId'},
     {type: 'number', name: 'requestedAt'},
+    {type: 'string', name: 'apiVersion'},
   ],
 }
 
