@@ -7,7 +7,12 @@ import {getRobotsJob, RobotsRequestError} from '../../actions/robots'
 import {useClient} from '../../hooks/useClient'
 import {workflowLabel} from '../../robots/catalog'
 import {formatTimestamp} from '../../robots/format'
-import {type RobotsJobDetailState, unitsCell} from '../../robots/records'
+import {
+  isDeletedByMux,
+  type RobotsJobDetailState,
+  shownJobStatus,
+  unitsCell,
+} from '../../robots/records'
 import {type RobotsJob, robotsJobErrorMessage} from '../../robots/types'
 import {DIALOGS_Z_INDEX} from '../../util/constants'
 import {RobotsCopyButton} from './RobotsCopyButton'
@@ -61,9 +66,6 @@ function isGone(error: unknown): boolean {
 }
 
 function readError(error: unknown): string {
-  if (isGone(error)) {
-    return 'Mux keeps jobs for 30 days, and this one is gone. The video document still records its status and units.'
-  }
   return error instanceof Error ? error.message : 'Could not load this job from Mux.'
 }
 
@@ -88,8 +90,10 @@ export function RobotsOutputDialog({
   const [tab, setTab] = useState<'result' | 'raw'>('result')
   // `outputs` and `errors` exist only on the single-job GET, so either means it's in hand.
   const isHeldInFull = !!job.outputs || job.errors !== undefined
+  // Past 30 days Mux has deleted the job, so it isn't asked.
+  const isDeleted = isDeletedByMux(job)
   const {data: fetched, error} = useSWR(
-    isHeldInFull ? null : `robots-job/${dataset}/${job.id}`,
+    isHeldInFull || isDeleted ? null : `robots-job/${dataset}/${job.id}`,
     async () => (await getRobotsJob(client, job)).data,
     {revalidateOnFocus: false, shouldRetryOnError: false},
   )
@@ -99,7 +103,8 @@ export function RobotsOutputDialog({
   }, [fetched, onLoaded])
 
   const shown = fetched ?? job
-  const isLoading = !isHeldInFull && !fetched && !error
+  const isGoneFromMux = !isHeldInFull && (isDeleted || isGone(error))
+  const isLoading = !isHeldInFull && !isDeleted && !fetched && !error
   const detail: RobotsJobDetailState = fetched ? 'loaded' : error ? 'unreadable' : detailState
 
   return (
@@ -118,7 +123,7 @@ export function RobotsOutputDialog({
         >
           <Fact label="Status">
             <Flex>
-              <RobotsStatusBadge kind="job" status={shown.status} />
+              <RobotsStatusBadge kind="job" status={shownJobStatus(shown)} />
             </Flex>
           </Fact>
           <Fact label="Mux AI units">
@@ -147,18 +152,23 @@ export function RobotsOutputDialog({
             </Text>
           </Flex>
         )}
-        {error && kept && isGone(error) ? (
-          <Stack gap={3}>
-            <RobotsNote>
-              Mux keeps jobs for 30 days, and this one is gone. This is what the video document
-              kept.
+        {isGoneFromMux &&
+          (kept ? (
+            <Stack gap={3}>
+              <RobotsNote>
+                Mux keeps jobs for 30 days, and this one is gone. This is what the video document
+                kept.
+              </RobotsNote>
+              <OutputBody job={{...shown, outputs: kept}} />
+            </Stack>
+          ) : (
+            <RobotsNote tone="caution">
+              Mux keeps jobs for 30 days, and this one is gone. The video document still records its
+              status and units.
             </RobotsNote>
-            <OutputBody job={{...shown, outputs: kept}} />
-          </Stack>
-        ) : (
-          error && <RobotsNote tone="caution">{readError(error)}</RobotsNote>
-        )}
-        {!isLoading && !error && (
+          ))}
+        {error && !isGoneFromMux && <RobotsNote tone="caution">{readError(error)}</RobotsNote>}
+        {!isLoading && !error && !isGoneFromMux && (
           <Stack gap={3}>
             <TabList gap={2}>
               <Tab

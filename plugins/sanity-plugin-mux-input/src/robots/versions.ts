@@ -1,4 +1,3 @@
-import {activeJobs} from './records'
 import type {RobotsApiVersion, RobotsJob, RobotsLinks} from './types'
 
 /**
@@ -32,16 +31,4 @@ export function jobVersions(job: Pick<RobotsJob, 'workflow' | '_links'>): Robots
   const linked = linkedVersion(job)
   if (linked) return [linked]
   return V0_ONLY_WORKFLOWS.has(job.workflow) ? ['v0'] : ['v1', 'v0']
-}
-
-/**
- * Workflows with a v0 job in progress, from a Studio on an older plugin or a v0 directive. v1
- * refuses a duplicate with a 409 only within its own version, so a run of one of these bills twice.
- */
-export function workflowsRunningOnV0(jobs: RobotsJob[]): ReadonlySet<string> {
-  return new Set(
-    activeJobs(jobs)
-      .filter((job) => linkedVersion(job) === 'v0')
-      .map((job) => job.workflow),
-  )
 }
