@@ -19,7 +19,8 @@ export const fieldLevelPatch = async (
   localeId: string,
   client: SanityClient,
   baseLanguage: string = 'en',
-  mergeWithTargetLocale: boolean = false,
+  // Kept for API compatibility: it has no effect on field-level imports (see below).
+  _mergeWithTargetLocale: boolean = false,
 ): Promise<void> => {
   let baseDoc: SanityDocument
   if (translatedFields._rev && translatedFields._id) {
@@ -28,11 +29,14 @@ export const fieldLevelPatch = async (
     baseDoc = await findLatestDraft(documentId, client)
   }
 
+  // The translated fields come back keyed by the base language, since that is how they were
+  // serialized for export, so they are always looked up under `baseLanguage`. Looking them up
+  // under the target locale finds nothing and commits an empty patch.
   const merged = BaseDocumentMerger.fieldLevelMerge(
     translatedFields,
     baseDoc,
     localeId,
-    mergeWithTargetLocale ? baseLanguage : localeId,
+    baseLanguage,
   )
 
   await client.patch(baseDoc._id).set(merged).commit()
