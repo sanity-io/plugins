@@ -1,5 +1,15 @@
 # sanity-plugin-mux-input
 
+## 5.3.0
+
+### Minor Changes
+
+- [#2307](https://github.com/sanity-io/plugins/pull/2307) [`1588a80`](https://github.com/sanity-io/plugins/commit/1588a80e9905ed91acafc1583ff12f5bae5325c0) Thanks [@javierarams](https://github.com/javierarams)! - Play videos in the Studio with Video.js instead of Mux Player. The player keeps signed and DRM playback, the poster, storyboard previews on the time slider, audio-only assets, the `hlsConfig` option and Mux Data monitoring. Signed assets now sign storyboards with their own `s` token, as Mux requires.
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 5.2.2
 
 ### Patch Changes

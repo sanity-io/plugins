@@ -1,5 +1,13 @@
 # sanity-plugin-hotspot-array
 
+## 5.0.24
+
+### Patch Changes
+
+- [#2306](https://github.com/sanity-io/plugins/pull/2306) [`fb78bd7`](https://github.com/sanity-io/plugins/commit/fb78bd7d6ee504af2275cedd7fac32ea106b0fbc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.10.1
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 5.0.23
 
 ### Patch Changes
