@@ -9,6 +9,7 @@ import {
   hasUnfinishedRobotsWork,
   jobsNeedingDetail,
   jobsWithHistory,
+  keptJobOutputs,
   matchPendingCreates,
   mergeJobRecords,
   newPendingDirectiveRunCreate,
@@ -407,6 +408,26 @@ describe('unitsCell', () => {
     [job('a'), 'unread', 'Not loaded', true],
   ] as const)('%#: %s', (entry, detail, label, isLoadable) => {
     expect(unitsCell(entry, detail)).toEqual({label, isLoadable})
+  })
+})
+
+describe('kept outputs', () => {
+  const outputs = {
+    _type: 'mux.robotsOutputs' as const,
+    summarize: {jobId: 'sum', completedAt: NOW_S, title: 'T', description: 'D', tags: ['a']},
+    analyzeStructure: {jobId: 'as', completedAt: NOW_S, title: 'T', summary: 'S'},
+    moderate: {jobId: 'mod', exceedsThreshold: false, maxScores: {sexual: 0.1}},
+  }
+
+  test('give back what the document stored for a job, in Mux’s shape', () => {
+    expect(keptJobOutputs(outputs, 'sum')).toEqual({title: 'T', description: 'D', tags: ['a']})
+    expect(keptJobOutputs(outputs, 'as')).toEqual({title: 'T', summary: 'S'})
+    expect(keptJobOutputs(outputs, 'mod')).toEqual({
+      exceeds_threshold: false,
+      max_scores: {sexual: 0.1},
+    })
+    expect(keptJobOutputs(outputs, 'other')).toBeUndefined()
+    expect(keptJobOutputs(undefined, 'sum')).toBeUndefined()
   })
 })
 

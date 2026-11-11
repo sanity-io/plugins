@@ -133,11 +133,14 @@ describe('defaults and untouched fields', () => {
     expect(params).not.toHaveProperty('censor_profanity')
   })
 
-  test('moderate language_code only shows when the asset might be audio-only', () => {
-    const field = fieldOf('moderate', 'language_code')
-    expect(isFieldVisible(field, {}, {isAudioOnly: false})).toBe(false)
-    expect(isFieldVisible(field, {}, {isAudioOnly: true})).toBe(true)
-    expect(isFieldVisible(field, {}, {})).toBe(true)
+  test('moderate reads captions while include_transcript is on, which audio-only always is', () => {
+    const transcript = fieldOf('moderate', 'include_transcript')
+    expect(isFieldVisible(transcript, {}, {isAudioOnly: false})).toBe(true)
+    expect(isFieldVisible(transcript, {}, {})).toBe(true)
+    expect(isFieldVisible(transcript, {}, {isAudioOnly: true})).toBe(false)
+    const language = fieldOf('moderate', 'language_code')
+    expect(isFieldVisible(language, {include_transcript: true}, {isAudioOnly: false})).toBe(true)
+    expect(isFieldVisible(language, {include_transcript: false}, {isAudioOnly: false})).toBe(false)
   })
 })
 
@@ -170,6 +173,27 @@ describe('replace_existing_tracks', () => {
     expect(
       confirmWarnings(definition, {upload_to_mux: false, replace_existing_tracks: 'replace_all'}),
     ).toEqual([])
+  })
+})
+
+describe('moderate transcript', () => {
+  test('moderates what is said by default, as Mux does, and can be turned off', () => {
+    expect(paramsFor('moderate', {}, {isAudioOnly: false})).toMatchObject({
+      include_transcript: true,
+    })
+    const off = paramsFor(
+      'moderate',
+      {include_transcript: false, language_code: 'en'},
+      {isAudioOnly: false},
+    )
+    expect(off['include_transcript']).toBe(false)
+    expect(off).not.toHaveProperty('language_code')
+  })
+
+  test('an audio-only video keeps its caption language and sends no switch', () => {
+    const params = paramsFor('moderate', {language_code: 'en'}, {isAudioOnly: true})
+    expect(params).not.toHaveProperty('include_transcript')
+    expect(params['language_code']).toBe('en')
   })
 })
 
@@ -528,6 +552,22 @@ describe('edit-captions', () => {
     )
     expect(params).not.toHaveProperty('replace_existing_tracks')
     expect(params).not.toHaveProperty('track_name')
+  })
+
+  test('no other caption track can have the edited track’s name, with either choice', () => {
+    const spanish = {...english, id: 'track-2', name: 'Spanish', language_code: 'es'}
+    const tracks = {captionTracks: [english, spanish]}
+    const taken = 'Another caption track is already named "Spanish". Choose another name.'
+    expect(errorsFor('edit-captions', {...base, track_name: 'spanish'}, tracks)).toEqual([taken])
+    expect(
+      errorsFor(
+        'edit-captions',
+        {...base, replace_existing_tracks: 'fail', track_name: 'Spanish'},
+        tracks,
+      ),
+    ).toEqual([taken])
+    // Replacing the original can keep its name.
+    expect(errorsFor('edit-captions', {...base, track_name: 'English'}, tracks)).toEqual([])
   })
 
   test('keeping the original needs a name other than its own', () => {
