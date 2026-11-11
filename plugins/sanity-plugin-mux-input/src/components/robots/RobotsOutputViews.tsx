@@ -64,6 +64,51 @@ function Tags({tags, tone = 'default'}: {tags: string[]; tone?: 'default' | 'pri
   )
 }
 
+/** v1 reports each asset update a job was asked for under `asset_updates`. */
+function assetUpdates(outputs: Outputs): {
+  title?: unknown
+  chapters?: unknown
+  thumbnail?: unknown
+} {
+  const updates = outputs['asset_updates']
+  return updates && typeof updates === 'object' ? updates : {}
+}
+
+const TITLE_UPDATE = {
+  done: 'The title was written to the Mux video. Resync the video to see it in the Studio.',
+  failed: 'Mux couldn’t write the title to the video.',
+}
+
+const CHAPTERS_UPDATE = {
+  done: 'The chapters were added to the Mux video as its chapters track.',
+  failed: 'Mux couldn’t add these chapters to the video. They’re still listed below.',
+}
+
+const THUMBNAIL_UPDATE = {
+  done: 'Mux set the best frame as the video’s thumbnail.',
+  failed: 'Mux couldn’t set the video’s thumbnail, so the Studio kept its own.',
+}
+
+/** The outcome of an asset update, or `unreported` when the job reports none. */
+function AssetUpdateNote({
+  assetUpdate,
+  done,
+  failed,
+  unreported = null,
+}: {
+  assetUpdate: unknown
+  done: string
+  failed: string
+  unreported?: ReactElement | null
+}) {
+  const status = (assetUpdate as {status?: unknown} | undefined)?.status
+  if (status === 'updated' || status === 'created') {
+    return <RobotsNote tone="positive">{done}</RobotsNote>
+  }
+  if (status === 'failed') return <RobotsNote tone="caution">{failed}</RobotsNote>
+  return unreported
+}
+
 /** Summarize calls the text `description`, Analyze structure `summary`. */
 function hasSummary(outputs: Outputs, textKey: 'description' | 'summary'): boolean {
   return (
@@ -101,9 +146,52 @@ const SUMMARIZE: OutputView = {
   hasContent: (outputs) => hasSummary(outputs, 'description'),
   render: (outputs) => (
     <Stack gap={4}>
+      <AssetUpdateNote assetUpdate={assetUpdates(outputs).title} {...TITLE_UPDATE} />
       <Summary outputs={outputs} textKey="description" />
     </Stack>
   ),
+}
+
+/** Skips a reader expects (no frames on audio-only, the transcript turned off) get no note. */
+const MODERATED_SURFACES = [
+  {
+    key: 'thumbnail_moderation',
+    expectedSkip: 'no_video_track',
+    skipped: 'The frames weren’t moderated',
+    failed: 'Mux couldn’t moderate the frames, so the scores come from what is said.',
+  },
+  {
+    key: 'transcript_moderation',
+    expectedSkip: 'disabled',
+    skipped: 'What is said wasn’t moderated',
+    failed: 'Mux couldn’t moderate what is said, so the scores come from the frames.',
+  },
+]
+
+/** v1 reports what each surface moderated; v0 reports neither. */
+function ModeratedSurfaceNotes({outputs}: {outputs: Outputs}) {
+  return MODERATED_SURFACES.map(({key, expectedSkip, skipped, failed}) => {
+    const surface = (outputs[key] ?? {}) as {
+      status?: unknown
+      skip_reason?: unknown
+      skip_message?: unknown
+    }
+    if (surface.status === 'failed') {
+      return (
+        <RobotsNote key={key} tone="caution">
+          {failed}
+        </RobotsNote>
+      )
+    }
+    if (surface.status !== 'skipped' || surface.skip_reason === expectedSkip) return null
+    return (
+      <RobotsNote key={key}>
+        {typeof surface.skip_message === 'string'
+          ? `${skipped}: ${surface.skip_message}`
+          : `${skipped}.`}
+      </RobotsNote>
+    )
+  })
 }
 
 const MODERATE: OutputView = {
@@ -112,6 +200,7 @@ const MODERATE: OutputView = {
     Object.keys(outputs['max_scores'] ?? {}).length > 0,
   render: (outputs) => (
     <Stack gap={3}>
+      <ModeratedSurfaceNotes outputs={outputs} />
       <Flex>
         <Badge
           tone={outputs['exceeds_threshold'] ? 'critical' : 'positive'}
@@ -166,41 +255,7 @@ const ASK_QUESTIONS: OutputView = {
  * `asset_updates.chapters`, v0 in `asset_update`.
  */
 function chaptersAssetUpdate(outputs: Outputs): unknown {
-  const updates = outputs['asset_updates'] as {chapters?: unknown} | undefined
-  return updates?.chapters ?? outputs['asset_update']
-}
-
-function updateStatus(update: unknown): unknown {
-  return (update as {status?: unknown} | undefined)?.status
-}
-
-/**
- * `unreported` shows when the job reports no outcome: Generate chapters then didn't write them,
- * and Analyze structure either wasn't asked to or made none.
- */
-function ChaptersAssetUpdateNote({
-  assetUpdate,
-  unreported = null,
-}: {
-  assetUpdate: unknown
-  unreported?: ReactElement | null
-}) {
-  const status = updateStatus(assetUpdate)
-  if (status === 'created') {
-    return (
-      <RobotsNote tone="positive">
-        The chapters were added to the Mux video as its chapters track.
-      </RobotsNote>
-    )
-  }
-  if (status === 'failed') {
-    return (
-      <RobotsNote tone="caution">
-        Mux couldn’t add these chapters to the video. They’re still listed below.
-      </RobotsNote>
-    )
-  }
-  return unreported
+  return assetUpdates(outputs).chapters ?? outputs['asset_update']
 }
 
 function Chapters({chapters}: {chapters: Outputs[]}) {
@@ -220,8 +275,9 @@ const GENERATE_CHAPTERS: OutputView = {
   hasContent: (outputs) => asRows(outputs['chapters']).length > 0,
   render: (outputs) => (
     <Stack gap={3}>
-      <ChaptersAssetUpdateNote
+      <AssetUpdateNote
         assetUpdate={chaptersAssetUpdate(outputs)}
+        {...CHAPTERS_UPDATE}
         unreported={
           <RobotsNote>
             These chapters weren’t added to the Mux video; they’re listed below.
@@ -315,62 +371,55 @@ const FIND_SCENES: OutputView = {
   render: (outputs) => <Scenes scenes={asRows(outputs['scenes'])} />,
 }
 
-function TitleUpdatedNote({assetUpdate}: {assetUpdate: unknown}) {
-  const status = updateStatus(assetUpdate)
-  if (status === 'updated') {
-    return (
-      <RobotsNote tone="positive">
-        The title was written to the Mux video. Resync the video to see it in the Studio.
-      </RobotsNote>
-    )
-  }
-  if (status === 'failed') {
-    return <RobotsNote tone="caution">Mux couldn’t write the title to the video.</RobotsNote>
-  }
-  return null
-}
+const STRUCTURE_LISTS = ['chapters', 'scenes', 'key_moments']
 
+/** Mux always returns the lists; what the document kept of a deleted job has none of them. */
 const ANALYZE_STRUCTURE: OutputView = {
   hasContent: (outputs) =>
-    hasSummary(outputs, 'summary') ||
-    ['chapters', 'scenes', 'key_moments'].some((key) => Array.isArray(outputs[key])),
+    hasSummary(outputs, 'summary') || STRUCTURE_LISTS.some((key) => Array.isArray(outputs[key])),
   render: (outputs) => {
-    const updates = outputs['asset_updates'] as {title?: unknown; chapters?: unknown} | undefined
+    const updates = assetUpdates(outputs)
     const chapters = asRows(outputs['chapters'])
     const scenes = asRows(outputs['scenes'])
     const moments = asRows(outputs['key_moments'])
     return (
       <Stack gap={4}>
-        <TitleUpdatedNote assetUpdate={updates?.title} />
-        <ChaptersAssetUpdateNote assetUpdate={updates?.chapters} />
+        <AssetUpdateNote assetUpdate={updates.title} {...TITLE_UPDATE} />
+        <AssetUpdateNote assetUpdate={updates.chapters} {...CHAPTERS_UPDATE} />
         <Summary outputs={outputs} textKey="summary" />
-        <Labelled label="Chapters">
-          {chapters.length > 0 ? (
-            <Chapters chapters={chapters} />
-          ) : (
-            <Text size={1} muted>
-              Mux made none. Chapters need at least a minute of the video.
-            </Text>
-          )}
-        </Labelled>
-        <Labelled label="Scenes">
-          {scenes.length > 0 ? (
-            <Scenes scenes={scenes} />
-          ) : (
-            <Text size={1} muted>
-              Mux found none. An audio-only video never has scenes.
-            </Text>
-          )}
-        </Labelled>
-        <Labelled label="Key moments">
-          {moments.length > 0 ? (
-            <KeyMoments moments={moments} />
-          ) : (
-            <Text size={1} muted>
-              None qualified.
-            </Text>
-          )}
-        </Labelled>
+        {Array.isArray(outputs['chapters']) && (
+          <Labelled label="Chapters">
+            {chapters.length > 0 ? (
+              <Chapters chapters={chapters} />
+            ) : (
+              <Text size={1} muted>
+                Mux made none. Chapters need at least a minute of the video.
+              </Text>
+            )}
+          </Labelled>
+        )}
+        {Array.isArray(outputs['scenes']) && (
+          <Labelled label="Scenes">
+            {scenes.length > 0 ? (
+              <Scenes scenes={scenes} />
+            ) : (
+              <Text size={1} muted>
+                Mux found none. An audio-only video never has scenes.
+              </Text>
+            )}
+          </Labelled>
+        )}
+        {Array.isArray(outputs['key_moments']) && (
+          <Labelled label="Key moments">
+            {moments.length > 0 ? (
+              <KeyMoments moments={moments} />
+            ) : (
+              <Text size={1} muted>
+                None qualified.
+              </Text>
+            )}
+          </Labelled>
+        )}
       </Stack>
     )
   },
@@ -379,19 +428,22 @@ const ANALYZE_STRUCTURE: OutputView = {
 const FIND_BEST_THUMBNAILS: OutputView = {
   hasContent: (outputs) => asRows(outputs['best_thumbnails']).length > 0,
   render: (outputs) => (
-    <Stack gap={2}>
-      {asRows(outputs['best_thumbnails']).map((thumbnail, index) => (
-        <RowCard
-          // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
-          key={index}
-          title={`At ${formatMediaTime(thumbnail['time'], thumbnail['timestamp_ms'])}`}
-          meta={`Score ${formatScore(thumbnail['overall'])}`}
-        >
-          {typeof thumbnail['description'] === 'string' && (
-            <Text size={1}>{thumbnail['description']}</Text>
-          )}
-        </RowCard>
-      ))}
+    <Stack gap={3}>
+      <AssetUpdateNote assetUpdate={assetUpdates(outputs).thumbnail} {...THUMBNAIL_UPDATE} />
+      <Stack gap={2}>
+        {asRows(outputs['best_thumbnails']).map((thumbnail, index) => (
+          <RowCard
+            // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
+            key={index}
+            title={`At ${formatMediaTime(thumbnail['time'], thumbnail['timestamp_ms'])}`}
+            meta={`Score ${formatScore(thumbnail['overall'])}`}
+          >
+            {typeof thumbnail['description'] === 'string' && (
+              <Text size={1}>{thumbnail['description']}</Text>
+            )}
+          </RowCard>
+        ))}
+      </Stack>
     </Stack>
   ),
 }

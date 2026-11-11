@@ -492,6 +492,7 @@ The plugin runs every workflow and directive on the Robots v1 API. Jobs and dire
 
 - **Analyze structure** replaces **Find scenes**, which v1 doesn't have. One run returns a title, summary, tags, chapters, scenes and key moments, and costs more than Find scenes did; on a video it can also generate Mux Shots, billed separately. An audio-only video is analyzed from its captions and has no scenes. It can write its title and chapters to the Mux video, both off by default.
 - **Captions to read** lists the video's own caption languages: v1 reads only a track whose language matches exactly, so `en` doesn't read an `en-US` track, and without a choice it reads the first ready track instead of preferring English.
+- **Moderate** also moderates what is said in the captions, as Robots v1 does by default, so the captions can trigger **Delete every playback ID** too. Turn off **Also moderate what is said** to moderate the sampled frames only.
 - **Edit captions** replaces the original track by default and keeps its name. To keep the original, choose so and give the edited track a different name.
 - Directives made with Robots v0 can't be run from the Studio. Make a v1 copy in the Mux dashboard (open the directive and choose **Create v1 copy**) and put its ID in `defaultDirectiveIds`. Until then, uploads still attach the v0 directive and Mux runs it on v0; the Robots panel and the upload dialog point out which ones. See [Migrate Robots Directives from Beta to GA](https://www.mux.com/docs/guides/robots-migrate-directives-to-v1).
 

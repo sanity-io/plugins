@@ -4,7 +4,7 @@ import {ROBOTS_CATALOG_BY_KEY} from './catalog'
 import {ROBOTS_WORKFLOWS, type RobotsWorkflow} from './types'
 
 /**
- * Every v1 job parameter path in the Mux API spec (checked 2026-10-30), per workflow, stopping at
+ * Every v1 job parameter path in the Mux API spec (checked 2026-11-11), per workflow, stopping at
  * arrays and taxonomy objects. When Mux adds a parameter, add it here: the gap then fails below
  * until the catalog offers it or it joins `LEFT_OUT`.
  */
@@ -42,6 +42,9 @@ const SPEC_PARAMETER_PATHS: Record<RobotsWorkflow, string[]> = {
     'track_name',
     'upload_to_mux',
     'replace_existing_tracks',
+    'captions.upload_to_mux',
+    'captions.track_name',
+    'captions.replace_existing_tracks',
     'output_language_code',
   ],
   'summarize': [
@@ -122,6 +125,7 @@ const SPEC_PARAMETER_PATHS: Record<RobotsWorkflow, string[]> = {
     'output_steering.scope.start_time',
     'output_steering.scope.end_time',
     'on_flagged.action',
+    'include_transcript',
   ],
 }
 
@@ -129,6 +133,8 @@ const SPEC_PARAMETER_PATHS: Record<RobotsWorkflow, string[]> = {
 const LEFT_OUT: Partial<Record<RobotsWorkflow, RegExp[]>> = {
   // One value, the default.
   'edit-captions': [/^auto_censor_profanity\.detection_method$/],
+  // Not offered yet: the dub's subtitles, documented after these forms were built.
+  'translate-audio': [/^captions\./],
 }
 
 describe.each(ROBOTS_WORKFLOWS)('%s', (workflow) => {

@@ -13,6 +13,7 @@ import {latestSummary} from '../../robots/applySummary'
 import type {RobotsAssetContext} from '../../robots/catalog'
 import {
   jobsWithHistory,
+  keptJobOutputs,
   nextPendingRelabelAt,
   type PendingCreateRow,
   pendingCreateRows,
@@ -257,6 +258,7 @@ function RobotsPanelForAsset({
         <RobotsOutputDialog
           job={viewedJob}
           detailState={detailStateOf(viewedJob, snapshot.detailedJobIds, snapshot.failedDetailIds)}
+          kept={keptJobOutputs(asset.robotsOutputs, viewedJob.id)}
           onLoaded={store.rememberJobDetail}
           onClose={() => setViewedJobId(undefined)}
         />

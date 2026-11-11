@@ -55,8 +55,13 @@ function Fact({label, children}: {label: string; children: React.ReactNode}) {
   )
 }
 
+/** Mux's own 404: it deletes jobs 30 days after they ran. */
+function isGone(error: unknown): boolean {
+  return error instanceof RobotsRequestError && error.status === 404 && error.muxAnswered
+}
+
 function readError(error: unknown): string {
-  if (error instanceof RobotsRequestError && error.status === 404 && error.muxAnswered) {
+  if (isGone(error)) {
     return 'Mux keeps jobs for 30 days, and this one is gone. The video document still records its status and units.'
   }
   return error instanceof Error ? error.message : 'Could not load this job from Mux.'
@@ -66,11 +71,14 @@ function readError(error: unknown): string {
 export function RobotsOutputDialog({
   job,
   detailState,
+  kept,
   onLoaded,
   onClose,
 }: {
   job: RobotsJob
   detailState: RobotsJobDetailState
+  /** What the document kept of this job's output, shown once Mux has deleted the job. */
+  kept?: Record<string, unknown> | undefined
   onLoaded: (job: RobotsJob) => void
   onClose: () => void
 }) {
@@ -139,7 +147,17 @@ export function RobotsOutputDialog({
             </Text>
           </Flex>
         )}
-        {error && <RobotsNote tone="caution">{readError(error)}</RobotsNote>}
+        {error && kept && isGone(error) ? (
+          <Stack gap={3}>
+            <RobotsNote>
+              Mux keeps jobs for 30 days, and this one is gone. This is what the video document
+              kept.
+            </RobotsNote>
+            <OutputBody job={{...shown, outputs: kept}} />
+          </Stack>
+        ) : (
+          error && <RobotsNote tone="caution">{readError(error)}</RobotsNote>
+        )}
         {!isLoading && !error && (
           <Stack gap={3}>
             <TabList gap={2}>

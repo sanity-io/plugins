@@ -283,7 +283,10 @@ function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamFiel
     label: `If ${track === 'audio' ? 'an audio' : 'a'} track in this language already exists`,
     helpText:
       'Tracks match by language, ignoring region, or by name, ignoring case.' +
-      (track === 'audio' ? ' The primary audio track is never deleted.' : ''),
+      (track === 'audio'
+        ? ' The primary audio track is never deleted.'
+        : ' Only captions Mux Video generated count as auto-generated: tracks from uploads or ' +
+          'Robots don’t.'),
     options,
     defaultValue: 'fail',
     showWhen: {field: 'upload_to_mux', equals: true},
@@ -887,17 +890,27 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
     key: 'moderate',
     label: 'Moderate',
     category: 'Trust & Safety',
-    description: 'Score sampled frames for sexual and violent content.',
+    description: 'Score sampled frames, and what is said, for sexual and violent content.',
     params: [
       {
-        // Mux ignores it for video assets, so it's hidden once the asset is known to have video.
+        // v1 moderates the captions too unless told not to; an audio-only video always is.
+        kind: 'boolean',
+        name: 'include_transcript',
+        label: 'Also moderate what is said',
+        helpText:
+          'Moderates the video’s captions as well as its sampled frames, and is skipped when it ' +
+          'has no ready caption track. Off moderates the frames only.',
+        defaultValue: true,
+        showWhen: {context: 'isAudioOnly', notEquals: true},
+      },
+      {
         kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
-          'Only for an audio-only video, which is moderated from its captions. Choose the ' +
-          'language of the caption track to use, or leave empty for the first one that is ready.',
-        showWhen: {context: 'isAudioOnly', notEquals: false},
+          'The caption track to moderate. Choose its language, or leave empty for the first one ' +
+          'that is ready.',
+        showWhen: {field: 'include_transcript', equals: true},
       },
       {
         kind: 'number',
@@ -954,8 +967,8 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
             whenValue: 'delete_playback_ids',
             title: 'This run can make the video unplayable',
             body:
-              'If the content scores over a threshold, Mux deletes every playback ID on this ' +
-              'asset. Playback stops everywhere the video is embedded, not just in Sanity, and ' +
+              'If a sampled frame, or what is said when the captions are moderated, scores over ' +
+              'a threshold, Mux deletes every playback ID on this asset. Playback stops everywhere the video is embedded, not just in Sanity, and ' +
               'anything that needs a playback ID breaks with it, including other workflows in a ' +
               'directive run on this asset. The asset, its captions and the Robots history on ' +
               'this document are kept, and the video’s player can create a new playback ID.',
@@ -1381,21 +1394,32 @@ function scopeErrors(
   return errors
 }
 
-/** Keeping the original caption track needs a name of its own for the edited one. */
-function keptTrackNameErrors(
+/**
+ * The edited track's name: keeping the original needs one of its own, and Mux refuses a name
+ * another track has, ignoring case.
+ */
+function editedTrackNameErrors(
   definition: RobotsWorkflowDefinition,
   values: Record<string, unknown>,
   context: RobotsAssetContext,
 ): string[] {
   const policy = definition.params.find((field) => field.name === 'replace_existing_tracks')
   if (!policy || !isFieldVisible(policy, values, context)) return []
-  if ((values['replace_existing_tracks'] ?? policy.defaultValue) !== 'fail') return []
+  const keepsOriginal = (values['replace_existing_tracks'] ?? policy.defaultValue) === 'fail'
 
   const name = typeof values['track_name'] === 'string' ? values['track_name'].trim() : ''
-  if (name === '') return ['Name the edited track, since the original is kept.']
+  if (name === '')
+    return keepsOriginal ? ['Name the edited track, since the original is kept.'] : []
+  const isNamed = (track: MuxTextTrack) => track.name?.trim().toLowerCase() === name.toLowerCase()
   const source = context.captionTracks?.find((track) => track.id === values['track_id'])
-  return source?.name?.trim().toLowerCase() === name.toLowerCase()
-    ? ['Give the edited track a name other than the original’s, since the original is kept.']
+  if (keepsOriginal && source && isNamed(source)) {
+    return ['Give the edited track a name other than the original’s, since the original is kept.']
+  }
+  const other = context.captionTracks?.find(
+    (track) => track.id !== values['track_id'] && isNamed(track),
+  )
+  return other
+    ? [`Another caption track is already named "${other.name}". Choose another name.`]
     : []
 }
 
@@ -1461,7 +1485,7 @@ function workflowErrors(
       ) {
         errors.push('Add a replacement rule or a speaker label, or turn on "Censor profanity".')
       }
-      errors.push(...keptTrackNameErrors(definition, values, context))
+      errors.push(...editedTrackNameErrors(definition, values, context))
       break
     }
     case 'ask-questions': {

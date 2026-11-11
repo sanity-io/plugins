@@ -208,6 +208,26 @@ function mergeRobotsOutputs(
   })
 }
 
+/** What the document kept of a job's output, in Mux's shape, for once Mux has deleted the job. */
+export function keptJobOutputs(
+  outputs: RobotsOutputs | undefined,
+  jobId: string,
+): Record<string, unknown> | undefined {
+  if (outputs?.summarize?.jobId === jobId) {
+    const {title, description, tags} = outputs.summarize
+    return compact({title, description, tags})
+  }
+  if (outputs?.analyzeStructure?.jobId === jobId) {
+    const {title, summary, tags} = outputs.analyzeStructure
+    return compact({title, summary, tags})
+  }
+  if (outputs?.moderate?.jobId === jobId) {
+    const {exceedsThreshold, maxScores} = outputs.moderate
+    return compact({exceeds_threshold: exceedsThreshold, max_scores: maxScores})
+  }
+  return undefined
+}
+
 /** Records every job read for the asset and folds in the newest outputs. */
 export function applyRobotsJobs(
   state: RobotsDocumentState,
