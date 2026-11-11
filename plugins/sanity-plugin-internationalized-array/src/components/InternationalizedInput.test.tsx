@@ -56,7 +56,15 @@ function createMockProps(
     (inputProps: {
       members?: Array<{
         kind: string
-        field?: {schemaType?: {title?: ReactNode; options?: Record<string, unknown>}}
+        collapsed?: boolean
+        collapsible?: boolean
+        field?: {
+          schemaType?: {
+            title?: ReactNode
+            options?: Record<string, unknown>
+            jsonType?: string
+          }
+        }
       }>
     }) => {
       const titles = inputProps.members?.flatMap((m) =>
@@ -75,9 +83,12 @@ function createMockProps(
         {
           kind: 'field' as const,
           name: 'value',
+          collapsed: undefined as boolean | undefined,
           field: {
+            level: 1,
             schemaType: {
               title: 'Value' as ReactNode,
+              jsonType: undefined as string | undefined,
               options: undefined as Record<string, unknown> | undefined,
             },
           },
@@ -257,6 +268,7 @@ describe('InternationalizedInput', () => {
     const props = createMockProps('en')
     props.inputProps.members[0]!.field.schemaType = {
       title: 'Value',
+      jsonType: 'object',
       options: {accept: ''},
     }
 
@@ -283,6 +295,30 @@ describe('InternationalizedInput', () => {
       collapsed: true,
     })
     expect(valueSchemaType?.title).toBeTruthy()
+    expect(rendered?.members?.[0]).toMatchObject({collapsed: true, collapsible: true})
+  })
+
+  test('keeps an object value expanded after the editor opens it', () => {
+    const props = createMockProps('en')
+    props.inputProps.members[0]!.collapsed = false
+    props.inputProps.members[0]!.field.schemaType = {
+      title: 'Value',
+      jsonType: 'object',
+      options: {accept: ''},
+    }
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput
+        {...props}
+        parentSchemaType={parentArrayField({collapsed: true, accept: '.vtt'})}
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const rendered = props.inputProps.renderInput.mock.calls[0]?.[0]
+
+    expect(rendered?.members?.[0]).toMatchObject({collapsed: false, collapsible: true})
   })
 
   test('leaves value field options unchanged when the array field only has plugin options', () => {
@@ -290,6 +326,7 @@ describe('InternationalizedInput', () => {
     const props = createMockProps('en')
     props.inputProps.members[0]!.field.schemaType = {
       title: 'Value',
+      jsonType: undefined,
       options: valueOptions,
     }
 

@@ -5,8 +5,9 @@ import {defineField, defineType} from 'sanity'
  * https://github.com/sanity-io/plugins/issues/1956
  *
  * Options on an internationalized array field must reach the underlying
- * value field. Open this document in the `home` workspace and use the file
- * picker on Subtitles/Captions. It should only offer `.vtt` and `.srt` files.
+ * value field. Open this document in the `home` workspace. Subtitles/Captions
+ * starts collapsed; once opened, the file picker only offers `.vtt` and `.srt`
+ * files.
  */
 export const issue1956Repro = defineType({
   name: 'issue1956Repro',
@@ -22,7 +23,8 @@ export const issue1956Repro = defineType({
       title: 'Subtitles/Captions',
       name: 'subtitles',
       type: 'internationalizedArrayFile',
-      description: 'The file picker should only offer .vtt and .srt files.',
+      description:
+        'Starts collapsed. Once opened, the file picker should only offer .vtt and .srt files.',
       options: {
         accept: '.vtt,.srt,text/vtt,application/x-subrip',
         collapsed: true,
