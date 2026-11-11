@@ -349,7 +349,7 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
 function SelectAllToLanguagesCheckbox(props: {
   fromLanguage: Language | undefined
   toLanguages: Language[] | undefined
-  setToLanguages: Dispatch<SetStateAction<Language[]>>
+  setToLanguages: Dispatch<SetStateAction<Language[] | undefined>>
   languages: Language[]
   outputLanguageIds: Set<string>
 }) {
