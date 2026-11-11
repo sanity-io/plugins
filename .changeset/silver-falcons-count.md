@@ -2,4 +2,4 @@
 '@sanity/assist': minor
 ---
 
-Added option selected/deselect all languages when doing translations
+Add a "Select all" option for target languages in field-level translation

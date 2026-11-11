@@ -3,7 +3,9 @@ import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text, Card} 
 import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
+  Dispatch,
   type PropsWithChildren,
+  SetStateAction,
   useCallback,
   useContext,
   useId,
@@ -347,13 +349,11 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
 function SelectAllToLanguagesCheckbox(props: {
   fromLanguage: Language | undefined
   toLanguages: Language[] | undefined
-  setToLanguages: any
+  setToLanguages: Dispatch<SetStateAction<Language[]>>
   languages: Language[]
   outputLanguageIds: Set<string>
 }) {
   const {fromLanguage, toLanguages, setToLanguages, languages, outputLanguageIds} = props
-
-  console.log('outputLanguageIds', outputLanguageIds, languages)
   const selectable = languages.filter((l) => outputLanguageIds.has(l.id))
   const selectedCount = selectable.filter((l) => !!toLanguages?.find((tl) => tl.id === l.id)).length
   const allSelected = selectable.length > 0 && selectedCount === selectable.length
