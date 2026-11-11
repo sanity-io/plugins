@@ -1,5 +1,15 @@
 # @sanity/themer
 
+## 0.10.7
+
+### Patch Changes
+
+- [#2300](https://github.com/sanity-io/plugins/pull/2300) [`b1781a5`](https://github.com/sanity-io/plugins/commit/b1781a5d667e860cae7cb5dc74d43632545f322e) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency xstate to ^5.33.3
+
+- [#2306](https://github.com/sanity-io/plugins/pull/2306) [`fb78bd7`](https://github.com/sanity-io/plugins/commit/fb78bd7d6ee504af2275cedd7fac32ea106b0fbc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.10.1
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 0.10.6
 
 ### Patch Changes

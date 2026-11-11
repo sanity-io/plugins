@@ -1,5 +1,13 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.10
+
+### Patch Changes
+
+- [#2262](https://github.com/sanity-io/plugins/pull/2262) [`8f457fc`](https://github.com/sanity-io/plugins/commit/8f457fce8509a396755329e2dda52ddfb99429ad) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - `collapsed` starts an object value, such as a file, collapsed inside the language row. The collapse arrow lines up with the language label.
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 5.3.9
 
 No changes in this release.
