@@ -1,6 +1,7 @@
 import type {ObjectSchemaType, SchemaType} from 'sanity'
 
-import type {RobotsSummarizeOutput} from './types'
+import {newestOutput} from './records'
+import type {RobotsOutputs, RobotsSummarizeOutput} from './types'
 
 /**
  * Copies a stored summary into the editor's own fields of the document that holds the video.
@@ -27,6 +28,25 @@ export interface SummaryTargetField {
 }
 
 export type SummaryTargets = Partial<Record<SummaryOutputKey, string>>
+
+export interface LatestSummary {
+  workflow: 'summarize' | 'analyze-structure'
+  /** Analyze structure's `summary` is the `description` here. */
+  summary: RobotsSummarizeOutput
+}
+
+/** The newer of the stored Summarize and Analyze structure outputs, by when the job finished. */
+export function latestSummary(outputs: RobotsOutputs | undefined): LatestSummary | undefined {
+  const summarize = outputs?.summarize
+  let fromStructure: RobotsSummarizeOutput | undefined
+  if (outputs?.analyzeStructure) {
+    const {summary, ...rest} = outputs.analyzeStructure
+    fromStructure = {...rest, ...(summary !== undefined && {description: summary})}
+  }
+  const newest = newestOutput(undefined, [summarize, fromStructure])
+  if (!newest) return undefined
+  return {workflow: newest === summarize ? 'summarize' : 'analyze-structure', summary: newest}
+}
 
 /** The summary's outputs that have a value, in the order the dialog lists them. */
 export function summaryOutputRows(summary: RobotsSummarizeOutput | undefined): SummaryOutputRow[] {

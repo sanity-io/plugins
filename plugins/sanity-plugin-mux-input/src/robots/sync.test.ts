@@ -15,7 +15,9 @@ vi.mock('../actions/robots', async (importOriginal) => {
     ...original,
     listRobotsJobs: vi.fn(),
     getRobotsJob: vi.fn(),
+    cancelRobotsJob: vi.fn(),
     startRobotsJob: vi.fn(),
+    startRobotsDirectiveRun: vi.fn(),
     listRobotsDirectiveRuns: vi.fn(),
     getRobotsDirectiveRun: vi.fn(),
   }
@@ -219,6 +221,92 @@ describe('RobotsSyncStore', () => {
     expect(notify).toHaveBeenCalledWith(
       expect.objectContaining({status: 'error', description: 'Not on your plan.'}),
     )
+  })
+
+  test('a 409 for captions not ready yet says so, rather than "already running"', async () => {
+    const lake = fakeContentLake({assetId: ASSET})
+    const store = subscribe(lake)
+    await flush()
+    api.startRobotsJob.mockRejectedValue(
+      new RobotsRequestError('No ready subtitle track available for this asset', {
+        status: 409,
+        type: 'track_not_ready',
+        muxAnswered: true,
+      }),
+    )
+    const notify = vi.fn()
+
+    await store.startJob('summarize', {asset_id: ASSET}, notify)
+    await flush()
+
+    expect(lake.doc.robotsPendingCreates).toEqual([])
+    expect(notify).toHaveBeenCalledTimes(1)
+    expect(notify).toHaveBeenCalledWith({
+      status: 'warning',
+      title: 'This video isn’t ready for this run yet',
+      description: 'No ready subtitle track available for this asset',
+    })
+  })
+
+  test('any other 409 still reads as the same run already going', async () => {
+    const lake = fakeContentLake({assetId: ASSET})
+    const store = subscribe(lake)
+    await flush()
+    api.startRobotsJob.mockRejectedValue(
+      new RobotsRequestError('A job is already running.', {
+        status: 409,
+        type: 'conflict',
+        muxAnswered: true,
+      }),
+    )
+    const notify = vi.fn()
+
+    await store.startJob('summarize', {asset_id: ASSET}, notify)
+    await flush()
+
+    expect(notify).toHaveBeenCalledWith({
+      status: 'warning',
+      title: 'This workflow is already running on this video with the same settings.',
+    })
+  })
+
+  test('a directive v1 doesn’t have says it may be a v0 one', async () => {
+    const lake = fakeContentLake({assetId: ASSET})
+    const store = subscribe(lake)
+    await flush()
+    api.startRobotsDirectiveRun.mockRejectedValue(
+      new RobotsRequestError('Directive not found', {
+        status: 404,
+        type: 'not_found',
+        muxAnswered: true,
+      }),
+    )
+    const notify = vi.fn()
+
+    await store.startDirectiveRun('dir_v0', notify)
+    await flush()
+
+    expect(lake.doc.robotsPendingCreates).toEqual([])
+    expect(notify).toHaveBeenCalledTimes(1)
+    expect(notify).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 'error',
+        title: 'Mux has no Robots v1 directive with this ID',
+      }),
+    )
+  })
+
+  test('reads and cancels each job through the job itself, so its version decides', async () => {
+    const lake = fakeContentLake({assetId: ASSET})
+    const v0Job = job('j-v0', {_links: {self: {href: '/robots/v0/jobs/summarize/j-v0'}}})
+    api.listRobotsJobs.mockResolvedValue({data: [v0Job]})
+    api.cancelRobotsJob.mockResolvedValue({data: {...v0Job, status: 'cancelled'}})
+    const store = subscribe(lake)
+    await flush()
+
+    await store.cancelJob(v0Job, vi.fn())
+
+    expect(api.cancelRobotsJob).toHaveBeenCalledWith(lake.client, v0Job)
   })
 
   test('an unknown outcome keeps the placeholder, so Run stays blocked', async () => {

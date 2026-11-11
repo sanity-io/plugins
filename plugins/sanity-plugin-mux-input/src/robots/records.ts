@@ -7,6 +7,7 @@ import {
   type RobotsDirectiveRunRecord,
   type RobotsFields,
   type RobotsJob,
+  type RobotsAnalyzeStructureOutput,
   type RobotsJobRecord,
   type RobotsModerateOutput,
   type RobotsOutputs,
@@ -87,19 +88,39 @@ export function mergeJobRecords(
   return changed ? next : existing
 }
 
-function extractSummarizeOutput(job: RobotsJob): RobotsSummarizeOutput | undefined {
-  const outputs = job.outputs ?? {}
+function textOutput(outputs: Record<string, unknown>, key: string): string | undefined {
+  return typeof outputs[key] === 'string' ? outputs[key] : undefined
+}
+
+function tagsOutput(outputs: Record<string, unknown>): string[] | undefined {
   const tags = Array.isArray(outputs['tags'])
     ? outputs['tags'].filter((tag): tag is string => typeof tag === 'string')
     : []
+  return tags.length > 0 ? tags : undefined
+}
+
+function extractSummarizeOutput(job: RobotsJob): RobotsSummarizeOutput | undefined {
+  const outputs = job.outputs ?? {}
   const output = compact<RobotsSummarizeOutput>({
     jobId: job.id,
     completedAt: job.updated_at,
-    title: typeof outputs['title'] === 'string' ? outputs['title'] : undefined,
-    description: typeof outputs['description'] === 'string' ? outputs['description'] : undefined,
-    tags: tags.length > 0 ? tags : undefined,
+    title: textOutput(outputs, 'title'),
+    description: textOutput(outputs, 'description'),
+    tags: tagsOutput(outputs),
   })
   return output.title || output.description || output.tags ? output : undefined
+}
+
+function extractAnalyzeStructureOutput(job: RobotsJob): RobotsAnalyzeStructureOutput | undefined {
+  const outputs = job.outputs ?? {}
+  const output = compact<RobotsAnalyzeStructureOutput>({
+    jobId: job.id,
+    completedAt: job.updated_at,
+    title: textOutput(outputs, 'title'),
+    summary: textOutput(outputs, 'summary'),
+    tags: tagsOutput(outputs),
+  })
+  return output.title || output.summary || output.tags ? output : undefined
 }
 
 function extractModerateOutput(job: RobotsJob): RobotsModerateOutput | undefined {
@@ -141,7 +162,7 @@ function isNewerOutput(
   return candidateAt > currentAt || (candidateAt === currentAt && candidate.jobId > current.jobId)
 }
 
-function newestOutput<T extends {jobId: string; completedAt?: number}>(
+export function newestOutput<T extends {jobId: string; completedAt?: number}>(
   current: T | undefined,
   candidates: (T | undefined)[],
 ): T | undefined {
@@ -162,12 +183,29 @@ function mergeRobotsOutputs(
     existing?.summarize,
     completed.filter((job) => job.workflow === 'summarize').map(extractSummarizeOutput),
   )
+  const analyzeStructure = newestOutput(
+    existing?.analyzeStructure,
+    completed
+      .filter((job) => job.workflow === 'analyze-structure')
+      .map(extractAnalyzeStructureOutput),
+  )
   const moderate = newestOutput(
     existing?.moderate,
     completed.filter((job) => job.workflow === 'moderate').map(extractModerateOutput),
   )
-  if (summarize === existing?.summarize && moderate === existing?.moderate) return existing
-  return compact<RobotsOutputs>({_type: 'mux.robotsOutputs', summarize, moderate})
+  if (
+    summarize === existing?.summarize &&
+    analyzeStructure === existing?.analyzeStructure &&
+    moderate === existing?.moderate
+  ) {
+    return existing
+  }
+  return compact<RobotsOutputs>({
+    _type: 'mux.robotsOutputs',
+    summarize,
+    analyzeStructure,
+    moderate,
+  })
 }
 
 /** Records every job read for the asset and folds in the newest outputs. */
@@ -729,6 +767,12 @@ export function unitsCell(
 
 // --- Thumbnails ---
 
+/** Whether Mux reports it couldn't set the asset's thumbnail. Absent until the job completes. */
+function thumbnailUpdateFailed(job: RobotsJob): boolean {
+  const updates = job.outputs?.['asset_updates'] as {thumbnail?: {status?: unknown}} | undefined
+  return updates?.thumbnail?.status === 'failed'
+}
+
 /** Recent jobs only: an old one must not overwrite a thumbnail someone picked since. */
 export function thumbnailJobsToApply(
   state: RobotsDocumentState,
@@ -745,6 +789,7 @@ export function thumbnailJobsToApply(
       job.workflow === 'find-best-thumbnails' &&
       job.status === 'completed' &&
       job.parameters?.['update_asset_thumbnail'] === true &&
+      !thumbnailUpdateFailed(job) &&
       unapplied.has(job.id) &&
       isRecent(job.updated_at ?? job.created_at, now),
   )

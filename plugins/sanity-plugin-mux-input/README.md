@@ -464,9 +464,20 @@ export default defineConfig({
 
 ## Mux Robots
 
-[Mux Robots](https://www.mux.com/docs/guides/robots) runs AI workflows on your videos: premium captions, caption edits and translations, dubbing, summaries, questions, key moments, thumbnails, engagement insights, chapters, scenes and moderation. Open **Robots** from a video's menu in the input, or from the **Robots** tab of a video in the Videos tool, to run a workflow, follow its jobs and read their outputs.
+[Mux Robots](https://www.mux.com/docs/guides/robots) runs AI workflows on your videos: premium captions, caption edits and translations, dubbing, summaries, questions, key moments, thumbnails, engagement insights, chapters, structure analysis and moderation. Open **Robots** from a video's menu in the input, or from the **Robots** tab of a video in the Videos tool, to run a workflow, follow its jobs and read their outputs.
 
 Every run consumes Mux AI units, and the plugin asks for confirmation before each one. See [Robots pricing](https://www.mux.com/docs/pricing/overview#mux-robots-pricing).
+
+### Robots v1
+
+The plugin runs every workflow and directive on the Robots v1 API. Jobs and directives answer only on the version that created them, so the plugin still reads Robots v0 jobs and directive runs on v0: the ones from before the upgrade, and those of v0 directives attached to uploads. Their history on the video document is kept as it was.
+
+- **Analyze structure** replaces **Find scenes**, which v1 doesn't have. One run returns a title, summary, tags, chapters, scenes and key moments, and costs more than Find scenes did; on a video it can also generate Mux Shots, billed separately. An audio-only video is analyzed from its captions and has no scenes. It can write its title and chapters to the Mux video, both off by default.
+- **Captions to read** lists the video's own caption languages: v1 reads only a track whose language matches exactly, so `en` doesn't read an `en-US` track, and without a choice it reads the first ready track instead of preferring English.
+- **Edit captions** replaces the original track by default and keeps its name. To keep the original, choose so and give the edited track a different name.
+- Directives made with Robots v0 can't be run from the Studio. Make a v1 copy in the Mux dashboard (open the directive and choose **Create v1 copy**) and put its ID in `defaultDirectiveIds`. Until then, uploads still attach the v0 directive and Mux runs it on v0; the Robots panel and the upload dialog point out which ones. See [Migrate Robots Directives from Beta to GA](https://www.mux.com/docs/guides/robots-migrate-directives-to-v1).
+
+Studios on older plugin versions keep running on v0 until Mux retires it.
 
 ### Access token
 
@@ -498,18 +509,18 @@ The upload dialog lists them, checked. With none configured, it says so and link
 
 With `disableUploadConfig` and `disableTextTrackConfig` both on, the upload dialog is skipped, so every configured directive attaches with no opt-out.
 
-Directives are authored in Mux. The Robots panel starts a directive on one video at a time.
+Directives are authored in Mux. The Robots panel starts a v1 directive on one video at a time.
 
 ### Applying a summary
 
-Opened from a video field, the Robots panel has **Apply summary**: it copies the newest **Summarize** title, description and tags into fields of the document that holds the video. A preview lists each output with the field it goes to, the field's current value and the new one. Fields named `title`, `description` and `tags` are picked when they're empty; a field that already has content is only replaced when you pick it. Only top-level text fields, and arrays of text for the tags, are offered. The change is an ordinary edit, so it stays a draft until you publish, and nothing is sent to Mux.
+Opened from a video field, the Robots panel has **Apply summary**: it copies the title, description and tags of the newest **Summarize** or **Analyze structure** result (its summary is the description) into fields of the document that holds the video. A preview lists each output with the field it goes to, the field's current value and the new one. Fields named `title`, `description` and `tags` are picked when they're empty; a field that already has content is only replaced when you pick it. Only top-level text fields, and arrays of text for the tags, are offered. The change is an ordinary edit, so it stays a draft until you publish, and nothing is sent to Mux.
 
 ### What's stored on the video document
 
 Robots data lives at the root of each `mux.videoAsset` document, next to `data`:
 
 - `robotsJobs`: every job Mux reports for the asset, whoever started it (the Studio, a directive, the dashboard or the API). Records are only added and updated, so the history outlives Mux, which deletes jobs after 30 days.
-- `robotsOutputs`: the newest completed `summarize` (title, description, tags) and `moderate` (threshold result, highest scores) outputs. Every other output is read from Mux while the job exists.
+- `robotsOutputs`: the newest completed `summarize` (title, description, tags), `analyzeStructure` (title, summary, tags) and `moderate` (threshold result, highest scores) outputs. Every other output is read from Mux while the job exists.
 - `robotsDirectiveRuns`: directive runs started from the Studio.
 - `robotsPendingCreates`: runs requested but not yet confirmed by Mux. They keep a second run from starting by accident, and clear themselves once Mux confirms.
 

@@ -1,12 +1,15 @@
 import type {SanityClient} from 'sanity'
 
 import type {
+  RobotsApiVersion,
   RobotsDirective,
   RobotsDirectiveRun,
   RobotsJob,
   RobotsJobStatus,
+  RobotsJobWorkflow,
   RobotsWorkflow,
 } from '../robots/types'
+import {jobVersions, linkedVersion, ROBOTS_API_VERSION} from '../robots/versions'
 import {getMuxAddonClient} from '../util/muxAddonClient'
 import {PLUGIN_VERSION_QUERY} from '../util/pluginVersion'
 
@@ -63,14 +66,17 @@ interface MuxData<T> {
 
 async function robotsRequest<T>(
   client: SanityClient,
+  version: RobotsApiVersion,
   method: 'GET' | 'POST',
   segments: string[],
   {query = {}, body}: {query?: Record<string, string>; body?: Record<string, unknown>} = {},
 ): Promise<MuxData<T>> {
   const {dataset} = client.config()
+  // v0 keeps the proxy's unversioned routes, which Studios on older plugin versions still call.
+  const prefix = version === 'v0' ? dataset : `${dataset}/${version}`
   try {
     return await getMuxAddonClient(client).request<MuxData<T>>({
-      url: `/addons/mux/robots/${dataset}/${segments.map(encodeURIComponent).join('/')}`,
+      url: `/addons/mux/robots/${prefix}/${segments.map(encodeURIComponent).join('/')}`,
       withCredentials: true,
       method,
       query: {...query, ...PLUGIN_VERSION_QUERY},
@@ -81,6 +87,64 @@ async function robotsRequest<T>(
   }
 }
 
+/** Mux's own 404: nothing by that id on the version asked, which may be the other version. */
+function isNotFoundOnVersion(error: unknown): boolean {
+  return error instanceof RobotsRequestError && error.status === 404 && error.muxAnswered
+}
+
+/** Sends `request` on each version in turn, moving on only after Mux's 404. */
+async function onVersions<T>(
+  versions: RobotsApiVersion[],
+  request: (version: RobotsApiVersion) => Promise<T>,
+): Promise<T> {
+  const [version, ...rest] = versions
+  if (!version) throw new Error('No Robots API version to ask.')
+  try {
+    return await request(version)
+  } catch (error) {
+    if (rest.length === 0 || !isNotFoundOnVersion(error)) throw error
+    return onVersions(rest, request)
+  }
+}
+
+/** Directive versions learnt this session, from listings and from where runs answered. */
+const directiveVersions = new Map<string, RobotsApiVersion>()
+
+function directiveKey(client: SanityClient, directiveId: string): string {
+  const {projectId, dataset} = client.config()
+  return `${projectId}:${dataset}:${directiveId}`
+}
+
+function rememberDirectiveVersion(
+  client: SanityClient,
+  directiveId: string,
+  version: RobotsApiVersion,
+): void {
+  directiveVersions.set(directiveKey(client, directiveId), version)
+}
+
+export function resetRobotsDirectiveVersions(): void {
+  directiveVersions.clear()
+}
+
+/**
+ * Sends a directive request on the directive's version. An id no listing has named yet, like a
+ * configured one, is tried on v1 and then v0. Only a version that answered is remembered: a 404
+ * can also mean a run Mux no longer has, which says nothing about the directive's version.
+ */
+async function onDirectiveVersion<T>(
+  client: SanityClient,
+  directiveId: string,
+  request: (version: RobotsApiVersion) => Promise<T>,
+): Promise<T> {
+  const known = directiveVersions.get(directiveKey(client, directiveId))
+  return onVersions(known ? [known] : ['v1', 'v0'], async (version) => {
+    const response = await request(version)
+    rememberDirectiveVersion(client, directiveId, version)
+    return response
+  })
+}
+
 function pageQuery({limit, page}: {limit?: number; page?: number}): Record<string, string> {
   return {
     ...(limit !== undefined && {limit: String(limit)}),
@@ -88,17 +152,18 @@ function pageQuery({limit, page}: {limit?: number; page?: number}): Record<strin
   }
 }
 
+/** v1 lists the jobs of both versions, each with `_links` naming the version that created it. */
 export function listRobotsJobs(
   client: SanityClient,
   query: {
     assetId: string
-    workflow?: RobotsWorkflow
+    workflow?: RobotsJobWorkflow
     status?: RobotsJobStatus
     limit?: number
     page?: number
   },
 ) {
-  return robotsRequest<RobotsJob[]>(client, 'GET', ['jobs'], {
+  return robotsRequest<RobotsJob[]>(client, ROBOTS_API_VERSION, 'GET', ['jobs'], {
     query: {
       asset_id: query.assetId,
       ...(query.workflow && {workflow: query.workflow}),
@@ -108,36 +173,81 @@ export function listRobotsJobs(
   })
 }
 
-export function getRobotsJob(client: SanityClient, workflow: RobotsWorkflow, jobId: string) {
-  return robotsRequest<RobotsJob>(client, 'GET', ['jobs', workflow, jobId])
+type RobotsJobRef = Pick<RobotsJob, 'id' | 'workflow' | '_links'>
+
+export function getRobotsJob(client: SanityClient, job: RobotsJobRef) {
+  return onVersions(jobVersions(job), (version) =>
+    robotsRequest<RobotsJob>(client, version, 'GET', ['jobs', job.workflow, job.id]),
+  )
 }
 
 /** Cancel takes no workflow segment, as in Mux. */
-export function cancelRobotsJob(client: SanityClient, jobId: string) {
-  return robotsRequest<RobotsJob>(client, 'POST', ['jobs', jobId, 'cancel'])
+export function cancelRobotsJob(client: SanityClient, job: RobotsJobRef) {
+  return onVersions(jobVersions(job), (version) =>
+    robotsRequest<RobotsJob>(client, version, 'POST', ['jobs', job.id, 'cancel']),
+  )
 }
 
-export function listRobotsDirectives(client: SanityClient, query: {limit?: number; page?: number}) {
-  return robotsRequest<RobotsDirective[]>(client, 'GET', ['directives'], {query: pageQuery(query)})
+/** v1 lists the directives of both versions, each with `_links` naming its own. */
+export async function listRobotsDirectives(
+  client: SanityClient,
+  query: {limit?: number; page?: number},
+) {
+  const response = await robotsRequest<RobotsDirective[]>(
+    client,
+    ROBOTS_API_VERSION,
+    'GET',
+    ['directives'],
+    {query: pageQuery(query)},
+  )
+  for (const directive of response.data ?? []) {
+    const version = linkedVersion(directive)
+    if (version) rememberDirectiveVersion(client, directive.id, version)
+  }
+  return response
 }
 
-export function listRobotsDirectiveRuns(
+type RobotsDirectiveRunResponse = Omit<RobotsDirectiveRun, 'run_id'> & {
+  run_id?: string
+  id?: string
+}
+
+/** v1 calls the run's id `id`, v0 `run_id`. */
+function toDirectiveRun({id, ...run}: RobotsDirectiveRunResponse): RobotsDirectiveRun {
+  return {...run, run_id: run.run_id ?? id ?? ''}
+}
+
+export async function listRobotsDirectiveRuns(
   client: SanityClient,
   directiveId: string,
   query: {limit?: number; page?: number},
-) {
-  return robotsRequest<RobotsDirectiveRun[]>(client, 'GET', ['directives', directiveId, 'runs'], {
-    query: pageQuery(query),
-  })
+): Promise<MuxData<RobotsDirectiveRun[]>> {
+  const response = await onDirectiveVersion(client, directiveId, (version) =>
+    robotsRequest<RobotsDirectiveRunResponse[]>(
+      client,
+      version,
+      'GET',
+      ['directives', directiveId, 'runs'],
+      {query: pageQuery(query)},
+    ),
+  )
+  return response.data ? {data: response.data.map(toDirectiveRun)} : {}
 }
 
-export function getRobotsDirectiveRun(client: SanityClient, directiveId: string, runId: string) {
-  return robotsRequest<RobotsDirectiveRun>(client, 'GET', [
-    'directives',
-    directiveId,
-    'runs',
-    runId,
-  ])
+export async function getRobotsDirectiveRun(
+  client: SanityClient,
+  directiveId: string,
+  runId: string,
+): Promise<MuxData<RobotsDirectiveRun>> {
+  const response = await onDirectiveVersion(client, directiveId, (version) =>
+    robotsRequest<RobotsDirectiveRunResponse>(client, version, 'GET', [
+      'directives',
+      directiveId,
+      'runs',
+      runId,
+    ]),
+  )
+  return response.data ? {data: toDirectiveRun(response.data)} : {}
 }
 
 /**
@@ -149,26 +259,35 @@ export async function startRobotsJob(
   workflow: RobotsWorkflow,
   parameters: Record<string, unknown>,
 ): Promise<RobotsJob> {
-  const response = await robotsRequest<RobotsJob>(client, 'POST', ['jobs', workflow], {
-    body: {parameters},
-  })
+  const response = await robotsRequest<RobotsJob>(
+    client,
+    ROBOTS_API_VERSION,
+    'POST',
+    ['jobs', workflow],
+    {body: {parameters}},
+  )
   if (!response?.data?.id) throw new Error('Mux answered without naming the job it started.')
   return response.data
 }
 
-/** Starts a directive run, on the same terms as `startRobotsJob`. */
+/**
+ * Starts a directive run, on the same terms as `startRobotsJob`. Only on v1: the Studio doesn't
+ * run v0 directives, and Mux answers 404 for one.
+ */
 export async function startRobotsDirectiveRun(
   client: SanityClient,
   directiveId: string,
   assetId: string,
 ): Promise<RobotsDirectiveRun> {
-  const response = await robotsRequest<RobotsDirectiveRun>(
+  const response = await robotsRequest<RobotsDirectiveRunResponse>(
     client,
+    ROBOTS_API_VERSION,
     'POST',
     ['directives', directiveId, 'runs'],
     {body: {asset_id: assetId}},
   )
-  if (!response?.data?.run_id) throw new Error('Mux answered without naming the run it started.')
-  // The response doesn't name its directive.
-  return {...response.data, directive_id: directiveId}
+  const run = response?.data && toDirectiveRun(response.data)
+  if (!run?.run_id) throw new Error('Mux answered without naming the run it started.')
+  rememberDirectiveVersion(client, directiveId, ROBOTS_API_VERSION)
+  return {...run, directive_id: directiveId}
 }

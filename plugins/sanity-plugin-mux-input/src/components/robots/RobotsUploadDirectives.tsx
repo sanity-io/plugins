@@ -3,7 +3,10 @@ import {useId} from 'react'
 
 import type {RobotsDirectiveListing} from '../../hooks/useRobotsDirectives'
 import {ROBOTS_DIRECTIVES_SET_BY_DEVELOPER} from '../../robots/access'
-import {ROBOTS_UPLOAD_DIRECTIVES_GUIDE_URL} from '../../robots/capability'
+import {
+  ROBOTS_DIRECTIVES_MIGRATION_URL,
+  ROBOTS_UPLOAD_DIRECTIVES_GUIDE_URL,
+} from '../../robots/capability'
 import FormField from '../FormField'
 import {RobotsNote} from './RobotsNote'
 
@@ -22,6 +25,7 @@ function unavailableWarning(listing: RobotsDirectiveListing): string | undefined
 export function RobotsUploadDirectives({
   configuredIds,
   missingIds,
+  v0Ids,
   directiveNames,
   listing,
   uncheckedIds,
@@ -31,6 +35,8 @@ export function RobotsUploadDirectives({
   configuredIds: string[]
   /** Configured ids the account doesn't have: shown, never attached. */
   missingIds: string[]
+  /** Configured ids made with Robots v0: they still run, with a note to replace them. */
+  v0Ids: string[]
   directiveNames: Record<string, string>
   listing: RobotsDirectiveListing
   uncheckedIds: string[]
@@ -101,6 +107,20 @@ export function RobotsUploadDirectives({
               {isMissing && (
                 <Text size={1} muted>
                   Not in this Mux account, so it won’t run.
+                </Text>
+              )}
+              {v0Ids.includes(directiveId) && (
+                <Text size={1} muted>
+                  Made with Robots v0, which Mux is retiring. It still runs; a developer can replace
+                  it with a{' '}
+                  <a
+                    href={ROBOTS_DIRECTIVES_MIGRATION_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    v1 copy
+                  </a>
+                  .
                 </Text>
               )}
             </Stack>

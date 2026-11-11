@@ -3,7 +3,7 @@
  * the fields a job record copies straight from Mux.
  */
 
-/** The twelve workflows, as they appear in `POST /robots/v0/jobs/{workflow}`. */
+/** The workflows the Studio runs, as they appear in `POST /robots/v1/jobs/{workflow}`. */
 export const ROBOTS_WORKFLOWS = [
   'generate-premium-captions',
   'edit-captions',
@@ -15,11 +15,22 @@ export const ROBOTS_WORKFLOWS = [
   'find-best-thumbnails',
   'generate-engagement-insights',
   'generate-chapters',
-  'find-scenes',
+  'analyze-structure',
   'moderate',
 ] as const
 
 export type RobotsWorkflow = (typeof ROBOTS_WORKFLOWS)[number]
+
+/** Any workflow a job can name: v0 jobs and the records of them can still be `find-scenes`. */
+export type RobotsJobWorkflow = RobotsWorkflow | 'find-scenes'
+
+/** Robots v1 is GA. v0 is deprecated, and Mux keeps serving it until its sunset. */
+export type RobotsApiVersion = 'v0' | 'v1'
+
+/** Where Mux's list summaries point: `self.href` names the version that created the item. */
+export interface RobotsLinks {
+  self?: {href?: string}
+}
 
 export type RobotsJobStatus = 'pending' | 'processing' | 'completed' | 'errored' | 'cancelled'
 
@@ -34,10 +45,13 @@ export interface RobotsJobDirective {
   run_id: string
 }
 
-/** A job as the Robots API returns it. `parameters`, `outputs` and `directive` are detail only. */
+/**
+ * A job as the Robots API returns it. `parameters`, `outputs` and `directive` are detail only,
+ * `_links` list only.
+ */
 export interface RobotsJob {
   id: string
-  workflow: RobotsWorkflow
+  workflow: RobotsJobWorkflow
   status: RobotsJobStatus
   created_at?: number
   updated_at?: number
@@ -47,17 +61,14 @@ export interface RobotsJob {
   /** Only documented as "present when errored"; read through `robotsJobErrorMessage`. */
   errors?: unknown
   directive?: RobotsJobDirective
+  _links?: RobotsLinks
 }
 
-export interface RobotsDirectiveWorkflowBinding {
-  reference_id?: string
-  workflow?: RobotsWorkflow
-}
-
+/** A directive as the v1 list summarizes it, whichever version created it. */
 export interface RobotsDirective {
   id: string
   name?: string
-  workflows?: RobotsDirectiveWorkflowBinding[]
+  _links?: RobotsLinks
 }
 
 export type RobotsDirectiveRunStatus =
@@ -79,22 +90,31 @@ export type RobotsNodeStatus =
   | 'dispatched'
   | 'failed'
   | 'waiting_for_resources'
+  /** v0 */
   | 'waiting_for_source_workflow'
+  /** v1 */
+  | 'waiting_for_source_bindings'
 
+/** A directive run's step, with the field names of either version. */
 export interface RobotsNodeState {
   reference_id?: string
   status?: RobotsNodeStatus
+  /** v1 */
+  workflow?: string
+  /** v0 */
   workflow_name?: string
   job_id?: string
   /** Present when `status` is `failed`. */
   reason?: string
-  /** Present when `status` is `waiting_for_source_workflow`. */
+  /** v0: the workflows a waiting step depends on. */
   source_workflows?: string[]
+  /** v1: the binding reference ids a waiting step depends on. */
+  source_bindings?: string[]
 }
 
 /**
- * A directive run from the REST API. It uses `run_id` and `subject_id` (the asset) and doesn't
- * name its directive, so the caller tags `directive_id` from the directive it asked about.
+ * A directive run, keyed by `run_id`: v0's name for the id, which v1 calls `id`. Only v1 names
+ * the directive, so the caller tags `directive_id` from the directive it asked about.
  */
 export interface RobotsDirectiveRun {
   run_id: string
@@ -131,7 +151,7 @@ export interface RobotsJobRecord {
   _key: string
   _type: 'mux.robotsJob'
   id: string
-  workflow: RobotsWorkflow
+  workflow: RobotsJobWorkflow
   status: RobotsJobStatus
   created_at?: number
   updated_at?: number
@@ -150,6 +170,15 @@ export interface RobotsSummarizeOutput {
   tags?: string[]
 }
 
+/** What "Apply summary" uses: the rest of the output stays on the job, read from Mux. */
+export interface RobotsAnalyzeStructureOutput {
+  jobId: string
+  completedAt?: number
+  title?: string
+  summary?: string
+  tags?: string[]
+}
+
 export interface RobotsModerateOutput {
   jobId: string
   completedAt?: number
@@ -157,10 +186,11 @@ export interface RobotsModerateOutput {
   maxScores?: {sexual?: number; violence?: number}
 }
 
-/** The newest completed summarize and moderate outputs on this asset, whoever ran them. */
+/** The newest completed output of each of these workflows on this asset, whoever ran them. */
 export interface RobotsOutputs {
   _type: 'mux.robotsOutputs'
   summarize?: RobotsSummarizeOutput
+  analyzeStructure?: RobotsAnalyzeStructureOutput
   moderate?: RobotsModerateOutput
 }
 
@@ -182,7 +212,7 @@ export interface RobotsPendingCreate {
   _type: 'mux.robotsPendingCreate'
   requestId: string
   kind: 'job' | 'directive-run'
-  workflow?: RobotsWorkflow
+  workflow?: RobotsJobWorkflow
   directiveId?: string
   /** Unix seconds, browser clock: the unit of Mux's `created_at`. */
   requestedAt: number

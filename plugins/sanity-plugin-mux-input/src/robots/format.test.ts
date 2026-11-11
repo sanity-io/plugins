@@ -1,6 +1,13 @@
 import {describe, expect, test} from 'vitest'
 
-import {formatOffsetMs, nodeStateDetail, runStatusNote, stepCountLabel} from './format'
+import {
+  formatMediaSpan,
+  formatMediaTime,
+  formatOffsetMs,
+  nodeStateDetail,
+  runStatusNote,
+  stepCountLabel,
+} from './format'
 
 describe('directive run steps', () => {
   test('say why a step failed or what it waits on', () => {
@@ -13,6 +20,9 @@ describe('directive run steps', () => {
         source_workflows: ['generate-premium-captions'],
       }),
     ).toBe('Waiting on Generate premium captions')
+    expect(
+      nodeStateDetail({status: 'waiting_for_source_bindings', source_bindings: ['captions_en']}),
+    ).toBe('Waiting on captions_en')
     expect(nodeStateDetail({status: 'waiting_for_resources'})).toBe(
       'Waiting for a resource, such as captions',
     )
@@ -36,4 +46,18 @@ describe('directive run steps', () => {
 test('offsets read as m:ss', () => {
   expect(formatOffsetMs(65_500)).toBe('1:05')
   expect(formatOffsetMs(undefined)).toBe('—')
+})
+
+describe('media times', () => {
+  test('read v1 seconds and v0 milliseconds by key, never converting twice', () => {
+    expect(formatMediaTime(65.5, undefined)).toBe('1:05')
+    expect(formatMediaTime(undefined, 65_500)).toBe('1:05')
+    expect(formatMediaTime(0, 999_000)).toBe('0:00')
+    expect(formatMediaTime(undefined, undefined)).toBe('—')
+  })
+
+  test('spans read either version', () => {
+    expect(formatMediaSpan({start_time: 0.033, end_time: 12})).toBe('0:00 – 0:12')
+    expect(formatMediaSpan({start_ms: 61_000, end_ms: 75_000})).toBe('1:01 – 1:15')
+  })
 })

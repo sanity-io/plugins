@@ -62,7 +62,7 @@ function readError(error: unknown): string {
   return error instanceof Error ? error.message : 'Could not load this job from Mux.'
 }
 
-/** A job's output, read from Mux: the document stores only summarize and moderate outputs. */
+/** A job's output, read from Mux: the document stores only a few fields of some workflows. */
 export function RobotsOutputDialog({
   job,
   detailState,
@@ -82,7 +82,7 @@ export function RobotsOutputDialog({
   const isHeldInFull = !!job.outputs || job.errors !== undefined
   const {data: fetched, error} = useSWR(
     isHeldInFull ? null : `robots-job/${dataset}/${job.id}`,
-    async () => (await getRobotsJob(client, job.workflow, job.id)).data,
+    async () => (await getRobotsJob(client, job)).data,
     {revalidateOnFocus: false, shouldRetryOnError: false},
   )
 

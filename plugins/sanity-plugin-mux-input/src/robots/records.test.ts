@@ -133,6 +133,41 @@ describe('outputs', () => {
     expect(applyRobotsJobs(doc(), [elsewhere, summaryOnly], ASSET).robotsOutputs).toBeUndefined()
   })
 
+  test('keep the newest Analyze structure title, summary and tags under their own key', () => {
+    const analyzed = job('s', {
+      workflow: 'analyze-structure',
+      updated_at: NOW_S,
+      parameters: {asset_id: ASSET},
+      outputs: {
+        title: 'Uploading with Mux',
+        summary: 'A developer uploads a video.',
+        tags: ['uploads'],
+        chapters: [{start_time: 0, end_time: 60, title: 'Upload'}],
+        scenes: [],
+        key_moments: [],
+      },
+    })
+    const state = applyRobotsJobs(doc(), [analyzed, summarized('a', NOW_S - 30, 'Old')], ASSET)
+    expect(state.robotsOutputs).toEqual({
+      _type: 'mux.robotsOutputs',
+      summarize: {
+        jobId: 'a',
+        completedAt: NOW_S - 30,
+        title: 'Old',
+        description: 'A video',
+        tags: ['a'],
+      },
+      analyzeStructure: {
+        jobId: 's',
+        completedAt: NOW_S,
+        title: 'Uploading with Mux',
+        summary: 'A developer uploads a video.',
+        tags: ['uploads'],
+      },
+    })
+    expect(applyRobotsJobs(state, [analyzed], ASSET)).toBe(state)
+  })
+
   test('keep moderate scores', () => {
     const moderated = job('m', {
       workflow: 'moderate',
@@ -391,6 +426,14 @@ describe('thumbnails', () => {
     expect(applied.thumbTime).toBe(12.67)
     expect(applied.robotsJobs?.[0]?.thumbnailApplied).toBe(true)
     expect(thumbnailJobsToApply(applied, [thumbnails], NOW_MS)).toEqual([])
+  })
+
+  test('skips a job whose thumbnail update Mux reports as failed', () => {
+    const failed = {...thumbnails, outputs: {asset_updates: {thumbnail: {status: 'failed'}}}}
+    const updated = {...thumbnails, outputs: {asset_updates: {thumbnail: {status: 'updated'}}}}
+    const recorded = applyRobotsJobs(doc({data: {thumbnail_time: 3}}), [thumbnails], ASSET)
+    expect(thumbnailJobsToApply(recorded, [failed], NOW_MS)).toEqual([])
+    expect(thumbnailJobsToApply(recorded, [updated], NOW_MS)).toEqual([updated])
   })
 
   test('skips jobs that did not ask, old jobs, and a missing thumbnail_time', () => {
