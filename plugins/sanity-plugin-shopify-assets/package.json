@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-shopify-assets",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "Choose assets from your Shopify store in your Sanity Studio",
   "keywords": [
     "assets",
@@ -43,7 +43,6 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "axios": "^1.19.0",
     "pretty-bytes": "^6.1.1",
     "pretty-ms": "^8.0.0",
     "react-infinite-scroll-component": "^6.1.1",

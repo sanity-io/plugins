@@ -1,5 +1,13 @@
 # @sanity/orderable-document-list
 
+## 2.0.29
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+- Updated dependencies [[`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543)]:
+  - sanity-plugin-utils@2.0.23
+
 ## 2.0.28
 
 ### Patch Changes

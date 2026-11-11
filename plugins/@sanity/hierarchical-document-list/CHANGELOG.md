@@ -1,5 +1,17 @@
 # @sanity/hierarchical-document-list
 
+## 4.0.11
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 4.0.10
+
+### Patch Changes
+
+- [#2253](https://github.com/sanity-io/plugins/pull/2253) [`0dc934d`](https://github.com/sanity-io/plugins/commit/0dc934dc87f00f0b0d5f80685a629ca15cdb9b72) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update `@nosferatu500/react-sortable-tree` to 7.1.0
+
 ## 4.0.9
 
 ### Patch Changes

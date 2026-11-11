@@ -1,22 +1,18 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text} from '@sanity/ui'
+import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text, Card} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
+  type Dispatch,
   type PropsWithChildren,
+  type SetStateAction,
   useCallback,
   useContext,
   useId,
   useMemo,
   useState,
 } from 'react'
-import {
-  type ObjectSchemaType,
-  type Path,
-  pathToString,
-  type SanityDocumentLike,
-  useClient,
-} from 'sanity'
+import {type ObjectSchemaType, type Path, type SanityDocumentLike, useClient} from 'sanity'
 
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import type {ConditionalMemberState} from '../helpers/conditionalMembers'
@@ -29,6 +25,8 @@ import {
   defaultLanguageOutputs,
   type FieldLanguageMap,
   getDocumentMembersFlat,
+  fieldLanguageMapsForLanguages,
+  fieldLanguageMapsUnderPath,
   getFieldLanguageMap,
 } from './paths'
 import type {Language} from './types'
@@ -59,11 +57,8 @@ function hasValuesToTranslate(
   fromLanguage: Language | undefined,
   basePath: Path,
 ) {
-  return fieldLanguageMaps?.some(
-    (map) =>
-      map.inputLanguageId === fromLanguage?.id &&
-      map.inputPath &&
-      pathToString(map.inputPath).startsWith(pathToString(basePath)),
+  return fieldLanguageMapsUnderPath(fieldLanguageMaps ?? [], basePath).some(
+    (map) => map.inputLanguageId === fromLanguage?.id && map.inputPath,
   )
 }
 
@@ -111,26 +106,28 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
 
       const preferred = getPreferredToFieldLanguages(from.id)
       const allToLanguages = languages.filter((l) => l.id !== from?.id)
-      const filteredToLanguages = allToLanguages.filter(
-        (l) => !preferred.length || preferred.includes(l.id),
-      )
-
-      setToLanguages(filteredToLanguages)
       const fromId = from?.id
       const allToIds = allToLanguages?.map((l) => l.id) ?? []
       const docMembers = getDocumentMembersFlat(document, documentSchema, config?.maxPathDepth)
-      if (fromId && allToIds?.length) {
-        const transMap = getFieldLanguageMap(
-          documentSchema,
-          docMembers,
-          fromId,
-          allToIds.filter((toId) => fromId !== toId),
-          config?.translationOutputs ?? defaultLanguageOutputs,
-        )
-        setFieldLanguageMaps(transMap)
-      } else {
-        setFieldLanguageMaps(undefined)
-      }
+      const transMap =
+        fromId && allToIds?.length
+          ? getFieldLanguageMap(
+              documentSchema,
+              docMembers,
+              fromId,
+              allToIds.filter((toId) => fromId !== toId),
+              config?.translationOutputs ?? defaultLanguageOutputs,
+            )
+          : undefined
+      setFieldLanguageMaps(transMap)
+      const scopedMaps = fieldLanguageMapsUnderPath(transMap ?? [], params.translatePath)
+      const outputIds = new Set(scopedMaps.flatMap((map) => map.outputs.map((output) => output.id)))
+      setToLanguages(
+        allToLanguages.filter(
+          (language) =>
+            outputIds.has(language.id) && (!preferred.length || preferred.includes(language.id)),
+        ),
+      )
     },
     [config],
   )
@@ -187,12 +184,26 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
     }
   }, [openFieldTranslation])
 
+  const selectedFieldLanguageMaps = fieldLanguageMapsForLanguages(
+    fieldLanguageMaps ?? [],
+    toLanguages?.map((language) => language.id) ?? [],
+  )
+  const outputLanguageIds = new Set(
+    fieldLanguageMapsUnderPath(
+      fieldLanguageMaps ?? [],
+      fieldTranslationParams?.translatePath ?? [],
+    ).flatMap((map) => map.outputs.map((output) => output.id)),
+  )
   const runDisabled =
     !fromLanguage ||
     !toLanguages?.length ||
-    !fieldLanguageMaps?.length ||
+    !selectedFieldLanguageMaps.length ||
     !documentId ||
-    !hasValuesToTranslate(fieldLanguageMaps, fromLanguage, fieldTranslationParams.translatePath)
+    !hasValuesToTranslate(
+      selectedFieldLanguageMaps,
+      fromLanguage,
+      fieldTranslationParams.translatePath,
+    )
 
   const onRunTranslation = useCallback(() => {
     const translatePath = fieldTranslationParams?.translatePath
@@ -209,10 +220,10 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
           schemaType: fieldTranslationParams?.documentSchema,
           translatePath,
         }),
-        fieldLanguageMap: fieldLanguageMaps.map((map) => ({
-          ...map,
-          outputs: map.outputs.filter((out) => !!toLanguages?.find((l) => l.id === out.id)),
-        })),
+        fieldLanguageMap: fieldLanguageMapsForLanguages(
+          fieldLanguageMaps,
+          toLanguages?.map((language) => language.id) ?? [],
+        ),
         conditionalMembers: fieldTranslationParams?.conditionalMembers,
       })
     }
@@ -293,12 +304,31 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
                 <Box marginBottom={2}>
                   <Text weight="semibold">To</Text>
                 </Box>
-                {languages.map((checkboxLanguage) => (
-                  <ToLanguageCheckbox
-                    key={checkboxLanguage.id}
-                    {...{checkboxLanguage, fromLanguage, toLanguages, toggleToLanguage, languages}}
-                  />
-                ))}
+                <SelectAllToLanguagesCheckbox
+                  fromLanguage={fromLanguage}
+                  toLanguages={toLanguages}
+                  setToLanguages={setToLanguages}
+                  languages={languages}
+                  outputLanguageIds={outputLanguageIds}
+                />
+                {languages
+                  .filter(
+                    (checkboxLanguage) =>
+                      checkboxLanguage.id === fromLanguage?.id ||
+                      outputLanguageIds.has(checkboxLanguage.id),
+                  )
+                  .map((checkboxLanguage) => (
+                    <ToLanguageCheckbox
+                      key={checkboxLanguage.id}
+                      {...{
+                        checkboxLanguage,
+                        fromLanguage,
+                        toLanguages,
+                        toggleToLanguage,
+                        languages,
+                      }}
+                    />
+                  ))}
               </Stack>
             </Flex>
           ) : (
@@ -313,6 +343,42 @@ export function FieldTranslationProvider(props: PropsWithChildren<{}>) {
       ) : null}
       {props.children}
     </FieldTranslationContext.Provider>
+  )
+}
+
+function SelectAllToLanguagesCheckbox(props: {
+  fromLanguage: Language | undefined
+  toLanguages: Language[] | undefined
+  setToLanguages: Dispatch<SetStateAction<Language[] | undefined>>
+  languages: Language[]
+  outputLanguageIds: Set<string>
+}) {
+  const {fromLanguage, toLanguages, setToLanguages, languages, outputLanguageIds} = props
+  const selectable = languages.filter((l) => outputLanguageIds.has(l.id))
+  const selectedCount = selectable.filter((l) => !!toLanguages?.find((tl) => tl.id === l.id)).length
+  const allSelected = selectable.length > 0 && selectedCount === selectable.length
+  const onChange = () => {
+    if (!fromLanguage) return
+    let newToLangs = allSelected ? [] : selectable
+    setToLanguages(newToLangs)
+    setPreferredToFieldLanguages(
+      fromLanguage.id,
+      newToLangs.map((l) => l.id),
+    )
+  }
+  return (
+    <Card borderBottom={true} paddingBottom={2}>
+      <Flex gap={3} align="center" as="label">
+        <Checkbox
+          name="toLangAll"
+          checked={allSelected}
+          indeterminate={selectedCount > 0 && !allSelected}
+          onChange={onChange}
+          disabled={!selectable.length}
+        />
+        <Text weight="medium">Select all</Text>
+      </Flex>
+    </Card>
   )
 }
 

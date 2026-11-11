@@ -3,14 +3,18 @@ import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
   isKeySegment,
+  isObjectSchemaType,
+  type ObjectField,
   type ObjectSchemaType,
   type Path,
   pathToString,
   type SanityDocumentLike,
+  type SchemaType,
   isRecord,
 } from 'sanity'
 
 import {randomKey} from '../_lib/randomKey'
+import {isSchemaAssistEnabled} from '../helpers/assistSupported'
 import type {DocumentMember, TranslationOutput, TranslationOutputsFunction} from './types'
 
 export interface FieldLanguageMap {
@@ -33,7 +37,149 @@ export function getDocumentMembersFlat(
     return []
   }
 
+  // A locked document has no writable fields to translate.
+  if (isStaticAssistLocked(schemaType)) {
+    return []
+  }
+
   return extractPaths(doc, schemaType, [], Math.min(maxDepth, ABSOLUTE_MAX_DEPTH))
+}
+
+/**
+ * Literal `readOnly` / `hidden` fields are skipped by AI Assist, and
+ * `options.aiAssist.exclude` drops the field from the serialized schema.
+ * Translate fields sends an explicit path map, so these fields must be left
+ * out here. Otherwise the API overwrites them (and can write a value that
+ * fails validation), or fails because the excluded field has no schema.
+ * Conditional (`function`) readOnly/hidden is reported separately via
+ * conditionalMembers and is not treated as locked here.
+ */
+function isStaticAssistLocked(schemaType: SchemaType): boolean {
+  return (
+    schemaType.readOnly === true || schemaType.hidden === true || !isSchemaAssistEnabled(schemaType)
+  )
+}
+
+/**
+ * A fieldset's literal `hidden` / `readOnly` is not copied onto `field.type`.
+ * Schema serialization overlays fieldset `hidden` onto each child; translation
+ * must do the same, and also honor a read-only fieldset, or those children
+ * stay in the field language map.
+ * A function on the fieldset stays conditional and is not treated as locked.
+ */
+function isFieldLockedForTranslation(parent: ObjectSchemaType, field: ObjectField): boolean {
+  const fieldset = field.fieldset
+    ? parent.fieldsets?.find((candidate) => !candidate.single && candidate.name === field.fieldset)
+    : undefined
+  if (fieldset && !fieldset.single && (fieldset.hidden === true || fieldset.readOnly === true)) {
+    return true
+  }
+  return isStaticAssistLocked(field.type)
+}
+
+function outputTargetsLockedField(
+  documentSchema: ObjectSchemaType,
+  outputPath: Path,
+  documentMembers: DocumentMember[],
+): boolean {
+  return schemaPathLocked(documentSchema, outputPath, documentMembers, [])
+}
+
+/**
+ * `outputPath` is a full document path. A custom output function can point at
+ * a different object than the source field, so the lock check walks from the
+ * document schema and applies field and fieldset locks along that path.
+ * Keyed array items use the existing item's `_type` from the array value.
+ * When the item is not in the document yet, the output is dropped if any
+ * candidate item type is locked.
+ */
+function schemaPathLocked(
+  current: SchemaType,
+  path: Path,
+  documentMembers: DocumentMember[],
+  walked: Path,
+): boolean {
+  const segment = path[0]
+  if (segment === undefined) {
+    return false
+  }
+  const rest = path.slice(1)
+  const nextWalked = [...walked, segment]
+
+  if (typeof segment === 'string') {
+    if (!isObjectSchemaType(current)) {
+      return false
+    }
+    const field = current.fields.find((candidate) => candidate.name === segment)
+    if (!field) {
+      return false
+    }
+    if (isFieldLockedForTranslation(current, field)) {
+      return true
+    }
+    return schemaPathLocked(field.type, rest, documentMembers, nextWalked)
+  }
+
+  if (
+    (isKeySegment(segment) || typeof segment === 'number') &&
+    current.jsonType === 'array' &&
+    'of' in current
+  ) {
+    const itemType = arrayItemSchema(current, nextWalked, documentMembers)
+    if (itemType) {
+      return (
+        isStaticAssistLocked(itemType) ||
+        schemaPathLocked(itemType, rest, documentMembers, nextWalked)
+      )
+    }
+    const itemTypes = current.of.filter((item) => isObjectSchemaType(item) || rest.length === 0)
+    if (itemTypes.length === 0) {
+      return false
+    }
+    return itemTypes.some(
+      (item) =>
+        isStaticAssistLocked(item) || schemaPathLocked(item, rest, documentMembers, nextWalked),
+    )
+  }
+
+  return false
+}
+
+function arrayItemSchema(
+  arraySchema: SchemaType & {of: SchemaType[]},
+  itemPath: Path,
+  documentMembers: DocumentMember[],
+): SchemaType | undefined {
+  const member = documentMembers.find(
+    (candidate) => pathToString(candidate.path) === pathToString(itemPath),
+  )
+  if (member) {
+    return member.schemaType
+  }
+
+  const parent = documentMembers.find(
+    (candidate) => pathToString(candidate.path) === pathToString(itemPath.slice(0, -1)),
+  )
+  if (!parent || !Array.isArray(parent.value)) {
+    return undefined
+  }
+
+  const segment = itemPath.at(-1)
+  if (segment === undefined) {
+    return undefined
+  }
+  const item = isKeySegment(segment)
+    ? parent.value.find((entry) => isRecord(entry) && entry['_key'] === segment._key)
+    : typeof segment === 'number'
+      ? parent.value[segment]
+      : undefined
+  if (!isRecord(item)) {
+    return undefined
+  }
+  if (typeof item['_type'] === 'string') {
+    return arraySchema.of.find((candidate) => candidate.name === item['_type'])
+  }
+  return arraySchema.of.length === 1 ? arraySchema.of[0] : undefined
 }
 
 function extractPaths(
@@ -52,7 +198,7 @@ function extractPaths(
     const parentValue = path.length ? extractWithPath(pathToString(path), doc)[0]?.value : doc
     const value = isRecord(parentValue) ? parentValue[field.name] : undefined
 
-    if (value === undefined || value === null) {
+    if (value === undefined || value === null || isFieldLockedForTranslation(schemaType, field)) {
       return acc
     }
 
@@ -95,7 +241,7 @@ function extractPaths(
               },
             )
           }
-          if (item._key && itemSchema) {
+          if (item._key && itemSchema && !isStaticAssistLocked(itemSchema)) {
             const innerFields = extractPaths(
               doc,
               // oxlint-disable-next-line no-unsafe-type-assertion
@@ -214,9 +360,13 @@ export function getFieldLanguageMap(
       enclosingType,
       translateFromLanguageId,
       outputLanguageIds,
-    )?.filter((translation) => translation.id !== translateFromLanguageId)
+    )?.filter(
+      (translation) =>
+        translation.id !== translateFromLanguageId &&
+        !outputTargetsLockedField(documentSchema, translation.outputPath, documentMembers),
+    )
 
-    if (translations) {
+    if (translations?.length) {
       translationMaps.push({
         inputLanguageId: translateFromLanguageId,
         inputPath: member.path,
@@ -227,4 +377,31 @@ export function getFieldLanguageMap(
   }
 
   return translationMaps
+}
+
+/** Maps whose input is the translate path or a field under it. */
+export function fieldLanguageMapsUnderPath(
+  maps: FieldLanguageMap[],
+  basePath: Path,
+): FieldLanguageMap[] {
+  const prefix = pathToString(basePath)
+  if (!prefix) {
+    return maps
+  }
+  return maps.filter((map) => {
+    const path = pathToString(map.inputPath)
+    return path === prefix || path.startsWith(`${prefix}.`) || path.startsWith(`${prefix}[`)
+  })
+}
+
+/** Keep only outputs for the selected languages, and drop maps that then have none. */
+export function fieldLanguageMapsForLanguages(
+  maps: FieldLanguageMap[],
+  languageIds: readonly string[],
+): FieldLanguageMap[] {
+  const selected = new Set(languageIds)
+  return maps.flatMap((map) => {
+    const outputs = map.outputs.filter((output) => selected.has(output.id))
+    return outputs.length ? [{...map, outputs}] : []
+  })
 }

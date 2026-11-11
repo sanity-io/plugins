@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import {afterEach, describe, expect, it} from 'vitest'
 
 import {renderWithProviders} from '../../__tests__/fixtures/renderWithProviders'
-import {inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
+import {getDialogRoot, inputByName, withinDialog} from '../../__tests__/fixtures/withinDialog'
 import DialogFolderCreate from './index'
 
 describe('DialogFolderCreate', () => {
@@ -35,6 +35,26 @@ describe('DialogFolderCreate', () => {
       </DialogFolderCreate>,
     )
 
+    expect(
+      withinDialog(/create folder/i, screen).getByRole('button', {name: /save and close/i}),
+    ).toBeDisabled()
+  })
+
+  it('shows an error indicator and keeps Save disabled for a whitespace-only name', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <DialogFolderCreate dialog={{id: 'dlg-1', type: 'folderCreate', parentFolderId: null}}>
+        <span />
+      </DialogFolderCreate>,
+    )
+
+    await user.type(inputByName(/create folder/i, screen, 'name'), '   ')
+
+    await waitFor(() => {
+      expect(
+        getDialogRoot(/create folder/i, screen).querySelector('[data-sanity-icon="error-outline"]'),
+      ).toBeTruthy()
+    })
     expect(
       withinDialog(/create folder/i, screen).getByRole('button', {name: /save and close/i}),
     ).toBeDisabled()

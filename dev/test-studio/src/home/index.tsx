@@ -45,6 +45,7 @@ const CUSTOM_PANE_TYPES = [
   'documentsPaneArticle', // sanity-plugin-documents-pane
   'iframeExample', // sanity-plugin-iframe-pane
   'naiveHtmlSerializerArticle', // sanity-naive-html-serializer
+  'naiveHtmlSerializerPage', // sanity-naive-html-serializer
 ]
 
 const INTERNATIONALIZATION_TYPES = [

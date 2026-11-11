@@ -1,5 +1,25 @@
 # sanity-plugin-media
 
+## 6.6.3
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 6.6.2
+
+### Patch Changes
+
+- [#2296](https://github.com/sanity-io/plugins/pull/2296) [`aa0cc5d`](https://github.com/sanity-io/plugins/commit/aa0cc5de119e54f4b485582cf87073edbedce1f7) Thanks [@tillschweneker](https://github.com/tillschweneker)! - Open a referring document from the asset's References tab by its published id and type, so the structure tool resolves it to its place in the desk structure even when the document has a draft
+
+## 6.6.1
+
+### Patch Changes
+
+- [#2061](https://github.com/sanity-io/plugins/pull/2061) [`078ac51`](https://github.com/sanity-io/plugins/commit/078ac519789b6a95f15cc62e66a7296d5a17fe25) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Search alt text, title, description, and credit line when those fields are stored per locale
+
+- [#2276](https://github.com/sanity-io/plugins/pull/2276) [`e5b5459`](https://github.com/sanity-io/plugins/commit/e5b54597e16d1e14e1724d417c1b49fea57812b0) Thanks [@coreyward](https://github.com/coreyward)! - Update dependencies `zod` to ^4.6.7 and `@hookform/resolvers` to ^6.0.2
+
 ## 6.6.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # sanity-naive-html-serializer
 
+## 5.1.17
+
+### Patch Changes
+
+- [#2084](https://github.com/sanity-io/plugins/pull/2084) [`089abaa`](https://github.com/sanity-io/plugins/commit/089abaaf9fb5849403eaa5185b8b19dda16808d5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Ignore `localize: false` on fields inside nested objects, page-builder modules, and inline object types when sending a document for translation
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 5.1.16
 
 ### Patch Changes

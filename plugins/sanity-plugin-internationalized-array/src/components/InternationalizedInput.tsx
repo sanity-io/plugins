@@ -10,7 +10,7 @@ import {set, unset} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'
 import {getLanguageDisplay} from '../utils/getLanguageDisplay'
-import {optionsForValueField} from '../utils/optionsForValueField'
+import {collapseFlagsForValueField, optionsForValueField} from '../utils/optionsForValueField'
 import {getToneFromValidation} from './getToneFromValidation'
 import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 
@@ -227,8 +227,29 @@ export default function InternationalizedInput(
           const schemaType = field?.schemaType
           const itemNeedsMigration = !props.value[LANGUAGE_FIELD_NAME]
 
+          // Field options compile onto the array, not the shared value type.
+          // Copy them onto this language row so inputs such as file `accept` apply.
+          // Object fields also need `collapsed` on the member: Studio already
+          // computed that flag from the shared value type.
+          const options = optionsForValueField(props.parentSchemaType?.options, schemaType?.options)
+          const collapse = collapseFlagsForValueField({
+            jsonType: schemaType?.jsonType,
+            arrayFieldOptions: props.parentSchemaType?.options,
+            valueFieldOptions: schemaType?.options,
+            mergedOptions: options,
+            level: field?.level,
+            currentCollapsed: member.collapsed,
+          })
+          const collapsible = collapse?.collapsible ?? member.collapsible
+
           const title = itemNeedsMigration ? null : keyIsValid ? (
-            <Label muted size={1}>
+            <Label
+              muted
+              size={1}
+              // Centers the label on the collapse chevron. Only collapsible rows
+              // have one; elsewhere this would shift the label down.
+              style={collapsible ? {display: 'inline-block', verticalAlign: 'middle'} : undefined}
+            >
               {languageTitle}
             </Label>
           ) : (
@@ -239,11 +260,8 @@ export default function InternationalizedInput(
             />
           )
 
-          // Field options compile onto the array, not the shared value type.
-          // Copy them onto this language row so inputs such as file `accept` apply.
-          const options = optionsForValueField(props.parentSchemaType?.options, schemaType?.options)
-
           return Object.assign({}, member, {
+            ...collapse,
             field: Object.assign({}, field, {
               schemaType: Object.assign({}, schemaType, {
                 title,
