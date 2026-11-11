@@ -3,9 +3,9 @@ import {Box, Button, Checkbox, Dialog, Flex, Radio, Spinner, Stack, Text, Card} 
 import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
-  Dispatch,
+  type Dispatch,
   type PropsWithChildren,
-  SetStateAction,
+  type SetStateAction,
   useCallback,
   useContext,
   useId,
