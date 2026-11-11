@@ -1,4 +1,4 @@
-import type MuxPlayerElement from '@mux/mux-player'
+import type {MuxSource} from '@videojs/react/media/mux-video'
 import type {ObjectInputProps} from 'sanity'
 import type {PartialDeep} from 'type-fest'
 
@@ -163,7 +163,7 @@ export interface MuxInputConfig {
   maxAssetDuration?: number
 
   /**
-   * HLS.js configuration options to be passed to the Mux Player.
+   * HLS.js configuration options to be passed to the Video.js player.
    * These options allow you to customize the underlying HLS.js playback engine behavior.
    *
    * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
@@ -177,7 +177,7 @@ export interface MuxInputConfig {
    * }
    * ```
    */
-  hlsConfig?: MuxPlayerElement['_hlsConfig']
+  hlsConfig?: NonNullable<MuxSource['engine']>['hlsJs']
 
   /**
    * The roles that can start and cancel Mux Robots workflows and directive runs. Everyone can
@@ -424,8 +424,6 @@ export interface Secrets {
 export type MuxImageOrigin = `https://image.mux.com`
 export type MuxThumbnailUrl = `${MuxImageOrigin}/${string}/thumbnail.png?${string}`
 export type MuxAnimatedThumbnailUrl = `${MuxImageOrigin}/${string}/animated.gif?${string}`
-export type MuxVideoOrigin = `https://stream.mux.com`
-export type MuxVideoUrl = `${MuxVideoOrigin}/${string}.m3u8?${string}`
 
 // 'preserve' by default
 // @url: https://docs.mux.com/guides/video/get-images-from-a-video#thumbnail-query-string-parameters

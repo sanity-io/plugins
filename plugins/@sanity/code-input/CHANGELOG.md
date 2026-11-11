@@ -1,5 +1,11 @@
 # @sanity/code-input
 
+## 7.3.15
+
+### Patch Changes
+
+- [#2156](https://github.com/sanity-io/plugins/pull/2156) [`8bd46d3`](https://github.com/sanity-io/plugins/commit/8bd46d3c976b573f34897cef969f4a03d1adda82) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @lezer/highlight to ^1.2.5
+
 ## 7.3.14
 
 ### Patch Changes

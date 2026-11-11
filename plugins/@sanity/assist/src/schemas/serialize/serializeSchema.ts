@@ -138,6 +138,14 @@ function serializeFields(
                 // regardless of weather or not it is the field function or the fieldset function that hides it
                 hidden:
                   typeof fs.hidden === 'function' ? fs.hidden : fs.hidden ? true : f.type.hidden,
+                // Same for readOnly: a fieldset function is not on field.type, and
+                // conditionalMembers only reports it when the serialized field is conditional.
+                readOnly:
+                  typeof fs.readOnly === 'function'
+                    ? fs.readOnly
+                    : fs.readOnly
+                      ? true
+                      : f.type.readOnly,
               },
             })),
       )

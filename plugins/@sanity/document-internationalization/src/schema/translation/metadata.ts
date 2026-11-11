@@ -1,5 +1,11 @@
 import {TranslateIcon} from '@sanity/icons/Translate'
-import {defineField, defineType, type DocumentDefinition, type FieldDefinition} from 'sanity'
+import {
+  defineField,
+  defineType,
+  type DocumentDefinition,
+  type FieldDefinition,
+  type PreviewConfig,
+} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 
 import {METADATA_SCHEMA_NAME, TRANSLATIONS_ARRAY_NAME} from '../../constants'
@@ -16,6 +22,7 @@ export default (
   schemaTypes: string[],
   metadataFields: FieldDefinition[],
   omnisearchVisibility = true,
+  metadataPreview?: PreviewConfig,
 ): DocumentDefinition =>
   defineType({
     type: 'document',
@@ -40,7 +47,7 @@ export default (
       }),
       ...metadataFields,
     ],
-    preview: {
+    preview: metadataPreview ?? {
       select: {
         translations: TRANSLATIONS_ARRAY_NAME,
         documentSchemaTypes: 'schemaTypes',
