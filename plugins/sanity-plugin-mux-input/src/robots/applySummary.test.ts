@@ -3,6 +3,7 @@ import {describe, expect, test} from 'vitest'
 
 import {
   defaultSummaryTargets,
+  latestSummary,
   pickSummaryTarget,
   summaryFieldValues,
   summaryOutputRows,
@@ -69,6 +70,30 @@ describe('apply summary', () => {
       title: 'Boxing match',
       tags: ['boxing'],
     })
+  })
+
+  test('applies the newer of Summarize and Analyze structure', () => {
+    const summarize = {...summary, completedAt: 100}
+    const analyzeStructure = {
+      jobId: 's1',
+      completedAt: 200,
+      title: 'Fight night',
+      summary: 'A bout.',
+    }
+    expect(latestSummary({_type: 'mux.robotsOutputs', summarize, analyzeStructure})).toEqual({
+      workflow: 'analyze-structure',
+      summary: {jobId: 's1', completedAt: 200, title: 'Fight night', description: 'A bout.'},
+    })
+    expect(
+      latestSummary({
+        _type: 'mux.robotsOutputs',
+        summarize,
+        analyzeStructure: {...analyzeStructure, completedAt: 50},
+      }),
+    ).toEqual({workflow: 'summarize', summary: summarize})
+    expect(latestSummary({_type: 'mux.robotsOutputs', summarize})?.workflow).toBe('summarize')
+    expect(latestSummary({_type: 'mux.robotsOutputs'})).toBeUndefined()
+    expect(latestSummary(undefined)).toBeUndefined()
   })
 
   test('skips outputs without a value', () => {

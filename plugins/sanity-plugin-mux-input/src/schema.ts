@@ -203,6 +203,17 @@ const muxRobotsOutputs = {
       ],
     },
     {
+      name: 'analyzeStructure',
+      type: 'object',
+      fields: [
+        {type: 'string', name: 'jobId'},
+        {type: 'number', name: 'completedAt'},
+        {type: 'string', name: 'title'},
+        {type: 'text', name: 'summary'},
+        {type: 'array', name: 'tags', of: [{type: 'string'}]},
+      ],
+    },
+    {
       name: 'moderate',
       type: 'object',
       fields: [

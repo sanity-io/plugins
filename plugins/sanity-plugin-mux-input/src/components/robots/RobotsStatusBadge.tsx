@@ -26,6 +26,7 @@ const TONES: Record<'job' | 'run' | 'node' | 'create', Record<string, BadgeTone>
     failed: 'critical',
     waiting_for_resources: 'default',
     waiting_for_source_workflow: 'default',
+    waiting_for_source_bindings: 'default',
   } satisfies Record<RobotsNodeStatus, BadgeTone>,
   create: {starting: 'primary', unconfirmed: 'caution'} satisfies Record<
     PendingCreateRowPhase,

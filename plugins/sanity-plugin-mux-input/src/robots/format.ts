@@ -21,6 +21,21 @@ export function formatOffsetMs(ms: unknown): string {
   return typeof ms === 'number' ? formatSeconds(ms / 1000) : EM_DASH
 }
 
+/**
+ * A media time from a v1 field in seconds or its v0 counterpart in milliseconds. Read by key,
+ * never by version, so a time is never converted twice.
+ */
+export function formatMediaTime(seconds: unknown, ms: unknown): string {
+  return typeof seconds === 'number' ? formatOffset(seconds) : formatOffsetMs(ms)
+}
+
+/** `start_time`–`end_time` (v1, seconds) or `start_ms`–`end_ms` (v0). */
+export function formatMediaSpan(row: Record<string, unknown>): string {
+  const start = formatMediaTime(row['start_time'], row['start_ms'])
+  const end = formatMediaTime(row['end_time'], row['end_ms'])
+  return `${start} – ${end}`
+}
+
 /** A model's 0–1 score, at the two decimals Mux reports. */
 export function formatScore(score: unknown): string {
   return typeof score === 'number' ? score.toFixed(2) : EM_DASH
@@ -48,6 +63,8 @@ export function nodeStateDetail(node: RobotsNodeState): string {
   if (node.source_workflows?.length) {
     return `Waiting on ${node.source_workflows.map(workflowLabel).join(', ')}`
   }
+  // Binding reference ids, which the directive's author named: shown as they are.
+  if (node.source_bindings?.length) return `Waiting on ${node.source_bindings.join(', ')}`
   if (node.status === 'waiting_for_resources') return 'Waiting for a resource, such as captions'
   if (node.status === 'dispatched') return 'Dispatched'
   return EM_DASH

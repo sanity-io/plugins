@@ -17,7 +17,6 @@ import {
 } from '../../robots/catalog'
 import type {RobotsWorkflow} from '../../robots/types'
 import {DIALOGS_Z_INDEX} from '../../util/constants'
-import type {MuxTextTrack} from '../../util/types'
 import FormField from '../FormField'
 import {RobotsNote} from './RobotsNote'
 import {RobotsParamFields} from './RobotsParamFields'
@@ -26,16 +25,17 @@ import {RobotsReasonButton} from './RobotsReasonButton'
 /** Nothing runs until a confirm step names the workflow, the spend and any destructive choice. */
 export function RobotsRunDialog({
   assetId,
-  captionTracks,
   context,
   runDisabledReason,
+  runningOnV0,
   onRun,
   onClose,
 }: {
   assetId: string
-  captionTracks: MuxTextTrack[]
   context: RobotsAssetContext
   runDisabledReason?: string | undefined
+  /** Workflows a v0 job is still running on this video, which v1 can't see. */
+  runningOnV0: ReadonlySet<string>
   /** Not awaited: the dialog closes on confirm and the job list shows the run starting. */
   onRun: (workflow: RobotsWorkflow, parameters: Record<string, unknown>) => void
   onClose: () => void
@@ -56,6 +56,13 @@ export function RobotsRunDialog({
   const values = valuesByWorkflow[workflow] ?? defaultParamValues(definition.params)
   const errors = validateParams(definition, values, context)
   const warnings = confirmWarnings(definition, values, context)
+  const v0Duplicate = runningOnV0.has(workflow) && (
+    <RobotsNote tone="caution">
+      A Robots v0 run of {definition.label} is still in progress on this video, from an older
+      version of this plugin or a v0 directive. Robots v1 can’t see it, so this starts a second run,
+      and both are billed.
+    </RobotsNote>
+  )
 
   const handleChange = (name: string, value: unknown) =>
     setValuesByWorkflow((previous) => ({...previous, [workflow]: {...values, [name]: value}}))
@@ -116,6 +123,7 @@ export function RobotsRunDialog({
                 The Studio picks it up when the job finishes.
               </RobotsNote>
             )}
+            {v0Duplicate}
             {(definition.notes ?? []).map((note) => (
               <RobotsNote key={note} tone="caution">
                 {note}
@@ -189,6 +197,7 @@ export function RobotsRunDialog({
               </Flex>
             )}
 
+            {v0Duplicate}
             {(definition.notes ?? []).map((note) => (
               <RobotsNote key={note}>{note}</RobotsNote>
             ))}
@@ -198,7 +207,6 @@ export function RobotsRunDialog({
               fields={definition.params}
               values={values}
               onChange={handleChange}
-              captionTracks={captionTracks}
               context={context}
             />
 

@@ -3,6 +3,7 @@ import {describe, expect, test} from 'vitest'
 import {
   availableWorkflow,
   buildRobotsParameters,
+  captionLanguageOptions,
   confirmWarnings,
   defaultParamValues,
   DEFAULT_ROBOTS_WORKFLOW,
@@ -14,6 +15,7 @@ import {
   type RobotsParamField,
   type TaxonomyValue,
   validateParams,
+  workflowLabel,
   workflowUnavailableReason,
 } from './catalog'
 import {ROBOTS_WORKFLOWS, type RobotsWorkflow} from './types'
@@ -105,7 +107,7 @@ describe('defaults and untouched fields', () => {
   })
 
   test('"No preference" leaves the steering out', () => {
-    expect(paramsFor('find-scenes', {'output_steering.title_style': ''})).not.toHaveProperty(
+    expect(paramsFor('analyze-structure', {'output_steering.granularity': ''})).not.toHaveProperty(
       'output_steering',
     )
   })
@@ -143,7 +145,7 @@ describe('replace_existing_tracks', () => {
   test.each(['generate-premium-captions', 'translate-captions', 'translate-audio'] as const)(
     '%s sends the documented fail by default, and only while the result is uploaded',
     (workflow) => {
-      const base = {track_id: 'track-1', to_language_code: 'es'}
+      const base = {track_id: 'track-1', output_language_code: 'es'}
       expect(paramsFor(workflow, base)['replace_existing_tracks']).toBe('fail')
       expect(paramsFor(workflow, {...base, upload_to_mux: false})).not.toHaveProperty(
         'replace_existing_tracks',
@@ -292,15 +294,18 @@ describe('find-key-moments', () => {
   })
 
   test('takes both highlight bounds or neither, min below max', () => {
-    expect(errorsFor('find-key-moments', {'target_duration_ms.min': 1000})).toEqual([
+    expect(errorsFor('find-key-moments', {'target_duration.min': 1})).toEqual([
       'Set both highlight length bounds, or neither.',
     ])
     expect(
-      errorsFor('find-key-moments', {
-        'target_duration_ms.min': 5000,
-        'target_duration_ms.max': 1000,
-      }),
+      errorsFor('find-key-moments', {'target_duration.min': 5, 'target_duration.max': 1}),
     ).toEqual(['The minimum highlight length cannot exceed the maximum.'])
+  })
+
+  test('sends the highlight bounds in seconds, fractions included', () => {
+    const bounds = {'target_duration.min': 1.5, 'target_duration.max': 30}
+    expect(errorsFor('find-key-moments', bounds)).toEqual([])
+    expect(paramsFor('find-key-moments', bounds)['target_duration']).toEqual({min: 1.5, max: 30})
   })
 })
 
@@ -322,9 +327,6 @@ describe('numbers', () => {
     ])
     expect(errorsFor('moderate', {sampling_interval: 4})).toEqual([
       'Seconds between samples must be at least 5.',
-    ])
-    expect(errorsFor('find-scenes', {min_scene_duration_ms: 500})).toEqual([
-      'Minimum scene length (ms) must be at least 1000.',
     ])
   })
 })
@@ -349,12 +351,12 @@ describe('text and list limits', () => {
       'Brand terms: at most 10 entries.',
     ])
     expect(
-      errorsFor('find-scenes', {'output_steering.brand_terms': ['x'.repeat(41)]}),
+      errorsFor('analyze-structure', {'output_steering.brand_terms': ['x'.repeat(41)]}),
     ).toHaveLength(1)
   })
 
   test('caps never_translate and refuses angle brackets', () => {
-    const base = {track_id: 'track-1', to_language_code: 'es'}
+    const base = {track_id: 'track-1', output_language_code: 'es'}
     expect(errorsFor('translate-captions', {...base, never_translate: ['<b>Mux</b>']})).toEqual([
       'Never translate cannot contain < or >: "<b>Mux</b>".',
     ])
@@ -409,8 +411,8 @@ describe('taxonomies', () => {
 
   test('sends nothing without values, and says so when a name was typed', () => {
     const named = {'output_steering.topic_taxonomy': taxonomy({name: 'Topics'})}
-    expect(paramsFor('find-scenes', named)).not.toHaveProperty('output_steering')
-    expect(errorsFor('find-scenes', named)).toEqual([
+    expect(paramsFor('analyze-structure', named)).not.toHaveProperty('output_steering')
+    expect(errorsFor('analyze-structure', named)).toEqual([
       'Topic taxonomy: add at least one value, or clear the taxonomy name.',
     ])
   })
@@ -451,10 +453,10 @@ describe('the scope window', () => {
   test('is on the six workflows that document it', () => {
     expect(scoped.toSorted()).toEqual(
       [
+        'analyze-structure',
         'ask-questions',
         'find-best-thumbnails',
         'find-key-moments',
-        'find-scenes',
         'moderate',
         'summarize',
       ].toSorted(),
@@ -482,15 +484,154 @@ describe('the scope window', () => {
 })
 
 describe('audio-only assets', () => {
-  test('find-scenes and find-best-thumbnails are unavailable, and only them', () => {
+  test('only find-best-thumbnails is unavailable', () => {
     const unavailable = ROBOTS_CATALOG.filter((definition) =>
       workflowUnavailableReason(definition, {isAudioOnly: true}),
     ).map((definition) => definition.key)
-    expect(unavailable.toSorted()).toEqual(['find-best-thumbnails', 'find-scenes'])
+    expect(unavailable).toEqual(['find-best-thumbnails'])
   })
 
   test('an unavailable choice falls back to the default', () => {
-    expect(availableWorkflow('find-scenes', {isAudioOnly: true})).toBe(DEFAULT_ROBOTS_WORKFLOW)
-    expect(availableWorkflow('find-scenes', {})).toBe('find-scenes')
+    expect(availableWorkflow('find-best-thumbnails', {isAudioOnly: true})).toBe(
+      DEFAULT_ROBOTS_WORKFLOW,
+    )
+    expect(availableWorkflow('find-best-thumbnails', {})).toBe('find-best-thumbnails')
+  })
+})
+
+describe('edit-captions', () => {
+  const english = {
+    type: 'text' as const,
+    id: 'track-1',
+    name: 'English',
+    language_code: 'en',
+    status: 'ready',
+  }
+  const context = {captionTracks: [english]}
+  const base = {
+    track_id: 'track-1',
+    replacements: [{find: 'a', replace: 'b', caseSensitive: false}],
+  }
+
+  test('replaces the original by default, keeping its name', () => {
+    const params = paramsFor('edit-captions', base, context)
+    expect(params['replace_existing_tracks']).toBe('replace')
+    expect(params).not.toHaveProperty('track_name')
+    expect(errorsFor('edit-captions', base, context)).toEqual([])
+  })
+
+  test('sends neither the policy nor a name when the result is not uploaded', () => {
+    const params = paramsFor(
+      'edit-captions',
+      {...base, upload_to_mux: false, replace_existing_tracks: 'fail', track_name: 'Edited'},
+      context,
+    )
+    expect(params).not.toHaveProperty('replace_existing_tracks')
+    expect(params).not.toHaveProperty('track_name')
+  })
+
+  test('keeping the original needs a name other than its own', () => {
+    const keep = {...base, replace_existing_tracks: 'fail'}
+    expect(errorsFor('edit-captions', keep, context)).toEqual([
+      'Name the edited track, since the original is kept.',
+    ])
+    expect(errorsFor('edit-captions', {...keep, track_name: ' english '}, context)).toEqual([
+      'Give the edited track a name other than the original’s, since the original is kept.',
+    ])
+    expect(errorsFor('edit-captions', {...keep, track_name: 'English (edited)'}, context)).toEqual(
+      [],
+    )
+    expect(paramsFor('edit-captions', {...keep, track_name: 'English (edited)'}, context)).toEqual(
+      expect.objectContaining({replace_existing_tracks: 'fail', track_name: 'English (edited)'}),
+    )
+  })
+})
+
+describe('captions to read', () => {
+  test('every workflow that reads captions offers the asset’s own languages', () => {
+    const readers = ROBOTS_CATALOG.filter((definition) =>
+      definition.params.some((param) => param.kind === 'captionLanguage'),
+    ).map((definition) => definition.key)
+    expect(readers.toSorted()).toEqual(
+      [
+        'analyze-structure',
+        'ask-questions',
+        'generate-chapters',
+        'moderate',
+        'summarize',
+      ].toSorted(),
+    )
+  })
+
+  test('one option per language, in track order, named after its tracks', () => {
+    const track = (id: string, language_code: string, name?: string) => ({
+      type: 'text' as const,
+      id,
+      language_code,
+      status: 'ready' as const,
+      ...(name && {name}),
+    })
+    expect(
+      captionLanguageOptions([
+        track('1', 'en-US', 'English'),
+        track('2', 'es'),
+        track('3', 'en-US', 'English (Generated)'),
+      ]),
+    ).toEqual([
+      {value: 'en-US', label: 'English, English (Generated) (en-US)'},
+      {value: 'es', label: 'es'},
+    ])
+  })
+})
+
+describe('analyze-structure', () => {
+  test('writes nothing to the asset by default', () => {
+    expect(paramsFor('analyze-structure', {'output_steering.granularity': 'fine'})).toEqual({
+      asset_id: ASSET,
+      update_asset_meta: false,
+      output_steering: {granularity: 'fine'},
+    })
+  })
+
+  test('sends each asset update that is turned on', () => {
+    expect(paramsFor('analyze-structure', {update_asset_meta: true})).toEqual({
+      asset_id: ASSET,
+      update_asset_meta: true,
+    })
+    expect(paramsFor('analyze-structure', {update_asset_chapters: true})).toEqual({
+      asset_id: ASSET,
+      update_asset_meta: false,
+      update_asset_chapters: true,
+    })
+  })
+
+  test('runs without captions on a video, but an audio-only one needs them', () => {
+    expect(errorsFor('analyze-structure', {}, {hasCaptions: false})).toEqual([])
+    expect(errorsFor('analyze-structure', {}, {hasCaptions: false, isAudioOnly: true})).toEqual([
+      'This audio-only video has no caption track, and it is analyzed from its captions. Generate captions first.',
+    ])
+    expect(errorsFor('analyze-structure', {}, {hasCaptions: true, isAudioOnly: true})).toEqual([])
+  })
+})
+
+describe.each(['translate-captions', 'translate-audio'] as const)('%s track name', (workflow) => {
+  const base = {track_id: 'track-1', output_language_code: 'es'}
+
+  test('is sent when set, and only with the result uploaded', () => {
+    expect(paramsFor(workflow, {...base, track_name: 'Español'})).toEqual(
+      expect.objectContaining({track_name: 'Español'}),
+    )
+    expect(paramsFor(workflow, base)).not.toHaveProperty('track_name')
+    expect(
+      paramsFor(workflow, {...base, upload_to_mux: false, track_name: 'Español'}),
+    ).not.toHaveProperty('track_name')
+  })
+})
+
+describe('workflowLabel', () => {
+  test('still names the workflows the Studio no longer starts', () => {
+    expect(workflowLabel('find-scenes')).toBe('Find scenes')
+    expect(workflowLabel('analyze-structure')).toBe('Analyze structure')
+    expect(workflowLabel('something-new')).toBe('something-new')
   })
 })

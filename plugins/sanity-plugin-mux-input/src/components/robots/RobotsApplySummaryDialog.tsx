@@ -6,12 +6,14 @@ import type {SummaryTarget} from '../../hooks/useSummaryTarget'
 import {
   defaultSummaryTargets,
   isEmptyValue,
+  type LatestSummary,
   pickSummaryTarget,
   type SummaryOutputRow,
   summaryFieldValues,
   summaryOutputRows,
   type SummaryTargets,
 } from '../../robots/applySummary'
+import {workflowLabel} from '../../robots/catalog'
 import {EM_DASH} from '../../robots/format'
 import type {RobotsSummarizeOutput} from '../../robots/types'
 import {DIALOGS_Z_INDEX} from '../../util/constants'
@@ -58,10 +60,12 @@ function CurrentValue({
 /** Copies the stored summary into fields of the document this video is in, after a preview. */
 export function RobotsApplySummaryDialog({
   summary,
+  workflow,
   target,
   onClose,
 }: {
   summary: RobotsSummarizeOutput
+  workflow: LatestSummary['workflow']
   target: SummaryTarget
   onClose: () => void
 }) {
@@ -108,8 +112,8 @@ export function RobotsApplySummaryDialog({
     >
       <Stack gap={4} padding={4}>
         <Text size={1}>
-          Pick a field for each output, or leave it on Do not apply. Nothing is sent to Mux: these
-          are this document’s own fields
+          From the newest {workflowLabel(workflow)} result. Pick a field for each output, or leave
+          it on Do not apply. Nothing is sent to Mux: these are this document’s own fields
           {target.isDraft ? ', and the change stays a draft until you publish.' : '.'}
         </Text>
         <Card radius={2} border>

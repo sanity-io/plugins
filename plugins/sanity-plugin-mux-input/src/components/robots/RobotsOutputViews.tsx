@@ -5,12 +5,13 @@ import {
   asRows,
   asStrings,
   EM_DASH,
+  formatMediaSpan,
+  formatMediaTime,
   formatOffset,
-  formatOffsetMs,
   formatScore,
   formatText,
 } from '../../robots/format'
-import type {RobotsWorkflow} from '../../robots/types'
+import type {RobotsJobWorkflow} from '../../robots/types'
 import {RobotsJsonBlock} from './RobotsJsonBlock'
 import {RobotsNote} from './RobotsNote'
 
@@ -63,28 +64,44 @@ function Tags({tags, tone = 'default'}: {tags: string[]; tone?: 'default' | 'pri
   )
 }
 
-const SUMMARIZE: OutputView = {
-  hasContent: (outputs) =>
+/** Summarize calls the text `description`, Analyze structure `summary`. */
+function hasSummary(outputs: Outputs, textKey: 'description' | 'summary'): boolean {
+  return (
     typeof outputs['title'] === 'string' ||
-    typeof outputs['description'] === 'string' ||
-    asStrings(outputs['tags']).length > 0,
-  render: (outputs) => (
-    <Stack gap={4}>
+    typeof outputs[textKey] === 'string' ||
+    asStrings(outputs['tags']).length > 0
+  )
+}
+
+function Summary({outputs, textKey}: {outputs: Outputs; textKey: 'description' | 'summary'}) {
+  const text = outputs[textKey]
+  const tags = asStrings(outputs['tags'])
+  return (
+    <>
       {typeof outputs['title'] === 'string' && (
         <Labelled label="Title">
           <Text size={1}>{outputs['title']}</Text>
         </Labelled>
       )}
-      {typeof outputs['description'] === 'string' && (
-        <Labelled label="Description">
-          <Text size={1}>{outputs['description']}</Text>
+      {typeof text === 'string' && (
+        <Labelled label={textKey === 'summary' ? 'Summary' : 'Description'}>
+          <Text size={1}>{text}</Text>
         </Labelled>
       )}
-      {asStrings(outputs['tags']).length > 0 && (
+      {tags.length > 0 && (
         <Labelled label="Tags">
-          <Tags tags={asStrings(outputs['tags'])} />
+          <Tags tags={tags} />
         </Labelled>
       )}
+    </>
+  )
+}
+
+const SUMMARIZE: OutputView = {
+  hasContent: (outputs) => hasSummary(outputs, 'description'),
+  render: (outputs) => (
+    <Stack gap={4}>
+      <Summary outputs={outputs} textKey="description" />
     </Stack>
   ),
 }
@@ -144,9 +161,31 @@ const ASK_QUESTIONS: OutputView = {
   ),
 }
 
-/** `asset_update` is present only when the job ran with `update_asset_chapters`. */
-function ChaptersAssetUpdateNote({assetUpdate}: {assetUpdate: unknown}) {
-  const status = (assetUpdate as {status?: unknown} | undefined)?.status
+/**
+ * Present only when the job ran with `update_asset_chapters`: v1 reports it in
+ * `asset_updates.chapters`, v0 in `asset_update`.
+ */
+function chaptersAssetUpdate(outputs: Outputs): unknown {
+  const updates = outputs['asset_updates'] as {chapters?: unknown} | undefined
+  return updates?.chapters ?? outputs['asset_update']
+}
+
+function updateStatus(update: unknown): unknown {
+  return (update as {status?: unknown} | undefined)?.status
+}
+
+/**
+ * `unreported` shows when the job reports no outcome: Generate chapters then didn't write them,
+ * and Analyze structure either wasn't asked to or made none.
+ */
+function ChaptersAssetUpdateNote({
+  assetUpdate,
+  unreported = null,
+}: {
+  assetUpdate: unknown
+  unreported?: ReactElement | null
+}) {
+  const status = updateStatus(assetUpdate)
   if (status === 'created') {
     return (
       <RobotsNote tone="positive">
@@ -161,8 +200,19 @@ function ChaptersAssetUpdateNote({assetUpdate}: {assetUpdate: unknown}) {
       </RobotsNote>
     )
   }
+  return unreported
+}
+
+function Chapters({chapters}: {chapters: Outputs[]}) {
   return (
-    <RobotsNote>These chapters weren’t added to the Mux video; they’re listed below.</RobotsNote>
+    <Stack gap={2}>
+      {chapters.map((chapter, index) => (
+        // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
+        <Text key={index} size={1}>
+          {formatOffset(chapter['start_time'])} — {formatText(chapter['title'])}
+        </Text>
+      ))}
+    </Stack>
   )
 }
 
@@ -170,15 +220,15 @@ const GENERATE_CHAPTERS: OutputView = {
   hasContent: (outputs) => asRows(outputs['chapters']).length > 0,
   render: (outputs) => (
     <Stack gap={3}>
-      <ChaptersAssetUpdateNote assetUpdate={outputs['asset_update']} />
-      <Stack gap={2}>
-        {asRows(outputs['chapters']).map((chapter, index) => (
-          // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
-          <Text key={index} size={1}>
-            {formatOffset(chapter['start_time'])} — {formatText(chapter['title'])}
-          </Text>
-        ))}
-      </Stack>
+      <ChaptersAssetUpdateNote
+        assetUpdate={chaptersAssetUpdate(outputs)}
+        unreported={
+          <RobotsNote>
+            These chapters weren’t added to the Mux video; they’re listed below.
+          </RobotsNote>
+        }
+      />
+      <Chapters chapters={asRows(outputs['chapters'])} />
     </Stack>
   ),
 }
@@ -203,11 +253,11 @@ function Narratives({moment}: {moment: Outputs}) {
   )
 }
 
-const FIND_KEY_MOMENTS: OutputView = {
-  hasContent: (outputs) => asRows(outputs['moments']).length > 0,
-  render: (outputs) => (
+/** Find key moments calls them `moments`, Analyze structure `key_moments`. */
+function KeyMoments({moments}: {moments: Outputs[]}) {
+  return (
     <Stack gap={2}>
-      {asRows(outputs['moments']).map((moment, index) => {
+      {moments.map((moment, index) => {
         const concepts = [
           ...asStrings(moment['notable_audible_concepts']),
           ...asRows(moment['notable_visual_concepts']).map((concept) =>
@@ -219,7 +269,7 @@ const FIND_KEY_MOMENTS: OutputView = {
             // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
             key={index}
             title={formatText(moment['title'])}
-            meta={`${formatOffsetMs(moment['start_ms'])} – ${formatOffsetMs(moment['end_ms'])} · score ${formatScore(moment['overall_score'])}`}
+            meta={`${formatMediaSpan(moment)} · score ${formatScore(moment['overall_score'])}`}
           >
             <Narratives moment={moment} />
             {concepts.length > 0 && <Tags tags={[...new Set(concepts)]} tone="primary" />}
@@ -227,19 +277,23 @@ const FIND_KEY_MOMENTS: OutputView = {
         )
       })}
     </Stack>
-  ),
+  )
 }
 
-const FIND_SCENES: OutputView = {
-  hasContent: (outputs) => asRows(outputs['scenes']).length > 0,
-  render: (outputs) => (
+const FIND_KEY_MOMENTS: OutputView = {
+  hasContent: (outputs) => asRows(outputs['moments']).length > 0,
+  render: (outputs) => <KeyMoments moments={asRows(outputs['moments'])} />,
+}
+
+function Scenes({scenes}: {scenes: Outputs[]}) {
+  return (
     <Stack gap={2}>
-      {asRows(outputs['scenes']).map((scene, index) => (
+      {scenes.map((scene, index) => (
         <RowCard
           // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
           key={index}
           title={formatText(scene['title'])}
-          meta={`${formatOffsetMs(scene['start_ms'])} – ${formatOffsetMs(scene['end_ms'])}`}
+          meta={formatMediaSpan(scene)}
         >
           <Text size={1}>
             {String(
@@ -252,7 +306,74 @@ const FIND_SCENES: OutputView = {
         </RowCard>
       ))}
     </Stack>
-  ),
+  )
+}
+
+/** v0 only: its jobs still show until Mux deletes them. */
+const FIND_SCENES: OutputView = {
+  hasContent: (outputs) => asRows(outputs['scenes']).length > 0,
+  render: (outputs) => <Scenes scenes={asRows(outputs['scenes'])} />,
+}
+
+function TitleUpdatedNote({assetUpdate}: {assetUpdate: unknown}) {
+  const status = updateStatus(assetUpdate)
+  if (status === 'updated') {
+    return (
+      <RobotsNote tone="positive">
+        The title was written to the Mux video. Resync the video to see it in the Studio.
+      </RobotsNote>
+    )
+  }
+  if (status === 'failed') {
+    return <RobotsNote tone="caution">Mux couldn’t write the title to the video.</RobotsNote>
+  }
+  return null
+}
+
+const ANALYZE_STRUCTURE: OutputView = {
+  hasContent: (outputs) =>
+    hasSummary(outputs, 'summary') ||
+    ['chapters', 'scenes', 'key_moments'].some((key) => Array.isArray(outputs[key])),
+  render: (outputs) => {
+    const updates = outputs['asset_updates'] as {title?: unknown; chapters?: unknown} | undefined
+    const chapters = asRows(outputs['chapters'])
+    const scenes = asRows(outputs['scenes'])
+    const moments = asRows(outputs['key_moments'])
+    return (
+      <Stack gap={4}>
+        <TitleUpdatedNote assetUpdate={updates?.title} />
+        <ChaptersAssetUpdateNote assetUpdate={updates?.chapters} />
+        <Summary outputs={outputs} textKey="summary" />
+        <Labelled label="Chapters">
+          {chapters.length > 0 ? (
+            <Chapters chapters={chapters} />
+          ) : (
+            <Text size={1} muted>
+              Mux made none. Chapters need at least a minute of the video.
+            </Text>
+          )}
+        </Labelled>
+        <Labelled label="Scenes">
+          {scenes.length > 0 ? (
+            <Scenes scenes={scenes} />
+          ) : (
+            <Text size={1} muted>
+              Mux found none. An audio-only video never has scenes.
+            </Text>
+          )}
+        </Labelled>
+        <Labelled label="Key moments">
+          {moments.length > 0 ? (
+            <KeyMoments moments={moments} />
+          ) : (
+            <Text size={1} muted>
+              None qualified.
+            </Text>
+          )}
+        </Labelled>
+      </Stack>
+    )
+  },
 }
 
 const FIND_BEST_THUMBNAILS: OutputView = {
@@ -263,7 +384,7 @@ const FIND_BEST_THUMBNAILS: OutputView = {
         <RowCard
           // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
           key={index}
-          title={`At ${formatOffsetMs(thumbnail['timestamp_ms'])}`}
+          title={`At ${formatMediaTime(thumbnail['time'], thumbnail['timestamp_ms'])}`}
           meta={`Score ${formatScore(thumbnail['overall'])}`}
         >
           {typeof thumbnail['description'] === 'string' && (
@@ -319,12 +440,13 @@ const TRACK_PRODUCING: OutputView = {
   ),
 }
 
-export const OUTPUT_VIEWS: Record<RobotsWorkflow, OutputView> = {
+export const OUTPUT_VIEWS: Record<RobotsJobWorkflow, OutputView> = {
   'summarize': SUMMARIZE,
   'moderate': MODERATE,
   'ask-questions': ASK_QUESTIONS,
   'generate-chapters': GENERATE_CHAPTERS,
   'find-key-moments': FIND_KEY_MOMENTS,
+  'analyze-structure': ANALYZE_STRUCTURE,
   'find-scenes': FIND_SCENES,
   'find-best-thumbnails': FIND_BEST_THUMBNAILS,
   'generate-engagement-insights': ENGAGEMENT_INSIGHTS,

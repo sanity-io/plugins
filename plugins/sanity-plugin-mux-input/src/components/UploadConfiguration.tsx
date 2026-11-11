@@ -14,6 +14,7 @@ import {
   directiveNamesById,
   missingDirectiveIds,
   useRobotsDirectives,
+  v0DirectiveIds,
 } from '../hooks/useRobotsDirectives'
 import {directivesToAttach, withDirectives} from '../robots/upload'
 import {convertWatermarkToMuxOverlay} from '../util/convertWatermarkToMux'
@@ -461,6 +462,7 @@ export default function UploadConfiguration({
         <RobotsUploadDirectives
           configuredIds={configuredDirectiveIds}
           missingIds={missingIds}
+          v0Ids={v0DirectiveIds(directiveListing)}
           directiveNames={directiveNamesById(directiveListing, configuredDirectiveIds)}
           listing={directiveListing}
           uncheckedIds={uncheckedDirectiveIds}

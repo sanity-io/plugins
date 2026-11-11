@@ -16,6 +16,7 @@ import {useId, useState} from 'react'
 
 import {
   asTaxonomyValue,
+  captionLanguageOptions,
   emptyQuestionRow,
   emptyTaxonomyRow,
   groupFieldsBySection,
@@ -378,6 +379,24 @@ function EnumListInput({field, value, onChange, inputId}: FieldProps) {
   )
 }
 
+function LanguageInput({
+  field,
+  value,
+  onChange,
+  inputId,
+  languageListId,
+}: FieldProps & {languageListId: string}) {
+  return (
+    <TextInput
+      id={inputId}
+      list={languageListId}
+      placeholder={field.placeholder ?? 'en'}
+      value={(value as string | undefined) ?? ''}
+      onChange={(event) => onChange(field.name, event.currentTarget.value.trim())}
+    />
+  )
+}
+
 function Control({
   field,
   value,
@@ -385,7 +404,7 @@ function Control({
   inputId,
   captionTracks,
   languageListId,
-}: FieldProps & {captionTracks: MuxTextTrack[]; languageListId: string}) {
+}: FieldProps & {captionTracks: MuxTextTrack[] | undefined; languageListId: string}) {
   switch (field.kind) {
     case 'select':
       return (
@@ -421,16 +440,40 @@ function Control({
       )
     case 'language':
       return (
-        <TextInput
+        <LanguageInput
+          field={field}
+          value={value}
+          onChange={onChange}
+          inputId={inputId}
+          languageListId={languageListId}
+        />
+      )
+    case 'captionLanguage':
+      // Until the asset's tracks are known, a language code is typed as before.
+      return captionTracks ? (
+        <Select
           id={inputId}
-          list={languageListId}
-          placeholder={field.placeholder ?? 'en'}
           value={(value as string | undefined) ?? ''}
-          onChange={(event) => onChange(field.name, event.currentTarget.value.trim())}
+          onChange={(event) => onChange(field.name, event.currentTarget.value)}
+        >
+          <option value="">First ready caption track</option>
+          {captionLanguageOptions(captionTracks).map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
+      ) : (
+        <LanguageInput
+          field={field}
+          value={value}
+          onChange={onChange}
+          inputId={inputId}
+          languageListId={languageListId}
         />
       )
     case 'track':
-      return captionTracks.length === 0 ? (
+      return !captionTracks || captionTracks.length === 0 ? (
         <Text size={1} muted>
           This video has no caption track to use.
         </Text>
@@ -483,13 +526,11 @@ export function RobotsParamFields({
   fields,
   values,
   onChange,
-  captionTracks,
   context,
 }: {
   fields: RobotsParamField[]
   values: Record<string, unknown>
   onChange: OnChange
-  captionTracks: MuxTextTrack[]
   context: RobotsAssetContext
 }) {
   const id = useId()
@@ -536,7 +577,7 @@ export function RobotsParamFields({
           value={value}
           onChange={onChange}
           inputId={inputId}
-          captionTracks={captionTracks}
+          captionTracks={context.captionTracks}
           languageListId={languageListId}
         />
       </FormField>
@@ -545,7 +586,7 @@ export function RobotsParamFields({
 
   return (
     <Stack gap={4}>
-      {fields.some((field) => field.kind === 'language') && (
+      {fields.some((field) => field.kind === 'language' || field.kind === 'captionLanguage') && (
         <datalist id={languageListId}>
           {ROBOTS_VERIFIED_LANGUAGES.map((language) => (
             <option key={language.code} value={language.code}>

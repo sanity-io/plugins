@@ -9,6 +9,7 @@ import {directiveNamesById, useRobotsDirectives} from '../../hooks/useRobotsDire
 import {useRobotsSync} from '../../hooks/useRobotsSync'
 import type {SummaryTarget} from '../../hooks/useSummaryTarget'
 import {robotsRunnersOnlyNote} from '../../robots/access'
+import {latestSummary} from '../../robots/applySummary'
 import type {RobotsAssetContext} from '../../robots/catalog'
 import {
   jobsWithHistory,
@@ -19,6 +20,7 @@ import {
 } from '../../robots/records'
 import type {RobotsToast} from '../../robots/sync'
 import type {RobotsPendingCreate} from '../../robots/types'
+import {workflowsRunningOnV0} from '../../robots/versions'
 import {hasUsableCaptionTrack, isCaptionTrack} from '../../util/tracks'
 import type {MuxInputConfig, MuxTextTrack, VideoAssetDocument} from '../../util/types'
 import {RobotsApplySummaryDialog} from './RobotsApplySummaryDialog'
@@ -34,7 +36,7 @@ import {RobotsUnconfirmedNote} from './RobotsUnconfirmedNote'
 const NO_DIRECTIVES: string[] = []
 
 const APPLY_SUMMARY_EMPTY =
-  'Run a Summarize workflow to apply its title, description and tags to this document’s own fields.'
+  'Run Summarize or Analyze structure to apply a title, description and tags to this document’s own fields.'
 
 export interface RobotsPanelProps {
   asset: VideoAssetDocument
@@ -138,18 +140,18 @@ function RobotsPanelForAsset({
     ...(tracks && {
       hasCaptions: hasUsableCaptionTrack(tracks),
       isAudioOnly: !tracks.some((track) => track?.type === 'video'),
+      captionTracks: tracks.filter(
+        (track): track is MuxTextTrack =>
+          isCaptionTrack(track) && track.status === 'ready' && !!track.id,
+      ),
     }),
     ...(!asset.data?.is_live &&
       typeof asset.data?.duration === 'number' && {duration: asset.data.duration}),
   }
-  const captionTracks = (tracks ?? []).filter(
-    (track): track is MuxTextTrack =>
-      isCaptionTrack(track) && track.status === 'ready' && !!track.id,
-  )
   const shownJobs = jobsWithHistory(snapshot.jobs, asset.robotsJobs)
   const viewedJob = shownJobs.find((job) => job.id === viewedJobId)
   const directiveNames = directiveNamesById(listing, defaultDirectiveIds)
-  const summary = asset.robotsOutputs?.summarize
+  const latest = latestSummary(asset.robotsOutputs)
 
   return (
     <Stack gap={4}>
@@ -168,7 +170,7 @@ function RobotsPanelForAsset({
             <RobotsReasonButton
               text="Apply summary"
               mode="ghost"
-              disabledReason={summary ? undefined : APPLY_SUMMARY_EMPTY}
+              disabledReason={latest ? undefined : APPLY_SUMMARY_EMPTY}
               onClick={() => setIsApplySummaryOpen(true)}
             />
           )}
@@ -236,16 +238,17 @@ function RobotsPanelForAsset({
       {canRun && isRunDialogOpen && (
         <RobotsRunDialog
           assetId={assetId}
-          captionTracks={captionTracks}
           context={context}
           runDisabledReason={runDisabledReason}
+          runningOnV0={workflowsRunningOnV0(snapshot.jobs)}
           onRun={(workflow, parameters) => void store.startJob(workflow, parameters, notify)}
           onClose={() => setIsRunDialogOpen(false)}
         />
       )}
-      {summaryTarget && summary && isApplySummaryOpen && (
+      {summaryTarget && latest && isApplySummaryOpen && (
         <RobotsApplySummaryDialog
-          summary={summary}
+          summary={latest.summary}
+          workflow={latest.workflow}
           target={summaryTarget}
           onClose={() => setIsApplySummaryOpen(false)}
         />

@@ -1,10 +1,11 @@
+import type {MuxTextTrack} from '../util/types'
 import type {RobotsWorkflow} from './types'
 
 /**
- * The Robots workflows as data, so the run dialog renders from it and this file alone decides
+ * The Robots v1 workflows as data, so the run dialog renders from it and this file alone decides
  * what reaches Mux. Names, enums and limits follow the API reference; where it and a guide
- * disagree, the stricter figure wins. Left out on purpose: the deprecated `replace_existing` and
- * `prompt_overrides`, and `auto_censor_profanity.detection_method` (one value, the default).
+ * disagree, the stricter figure wins. Left out on purpose: `auto_censor_profanity.detection_method`
+ * (one value, the default).
  */
 
 export type RobotsParamKind =
@@ -13,6 +14,11 @@ export type RobotsParamKind =
   | 'boolean'
   | 'select'
   | 'language'
+  /**
+   * The language of the caption track to read. v1 needs an exact match (`en` doesn't read an
+   * `en-US` track), so it offers the asset's own languages once its tracks are known.
+   */
+  | 'captionLanguage'
   /** Picks one of the asset's caption tracks. */
   | 'track'
   | 'stringList'
@@ -38,6 +44,8 @@ export interface RobotsAssetContext {
   isAudioOnly?: boolean
   /** Seconds. Absent for live streams. */
   duration?: number
+  /** The ready caption tracks, once the asset's tracks are known. */
+  captionTracks?: MuxTextTrack[]
 }
 
 export type RobotsFieldCondition =
@@ -214,6 +222,42 @@ const TOPIC_TAXONOMY: RobotsParamField = {
   },
 }
 
+const UPDATE_ASSET_META: RobotsParamField = {
+  kind: 'boolean',
+  name: 'update_asset_meta',
+  label: "Set the asset's title to the generated one",
+  helpText:
+    'Writes meta.title on the Mux asset. The title in the Studio only changes when you ' +
+    'resync the video.',
+  defaultValue: false,
+}
+
+function updateAssetChaptersField(defaultValue: boolean): RobotsParamField {
+  return {
+    kind: 'boolean',
+    name: 'update_asset_chapters',
+    label: 'Add the chapters to the Mux video',
+    helpText:
+      'Writes them as the video’s chapters track when the job finishes. Replaces any ' +
+      'chapters track the video already has, including one added by hand.',
+    defaultValue,
+    omitWhenFalse: true,
+  }
+}
+
+/** The name of a translation's new track, which Mux otherwise names after its language. */
+function translatedTrackNameField(defaultName: string): RobotsParamField {
+  return {
+    kind: 'text',
+    name: 'track_name',
+    label: 'Track name',
+    helpText:
+      `Leave empty and Mux names it after the target language, e.g. "${defaultName}". A track ` +
+      'with this name counts as an existing one below.',
+    showWhen: {field: 'upload_to_mux', equals: true},
+  }
+}
+
 function replaceExistingTracksField(track: 'caption' | 'audio'): RobotsParamField {
   const noun = track === 'audio' ? 'audio track' : 'caption track'
   const warning = (whenValue: string, which: string): RobotsConfirmWarning => ({
@@ -354,19 +398,28 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
           'Renames the bracketed speaker labels at the start of cues. Write the labels without ' +
           'the brackets. The spoken text is not changed.',
       },
-      {
-        kind: 'text',
-        name: 'track_name_suffix',
-        label: 'Suffix for the new track name',
-        helpText: 'Added to the original track’s name. Leave empty for Mux’s default, "edited".',
-      },
       UPLOAD_TO_MUX,
       {
-        kind: 'boolean',
-        name: 'delete_original_track',
-        label: 'Delete the original track',
-        helpText: 'The edited track replaces it rather than sitting alongside it.',
-        defaultValue: true,
+        kind: 'select',
+        name: 'replace_existing_tracks',
+        label: 'The original track',
+        helpText:
+          'Replaced, the edited track takes its place under the same name and language, and the ' +
+          'original comes back if the edited one can’t be added.',
+        options: [
+          {value: 'replace', label: 'Replace it with the edited track'},
+          {value: 'fail', label: 'Keep it, and add the edited track next to it'},
+        ],
+        defaultValue: 'replace',
+        showWhen: {field: 'upload_to_mux', equals: true},
+      },
+      {
+        kind: 'text',
+        name: 'track_name',
+        label: 'Name of the edited track',
+        helpText:
+          'Leave empty to keep the original’s name. Required when you keep the original, and ' +
+          'different from its name. No other track on the video can have it.',
         showWhen: {field: 'upload_to_mux', equals: true},
       },
     ],
@@ -381,7 +434,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
       {kind: 'track', name: 'track_id', label: 'Source caption track', isRequired: true},
       {
         kind: 'language',
-        name: 'to_language_code',
+        name: 'output_language_code',
         label: 'Target language',
         helpText: LANGUAGE_HELP,
         isRequired: true,
@@ -397,6 +450,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         maxItemLength: 100,
       },
       UPLOAD_TO_MUX,
+      translatedTrackNameField('Spanish (Auto-translated)'),
       replaceExistingTracksField('caption'),
     ],
   },
@@ -415,12 +469,13 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
     params: [
       {
         kind: 'language',
-        name: 'to_language_code',
+        name: 'output_language_code',
         label: 'Target language',
         helpText: LANGUAGE_HELP,
         isRequired: true,
       },
       UPLOAD_TO_MUX,
+      translatedTrackNameField('Spanish (Auto-dubbed)'),
       replaceExistingTracksField('audio'),
     ],
   },
@@ -459,7 +514,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         integer: true,
       },
       {
-        kind: 'language',
+        kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
@@ -515,15 +570,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         defaultValue: '',
       },
       ...SCOPE_FIELDS,
-      {
-        kind: 'boolean',
-        name: 'update_asset_meta',
-        label: "Set the asset's title to the generated one",
-        helpText:
-          'Writes meta.title on the Mux asset. The title in the Studio only changes when you ' +
-          'resync the video.',
-        defaultValue: false,
-      },
+      UPDATE_ASSET_META,
     ],
   },
   {
@@ -556,7 +603,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         integer: true,
       },
       {
-        kind: 'language',
+        kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
@@ -595,20 +642,18 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
       },
       {
         kind: 'number',
-        name: 'target_duration_ms.min',
-        label: 'Minimum highlight length (ms)',
+        name: 'target_duration.min',
+        label: 'Minimum highlight length (seconds)',
         min: 0,
-        step: 1000,
-        integer: true,
+        step: 1,
         section: HIGHLIGHT_LENGTH_SECTION,
       },
       {
         kind: 'number',
-        name: 'target_duration_ms.max',
-        label: 'Maximum highlight length (ms)',
+        name: 'target_duration.max',
+        label: 'Maximum highlight length (seconds)',
         min: 0,
-        step: 1000,
-        integer: true,
+        step: 1,
         section: HIGHLIGHT_LENGTH_SECTION,
       },
       {
@@ -743,13 +788,13 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
     description: 'Create timestamped chapters from the video content.',
     params: [
       {
-        kind: 'language',
+        kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
           'Chapters are made from one of this video’s caption tracks. Choose the language of ' +
-          'the one to use, or leave empty and Mux prefers English when there is an English ' +
-          'track. The chapter titles’ language is Output language.',
+          'the one to use, or leave empty for the first one that is ready. The chapter titles’ ' +
+          'language is Output language.',
       },
       {
         kind: 'language',
@@ -785,90 +830,57 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
       },
       audienceField(),
       brandTermsField('Terminology to prefer in the chapter titles.'),
-      {
-        kind: 'boolean',
-        name: 'update_asset_chapters',
-        label: 'Add the chapters to the Mux video',
-        helpText:
-          'Writes them as the video’s chapters track when the job finishes. Replaces any ' +
-          'chapters track the video already has, including one added by hand.',
-        defaultValue: true,
-        omitWhenFalse: true,
-      },
+      updateAssetChaptersField(true),
     ],
   },
   {
-    key: 'find-scenes',
-    label: 'Find scenes',
+    key: 'analyze-structure',
+    label: 'Analyze structure',
     category: 'Structure',
-    description: 'Segment the video into ordered, timestamped scenes.',
-    requiresVideoTrack: true,
+    description:
+      'A title, summary, tags, chapters, scenes and key moments in one run. Replaces Find ' +
+      'scenes, which Robots v1 no longer has.',
+    notes: [
+      'Costs more than Find scenes. On a video it can also generate Mux Shots, billed ' +
+        'separately from Robots units.',
+      'An audio-only video is analyzed from its captions and has no scenes.',
+    ],
     params: [
       {
-        kind: 'language',
+        kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
-          'Scenes are found from this video’s caption track in that language, if it has one. ' +
-          'Leave empty to use the first caption track that is ready.',
+          'Captions add what is said. Choose the language of the caption track to read, or ' +
+          'leave empty for the first one that is ready. A video works without captions; an ' +
+          'audio-only one needs them.',
       },
       {
-        kind: 'number',
-        name: 'min_scenes',
-        label: 'Minimum scenes (hint)',
-        min: 1,
-        step: 1,
-        integer: true,
-      },
-      {
-        kind: 'select',
-        name: 'output_steering.segmentation_strategy',
-        label: 'How to split the video',
-        options: [
-          {value: '', label: NO_PREFERENCE_LABEL},
-          {value: 'editorial_beats', label: 'Editorial beats'},
-          {value: 'topic_changes', label: 'Topic changes'},
-          {value: 'visual_transitions', label: 'Visual transitions'},
-          {value: 'action_progression', label: 'Action progression'},
-          {value: 'instructional_steps', label: 'Instructional steps'},
-        ],
+        kind: 'language',
+        name: 'output_language_code',
+        label: 'Output language',
+        helpText: `Leave empty to detect it from the video. ${LANGUAGE_HELP}`,
       },
       {
         kind: 'select',
-        name: 'output_steering.title_style',
-        label: 'Title style',
+        name: 'output_steering.granularity',
+        label: 'Scene and chapter density',
+        helpText:
+          'Fewer, longer scenes and chapters (coarse) or more, shorter ones (fine). Best effort.',
         options: [
           {value: '', label: NO_PREFERENCE_LABEL},
-          {value: 'descriptive', label: 'Descriptive'},
-          {value: 'editorial', label: 'Editorial'},
-          {value: 'search_optimized', label: 'Search optimized'},
-          {value: 'accessibility', label: 'Accessibility'},
-        ],
-      },
-      {
-        kind: 'select',
-        name: 'output_steering.narration_detail',
-        label: 'Narration detail',
-        options: [
-          {value: '', label: NO_PREFERENCE_LABEL},
-          {value: 'concise', label: 'Concise'},
+          {value: 'coarse', label: 'Coarse'},
           {value: 'balanced', label: 'Balanced'},
-          {value: 'detailed', label: 'Detailed'},
+          {value: 'fine', label: 'Fine'},
         ],
+        defaultValue: '',
       },
       audienceField(),
-      brandTermsField('Terminology to prefer in the scene titles. One per line.'),
+      brandTermsField('Terminology to prefer in the generated text. One per line.'),
       TOPIC_TAXONOMY,
       ...SCOPE_FIELDS,
-      {
-        kind: 'number',
-        name: 'min_scene_duration_ms',
-        label: 'Minimum scene length (ms)',
-        helpText: 'At least 1000. Defaults to 15000.',
-        min: 1000,
-        step: 1000,
-        integer: true,
-      },
+      UPDATE_ASSET_META,
+      updateAssetChaptersField(false),
     ],
   },
   {
@@ -879,7 +891,7 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
     params: [
       {
         // Mux ignores it for video assets, so it's hidden once the asset is known to have video.
-        kind: 'language',
+        kind: 'captionLanguage',
         name: 'language_code',
         label: CAPTIONS_TO_READ_LABEL,
         helpText:
@@ -965,8 +977,18 @@ export const ROBOTS_CATEGORIES: RobotsCategory[] = [
   'Trust & Safety',
 ]
 
+/** Workflows the Studio doesn't start whose jobs still show: v0's, and those directives run. */
+const UNOFFERED_WORKFLOW_LABELS: Record<string, string> = {
+  'find-scenes': 'Find scenes',
+  'generate-contextual-text': 'Generate contextual text',
+}
+
 export function workflowLabel(workflow: string): string {
-  return ROBOTS_CATALOG_BY_KEY[workflow as RobotsWorkflow]?.label ?? workflow
+  return (
+    ROBOTS_CATALOG_BY_KEY[workflow as RobotsWorkflow]?.label ??
+    UNOFFERED_WORKFLOW_LABELS[workflow] ??
+    workflow
+  )
 }
 
 /** What the run form opens on. It runs on any asset. */
@@ -1087,6 +1109,20 @@ function splitCommaList(text: string | undefined): string[] {
     .split(',')
     .map((entry) => entry.trim())
     .filter(Boolean)
+}
+
+/** One option per language of the ready caption tracks, in track order, named after its tracks. */
+export function captionLanguageOptions(tracks: MuxTextTrack[]): RobotsParamOption[] {
+  const namesByLanguage = new Map<string, string[]>()
+  for (const track of tracks) {
+    if (!track.language_code) continue
+    const names = namesByLanguage.get(track.language_code) ?? []
+    namesByLanguage.set(track.language_code, track.name ? [...names, track.name] : names)
+  }
+  return [...namesByLanguage].map(([code, names]) => ({
+    value: code,
+    label: names.length > 0 ? `${names.join(', ')} (${code})` : code,
+  }))
 }
 
 export function defaultParamValues(fields: RobotsParamField[]): Record<string, unknown> {
@@ -1345,6 +1381,24 @@ function scopeErrors(
   return errors
 }
 
+/** Keeping the original caption track needs a name of its own for the edited one. */
+function keptTrackNameErrors(
+  definition: RobotsWorkflowDefinition,
+  values: Record<string, unknown>,
+  context: RobotsAssetContext,
+): string[] {
+  const policy = definition.params.find((field) => field.name === 'replace_existing_tracks')
+  if (!policy || !isFieldVisible(policy, values, context)) return []
+  if ((values['replace_existing_tracks'] ?? policy.defaultValue) !== 'fail') return []
+
+  const name = typeof values['track_name'] === 'string' ? values['track_name'].trim() : ''
+  if (name === '') return ['Name the edited track, since the original is kept.']
+  const source = context.captionTracks?.find((track) => track.id === values['track_id'])
+  return source?.name?.trim().toLowerCase() === name.toLowerCase()
+    ? ['Give the edited track a name other than the original’s, since the original is kept.']
+    : []
+}
+
 function workflowErrors(
   definition: RobotsWorkflowDefinition,
   values: Record<string, unknown>,
@@ -1376,8 +1430,8 @@ function workflowErrors(
             : 'This video has no caption track. Turn on "Use visual evidence (Mux Shots)", or generate captions first.',
         )
       }
-      const min = numberValue(definition, values, 'target_duration_ms.min')
-      const max = numberValue(definition, values, 'target_duration_ms.max')
+      const min = numberValue(definition, values, 'target_duration.min')
+      const max = numberValue(definition, values, 'target_duration.max')
       if ((min === undefined) !== (max === undefined)) {
         errors.push('Set both highlight length bounds, or neither.')
       } else if (min !== undefined && max !== undefined && min > max) {
@@ -1385,6 +1439,13 @@ function workflowErrors(
       }
       break
     }
+    case 'analyze-structure':
+      if (context.isAudioOnly === true && context.hasCaptions === false) {
+        errors.push(
+          'This audio-only video has no caption track, and it is analyzed from its captions. Generate captions first.',
+        )
+      }
+      break
     case 'generate-chapters':
       if (context.hasCaptions === false) {
         errors.push(
@@ -1392,7 +1453,7 @@ function workflowErrors(
         )
       }
       break
-    case 'edit-captions':
+    case 'edit-captions': {
       if (
         !valueOf('replacements') &&
         !valueOf('speakerReplacements') &&
@@ -1400,7 +1461,9 @@ function workflowErrors(
       ) {
         errors.push('Add a replacement rule or a speaker label, or turn on "Censor profanity".')
       }
+      errors.push(...keptTrackNameErrors(definition, values, context))
       break
+    }
     case 'ask-questions': {
       const rows = Array.isArray(values['questions']) ? (values['questions'] as QuestionRow[]) : []
       if (rows.some((row) => row.question.trim().length > 600)) {
