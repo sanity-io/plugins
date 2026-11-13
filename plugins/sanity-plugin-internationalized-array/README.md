@@ -62,7 +62,7 @@ This will register two new fields to the schema, based on the settings passed in
 - `internationalizedArrayString` an array field of:
 - `internationalizedArrayStringValue` an object field, with a single `string` field inside called `value`
 
-The above config will also create an empty array item in new documents for each language in `defaultLanguages`. This is configured globally for all internationalized array fields.
+The above config will also create an empty array item in new documents for each language in `defaultLanguages`. Persisted documents that are still in the dataset get the same rows. Deleted documents are not recreated.
 
 Those rows cannot be removed, and a missing row is inserted again while the document is open. Set `allowRemovingDefaultLanguages: true` to treat them as initial values instead: they are still added on a new document, and editors can remove them afterwards. A removed row stays removed once the document has history, including when removing the last row clears the field.
 
