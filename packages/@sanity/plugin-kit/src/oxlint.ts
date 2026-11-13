@@ -1,10 +1,14 @@
+import {fileURLToPath} from 'node:url'
+
 import type {OxlintConfig} from 'oxlint'
 
 /**
  * Shared [oxlint](https://oxc.rs/docs/guide/usage/linter.html) config for Sanity plugins - the
  * same settings the [sanity-io/plugins](https://github.com/sanity-io/plugins) monorepo uses:
  * type-aware rules and TypeScript type checking enabled (via `oxlint-tsgolint`), warnings denied,
- * and the React, React Compiler, import, promise, a11y and unicorn rule sets turned on.
+ * the React, React Compiler, import, promise, a11y and unicorn rule sets turned on, and the
+ * `@sanity/plugin-kit/oxlint-plugin` rules (CSS modules are imported with `import * as styles` or
+ * named imports, which Lightning CSS can tree-shake) loaded as a JS plugin.
  *
  * Re-export it from an `oxlint.config.ts` next to the `package.json` that runs oxlint (the
  * repository root in a monorepo, otherwise the plugin directory):
@@ -33,6 +37,9 @@ import type {OxlintConfig} from 'oxlint'
  */
 const config: OxlintConfig = {
   plugins: ['typescript', 'unicorn', 'react', 'oxc', 'import', 'jsx-a11y', 'promise'],
+  // oxlint resolves relative `jsPlugins` specifiers from the extending config, not from this
+  // one, so hand it the plugin's absolute path.
+  jsPlugins: [fileURLToPath(import.meta.resolve('@sanity/plugin-kit/oxlint-plugin'))],
   ignorePatterns: ['**/.sanity/*', '**/dist/*', '**/sanity.types.ts'],
   options: {
     denyWarnings: true,
@@ -118,6 +125,7 @@ const config: OxlintConfig = {
     'typescript/prefer-ts-expect-error': 'error',
     'import/no-commonjs': 'error',
     'import/no-unassigned-import': ['error', {allow: ['**/*.css']}],
+    'plugin-kit/no-css-module-default-import': 'error',
     'no-restricted-globals': [
       'error',
       {name: '__dirname', message: 'Use path.dirname(fileURLToPath(import.meta.url)) instead'},

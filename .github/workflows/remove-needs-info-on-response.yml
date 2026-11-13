@@ -1,24 +1,25 @@
 name: Remove needs-more-info Label on Response
 
 on:
-  issue_comment:
+  issue_comment: # zizmor: ignore[dangerous-triggers] gated to the human issue author on sanity-io/plugins; no checkout and the comment body is never executed
     types: [created]
 
 permissions:
   issues: write
-  pull-requests: read
 
 jobs:
   remove-label:
     runs-on: ubuntu-latest
 
     # Only run when:
+    # - This is the upstream repository (forks keep their own copy of the workflow)
     # - The event is for an issue, not a pull request
     # - The issue has the "needs-more-info" label
     # - The commenter is the original issue author (not someone else)
     # - The commenter is a human (not a bot)
     if: >-
-      github.event.issue.pull_request == null
+      github.repository == 'sanity-io/plugins'
+      && github.event.issue.pull_request == null
       && contains(github.event.issue.labels.*.name, 'needs-more-info')
       && github.event.comment.user.login == github.event.issue.user.login
       && github.event.comment.user.type != 'Bot'

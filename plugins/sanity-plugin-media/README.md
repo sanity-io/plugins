@@ -30,6 +30,7 @@ _Individual asset view_
 - Manage tags directly within the plugin
 - Get previews for audio and video files
 - Easily select and delete multiple assets in bulk
+- Shift-click to pick a run of assets, Ctrl-click (Cmd-click on macOS) to pick individual assets
 
 #### Granular search tools
 
@@ -101,6 +102,7 @@ export default defineConfig({
 ```ts
 // sanity.config.ts
 import {media} from 'sanity-plugin-media'
+
 import {CustomDetails} from './MyCustomDetails'
 
 export default defineConfig({
@@ -223,6 +225,9 @@ coalesce(altText.it, altText.en)
 When `locales` are provided, all localized fields (title, altText, description, creditLine) are grouped by language in tabs. Each tab shows all fields for a single language, making it easy to edit translations for many languages in a compact interface.
 
 This will return the Italian value if present, otherwise English, otherwise French, etc. Adjust the order as needed for your project.
+
+**Sorting by title:**
+When `locales` are configured, "Title: A to Z" / "Title: Z to A" in the sort dropdown sort by the first available translation, checked in the order your `locales` array is declared — the same fallback pattern shown above. Assets missing a title in every configured locale sort as empty.
 
 #### Migrating existing assets to localized format
 
@@ -363,6 +368,7 @@ Note that tags and folders are namespaced within `opt.media`. Tag names are acce
 - Asset folder assignment is stored as a weak reference at `opt.media.folder`
 - The default asset browser view shows all assets. Opening a folder filters the asset list to assets assigned to that folder.
 - You can move selected assets to a folder from the selection bar, remove selected assets from the current folder, or change/remove an individual asset's folder from the asset details dialog
+- You can also drag assets onto a folder in the folder panel. Dragging a picked asset moves every picked asset. Dropping on "All assets" removes them from their folder
 - Deleting a folder deletes only the folder document. Assets assigned to it stay in the library and have their folder assignment removed; nested folders move up one level.
 
 </details>

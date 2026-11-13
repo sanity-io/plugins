@@ -91,7 +91,11 @@ export default function VideosBrowser({onSelect, config}: VideosBrowserProps) {
         )}
       </Stack>
       {freshEditedAsset && (
-        <VideoDetails closeDialog={() => setEditedAsset(null)} asset={freshEditedAsset} />
+        <VideoDetails
+          closeDialog={() => setEditedAsset(null)}
+          asset={freshEditedAsset}
+          config={config}
+        />
       )}
     </DrmPlaybackWarningContextProvider>
   )

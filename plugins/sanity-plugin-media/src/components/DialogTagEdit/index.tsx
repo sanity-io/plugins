@@ -1,3 +1,4 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import type {MutationEvent} from '@sanity/client'
 import {Box, Button, Card, Flex, Text} from '@sanity/ui'
 import groq from 'groq'
@@ -12,7 +13,6 @@ import {dialogActions} from '../../modules/dialog'
 import {selectTagById, tagsActions} from '../../modules/tags'
 import type {DialogTagEditProps, Tag, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
-import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -54,7 +54,7 @@ const DialogTagEdit = (props: Props) => {
   } = useForm<TagFormData>({
     defaultValues: generateDefaultValues(tagItem?.tag),
     mode: 'onChange',
-    resolver: zodFormResolver<TagFormData>(tagFormSchema),
+    resolver: zodResolver(tagFormSchema),
   })
 
   const formUpdating = !tagItem || tagItem?.updating
@@ -133,7 +133,8 @@ const DialogTagEdit = (props: Props) => {
     }
   }, [client, handleTagUpdate, tagItem?.tag])
 
-  const Footer = () => (
+  // Element, not an inner component. See DialogTagCreate.
+  const footer = (
     <Box padding={3}>
       <Flex justify="space-between">
         {/* Delete button */}
@@ -162,15 +163,7 @@ const DialogTagEdit = (props: Props) => {
   }
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Edit Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Edit Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Deleted notification */}

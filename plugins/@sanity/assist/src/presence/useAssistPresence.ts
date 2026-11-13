@@ -19,6 +19,7 @@ export function useAssistPresence(path: Path, showFocusWithin?: boolean): FormNo
       ?.filter(
         (p) =>
           p.started &&
+          // oxlint-disable-next-line react/purity
           new Date().getTime() - new Date(p.started).getTime() < maxHistoryVisibilityMs,
       )
       .filter((presence) => {

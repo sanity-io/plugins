@@ -75,9 +75,9 @@ Keep this in its own module rather than in `sanity.config.ts` or your schema ind
 Import the `define<Type>` functions and use them to build your types. `definePage` produces a document type; the others produce object types you compose into it. Presets and hand-modelled types mix freely:
 
 ```ts
+import {hero} from './hero'
 // schemaTypes/index.ts
 import {definePage, defineImage, defineCta, defineRichText} from './presets'
-import {hero} from './hero'
 
 export const schemaTypes = [
   definePage({
@@ -118,6 +118,7 @@ Import the assembled array and pass it to `schema.types`:
 ```ts
 // sanity.config.ts
 import {defineConfig} from 'sanity'
+
 import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({

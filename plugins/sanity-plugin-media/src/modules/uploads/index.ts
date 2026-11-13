@@ -257,6 +257,7 @@ export const uploadsCheckRequestEpic: MyEpic = (action$, state$, {client}) =>
         assetTypes: state.assets.assetTypes,
         currentFolderId: state.folders.currentFolderId,
         excludeTagSlugs: state.assets.excludeTagSlugs,
+        localeIds: state.assets.localeIds,
         searchFacets: state.search.facets,
         searchQuery: state.search.query,
         showMediaLibraryAssets: state.assets.showMediaLibraryAssets,

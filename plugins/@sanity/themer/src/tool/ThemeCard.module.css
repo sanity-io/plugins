@@ -1,0 +1,74 @@
+.root {
+  position: relative;
+}
+
+/* A bare button, so that the thumbnail and the title can carry the styling */
+.pickButton {
+  appearance: none;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.pickButton:focus {
+  outline: none;
+}
+
+/*
+ * Wraps the thumbnail with room for the ring that marks the applied theme —
+ * hovering shows a faint ring, the applied theme the focus ring color, and
+ * keyboard focus an outline. The rings are drawn inside the frame's padding,
+ * so nothing sticks out to be clipped by the scrolling list.
+ */
+.frame {
+  display: block;
+  padding: 4px;
+  border-radius: 10px;
+  transition: box-shadow 100ms;
+}
+
+.pickButton:hover .frame {
+  box-shadow: inset 0 0 0 2px var(--card-border-color);
+}
+
+.pickButton[aria-pressed='true'] .frame {
+  box-shadow: inset 0 0 0 2px var(--card-focus-ring-color);
+}
+
+.pickButton:focus-visible .frame {
+  outline: 2px solid var(--card-focus-ring-color);
+  outline-offset: -2px;
+}
+
+/*
+ * The actions menu sits on the thumbnail's top right corner, like the actions
+ * of an image input, and only shows on hover, on keyboard focus, and while it
+ * is open — its popover is portaled, so an open menu does not count as focus
+ * within
+ */
+.menuSlot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.root:hover .menuSlot,
+.root:focus-within .menuSlot,
+.menuSlot[data-visible='true'] {
+  opacity: 1;
+}
+
+/* The dark card behind the menu button sizes to the button, not the slot */
+.menuCard {
+  display: inline-block;
+}

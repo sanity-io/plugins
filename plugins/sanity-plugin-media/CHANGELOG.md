@@ -1,5 +1,97 @@
 # sanity-plugin-media
 
+## 6.6.3
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 6.6.2
+
+### Patch Changes
+
+- [#2296](https://github.com/sanity-io/plugins/pull/2296) [`aa0cc5d`](https://github.com/sanity-io/plugins/commit/aa0cc5de119e54f4b485582cf87073edbedce1f7) Thanks [@tillschweneker](https://github.com/tillschweneker)! - Open a referring document from the asset's References tab by its published id and type, so the structure tool resolves it to its place in the desk structure even when the document has a draft
+
+## 6.6.1
+
+### Patch Changes
+
+- [#2061](https://github.com/sanity-io/plugins/pull/2061) [`078ac51`](https://github.com/sanity-io/plugins/commit/078ac519789b6a95f15cc62e66a7296d5a17fe25) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Search alt text, title, description, and credit line when those fields are stored per locale
+
+- [#2276](https://github.com/sanity-io/plugins/pull/2276) [`e5b5459`](https://github.com/sanity-io/plugins/commit/e5b54597e16d1e14e1724d417c1b49fea57812b0) Thanks [@coreyward](https://github.com/coreyward)! - Update dependencies `zod` to ^4.6.7 and `@hookform/resolvers` to ^6.0.2
+
+## 6.6.0
+
+### Minor Changes
+
+- [#2016](https://github.com/sanity-io/plugins/pull/2016) [`c7408b1`](https://github.com/sanity-io/plugins/commit/c7408b122db8816e511e52f621482849e61537be) Thanks [@trostum](https://github.com/trostum)! - Add "Title: A to Z" and "Title: Z to A" sort options to the sort order dropdown. When `locales` are configured, title sorting coalesces through the configured locales in declared order.
+
+## 6.5.0
+
+### Minor Changes
+
+- [#2233](https://github.com/sanity-io/plugins/pull/2233) [`71cc47d`](https://github.com/sanity-io/plugins/commit/71cc47de9c7768eac42eb9c8e1ef1d52871ec46b) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Show the asset document ID in the asset details panel
+
+### Patch Changes
+
+- [#2075](https://github.com/sanity-io/plugins/pull/2075) [`dad9ada`](https://github.com/sanity-io/plugins/commit/dad9ada4fe44d69b8b8d531d6f3815d6efff2dbf) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Save and close ignoring the click when creating or editing a tag, or creating a folder, from the media browser
+
+- [#2082](https://github.com/sanity-io/plugins/pull/2082) [`d0cd298`](https://github.com/sanity-io/plugins/commit/d0cd298e526c09acefddd87ab69a4a46c8592f02) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix Media search failing when the query contains an apostrophe, such as `don't`
+
+## 6.4.0
+
+### Minor Changes
+
+- [#2017](https://github.com/sanity-io/plugins/pull/2017) [`8349010`](https://github.com/sanity-io/plugins/commit/8349010f06117b839432b2b500a10ca9ed695cbb) Thanks [@trostum](https://github.com/trostum)! - Show when the asset was uploaded ("Uploaded") in the asset details metadata panel
+
+### Patch Changes
+
+- [#2231](https://github.com/sanity-io/plugins/pull/2231) [`362762b`](https://github.com/sanity-io/plugins/commit/362762b94df6f4f04bd5c6407f7465a5a5bfd523) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the asset grid jumping back and forth between two scroll positions after scrolling, by opting the grid's scroller out of browser scroll anchoring
+
+## 6.3.5
+
+### Patch Changes
+
+- [#2170](https://github.com/sanity-io/plugins/pull/2170) [`ea794b7`](https://github.com/sanity-io/plugins/commit/ea794b7181eb3f36348529d1a566f79bfff82eb2) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.90.0
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 6.3.4
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 6.3.3
+
+### Patch Changes
+
+- [#1947](https://github.com/sanity-io/plugins/pull/1947) [`2d83ac7`](https://github.com/sanity-io/plugins/commit/2d83ac79cad3d8946b09fa06efa7d94de3370ff6) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency react-hook-form to ^7.89.0
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2134](https://github.com/sanity-io/plugins/pull/2134) [`d3ceaaa`](https://github.com/sanity-io/plugins/commit/d3ceaaad3f943a886dc412138eaa73e07cc98182) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^6.0.2
+
+## 6.3.2
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
+## 6.3.1
+
+### Patch Changes
+
+- [#2028](https://github.com/sanity-io/plugins/pull/2028) [`82ac806`](https://github.com/sanity-io/plugins/commit/82ac806a4d84a0f71caf07f412c7d6e8a2a2c770) Thanks [@stipsan](https://github.com/stipsan)! - Remove `crossOrigin="anonymous"` from the image thumbnail component. The Firefox Opaque Response Blocking issue it worked around — Sanity CDN asset responses sending `Vary: Origin` — is fixed at the API gateway, verified by green Firefox e2e runs in [sanity-io/sanity#14928](https://github.com/sanity-io/sanity/pull/14928). Thumbnails now load in Firefox without the client opting into CORS requests, so the workaround added in [#1108](https://github.com/sanity-io/plugins/pull/1108) (thanks [@oxygensmith](https://github.com/oxygensmith)) is no longer needed.
+
+## 6.3.0
+
+### Minor Changes
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Ctrl-click (Cmd-click on macOS) an asset in the grid or table to toggle its pick without opening it.
+
+- [#2014](https://github.com/sanity-io/plugins/pull/2014) [`e58d1af`](https://github.com/sanity-io/plugins/commit/e58d1af6021af6551fd7d7713743e1864e1f7d40) Thanks [@ovsw](https://github.com/ovsw)! - Drag assets onto folders in the folder panel to move them. Dragging a picked asset moves every picked asset; dragging an unpicked asset moves only that one. Dropping on "All assets" removes the dragged assets from their folder.
+
 ## 6.2.0
 
 ### Minor Changes

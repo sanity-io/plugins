@@ -1,26 +1,24 @@
-import {
-  SortableTreeWithoutDndContext as SortableTree,
-  type TreeItem,
-} from '@nosferatu500/react-sortable-tree'
+import {DndProvider} from '@nosferatu500/react-dnd'
+import {HTML5Backend} from '@nosferatu500/react-dnd-html5-backend'
+import {SortableTreeWithoutDndContext as SortableTree} from '@nosferatu500/react-sortable-tree'
 import {AddCircleIcon} from '@sanity/icons/AddCircle'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
 import type {PatchEvent} from 'sanity'
 
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
 import {TreeOperationsContext} from '../hooks/useTreeOperations'
-import useTreeOperationsProvider from '../hooks/useTreeOperationsProvider'
-import type {Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
+import type {LocalTreeItem, Optional, StoredTreeItem, TreeDeskStructureProps} from '../types'
 import getCommonTreeProps from '../utils/getCommonTreeProps'
 import getTreeHeight from '../utils/getTreeHeight'
+import {getTreeOperations} from '../utils/getTreeOperations'
 import {getUnaddedItems} from '../utils/treeData'
 import type {HandleMovedNodeData} from '../utils/treePatches'
 import DocumentInNode from './DocumentInNode'
 import {TreeEditorErrorBoundary} from './TreeEditorErrorBoundary'
+import {TreeScaffoldStyles} from './TreeNodeRendererScaffold'
 
 interface TreeEditorProps {
   tree: StoredTreeItem[]
@@ -41,11 +39,14 @@ function TreeEditor(props: TreeEditorProps) {
     allItems,
   })
 
-  const operations = useTreeOperationsProvider({
-    patchPrefix: props.patchPrefix,
-    onChange: props.onChange,
-    localTree,
-  })
+  const operations = useMemo(
+    () =>
+      getTreeOperations({
+        patchPrefix: props.patchPrefix,
+        onChange: props.onChange,
+      }),
+    [props.patchPrefix, props.onChange],
+  )
 
   const [context, setContext] = useState<HTMLElement | null>(null)
   const [treeViewHeight, setTreeViewHeight] = useState<string>('')
@@ -87,6 +88,7 @@ function TreeEditor(props: TreeEditorProps) {
 
   return (
     <TreeEditorErrorBoundary>
+      <TreeScaffoldStyles />
       {/*Use this Box-wrapper to get a context Element to prevent DndProvider to have to HTML% backend at the same time https://github.com/react-dnd/react-dnd/issues/186#issuecomment-978206387 */}
       <Box id={documentId} ref={setContext}>
         {context ? (
@@ -174,17 +176,17 @@ function TreeEditor(props: TreeEditorProps) {
   )
 }
 
+// Paths hold row `_key`s (see `getNodeKey`), so a row keeps the same path when it moves within
+// its level. Only a drop below the dragged row itself would put it inside its own subtree.
 function canDrop({nextPath, prevPath}: {nextPath: number[]; prevPath: number[]}) {
-  const insideItself =
-    nextPath.length >= prevPath.length &&
-    prevPath.every((pathIndex, index) => nextPath[index] === pathIndex)
-  return !insideItself
+  const draggedKey = prevPath.at(-1)
+  return !nextPath.slice(0, -1).includes(draggedKey as number)
 }
 
 const doNothingOnChange = () => {
   // Do nothing. onMoveNode will do all the work
 }
 
-const getNodeKey = (data: {node: TreeItem}) => data.node['_key'] as string
+const getNodeKey = (data: {node: LocalTreeItem}) => data.node._key
 
 export default TreeEditor

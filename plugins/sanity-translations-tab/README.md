@@ -15,9 +15,8 @@ Unless you are involved in developing this module or a translation plugin, you p
 Add the `TranslationsTab` component as a view in your document structure:
 
 ```js
-import {StructureBuilder as S} from 'sanity/structure'
-
 import {TranslationsTab, DummyAdapter} from 'sanity-translations-tab'
+import {StructureBuilder as S} from 'sanity/structure'
 
 export const getDefaultDocumentNode = ({schemaType}) => {
   if (schemaType === 'translatable') {

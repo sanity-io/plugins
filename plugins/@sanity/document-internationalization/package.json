@@ -1,6 +1,6 @@
 {
   "name": "@sanity/document-internationalization",
-  "version": "6.2.36",
+  "version": "6.3.0",
   "description": "Create unique translations of a document based on its language, joined by a shared reference document.",
   "keywords": [
     "sanity",
@@ -53,6 +53,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "groq-js": "2.0.1",
     "jsdom": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",

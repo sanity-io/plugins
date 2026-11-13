@@ -8,6 +8,7 @@ export type DialogState =
   | 'select-video'
   | 'edit-thumbnail'
   | 'edit-captions'
+  | 'robots'
   | false
 
 export function useDialogState() {

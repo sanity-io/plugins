@@ -5,5 +5,13 @@ import {defineConfig} from 'oxfmt'
 // only workspace-specific ignore patterns belong here.
 export default defineConfig({
   ...pluginKitOxfmt,
-  ignorePatterns: [...(pluginKitOxfmt.ignorePatterns ?? []), 'turbo/**/*.hbs'],
+  ignorePatterns: [
+    ...(pluginKitOxfmt.ignorePatterns ?? []),
+    'storybook-static/**',
+    'CHANGELOG.md',
+    'turbo/**/*.hbs',
+    // The CSS module typings css-modules-kit writes (`pnpm css:types`): gitignored output in
+    // the generator's own formatting
+    '**/generated/**/*.module.css.d.ts',
+  ],
 })

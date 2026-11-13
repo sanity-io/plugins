@@ -18,6 +18,8 @@ This guide is for AI agents working on this codebase. Follow these instructions 
 | Cleanup e2e datasets | `pnpm e2e:cleanup`   |
 | Add changeset        | `pnpm changeset add` |
 | Start dev server     | `pnpm dev`           |
+| Start Storybook      | `pnpm dev:storybook` |
+| Run Storybook tests  | `pnpm test:browser`  |
 
 ## Environment Setup
 
@@ -27,7 +29,7 @@ Use the **latest LTS** release of Node.js.
 
 ### pnpm Version
 
-The exact pnpm version is managed via the `packageManager` field in root `package.json`. You only need pnpm **v11 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
+The exact pnpm version is managed via the `packageManager` field in root `package.json` (currently pnpm **v12**). You only need pnpm **v12 or later** installed globally—corepack or pnpm itself will auto-install the exact version specified.
 
 ```bash
 # Enable corepack to automatically use the correct pnpm version
@@ -37,9 +39,21 @@ corepack enable
 pnpm install
 ```
 
-pnpm v11 defaults `minimumReleaseAge` to 1 day. `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific pins (e.g. `react-rx@4.2.5`) for one-off upgrades still inside that window.
+Install the pinned version globally before regenerating `pnpm-lock.yaml`. When an older global pnpm self-switches to the pinned version, the outer shim injects `pnpm_config_pm_on_fail=ignore`, and the inner pnpm then leaves the lockfile's `packageManagerDependencies` block unwritten. Running the pinned version directly (what `pnpm/setup` does in CI) records it correctly.
+
+Because pnpm 12 records that block, `pnpm-lock.yaml` is **two YAML documents**: a leading env document with `packageManagerDependencies`, then the dependency graph. Any tool that reads the lockfile must parse multi-document YAML; a single-document parser silently sees only the env document and concludes the project has no dependencies. This is why the `vercel` CLI must stay at `58.9.5` or newer, with the versions `pnpm install` reports as trust downgrades listed in `trustPolicyExclude`—see [`e2e/README.md`](e2e/README.md) (`Vercel studio preview`).
+
+`autoDedupe: true` in `pnpm-workspace.yaml` collapses compatible duplicate versions on every non-frozen install, so the lockfile arrives deduped instead of waiting for the `Dedupe lockfile` workflow to open a follow-up PR. Frozen installs never rewrite the lockfile. It requires pnpm >= 12.6.0.
+
+pnpm 12.6.0 doesn't settle on one set of optional peers for `plugins/@sanity/debug-preview-url-secret-plugin`. A fresh install, and any install or `pnpm dedupe` that re-resolves the lockfile, toggles `@vitejs/devtools` and `oxc-transform-react` in the peer suffixes of its `sanity` and `@sanity/tsdown-config` entries. No version changes and frozen installs are unaffected, so don't commit a `pnpm-lock.yaml` diff that only toggles those suffixes. The `Dedupe lockfile` workflow runs `pnpm dedupe` twice for the same reason.
+
+pnpm defaults `minimumReleaseAge` to 1 day (since v11). `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` lists first-party packages and closely tracked tooling that may need immediate installs, plus version-specific `name@version` pins (e.g. `yuku-core@0.18.1`) for one-off upgrades still inside that window. `minimumReleaseAgeExcludePrune` and `trustPolicyExcludePrune` drop exclude entries that no longer match anything in the tree, but only on an install that actually rewrites the lockfile—a no-op install leaves stale entries in place.
 
 Do **not** bypass the maturity check with `pnpm add … --config.minimumReleaseAge=0` (or any other `--config.minimumReleaseAge` override). That is not allowed. If `pnpm install` fails because a needed version is too new, add that exact `name@version` to `minimumReleaseAgeExclude` instead.
+
+A `name@version` pin is only enough when the bump is a one-off. Renovate's artifact update commits `pnpm-lock.yaml` alone, so the entries pnpm writes into `pnpm-workspace.yaml` during that install are discarded and CI's frozen install then rejects the lockfile with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`. For dependencies Renovate bumps regularly and forces from the Dependency Dashboard before the window closes, list the whole family by package name instead — the whole family, because each release pins its siblings and platform bindings to exact versions, so excluding only the package Renovate names leaves the rest flagged. That is why `motion`/`framer-motion`/`motion-dom`/`motion-utils`, `oxc-transform`/`oxc-transform-react` with their `@oxc-transform/*` and `@oxc-transform-react/*` bindings, `@tanstack/react-virtual`/`@tanstack/virtual-core`, and `styled-components` are listed by name.
+
+pnpm also writes such entries itself: when a package that `minimumReleaseAgeExclude` already lists (e.g. `yuku-parser`) resolves to a release that pins an exact, still-too-new version of a subdependency (e.g. `yuku-core@0.18.1` and its `@yuku-core/binding-*` platform packages), a lockfile-rewriting install appends those `name@version` entries to `pnpm-workspace.yaml`. Commit them (or a scoped glob such as `'@yuku-core/*'` for a family of platform binaries) with a short dated comment—`pnpm install --frozen-lockfile` in CI re-verifies the lockfile against `minimumReleaseAge` and fails with `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` if the lockfile pins a too-new version that is not excluded. `minimumReleaseAgeExcludePrune` removes the exact entries once they age out.
 
 ## Before Submitting a PR
 
@@ -65,6 +79,8 @@ pnpm test
 ### Required: Add Changesets
 
 Every PR that changes published packages **must** include changesets. **Important:** Create a separate changeset file for each plugin you modify.
+
+The Changesets setup (`.changeset/config.json`, the `@changesets/*` versions, the `changeset`/`release` scripts and `.github/workflows/release.yml`) matches sanity-io/ui's; only the changelog `repo` differs. `"format": "oxfmt"` makes Changesets format the changesets and changelogs it writes with the repo's oxfmt config, and `"bumpVersionsWithWorkspaceProtocolOnly": true` keeps it from rewriting internal ranges that don't use `workspace:` (like the intentionally wide `sanity-plugin-internationalized-array` peer of `@sanity/sfcc`).
 
 #### Why Separate Changesets?
 
@@ -202,12 +218,13 @@ Two things are required:
 
 The CI pipeline runs on every PR:
 
-| Job       | What it checks                                         |
-| --------- | ------------------------------------------------------ |
-| **build** | `pnpm build` - All packages compile successfully       |
-| **lint**  | `pnpm lint --format github` - Code passes oxlint       |
-| **knip**  | `pnpm knip` - No unused files, dependencies or exports |
-| **test**  | `pnpm test` - All tests pass (runs after build + lint) |
+| Job                | What it checks                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| **build**          | `pnpm build` - All packages compile successfully                                                       |
+| **lint**           | `pnpm lint --format github` - CSS module typings are current, CSS passes stylelint, code passes oxlint |
+| **knip**           | `pnpm knip` - No unused files, dependencies or exports                                                 |
+| **test**           | `pnpm test` - All tests pass (runs after build + lint)                                                 |
+| **storybook-test** | `pnpm test:browser` - Every story renders in headless Chromium                                         |
 
 Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUsedInFile`), so removing a type assertion or annotation that was the last reference to an exported type will make knip start flagging that export. Run `pnpm knip` after refactors that remove type references.
 
@@ -215,11 +232,12 @@ Note on **knip**: in-file usage keeps an exported type "used" (`ignoreExportsUse
 
 - **oxlint**: Type-aware linting with `--deny-warnings` (warnings are errors). React Compiler rules run natively via the [React Compiler vendored into oxlint](https://oxc.rs/blog/2026-08-18-react-compiler-support.html); the root `oxlint.config.ts` enables all of them (stricter than the plugin-kit preset) since this monorepo builds plugins with React Compiler.
 - **TypeScript type checking** is included in `pnpm lint` via oxlint — no separate `tsc` needed
-- Run `pnpm lint:fix` to auto-fix issues when possible
+- **stylelint** lints every `*.css` file (`pnpm lint:css`, part of `pnpm lint`) with the `@sanity/plugin-kit/stylelint` preset: `stylelint-config-recommended` plus `stylelint-config-css-modules`, formatting rules off since oxfmt owns formatting. The root `stylelint.config.mjs` imports and spreads the preset; it is `.mjs` on purpose, as stylelint loads `.ts` configs through the TypeScript compiler API that TypeScript 7 does not ship. stylelint 17 has no GitHub formatter, so the CI lint job registers `.github/problem-matchers/stylelint.json` to turn its default output into annotations.
+- Run `pnpm lint:fix` to auto-fix issues when possible (regenerates the CSS module typings, then stylelint and oxlint with `--fix`)
 
 ## Testing
 
-The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+The monorepo uses [Vitest v5](https://vitest.dev) for testing.
 
 ### Running Tests
 
@@ -248,6 +266,7 @@ Example test file (`src/index.test.ts`):
 
 ```ts
 import {fileURLToPath} from 'node:url'
+
 import {expect, test} from 'vitest'
 import {getPackageExportsManifest} from 'vitest-package-exports'
 
@@ -288,6 +307,7 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 - Snapshots are generated with `pnpm test -u`
 - Root Vitest sets `SC_DISABLE_SPEEDY=false` so styled-components keeps its fast CSSOM injection path under jsdom (upstream disables it when `NODE_ENV !== 'production'`, which makes first mounts of styled-heavy trees slow enough to trip default timeouts). Same approach as [sanity#13675](https://github.com/sanity-io/sanity/pull/13675).
 - For plugins that use vanilla-extract: register `vanillaExtractPlugin()` in the plugin’s `vitest.config.ts` (required so `.css.ts` compiles under Vitest) and include `'@vanilla-extract/css/disableRuntimeStyles'` in `setupFiles` (no-op under `node`, skips CSS injection for `jsdom`/`happy-dom` suites; remove only when a test asserts real CSS) — see the `sanity-plugin-best-practices` styling reference (`Disabling runtime styles in tests`)
+- For suites that use `@testing-library/jest-dom`: register its matchers in the setup file with `expect.extend(matchers)` from `@testing-library/jest-dom/matchers`, and get their types from `/// <reference types="@testing-library/jest-dom/vitest" />` (see `plugins/@sanity/presets/src/test/setup.ts`), as sanity-io/ui does. Don't import the `@testing-library/jest-dom/vitest` entry: it extends whichever vitest pnpm links next to jest-dom, which can be a different copy than the one running the tests.
 
 ## Pull Request Workflow
 
@@ -295,11 +315,11 @@ Use numeric separators (`30_000` instead of `30000`) for readability.
 
 Always open PRs as **draft** initially. The prompter (person who requested the work) reviews first before marking ready for team review.
 
-### 2. Apply the "🤖 bot" Label
+### 2. Apply the "✨ ai" Label
 
-**All PRs created by AI agents must be labeled with "🤖 bot".** This label helps the team identify bot-created PRs and ensures proper tracking and review workflows.
+**All PRs created by AI agents must be labeled with "✨ ai".** This label helps the team identify AI-created PRs and ensures proper tracking and review workflows. Do not use `🤖 bot` — that label is reserved for PRs opened by CI automations and Renovate, not AI agents.
 
-When creating or updating a PR, always ensure the `🤖 bot` label is applied.
+When creating or updating a PR, always ensure the `✨ ai` label is applied.
 
 ### 3. Move Out of Draft
 
@@ -353,7 +373,7 @@ To inspect a **new** build after making changes—while `pnpm devtools:test-stud
 pnpm devtools:test-studio:build
 ```
 
-Builds are not hooked into HMR; `sanity build` must be invoked manually (via the command above) each time you want a new session to inspect. Sessions can be compared against each other in the DevTools UI to diff bundle changes.
+Sessions can be compared against each other in the DevTools UI to diff bundle changes.
 
 How it works:
 
@@ -367,6 +387,14 @@ How it works:
 `dev/test-studio/sanity.cli.ts` enables React production profiling on Vercel preview and production deployments (`VERCEL_ENV === "preview" || VERCEL_ENV === "production"`). During `sanity build`, it aliases `react-dom/client` → `react-dom/profiling`, emits production source maps, and disables identifier mangling so React DevTools can profile and show readable component names. While that profiling path is active it also sets `deployment.autoUpdates: false`, because auto-updates vendor builds hardcode `react-dom-client.production.js` and would bypass the profiling alias.
 
 React profiling is already available in the development build from `pnpm dev`. `VERCEL_ENV` is listed in `dev/test-studio/turbo.jsonc` so Turbo cache keys differ between Vercel and non-Vercel builds.
+
+### Storybook
+
+`dev/storybook` is a React Storybook set up like sanity-io/ui's `apps/storybook`, next to the other dev apps, with stories in `dev/storybook/stories/<plugin>/` (see its `README.md`). `pnpm dev:storybook` serves it at `http://localhost:6006` without Sanity authentication, `pnpm test:browser` renders every story in headless Chromium through the Storybook Vitest addon (the `storybook-test` CI job), and `pnpm storybook:build` writes the static build to `dev/storybook/storybook-static`. Install the browser once with `pnpm --filter plugins-storybook exec playwright install chromium`. The preview imports `@sanity/ui/styles.css` because the published `@sanity/ui` dist doesn't import its own CSS, and it keeps the vanilla-extract Vite plugin because workspace plugins resolve to their `.css.ts` source. Like the other `dev/*` apps, it's skipped by `pretest` and the CI build job.
+
+### `@sanity/ui` v5 (`ui5`)
+
+`sanity` renders the `@sanity/ui` v5 alpha next to v4, aliased as `ui5` (`"ui5": "npm:@sanity/ui@<version>"`). `dev/test-studio` depends on the same alias, pinned to the exact version `sanity` depends on, so that both resolve one instance and one stylesheet. Renovate leaves it alone (a `packageRules` entry in `.github/renovate.json`), so bump it by hand when the Studio's `ui5` moves. The test studio's **UI v5** tool (`/home/ui5`, `dev/test-studio/src/themer/ui5`) explores how far Themer's themes reach into v5, and flags when the two versions drift.
 
 ## Creating a New Plugin
 
@@ -460,6 +488,23 @@ Exception: peers that must stay in lockstep with the version we develop against 
 
 Note that the `peer` catalog entries are intentionally wider than the default catalog's (e.g. `react: ^19.2` vs `^19.2.7`): the default catalog pins what we develop against, the `peer` catalog declares what consumers may use. Renovate is configured (a `packageRules` entry in `.github/renovate.json` disables the `pnpm.catalog.peer` depType) to never rewrite these ranges — changing a peer range is a deliberate, manual decision.
 
+**Every `catalog:peer` peer also needs a `catalog:` dev dependency**
+
+Because the `peer` catalog ranges are wide, a package that lists `react` (or `react-dom`, `sanity`, `styled-components`) only in `peerDependencies` leaves pnpm free to satisfy that peer itself via `autoInstallPeers`. pnpm resolves it against the wide range and keeps whatever the lockfile already had, so the package silently drifts onto a different version than the rest of the workspace. That duplicate then splits everything downstream of it: a second `react` produces a second `sanity` instance, which breaks `pnpm lint` with `TS2322` "Type … is not assignable to type …" between two `.pnpm/sanity@<version>_<hash>` paths, and breaks `pnpm test` with React's "Incompatible React versions" invariant.
+
+Always pair the peer with a dev dependency on the default catalog so the workspace resolves a single copy:
+
+```jsonc
+"devDependencies": {
+  "react": "catalog:"
+},
+"peerDependencies": {
+  "react": "catalog:peer"
+}
+```
+
+This also keeps Renovate's catalog bumps applying to the package — a peer-only declaration is invisible to them, so the package is left behind on the old version and omitted from the bump's changeset.
+
 **Always use `lodash-es` instead of `lodash`**
 
 When working with lodash utility functions, always use the `lodash-es` package instead of `lodash`. The `lodash-es` package is the ES module version that supports tree-shaking and works correctly with modern build tools.
@@ -496,6 +541,10 @@ When bumping the Studio stack (e.g. `^6.5.0` → `^6.6.0`):
 4. Fix any new document-operation disable reasons (e.g. `TARGET_NOT_FOUND`) by mapping them to Sanity's structure locale keys (`action.*.disabled.*`), not by reusing an unrelated tooltip string.
 5. Add a **separate** changeset per published package whose `package.json` or runtime code changed.
 
+**Lockfile re-resolution also moves the Studio `next` overrides**
+
+While `pnpm-workspace.yaml` overrides `sanity`, `@sanity/mutator`, `@sanity/schema`, `@sanity/types`, `@sanity/util`, `@sanity/vision`, and `groq` to the `next` dist-tag, any full re-resolution (editing `overrides`, `pnpm update <pkg>`, `pnpm dedupe`) also bumps them to the newest `next` prerelease, since pnpm cannot reuse a locked version for a dist-tag. That turns a targeted dependency PR into a Studio upgrade, and the new prerelease can pull in packages that fail `trustPolicy: no-downgrade` (`ERR_PNPM_TRUST_DOWNGRADE`). Either call the Studio bump out in the PR, or keep it out by resolving through a local registry proxy that serves the locked versions as `next` and rewrites tarball URLs to itself (`pnpm update <pkg> -r --registry=http://localhost:<port>/`), then confirm the lockfile gained no `localhost` or `tarball:` entries. Do not temporarily pin these overrides to an exact version instead: pnpm also applies semver overrides to `peerDependencies` ranges, and those rewritten ranges stay in the lockfile.
+
 **date-fns: v4 via the catalog, subpath imports, official `@date-fns/tz`**
 
 All date handling matches sanity core (`sanity-io/sanity`), so plugins dedupe against the `date-fns` instance that `sanity` itself ships:
@@ -514,6 +563,16 @@ pnpm format
 
 The formatter settings live in the shared `@sanity/plugin-kit/oxfmt` preset (`packages/@sanity/plugin-kit/src/oxfmt.ts`), which the root `oxfmt.config.ts` extends with workspace-specific `ignorePatterns` (for example `turbo/**/*.hbs`). Standalone plugins scaffolded with `plugin-kit init` reuse the same preset. Note that loading the TypeScript config requires Node `^20.19 || >=22.18`.
 
+The oxfmt version, options and ignore patterns match sanity-io/ui's `.oxfmtrc.json`, so keep them in sync. The exceptions are `turbo/**/*.hbs`, which only exists here, and ui's `**/sanity.types.ts`: `pnpm typegen` formats `dev/test-studio/sanity.types.ts` on purpose, since the test studio runs typegen with `formatGeneratedCode: false`. `.vscode/settings.json` points the Oxc extension at `oxfmt.config.ts`; if `oxc.fmt.configPath` names a missing file, the editor silently formats with oxfmt's defaults instead.
+
+Changesets are formatted like any other file, so their frontmatter uses single quotes, and Changesets formats the changesets it writes with oxfmt. Renovate's changeset action writes double quotes, so after a Renovate PR merges, the Auto format workflow opens a `chore(format): 🤖 ✨` PR that requotes it, as in sanity-io/ui.
+
+A lefthook pre-commit hook (`lefthook.yml`, set up like sanity-io/sanity's) runs oxfmt on the staged files and re-stages them. `pnpm install` installs the hook through lefthook's own install script, which `allowBuilds` in `pnpm-workspace.yaml` permits and which skips when `CI` is set. Skip the hook once with `LEFTHOOK=0 git commit`.
+
+- **Clones that ran husky:** they still have `core.hooksPath` set to `.husky/_`, and lefthook won't install there. Run `git config --unset core.hooksPath && pnpm install` once.
+- **Hook commands:** they call `node_modules/.bin/oxfmt` directly. `pnpm <bin>` in a hook runs pnpm 12's implicit install, which flips the peer toggle described under pnpm Version.
+- **Local scripts:** `pnpm --config.verify-deps-before-run=false <script>` avoids that implicit install too. Turbo tasks (`pnpm build`, the `pretest` build) run plain `pnpm run` in every package, so locally they trigger it as well, and that install is not frozen: it re-resolves the Studio `next` overrides (see `Lockfile re-resolution also moves the Studio next overrides`) and rewrites `pnpm-lock.yaml`. When the lockfile must stay put, run the package scripts through that flag instead, or export `pnpm_config_verify_deps_before_run=false` for the shell session—pnpm 12 reads `pnpm_config_*` environment variables (not `npm_config_*`), and the variable also reaches the nested `pnpm run` invocations inside turbo tasks that the CLI flag cannot. If it already happened, `git checkout pnpm-lock.yaml && pnpm install --frozen-lockfile` puts `node_modules` back on the locked versions.
+
 ### Linting
 
 We use [oxlint](https://oxc.rs/docs/linter.html) for all linting (type-aware, includes TypeScript type checking and [React Compiler rules](https://oxc.rs/blog/2026-08-18-react-compiler-support.html)):
@@ -525,10 +584,21 @@ pnpm lint:fix    # Auto-fix what's possible
 
 The shared rules (plugins, options, categories, rules) live in the `@sanity/plugin-kit/oxlint` config (`packages/@sanity/plugin-kit/src/oxlint.ts`), which the root `oxlint.config.ts` extends; only workspace-specific ignores and overrides belong in the root config. Standalone plugins scaffolded with `plugin-kit init` re-export the same shared config. Note that `ignorePatterns` do not propagate through `extends`, so the root config spreads the shared patterns before adding its own. Like `pnpm format`, `pnpm lint` requires Node `>=22.18` to load the TypeScript config.
 
+### CSS modules
+
+`@sanity/themer` styles its tool with `*.module.css` files, built by `@tsdown/css` (Lightning CSS) through the `css` option of `@sanity/tsdown-config`. What to know when writing or reviewing one:
+
+- **Every CSS module gets a generated, gitignored `X.module.css.d.ts` under the plugin's `generated/` directory**, written by [css-modules-kit](https://github.com/mizdra/css-modules-kit)'s codegen. `pnpm css:types` regenerates them all: it runs the `generate` script of `packages/@repo/css-modules-kit`, a private package that exists only because css-modules-kit needs the TypeScript 6 compiler API, which it gets from `@typescript/typescript6` aliased as `typescript` there — the TypeScript 7 the rest of the repo runs on does not ship that API. That script chains one `cmk --clean --project <plugin>` script per plugin with CSS modules (`generate:themer`), and the typings are never committed: `pnpm install` generates them (the package's `prepare` script), `pnpm lint` and `pnpm lint:fix` regenerate them before oxlint type-checks, and each plugin's `build` regenerates its own first (`prebuild: pnpm --filter @repo/css-modules-kit run generate:themer`), so a fresh clone, the editor and CI see them without a checked-in copy. Keep a plugin's `prebuild` to its own `generate:<plugin>` script: `cmk --clean` wipes the output directory, so two plugins regenerating each other's typings while turbo builds them in parallel would race. A `.module.css` import that fails with TS2307 outside those commands just means the typings have not been generated yet — run `pnpm css:types`. The plugin's `tsconfig.json` carries the setup: the `*.module.css` files in `include`, `rootDirs: [".", "generated"]` so `./X.module.css` resolves to the typings, and `cmkOptions` (`enabled`, plus `container: true` so container names are exported the way Lightning CSS exports them — keyframes are on by default and custom properties off, matching Lightning CSS — and `namedExports: true`, so the typings export each name and have no default export). A typo like `styles.removedThumbnails` then fails `pnpm lint` with `TS2551 … Did you mean 'removedThumbnail'?` — there is no ambient `declare module '*.module.css'` to fall back on; keep it that way. oxfmt and oxlint skip the generated files, which carry css-modules-kit's own `// @ts-nocheck` and formatting.
+- **Import a CSS module as `import * as styles from './X.module.css'` or with named imports, never as a default import.** Lightning CSS [tree-shakes](https://parceljs.org/languages/css/#tree-shaking) the classes a module never reads, and it can only see the reads through a namespace or named import; a default import keeps the whole stylesheet. `@tsdown/css` 0.23 does not prune individual classes yet (it drops a module's stylesheet only when the whole module goes unused), so today the rule is about keeping that door open and matching the typings rather than about bundle size. The shared oxlint config loads `@sanity/plugin-kit/oxlint-plugin`, whose `plugin-kit/no-css-module-default-import` rule reports a default import from any `*.module.css` and rewrites a lone one to the namespace import under `pnpm lint:fix`. The generated typings have no default export either (`namedExports: true`), so the default import is also a type error. Vitest's stand-in for an unprocessed CSS module in jsdom is a default export only (a Proxy that answers every property), so a namespace or named import reads `undefined` from it; the themer's `vitest.config.ts` sets `css: {include: [/\.module\.css$/]}` so Vite compiles the modules and the tests read the same named exports the build emits. Copy that setting into any plugin that adds CSS modules.
+- **Lightning CSS scopes more than classes.** With `cssModules` on, `@keyframes`, `container-name`, `view-transition-class`, the classes inside `::view-transition-*(.x)` and the idents inside `:active-view-transition-type(x)` are all hashed per file, and exported alongside the classes (a container name shows up in the typings too). Keep a `@container` query in the same module as the `container-name` it queries — a shared name across two files never matches, and `@tsdown/css` sets `cssModules` itself, so `container: false` cannot be configured — and mark identifiers that must stay public with `:global()`, e.g. `:root:global(:active-view-transition-type(sanity-themer))`.
+- **The scoped names hash the stylesheet's content** (`generateScopedName: '[content-hash]_[local]'` in the plugin's `tsdown.config.ts`), so a release that changes a file's styles gets new names for them. Custom properties are not scoped (`dashedIdents` is off); namespace them, e.g. `--themer-preview-bg`, and type an inline `style` that sets them through an interface extending `CSSProperties` rather than a type assertion.
+- **The test studio compiles the same files with Vite**, so `dev/test-studio/sanity.cli.ts` sets `css.transformer: 'lightningcss'` with the same `cssModules.pattern`. The studio then renders exactly the names the build ships, which also makes `sanity dev` a faithful check of the hashing. Mirror both settings when one changes.
+
 ## Project Structure
 
 ```
 plugins/
+├── dev/storybook/        # React Storybook for plugin components (localhost:6006)
 ├── dev/test-studio/      # Test Sanity Studio (localhost:3333)
 ├── packages/@repo/       # Internal shared packages
 ├── packages/@sanity/     # Published tooling packages (e.g. @sanity/plugin-kit)
@@ -545,6 +615,8 @@ plugins/
 
 Declarations are generated with tsgo (tsdown enables dts generation automatically — packages either declare types in `package.json` or inherit `declaration: true` from the shared `@sanity/tsconfig` presets — and picks the tsgo generator because the installed `typescript` is v7+), which requires exported types to be portable. A `TS2883` error printed above the failure means an inferred exported type references a module that is not publicly addressable (for example a deep `.pnpm` or dts-chunk path). Fix it by adding an explicit type annotation at the reported site so the emitted declaration can use a locally imported name (see the actor annotations in `plugins/sanity-plugin-dashboard-widget-vercel/src/machines/form.ts` for an example). Note that test files are part of the declaration program too, since the single `tsconfig.json` includes them.
 
+When the TS2883 is reported for `tsdown.config.ts` itself and names `UserConfig` from a `.pnpm/tsdown@…` path, the fix is in `pnpm-lock.yaml`, not in the config: the plugin's own `tsdown` entry and the `tsdown` that its `@sanity/tsdown-config` snapshot links resolve to different peer variants (`tsdown@0.23.1(@tsdown/css@0.23.1)…` versus `tsdown@0.23.1(@vitejs/devtools@0.4.12)…`), so the `UserConfig` that `defineConfig` returns lives in a `tsdown` copy the plugin cannot import. `@tsdown/css` is a devDependency of `@sanity/themer` only, so pnpm has two `tsdown` instances to choose from, and a partial re-resolution (an install after merging `main`, say) can dedupe `@sanity/tsdown-config` onto one of them while leaving other importers' `tsdown` on the other. Run `pnpm dedupe` twice (through the registry proxy when the Studio `next` overrides must stay put) until every importer's `tsdown` matches the `tsdown` dependency of its `@sanity/tsdown-config` snapshot; the only intended holdout is `turbo/generators`, which does not use `@sanity/tsdown-config`.
+
 ### Lint Errors About Missing Types
 
 Run `pnpm build` first—some packages need to be built for type information to be available.
@@ -555,7 +627,7 @@ Run `pnpm build` first—some packages need to be built for type information to 
 
 ### "Command not found: pnpm"
 
-Ensure you have pnpm v11+ installed, then run:
+Ensure you have pnpm v12+ installed, then run:
 
 ```bash
 corepack enable
@@ -571,9 +643,10 @@ corepack enable
 
 ### Services
 
-| Service                  | Port | Purpose                                       |
-| ------------------------ | ---- | --------------------------------------------- |
-| Test Studio (`pnpm dev`) | 3333 | Local Sanity Studio for manual plugin testing |
+| Service                          | Port | Purpose                                         |
+| -------------------------------- | ---- | ----------------------------------------------- |
+| Test Studio (`pnpm dev`)         | 3333 | Local Sanity Studio for manual plugin testing   |
+| Storybook (`pnpm dev:storybook`) | 6006 | Plugin component stories, no Sanity auth needed |
 
 No Docker, databases, or other local services are required. CI-style verification (`pnpm lint`, `pnpm build`, `pnpm test run`) runs entirely in-process.
 
@@ -622,6 +695,8 @@ Tests run against the dedicated bare-bones `dev/e2e-studio` (workspaces `/chromi
 ### Lint / build / test
 
 Standard commands from the Quick Reference table apply. Run `pnpm build` before `pnpm lint` if type errors reference missing `dist/` output. `pretest` automatically builds all packages except `dev/*` before Vitest runs.
+
+`pnpm knip` reports `lefthook` as an unused devDependency on these VMs because knip's lefthook plugin follows `git config core.hooksPath`, which Cursor Cloud points at its own agent hooks directory instead of `.git/hooks`. CI is unaffected. To reproduce the CI result locally, override the setting for that one process: `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=.git/hooks pnpm knip`. The override only helps once lefthook's hook exists in `.git/hooks`, and on a fresh VM it does not: the snapshot's `pnpm install` ran with `core.hooksPath` already pointing elsewhere, so lefthook never wrote `.git/hooks/pre-commit`. Install it there once, then restore the setting: `HOOKS=$(git config core.hooksPath); git config core.hooksPath .git/hooks && pnpm exec lefthook install --force; git config core.hooksPath "$HOOKS"`.
 
 ## Related Documentation
 

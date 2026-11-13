@@ -1,5 +1,75 @@
 # @sanity/document-internationalization
 
+## 6.3.0
+
+### Minor Changes
+
+- [#2058](https://github.com/sanity-io/plugins/pull/2058) [`e9e0b2e`](https://github.com/sanity-io/plugins/commit/e9e0b2ed4931aec0be20d967184a4f49f4440423) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add a `metadataPreview` option to replace the preview of `translation.metadata` documents in reference fields, lists, and Omnisearch
+
+### Patch Changes
+
+- [#2309](https://github.com/sanity-io/plugins/pull/2309) [`3b4029b`](https://github.com/sanity-io/plugins/commit/3b4029bde80d7ae101ca6a7a524bbd8c695c273e) Thanks [@stipsan](https://github.com/stipsan)! - Fix translations validation failing in a Content Release when the referenced translation documents exist only as versions in that release
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+- Updated dependencies [[`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543)]:
+  - sanity-plugin-utils@2.0.23
+
+## 6.2.46
+
+No changes in this release.
+
+## 6.2.45
+
+No changes in this release.
+
+## 6.2.44
+
+No changes in this release.
+
+## 6.2.43
+
+No changes in this release.
+
+## 6.2.42
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+- Updated dependencies [[`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3)]:
+  - sanity-plugin-utils@2.0.22
+
+## 6.2.41
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+- Updated dependencies [[`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30)]:
+  - sanity-plugin-utils@2.0.21
+
+## 6.2.40
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+- Updated dependencies [[`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59)]:
+  - sanity-plugin-utils@2.0.20
+
+## 6.2.39
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+- Updated dependencies [[`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420)]:
+  - sanity-plugin-utils@2.0.19
+
+## 6.2.38
+
+### Patch Changes
+
+- [#2015](https://github.com/sanity-io/plugins/pull/2015) [`90aa52f`](https://github.com/sanity-io/plugins/commit/90aa52f04645b4d3825869852b0c4f7660ef62d5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix reference strengthening on translation.metadata, in some cases it showed a patch error
+
+## 6.2.37
+
 ## 6.2.36
 
 ### Patch Changes

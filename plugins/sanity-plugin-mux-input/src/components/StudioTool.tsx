@@ -1,11 +1,16 @@
 import type {Tool} from 'sanity'
 
+import {MuxApiHostProvider} from '../context/MuxApiHostContext'
 import type {PluginConfig} from '../util/types'
 import ToolIcon from './icons/ToolIcon'
 import VideosBrowser from './VideosBrowser'
 
 const StudioTool: React.FC<PluginConfig> = (config) => {
-  return <VideosBrowser config={config} />
+  return (
+    <MuxApiHostProvider muxApiHost={config.muxApiHost}>
+      <VideosBrowser config={config} />
+    </MuxApiHostProvider>
+  )
 }
 
 export const DEFAULT_TOOL_CONFIG = {

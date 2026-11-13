@@ -57,6 +57,26 @@ defineField({
 }),
 ```
 
+Asset requests use the active Studio dataset unless you set `dataset`. Use this when the workspace edits a different dataset from the one Sanity Connect syncs with Shopify. A field-level `dataset` overrides the plugin value. Other fields keep the plugin value, or the active Studio dataset when the plugin does not set one.
+
+```ts
+shopifyAssets({
+  shopifyDomain: '*.myshopify.com',
+  dataset: 'production',
+})
+```
+
+```ts
+defineField({
+  type: 'shopify.asset',
+  name: 'shopifyAsset',
+  options: {
+    shopifyDomain: '*.myshopify.com',
+    dataset: 'production',
+  },
+})
+```
+
 ## Example of resulting object
 
 ```jsonc

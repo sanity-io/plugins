@@ -90,11 +90,11 @@ export const baseI18nArrayConfig = {
       ...customBlockDeserializers,
     ]
 
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,
       blockDeserializers,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     ) as SanityDocument
     return i18nArrayPatch(id, deserialized, localeId, client, baseLanguage)
   },

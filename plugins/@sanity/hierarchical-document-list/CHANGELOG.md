@@ -1,5 +1,51 @@
 # @sanity/hierarchical-document-list
 
+## 4.0.11
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 4.0.10
+
+### Patch Changes
+
+- [#2253](https://github.com/sanity-io/plugins/pull/2253) [`0dc934d`](https://github.com/sanity-io/plugins/commit/0dc934dc87f00f0b0d5f80685a629ca15cdb9b72) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update `@nosferatu500/react-sortable-tree` to 7.1.0
+
+## 4.0.9
+
+### Patch Changes
+
+- [#2246](https://github.com/sanity-io/plugins/pull/2246) [`ce73088`](https://github.com/sanity-io/plugins/commit/ce7308820dec81bfd83632543fc7fab469df0fca) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Dragging an item up or down within the same level moves it again. Previously the drop was rejected and the item snapped back to where it was.
+
+- [#2097](https://github.com/sanity-io/plugins/pull/2097) [`3ced124`](https://github.com/sanity-io/plugins/commit/3ced124840ddfcc2ff577934973f47125176975c) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Opening or leaving a hierarchy with many documents no longer freezes the Studio. Drag-indicator styles are injected once for the tree instead of once per row.
+
+- [#2242](https://github.com/sanity-io/plugins/pull/2242) [`59a6310`](https://github.com/sanity-io/plugins/commit/59a63106674c5941aa0ab17538e1918351875ba0) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Tree rows no longer re-render whenever the surrounding form or structure pane re-renders. The tree's add, duplicate, remove and move actions now keep the same identity between renders.
+
+## 4.0.8
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 4.0.7
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 4.0.6
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+## 4.0.5
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
 ## 4.0.4
 
 ### Patch Changes

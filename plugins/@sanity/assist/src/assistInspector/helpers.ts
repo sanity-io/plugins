@@ -1,4 +1,3 @@
-// oxlint-disable no-accumulating-spread
 import {BlockContentIcon} from '@sanity/icons/BlockContent'
 import {BlockquoteIcon} from '@sanity/icons/Blockquote'
 import {DocumentIcon} from '@sanity/icons/Document'
@@ -61,10 +60,10 @@ function getTypeIcon(schemaType: SchemaType): ComponentType {
 }
 
 export function asFieldRefsByTypePath(fieldRefs: FieldRef[]): Record<string, FieldRef | undefined> {
-  const lookup: Record<string, FieldRef | undefined> = fieldRefs.reduce(
-    (acc, ref) => ({...acc, [ref.key]: ref}),
-    {},
-  )
+  // Spreading the accumulator per ref is O(n^2); large page-builder schemas reach tens of
+  // thousands of refs, which blocked the main thread for close to a minute.
+  const lookup: Record<string, FieldRef | undefined> = {}
+  for (const ref of fieldRefs) lookup[ref.key] = ref
   return lookup
 }
 

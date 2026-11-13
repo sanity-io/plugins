@@ -1,0 +1,12 @@
+{
+  "extends": ["@sanity/tsconfig/strictest"],
+  "include": ["./.storybook/**/*", "./stories", "./typings", "./vitest.config.ts"],
+  "exclude": ["node_modules", "storybook-static"],
+  "compilerOptions": {
+    // Stories import the parts of plugins that are not public API from their source
+    "rootDir": "../..",
+    "declaration": false,
+    "declarationMap": false,
+    "noUncheckedIndexedAccess": false
+  }
+}

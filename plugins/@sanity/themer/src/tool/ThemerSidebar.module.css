@@ -1,0 +1,4 @@
+/* Lets the title shrink and truncate instead of pushing the buttons out */
+.title {
+  min-width: 0;
+}

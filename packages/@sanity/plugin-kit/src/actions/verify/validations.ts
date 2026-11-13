@@ -75,7 +75,7 @@ export async function validateTsConfig(
 
   const expectedCompilerOptions = {
     target: 'esnext',
-    jsx: 'preserve',
+    jsx: 'react-jsx',
     module: 'preserve',
     rootDir: '.',
     outDir,
@@ -101,8 +101,8 @@ export async function validateTsConfig(
       option = 'preserve'
     }
 
-    if (key === 'jsx' && option === 1) {
-      option = 'preserve'
+    if (key === 'jsx' && option === 4) {
+      option = 'react-jsx'
     }
 
     return typeof value === 'string' && typeof option === 'string'

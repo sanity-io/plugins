@@ -1,6 +1,8 @@
-import type MuxPlayerElement from '@mux/mux-player'
+import type {MuxSource} from '@videojs/react/media/mux-video'
 import type {ObjectInputProps} from 'sanity'
 import type {PartialDeep} from 'type-fest'
+
+import type {RobotsFields} from '../robots/types'
 
 /**
  * All static rendition resolution options supported by Mux
@@ -161,7 +163,7 @@ export interface MuxInputConfig {
   maxAssetDuration?: number
 
   /**
-   * HLS.js configuration options to be passed to the Mux Player.
+   * HLS.js configuration options to be passed to the Video.js player.
    * These options allow you to customize the underlying HLS.js playback engine behavior.
    *
    * @see {@link https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning}
@@ -175,7 +177,25 @@ export interface MuxInputConfig {
    * }
    * ```
    */
-  hlsConfig?: MuxPlayerElement['_hlsConfig']
+  hlsConfig?: NonNullable<MuxSource['engine']>['hlsJs']
+
+  /**
+   * The roles that can start and cancel Mux Robots workflows and directive runs. Everyone can
+   * see results. An empty list lets every role run Robots.
+   *
+   * This only hides controls in the Studio: any project member can call the Mux proxy.
+   * @see {@link https://www.mux.com/docs/guides/robots}
+   * @defaultValue ['administrator']
+   */
+  allowedRolesForRobots?: string[]
+
+  /**
+   * Mux Robots directives attached to every new upload. They run once Mux has ingested the
+   * video, and consume Mux AI units. People who can run Robots can uncheck them per upload.
+   * @see {@link https://www.mux.com/docs/guides/robots-directives}
+   * @defaultValue []
+   */
+  defaultDirectiveIds?: string[]
 }
 
 export interface PluginConfig extends MuxInputConfig {
@@ -199,6 +219,22 @@ export interface PluginConfig extends MuxInputConfig {
    * @defaultValue []
    */
   allowedRolesForConfiguration: string[]
+
+  /**
+   * Send only Mux addon requests (`/v<apiVersion>/addons/mux/...`) to this host, for example a
+   * local development server. Content Lake requests (queries, listeners, asset documents)
+   * still use the Studio API host.
+   *
+   * The host is used as-is: the plugin does not prepend the project id to it. If your server needs
+   * the project id in the hostname, include it in the host, like `http://<projectId>.example.test:8000`.
+   *
+   * Auth: the Studio token (if any) is sent as `Authorization: Bearer`. Session cookies for the
+   * Studio API host are not sent to a different host.
+   *
+   * @example 'http://127.0.0.1:8080'
+   * @defaultValue undefined
+   */
+  muxApiHost?: string
 }
 
 export const SUPPORTED_MUX_LANGUAGES = [
@@ -343,8 +379,8 @@ export interface MuxNewAssetSettings extends Pick<
     end_time?: number
     /** This parameter is required for text type tracks. */
     type?: 'video' | 'audio' | 'text'
-    /** Type of text track. This parameter only supports subtitles value. */
-    text_type?: 'subtitles'
+    /** Type of text track. */
+    text_type?: 'subtitles' | 'chapters'
     /** The language code value must be a valid BCP 47 specification compliant value. */
     language_code?: string
     /** The name of the track containing a human-readable description. This value must be unique within each group of text or audio track types. */
@@ -365,6 +401,9 @@ export interface MuxNewAssetSettings extends Pick<
 
   /** Arbitrary user-supplied metadata that will be included in the asset details and related webhooks.  */
   passthrough?: string
+
+  /** Mux Robots directives to run once the asset is ingested. */
+  directives?: {id: string}[]
 }
 
 /** Used by advanced_playback_policies, allows to define DRM config. */
@@ -385,8 +424,6 @@ export interface Secrets {
 export type MuxImageOrigin = `https://image.mux.com`
 export type MuxThumbnailUrl = `${MuxImageOrigin}/${string}/thumbnail.png?${string}`
 export type MuxAnimatedThumbnailUrl = `${MuxImageOrigin}/${string}/animated.gif?${string}`
-export type MuxVideoOrigin = `https://stream.mux.com`
-export type MuxVideoUrl = `${MuxVideoOrigin}/${string}.m3u8?${string}`
 
 // 'preserve' by default
 // @url: https://docs.mux.com/guides/video/get-images-from-a-video#thumbnail-query-string-parameters
@@ -449,7 +486,7 @@ export interface MuxAudioTrack {
 export interface MuxTextTrack {
   type: 'text'
   id: string
-  text_type?: 'subtitles'
+  text_type?: 'subtitles' | 'chapters'
   // https://docs.mux.com/api-reference/video#operation/list-assets:~:text=text%20type%20tracks.-,tracks%5B%5D.,text_source,-string
   text_source?:
     | 'uploaded'
@@ -544,9 +581,11 @@ export interface MuxAsset {
   meta?: {
     title?: string
   }
+  /** Seconds. Set by Robots' find-best-thumbnails with `update_asset_thumbnail`. */
+  thumbnail_time?: number
 }
 
-export interface VideoAssetDocument {
+export interface VideoAssetDocument extends RobotsFields {
   _id: string
   _type: 'mux.videoAsset'
   _createdAt: string

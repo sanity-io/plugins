@@ -215,6 +215,28 @@ describe('CardAsset', () => {
     ).toBe(true)
   })
 
+  it('ctrl-clicks on preview to toggle pick without opening the asset', async () => {
+    const user = userEvent.setup()
+    const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {
+      preloaded: {
+        assets: assetsState({'img-1': assetItem(imageAsset, {picked: false})}),
+      },
+    })
+
+    await user.keyboard('{Control>}')
+    await user.click(clickPreview())
+    await user.keyboard('{/Control}')
+
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(true)
+    expect(store.getState().dialog.items).toHaveLength(0)
+
+    await user.keyboard('{Control>}')
+    await user.click(clickPreview())
+    await user.keyboard('{/Control}')
+
+    expect(store.getState().assets.byIds['img-1']!.picked).toBe(false)
+  })
+
   it('shift-clicks on preview to unpick when the asset is already picked', async () => {
     const user = userEvent.setup()
     const {store} = renderWithProviders(<CardAsset id="img-1" selected={false} />, {

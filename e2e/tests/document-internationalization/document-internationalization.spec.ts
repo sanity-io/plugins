@@ -1,3 +1,5 @@
+import {randomUUID} from 'node:crypto'
+
 import {expect, test} from '@playwright/test'
 
 import {
@@ -30,9 +32,11 @@ test.describe('@sanity/document-internationalization', () => {
    */
   test('creates a Spanish translation from an English lesson', async ({page}, testInfo) => {
     const projectName = testInfo.project.name
+    // Unique per run so documents left behind by an interrupted attempt in the
+    // same dataset (e.g. a retry) cannot be confused with this run's lesson.
     const lesson = await seedLesson(projectName, {
       language: 'en',
-      title: 'English source lesson',
+      title: `English source lesson ${randomUUID().slice(0, 8)}`,
       content: 'Source content that should not copy',
     })
 
@@ -70,7 +74,7 @@ test.describe('@sanity/document-internationalization', () => {
         .locator('textarea, [data-testid="text-input"]')
         .first()
 
-      await expect(spanishTitle).toHaveValue('English source lesson')
+      await expect(spanishTitle).toHaveValue(lesson.title)
       await expect(spanishContent).toHaveValue('')
     } finally {
       await cleanupLessonTree(projectName, lesson.id)

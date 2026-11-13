@@ -1,0 +1,4 @@
+/* The layout's `Flex` positions the sidebar overlay on small screens */
+.root {
+  position: relative;
+}

@@ -1,6 +1,6 @@
 import {cleanup, fireEvent, render, screen} from '@testing-library/react'
 import type {ReactNode} from 'react'
-import {set} from 'sanity'
+import {set, unset, type ArraySchemaType} from 'sanity'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -32,6 +32,13 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
+function parentArrayField(options: Record<string, unknown>): ArraySchemaType {
+  // The array field's compiled options include plugin keys and the caller's
+  // underlying-field options. ArraySchemaType only types the built-in array keys.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  return {options} as unknown as ArraySchemaType
+}
+
 /**
  * Creates minimal mock ObjectItemProps for InternationalizedInput.
  */
@@ -46,7 +53,20 @@ function createMockProps(
   const onChange = vi.fn()
 
   const renderInput = vi.fn(
-    (inputProps: {members?: Array<{kind: string; field?: {schemaType?: {title?: ReactNode}}}>}) => {
+    (inputProps: {
+      members?: Array<{
+        kind: string
+        collapsed?: boolean
+        collapsible?: boolean
+        field?: {
+          schemaType?: {
+            title?: ReactNode
+            options?: Record<string, unknown>
+            jsonType?: string
+          }
+        }
+      }>
+    }) => {
       const titles = inputProps.members?.flatMap((m) =>
         m.kind === 'field' && m.field?.schemaType?.title != null ? [m.field.schemaType.title] : [],
       )
@@ -63,9 +83,13 @@ function createMockProps(
         {
           kind: 'field' as const,
           name: 'value',
+          collapsed: undefined as boolean | undefined,
           field: {
+            level: 1,
             schemaType: {
-              title: 'Value',
+              title: 'Value' as ReactNode,
+              jsonType: undefined as string | undefined,
+              options: undefined as Record<string, unknown> | undefined,
             },
           },
         },
@@ -141,6 +165,35 @@ describe('InternationalizedInput', () => {
     expect(removeButton).toHaveAttribute('data-disabled', 'true')
   })
 
+  test('enables remove button for default languages when allowRemovingDefaultLanguages is set', () => {
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+      allowRemovingDefaultLanguages: true,
+    })
+
+    const props = createMockProps('en')
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput {...props} />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const buttons = screen.getAllByRole('button')
+    const removeButton = buttons.find(
+      (btn) => btn.querySelector('[data-sanity-icon="remove-circle"]') !== null,
+    )
+    expect(removeButton).toBeTruthy()
+    expect(removeButton).toHaveAttribute('data-disabled', 'false')
+
+    if (!removeButton) {
+      throw new Error('Expected a remove button')
+    }
+    fireEvent.click(removeButton)
+    expect(props.inputProps.onChange).toHaveBeenCalledWith(unset())
+  })
+
   test('enables remove button for non-default languages', () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
@@ -209,6 +262,89 @@ describe('InternationalizedInput', () => {
     // Should not show any language label when languages are null
     expect(screen.queryByText('EN')).not.toBeInTheDocument()
     expect(screen.queryByText(/Change/)).not.toBeInTheDocument()
+  })
+
+  test('passes array field options through to the value field', () => {
+    const props = createMockProps('en')
+    props.inputProps.members[0]!.field.schemaType = {
+      title: 'Value',
+      jsonType: 'object',
+      options: {accept: ''},
+    }
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput
+        {...props}
+        parentSchemaType={parentArrayField({
+          accept: '.vtt,.srt,text/vtt,application/x-subrip',
+          collapsed: true,
+          apiVersion: '2025-10-15',
+          languages: MOCK_LANGUAGES,
+          select: {market: 'market'},
+        })}
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const rendered = props.inputProps.renderInput.mock.calls[0]?.[0]
+    const valueSchemaType = rendered?.members?.[0]?.field?.schemaType
+
+    expect(valueSchemaType?.options).toEqual({
+      accept: '.vtt,.srt,text/vtt,application/x-subrip',
+      collapsed: true,
+    })
+    expect(valueSchemaType?.title).toBeTruthy()
+    expect(rendered?.members?.[0]).toMatchObject({collapsed: true, collapsible: true})
+  })
+
+  test('keeps an object value expanded after the editor opens it', () => {
+    const props = createMockProps('en')
+    props.inputProps.members[0]!.collapsed = false
+    props.inputProps.members[0]!.field.schemaType = {
+      title: 'Value',
+      jsonType: 'object',
+      options: {accept: ''},
+    }
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput
+        {...props}
+        parentSchemaType={parentArrayField({collapsed: true, accept: '.vtt'})}
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const rendered = props.inputProps.renderInput.mock.calls[0]?.[0]
+
+    expect(rendered?.members?.[0]).toMatchObject({collapsed: false, collapsible: true})
+  })
+
+  test('leaves value field options unchanged when the array field only has plugin options', () => {
+    const valueOptions = {accept: 'image/*'}
+    const props = createMockProps('en')
+    props.inputProps.members[0]!.field.schemaType = {
+      title: 'Value',
+      jsonType: undefined,
+      options: valueOptions,
+    }
+
+    render(
+      // @ts-expect-error - simplified mock props
+      <InternationalizedInput
+        {...props}
+        parentSchemaType={parentArrayField({
+          apiVersion: '2025-10-15',
+          languages: MOCK_LANGUAGES,
+        })}
+      />,
+      {wrapper: ThemeWrapper},
+    )
+
+    const rendered = props.inputProps.renderInput.mock.calls[0]?.[0]
+
+    expect(rendered?.members?.[0]?.field?.schemaType?.options).toBe(valueOptions)
   })
 
   test('renders the input via renderInput', () => {

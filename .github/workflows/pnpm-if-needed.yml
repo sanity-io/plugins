@@ -24,6 +24,10 @@ jobs:
       - uses: ./.github/actions/setup
 
       - run: pnpm dedupe --config.ignore-scripts=true
+      # pnpm 12.6.0's dedupe isn't idempotent for some optional peers: each run toggles the same peer
+      # suffixes back and forth. A second run undoes that toggle, so the PR only has real dedupes and
+      # merging it doesn't trigger another dedupe PR.
+      - run: pnpm dedupe --config.ignore-scripts=true
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:

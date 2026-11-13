@@ -47,14 +47,24 @@ describe('LanguageFilterStudioProvider', () => {
       defaultLanguages: ['en'],
     }
 
-    const {result} = renderHook(() => useLanguageFilterStudioContext(), {
+    const {result, rerender} = renderHook(() => useLanguageFilterStudioContext(), {
       wrapper: createContextWrapper(options),
     })
+
+    // Until the languages resolve, nothing is selectable and nothing is selected.
+    expect(result.current.options.supportedLanguages).toEqual([])
+    expect(result.current.selectedLanguageIds).toEqual([])
 
     await waitFor(() => {
       expect(result.current.options.supportedLanguages).toEqual(languages)
       expect(result.current.selectedLanguageIds).toEqual(['en', 'es'])
     })
+
+    // The languages are resolved once per provider, not once per render.
+    rerender()
+    rerender()
+    expect(supportedLanguages).toHaveBeenCalledTimes(1)
+    expect(result.current.selectedLanguageIds).toEqual(['en', 'es'])
   })
 
   it('hydrates selected languages when supportedLanguages is a static array', async () => {
@@ -112,5 +122,62 @@ describe('LanguageFilterStudioProvider', () => {
       )
       expect(result.current.selectedLanguageIds).toEqual(['en'])
     })
+  })
+
+  it('keeps the selection made in this session over the persisted one', async () => {
+    const options: Required<LanguageFilterConfig> = {
+      ...defaultContextValue.options,
+      supportedLanguages: [
+        {id: 'en', title: 'English'},
+        {id: 'fr', title: 'French'},
+      ],
+      defaultLanguages: ['en'],
+    }
+
+    const {result, rerender} = renderHook(() => useLanguageFilterStudioContext(), {
+      wrapper: createContextWrapper(options),
+    })
+
+    await waitFor(() => {
+      expect(result.current.selectedLanguageIds).toEqual(['en', 'fr'])
+    })
+
+    // Deriving from storage again would put the default language back in front.
+    act(() => {
+      result.current.setSelectedLanguageIds(['fr'])
+    })
+    rerender()
+
+    expect(result.current.selectedLanguageIds).toEqual(['fr'])
+    expect(window.localStorage.getItem('@sanity/plugin/language-filter/selected-languages')).toBe(
+      '["fr"]',
+    )
+  })
+
+  it('falls back to no selectable languages when language resolution fails', async () => {
+    const supportedLanguages = vi.fn(async (): Promise<Language[]> => {
+      throw new Error('boom')
+    })
+
+    const options: Required<LanguageFilterConfig> = {
+      ...defaultContextValue.options,
+      supportedLanguages,
+      defaultLanguages: ['en'],
+    }
+
+    const {result} = renderHook(() => useLanguageFilterStudioContext(), {
+      wrapper: createContextWrapper(options),
+    })
+
+    await waitFor(() => {
+      expect(supportedLanguages).toHaveBeenCalledTimes(1)
+    })
+    // Let the rejection reach the subscription; without `catchError` it would surface here.
+    await act(async () => {
+      await supportedLanguages.mock.results[0]?.value.catch(() => {})
+    })
+
+    expect(result.current.options.supportedLanguages).toEqual([])
+    expect(result.current.selectedLanguageIds).toEqual([])
   })
 })

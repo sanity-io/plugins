@@ -2,7 +2,7 @@ import {Schema} from '@sanity/schema'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 import {describe, expect, test} from 'vitest'
 
-import {DEFAULT_MAX_FIELD_SELECTION_DEPTH, getFieldRefs} from './helpers'
+import {asFieldRefsByTypePath, DEFAULT_MAX_FIELD_SELECTION_DEPTH, getFieldRefs} from './helpers'
 
 // Mirrors the shape from sanity-io/plugins#1992: array item -> object -> array item -> locale
 // object -> string, which puts the translated strings 7 path segments deep.
@@ -102,5 +102,33 @@ describe('getFieldRefs', () => {
       'Overview Hours / Overview Hours / Hours Of Operation / Temporary Hours / Temporary Hours / Reason / En',
     )
     expect(reasonEn?.schemaType.jsonType).toBe('string')
+  })
+})
+
+describe('asFieldRefsByTypePath', () => {
+  test('looks up every field ref by its key', () => {
+    const fieldRefs = getFieldRefs(documentType, 8)
+    const lookup = asFieldRefsByTypePath(fieldRefs)
+
+    expect(Object.keys(lookup)).toEqual(fieldRefs.map((ref) => ref.key))
+    for (const ref of fieldRefs) {
+      expect(lookup[ref.key]).toBe(ref)
+    }
+  })
+
+  test('builds the lookup in linear time for large page-builder schemas', () => {
+    // A page builder with many block types yields tens of thousands of refs. Spreading the
+    // accumulator for each ref took seconds at this size; a single pass takes milliseconds.
+    const [template] = getFieldRefs(documentType)
+    const fieldRefs = Array.from({length: 10_000}, (_, index) => ({
+      ...template!,
+      key: `builder|_key:block${index % 90}|.field${index}`,
+    }))
+
+    const start = performance.now()
+    const lookup = asFieldRefsByTypePath(fieldRefs)
+
+    expect(performance.now() - start).toBeLessThan(1_000)
+    expect(Object.keys(lookup)).toHaveLength(10_000)
   })
 })

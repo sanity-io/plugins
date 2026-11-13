@@ -35,7 +35,7 @@
     "@sanity/sfcc": "workspace:*",
     "@sanity/studio-secrets": "workspace:*",
     "@sanity/table": "workspace:*",
-    "@sanity/themer": "^0.3.12",
+    "@sanity/themer": "workspace:*",
     "@sanity/ui": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@sanity/vercel-protection-bypass": "workspace:*",
@@ -69,7 +69,8 @@
     "sanity-plugin-workflow": "workspace:*",
     "sanity-plugin-workspace-home": "workspace:*",
     "sanity-translations-tab": "workspace:*",
-    "styled-components": "catalog:"
+    "styled-components": "catalog:",
+    "ui5": "npm:@sanity/ui@5.0.0-alpha.14"
   },
   "devDependencies": {
     "@tsconfig/vite-react": "^8.1.1",

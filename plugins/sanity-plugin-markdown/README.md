@@ -102,6 +102,7 @@ Set the plugin input option:
 ```ts
 // studio.config.ts
 import {markdownSchema} from 'sanity-plugin-markdown'
+
 import {CustomMarkdownInput} from './CustomMarkdownInput'
 
 export default defineConfig({
@@ -134,10 +135,10 @@ One way to customize the preview that does not involve ReactDOMServer
 Then use these to create a custom editor:
 
 ```tsx
-// MarkdownInputCustomPreview.tsx
-import {MarkdownInput, MarkdownInputProps} from 'sanity-plugin-markdown'
 import DOMPurify from 'dompurify'
 import {marked} from 'marked'
+// MarkdownInputCustomPreview.tsx
+import {MarkdownInput, MarkdownInputProps} from 'sanity-plugin-markdown'
 
 export function CustomMarkdownInput(props) {
   const reactMdeProps: MarkdownInputProps['reactMdeProps'] = useMemo(() => {

@@ -7,12 +7,12 @@ const baseDoc = {_id: 'drafts.doc-1', _type: 'article'} as SanityDocumentLike
 
 const getMockClient = () => {
   const created: SanityDocumentLike[] = []
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- minimal SanityClient mock for the test
   const client = {
     create: vi.fn((doc: SanityDocumentLike) => {
       created.push(doc)
       return Promise.resolve(doc)
     }),
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- minimal SanityClient mock for the test
   } as unknown as SanityClient
   return {client, created}
 }

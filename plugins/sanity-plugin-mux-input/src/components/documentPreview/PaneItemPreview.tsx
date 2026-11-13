@@ -1,5 +1,5 @@
 // Adapted from:
-// https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/desk/components/paneItem/PaneItemPreview.tsx
+// https://github.com/sanity-io/sanity/blob/current/packages/sanity/src/structure/components/paneItem/PaneItemPreview.tsx
 import {Inline} from '@sanity/ui'
 import {isNumber, isString} from 'lodash'
 import {isValidElement, useMemo} from 'react'
@@ -28,6 +28,12 @@ export interface PaneItemPreviewProps {
   value: SanityDocument
 }
 
+const INITIAL_PREVIEW_STATE = {
+  snapshot: null,
+  isLoading: true,
+  original: null,
+}
+
 export function PaneItemPreview(props: PaneItemPreviewProps) {
   const {icon, layout, presence, schemaType, value} = props
   const title =
@@ -37,15 +43,14 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
       ? value['title']
       : null
 
-  const observable = useMemo(
+  const previewStateObservable = useMemo(
     () => getPreviewStateObservable(props.documentPreviewStore, schemaType, value._id),
     [props.documentPreviewStore, schemaType, value._id],
   )
-  const {snapshot, original, isLoading} = useObservable(observable, {
-    isLoading: true,
-    snapshot: null,
-    original: null,
-  })
+  const {snapshot, original, isLoading} = useObservable(
+    previewStateObservable,
+    INITIAL_PREVIEW_STATE,
+  )
 
   const status = isLoading ? null : (
     <Inline gap={4}>

@@ -167,7 +167,7 @@ Recommended tsconfig.json compilerOptions missing:
 The following fields had unexpected values: [target, jsx, module, rootDir, outDir, noEmit]
 Expected to find these values:
 "target": "esnext",
-"jsx": "preserve",
+"jsx": "react-jsx",
 "module": "preserve",
 "rootDir": ".",
 "outDir": "dist",

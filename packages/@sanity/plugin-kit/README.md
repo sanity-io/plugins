@@ -26,6 +26,7 @@ Check the [FAQ](#faq) fro more on these.
 - [Initialize a new plugin](#initialize-a-new-plugin)
 - [Formatting with oxfmt](#formatting-with-oxfmt)
 - [Linting with oxlint](#linting-with-oxlint)
+- [Linting CSS with stylelint](#linting-css-with-stylelint)
 - [Verify plugin package](#verify-plugin-package)
 - [Inject config into existing package](#inject-config-into-existing-package)
 - [Testing a plugin in Sanity Studio](#testing-a-plugin-in-sanity-studio)
@@ -186,6 +187,53 @@ Note: TypeScript config files require the Node-based `oxlint` package and Node `
 Migrating a plugin from eslint? Remove the eslint config files and the eslint devDependencies
 (`eslint`, `eslint-config-*`, `eslint-plugin-*`, `@typescript-eslint/*`), and add the
 `oxlint.config.ts` above.
+
+## Linting CSS with stylelint
+
+Plugins that ship stylesheets - CSS modules, say - lint them with [stylelint](https://stylelint.io)
+using a shared config exported as `@sanity/plugin-kit/stylelint`. It extends
+[`stylelint-config-recommended`](https://github.com/stylelint/stylelint-config-recommended), which
+catches what a browser would drop silently (unknown properties and values, invalid selectors,
+duplicate declarations) on top of the parse errors every run reports, and
+[`stylelint-config-css-modules`](https://github.com/pascalduez/stylelint-config-css-modules) for the
+CSS modules syntax (`:global()`, `:local()`, `composes`) the recommended rules would otherwise flag.
+Formatting stays with oxfmt, so the config turns off the one formatting rule the CSS modules config
+brings along. Both configs are dependencies of `@sanity/plugin-kit`, so the plugin only installs
+`stylelint` itself:
+
+> npm install --save-dev stylelint
+
+Then add a `lint:css` script and a `stylelint.config.mjs` next to the `package.json` that runs
+stylelint (the workspace root in a monorepo, otherwise the plugin directory):
+
+```json
+{
+  "scripts": {
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input"
+  }
+}
+```
+
+```js
+export {default} from '@sanity/plugin-kit/stylelint'
+```
+
+To customize, spread the preset and add your own options:
+
+```js
+import pluginKitStylelint from '@sanity/plugin-kit/stylelint'
+
+export default {
+  ...pluginKitStylelint,
+  ignoreFiles: [...(pluginKitStylelint.ignoreFiles ?? []), 'storybook-static/**'],
+}
+```
+
+The config file is `.mjs` (or `.js`) rather than `.ts` on purpose: stylelint loads TypeScript
+configs through the TypeScript compiler API, which TypeScript 7 no longer ships. stylelint 17 has
+no GitHub Actions formatter either; to get annotations in CI, register a
+[problem matcher](https://github.com/actions/toolkit/blob/main/docs/problem-matchers.md) for its
+default output, like the one in this repository's `.github/problem-matchers/stylelint.json`.
 
 ## Verify plugin package
 

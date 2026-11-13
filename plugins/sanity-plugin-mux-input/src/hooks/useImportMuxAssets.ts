@@ -1,16 +1,11 @@
 import {uuid} from '@sanity/uuid'
 import {useMemo, useState} from 'react'
-import {
-  createHookFromObservableFactory,
-  type DocumentStore,
-  useClient,
-  useDocumentStore,
-} from 'sanity'
+import {createHookFromObservableFactory, type DocumentStore, useDocumentStore} from 'sanity'
 
 import {generateAssetPlaceholder} from '../util/assetTitlePlaceholder'
 import {parseMuxDate} from '../util/parsers'
 import type {MuxAsset, VideoAssetDocument} from '../util/types'
-import {SANITY_API_VERSION} from './useClient'
+import {SANITY_API_VERSION, useClient} from './useClient'
 import useMuxAssets from './useMuxAssets'
 import {useSecretsDocumentValues} from './useSecretsDocumentValues'
 
@@ -23,9 +18,7 @@ export type AssetInSanity = {
 
 export default function useImportMuxAssets() {
   const documentStore = useDocumentStore()
-  const client = useClient({
-    apiVersion: SANITY_API_VERSION,
-  })
+  const client = useClient()
 
   const [assetsInSanity, assetsInSanityLoading] = useAssetsInSanity(documentStore)
 

@@ -8,31 +8,52 @@ import {createMockTranslation} from '../../test/helpers'
 import OptimisticallyStrengthen from './index'
 import ReferencePatcher from './ReferencePatcher'
 
-const mockUseEditState = vi.fn()
+const mockUseUnstableObserveDocument = vi.fn()
 const mockOnChange = vi.fn()
-const mockUseClient = vi.fn(() => ({}))
+const mockUseDocumentPane = vi.fn()
 
 vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
-    useEditState: (id: string, type: string) => mockUseEditState(id, type),
-    useClient: () => mockUseClient(),
+    useUnstableObserveDocument: (id: string) => mockUseUnstableObserveDocument(id),
   }
 })
 
 vi.mock('sanity/structure', () => ({
-  useDocumentPane: () => ({onChange: mockOnChange}),
+  useDocumentPane: () => mockUseDocumentPane(),
 }))
 
+const publishedDocument = {_id: 'doc-1', _type: 'article'}
+
+function mockObserve(overrides?: {document?: unknown; loading?: boolean}) {
+  mockUseUnstableObserveDocument.mockReturnValue({
+    document: 'document' in (overrides ?? {}) ? overrides?.document : publishedDocument,
+    loading: overrides?.loading ?? false,
+  })
+}
+
+function mockPane(overrides?: {ready?: boolean; readOnly?: boolean}) {
+  mockUseDocumentPane.mockReturnValue({
+    onChange: mockOnChange,
+    ready: overrides?.ready ?? true,
+    formState: {readOnly: overrides?.readOnly ?? false},
+  })
+}
+
 describe('OptimisticallyStrengthen', () => {
+  beforeEach(() => {
+    mockObserve()
+    mockPane()
+  })
+
   afterEach(() => {
     cleanup()
     vi.clearAllMocks()
   })
 
   test('returns null when translations are empty', () => {
-    const {container} = render(<OptimisticallyStrengthen translations={[]} metadataId="meta-1" />, {
+    const {container} = render(<OptimisticallyStrengthen translations={[]} />, {
       wrapper: ThemeWrapper,
     })
 
@@ -40,12 +61,6 @@ describe('OptimisticallyStrengthen', () => {
   })
 
   test('renders ReferencePatcher only for items with _strengthenOnPublish.type', () => {
-    mockUseEditState.mockReturnValue({
-      draft: {_id: 'drafts.doc-1'},
-      published: null,
-      ready: true,
-    })
-
     const withStrengthen = createMockTranslation('en', 'doc-1', {
       weak: true,
       strengthenOnPublish: true,
@@ -56,27 +71,20 @@ describe('OptimisticallyStrengthen', () => {
       strengthenOnPublish: false,
     })
 
-    render(
-      <OptimisticallyStrengthen
-        translations={[withStrengthen, withoutStrengthen]}
-        metadataId="meta-1"
-      />,
-      {wrapper: ThemeWrapper},
-    )
+    render(<OptimisticallyStrengthen translations={[withStrengthen, withoutStrengthen]} />, {
+      wrapper: ThemeWrapper,
+    })
 
-    expect(mockUseEditState).toHaveBeenCalledTimes(1)
-    expect(mockUseEditState).toHaveBeenCalledWith('doc-1', 'article')
+    expect(mockUseUnstableObserveDocument).toHaveBeenCalledTimes(1)
+    expect(mockUseUnstableObserveDocument).toHaveBeenCalledWith('doc-1')
   })
 })
 
 describe('ReferencePatcher', () => {
   beforeEach(() => {
     mockOnChange.mockClear()
-    mockUseEditState.mockReturnValue({
-      draft: null,
-      published: {_id: 'doc-1', _type: 'article'},
-      ready: true,
-    })
+    mockObserve()
+    mockPane()
   })
 
   afterEach(() => {
@@ -84,16 +92,14 @@ describe('ReferencePatcher', () => {
     vi.clearAllMocks()
   })
 
-  test('patches to unset _weak and _strengthenOnPublish when published and ready', () => {
+  test('patches to unset _weak and _strengthenOnPublish when published and pane is ready', () => {
     const translation = createMockTranslation('en', 'doc-1', {
       weak: true,
       strengthenOnPublish: true,
       type: 'article',
     })
 
-    render(
-      <ReferencePatcher translation={translation} documentType="article" metadataId="meta-1" />,
-    )
+    render(<ReferencePatcher translation={translation} />)
 
     expect(mockOnChange).toHaveBeenCalledTimes(1)
     const patchEvent = mockOnChange.mock.calls[0]![0] as PatchEvent
@@ -102,38 +108,50 @@ describe('ReferencePatcher', () => {
     expect(JSON.stringify(patchEvent)).toContain('_strengthenOnPublish')
   })
 
-  test('does not patch when a draft still exists', () => {
-    mockUseEditState.mockReturnValue({
-      draft: {_id: 'drafts.doc-1'},
-      published: {_id: 'doc-1'},
-      ready: true,
-    })
+  test('does not patch when the metadata pane is not ready', () => {
+    mockPane({ready: false})
     const translation = createMockTranslation('en', 'doc-1', {
       weak: true,
       strengthenOnPublish: true,
     })
 
-    render(
-      <ReferencePatcher translation={translation} documentType="article" metadataId="meta-1" />,
-    )
+    render(<ReferencePatcher translation={translation} />)
 
     expect(mockOnChange).not.toHaveBeenCalled()
   })
 
-  test('does not patch when edit state is not ready', () => {
-    mockUseEditState.mockReturnValue({
-      draft: null,
-      published: {_id: 'doc-1'},
-      ready: false,
-    })
+  test('does not patch when the metadata pane is read-only', () => {
+    mockPane({readOnly: true})
     const translation = createMockTranslation('en', 'doc-1', {
       weak: true,
       strengthenOnPublish: true,
     })
 
-    render(
-      <ReferencePatcher translation={translation} documentType="article" metadataId="meta-1" />,
-    )
+    render(<ReferencePatcher translation={translation} />)
+
+    expect(mockOnChange).not.toHaveBeenCalled()
+  })
+
+  test('does not patch while the published document is still loading', () => {
+    mockObserve({loading: true})
+    const translation = createMockTranslation('en', 'doc-1', {
+      weak: true,
+      strengthenOnPublish: true,
+    })
+
+    render(<ReferencePatcher translation={translation} />)
+
+    expect(mockOnChange).not.toHaveBeenCalled()
+  })
+
+  test('does not patch when no published document exists', () => {
+    mockObserve({document: null})
+    const translation = createMockTranslation('en', 'doc-1', {
+      weak: true,
+      strengthenOnPublish: true,
+    })
+
+    render(<ReferencePatcher translation={translation} />)
 
     expect(mockOnChange).not.toHaveBeenCalled()
   })
@@ -144,9 +162,7 @@ describe('ReferencePatcher', () => {
       strengthenOnPublish: true,
     })
 
-    render(
-      <ReferencePatcher translation={translation} documentType="article" metadataId="meta-1" />,
-    )
+    render(<ReferencePatcher translation={translation} />)
 
     expect(mockOnChange).not.toHaveBeenCalled()
   })
@@ -157,9 +173,7 @@ describe('ReferencePatcher', () => {
       strengthenOnPublish: false,
     })
 
-    render(
-      <ReferencePatcher translation={translation} documentType="article" metadataId="meta-1" />,
-    )
+    render(<ReferencePatcher translation={translation} />)
 
     expect(mockOnChange).not.toHaveBeenCalled()
   })

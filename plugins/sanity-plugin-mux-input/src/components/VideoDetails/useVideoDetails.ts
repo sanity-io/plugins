@@ -6,13 +6,14 @@ import {useClient} from '../../hooks/useClient'
 import useDocReferences from '../../hooks/useDocReferences'
 import {useResyncAsset} from '../../hooks/useResyncAsset'
 import getVideoMetadata from '../../util/getVideoMetadata'
-import {type VideoAssetDocument} from '../../util/types'
+import {type PluginConfig, type VideoAssetDocument} from '../../util/types'
 
 type VideoDetailsState = 'idle' | 'saving' | 'deleting' | 'closing' | 'resyncing'
 
 export interface VideoDetailsProps {
   closeDialog: () => void
   asset: VideoAssetDocument & {autoPlay?: boolean}
+  config: PluginConfig
 }
 
 export default function useVideoDetails(props: VideoDetailsProps) {
@@ -24,9 +25,10 @@ export default function useVideoDetails(props: VideoDetailsProps) {
     useMemo(() => ({documentStore, id: props.asset._id}), [documentStore, props.asset._id]),
   )
 
-  const [originalAsset, setOriginalAsset] = useState(() => props.asset)
-  const [filename, setFilename] = useState(props.asset.filename)
-  const modified = filename !== originalAsset.filename
+  // Only an edit is local: until then the title follows the document, a resync included.
+  const [draftFilename, setFilename] = useState<string>()
+  const filename = draftFilename ?? props.asset.filename
+  const modified = draftFilename !== undefined && draftFilename !== props.asset.filename
 
   const displayInfo = getVideoMetadata({...props.asset, filename})
 
@@ -66,7 +68,7 @@ export default function useVideoDetails(props: VideoDetailsProps) {
 
     try {
       await client.patch(props.asset._id).set({filename}).commit()
-      setOriginalAsset((prev) => ({...prev, filename}))
+      setFilename(undefined)
       toast.push({
         title: 'Video title updated',
         description: `New title: ${filename}`,
@@ -79,7 +81,7 @@ export default function useVideoDetails(props: VideoDetailsProps) {
         status: 'error',
         description: typeof error === 'string' ? error : 'Please try again',
       })
-      setFilename(originalAsset.filename)
+      setFilename(undefined)
     }
 
     setState('idle')

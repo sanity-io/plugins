@@ -1,0 +1,44 @@
+/*
+ * A native color input, trimmed down to its swatch: `<input type="color">`
+ * paints the color into a shadow-DOM swatch that brings its own border and
+ * padding, which then sits inside ours as a second border. Stripping that
+ * chrome leaves the themed border as the only one.
+ */
+.swatch {
+  box-sizing: border-box;
+  flex: none;
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  border: 1px solid var(--card-border-color);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+.swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.swatch::-moz-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+/* A native range input, themed through `accent-color` */
+.range {
+  display: block;
+  width: 100%;
+  margin: 0;
+  accent-color: var(--card-focus-ring-color);
+}
+
+/* Lets the color row's text shrink and truncate instead of widening the row */
+.colorRowText {
+  min-width: 0;
+}

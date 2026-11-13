@@ -34,12 +34,6 @@ const config: OxfmtConfig = {
   sortImports: true,
   sortPackageJson: {sortScripts: true},
   ignorePatterns: ['dist/**', 'pnpm-lock.yaml'],
-  overrides: [
-    {
-      files: ['.changeset/*.md'],
-      options: {singleQuote: false},
-    },
-  ],
 }
 
 export default config

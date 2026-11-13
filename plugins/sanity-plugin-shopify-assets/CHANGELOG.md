@@ -1,5 +1,47 @@
 # sanity-plugin-shopify-assets
 
+## 2.1.2
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 2.1.1
+
+### Patch Changes
+
+- [#2261](https://github.com/sanity-io/plugins/pull/2261) [`854288a`](https://github.com/sanity-io/plugins/commit/854288a9f0c00263deadc58d9f7c05f1a174a673) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Replace `axios` with the native `fetch` API. In-flight asset requests are now aborted when a newer search supersedes them.
+
+## 2.1.0
+
+### Minor Changes
+
+- [#2062](https://github.com/sanity-io/plugins/pull/2062) [`2c565d0`](https://github.com/sanity-io/plugins/commit/2c565d02c5d82968a4ca81c1641478b4b73fad3a) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add an optional `dataset` setting on the plugin and on `shopify.asset` fields so asset requests can use the dataset connected to Shopify. A field value overrides the plugin value, and `dataset` and `shopifyDomain` can be overridden independently. When neither is set, requests keep using the active Studio dataset.
+
+## 2.0.20
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 2.0.19
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 2.0.18
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+## 2.0.17
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
 ## 2.0.16
 
 ### Patch Changes

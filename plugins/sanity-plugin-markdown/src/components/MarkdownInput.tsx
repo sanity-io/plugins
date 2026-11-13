@@ -2,6 +2,7 @@
 // oxlint-disable typescript/no-deprecated
 
 import {Box, Text} from '@sanity/ui'
+import {rgba} from '@sanity/ui/theme'
 // `import type` (not an inline type specifier) so the bundle keeps no side-effect
 // `import 'easymde'`, which would break SSR/Node (easymde touches `document` on load)
 import type {Options as EasyMdeOptions} from 'easymde'
@@ -31,6 +32,18 @@ const MarkdownInputStyles = styled(Box)`
     background-color: inherit;
   }
 
+  & .CodeMirror-line::selection,
+  .CodeMirror-line > span::selection,
+  .CodeMirror-line > span > span::selection {
+    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
+  }
+
+  & .CodeMirror-line::-moz-selection,
+  .CodeMirror-line > span::-moz-selection,
+  .CodeMirror-line > span > span::-moz-selection {
+    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
+  }
+
   & .cm-s-easymde .CodeMirror-cursor {
     border-color: ${({theme}) => theme.sanity.color.card.enabled.fg};
   }
@@ -41,7 +54,7 @@ const MarkdownInputStyles = styled(Box)`
   }
 
   & .CodeMirror-focused .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {
-    background-color: ${({theme}) => theme.sanity.color.selectable?.primary?.hovered?.bg};
+    background-color: ${({theme}) => rgba(theme.sanity.color.base.focusRing, 0.3)};
   }
 
   & .CodeMirror-selected.CodeMirror-selected.CodeMirror-selected {

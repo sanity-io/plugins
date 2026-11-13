@@ -89,10 +89,10 @@ export const documentLevelPatch = async (
    * to create a document that contains the translation and everything
    * that wasn't sent over for translation
    */
-  // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentMerger returns a loosely typed object
   const merged = BaseDocumentMerger.documentLevelMerge(
     translatedFields,
     baseDoc,
+    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentMerger returns a loosely typed object
   ) as SanityDocumentLike
 
   if (i18nDoc) {

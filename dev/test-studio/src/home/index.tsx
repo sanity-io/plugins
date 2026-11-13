@@ -15,6 +15,7 @@ import {translationsTabDefaultDocumentNode} from '#translations-tab'
 // the structure, so nothing ever disappears from the studio.
 
 const INPUT_PLUGIN_TYPES = [
+  'assistImageDescriptionRepro', // @sanity/assist (#660, #663)
   'asyncListTest', // @sanity/sanity-plugin-async-list
   'codeTest', // @sanity/code-input
   'colorTest', // @sanity/color-input
@@ -44,6 +45,7 @@ const CUSTOM_PANE_TYPES = [
   'documentsPaneArticle', // sanity-plugin-documents-pane
   'iframeExample', // sanity-plugin-iframe-pane
   'naiveHtmlSerializerArticle', // sanity-naive-html-serializer
+  'naiveHtmlSerializerPage', // sanity-naive-html-serializer
 ]
 
 const INTERNATIONALIZATION_TYPES = [
@@ -54,6 +56,7 @@ const INTERNATIONALIZATION_TYPES = [
   'i18nArrayPerformanceTest', // sanity-plugin-internationalized-array
   'i18nArrayCircularSchemaRepro', // sanity-plugin-internationalized-array
   'movieDocument', // sanity-plugin-internationalized-array
+  'issue1956Repro', // sanity-plugin-internationalized-array
   'issue520Repro', // sanity-plugin-internationalized-array
   'smartlingTest', // sanity-plugin-studio-smartling
   'transifexTest', // sanity-plugin-transifex

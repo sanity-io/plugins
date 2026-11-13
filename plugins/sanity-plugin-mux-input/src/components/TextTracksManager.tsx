@@ -13,6 +13,7 @@ import {deleteTextTrack} from '../actions/assets'
 import {useClient} from '../hooks/useClient'
 import {useResyncAsset} from '../hooks/useResyncAsset'
 import {downloadVttFile} from '../util/textTracks'
+import {isCaptionTrack, isChaptersTrack} from '../util/tracks'
 import type {MuxTextTrack, VideoAssetDocument} from '../util/types'
 import AddCaptionDialog from './AddCaptionDialog'
 import EditCaptionDialog from './EditCaptionDialog'
@@ -187,6 +188,41 @@ function TrackCard({
   )
 }
 
+function ChaptersTrackCard({
+  track,
+  isDeleting,
+  onDelete,
+}: {
+  track: MuxTextTrack
+  isDeleting: boolean
+  onDelete: (track: MuxTextTrack) => void
+}) {
+  return (
+    <Card padding={3} radius={2} tone="transparent" border>
+      <Flex align="center" justify="space-between" gap={3}>
+        <Stack gap={2} flex={1}>
+          <Text weight="semibold">Chapters</Text>
+          <Text size={1} muted>
+            {[track.name, track.language_code && `Language: ${track.language_code}`]
+              .filter(Boolean)
+              .join(' · ')}
+          </Text>
+        </Stack>
+        <Button
+          icon={isDeleting ? <Spinner style={{width: '0.5em', height: '0.5em'}} /> : <TrashIcon />}
+          mode="ghost"
+          tone="critical"
+          fontSize={1}
+          padding={2}
+          disabled={isDeleting}
+          onClick={() => onDelete(track)}
+          title="Delete"
+        />
+      </Flex>
+    </Card>
+  )
+}
+
 interface TextTracksManagerProps {
   asset: VideoAssetDocument
   iconOnly?: boolean
@@ -219,7 +255,10 @@ export default function TextTracksManager({
 
   const realTracks: MuxTextTrack[] = propTracks
     ? propTracks
-    : asset.data?.tracks?.filter((track): track is MuxTextTrack => track.type === 'text') || []
+    : asset.data?.tracks?.filter(isCaptionTrack) || []
+  // A chapters track is a text track too, but never a caption: listed apart, delete only.
+  const chaptersTracks =
+    asset.data?.tracks?.filter(isChaptersTrack).filter((track) => !!track.id) || []
 
   const activeTracks = realTracks.filter(
     (track) =>
@@ -330,8 +369,7 @@ export default function TextTracksManager({
         const muxData = await resyncAsset(asset)
         if (!muxData) return
 
-        const fetchedTracks =
-          muxData.tracks?.filter((track): track is MuxTextTrack => track.type === 'text') || []
+        const fetchedTracks = muxData.tracks?.filter(isCaptionTrack) || []
 
         const isMockTrackReplaced = (
           mockTrack: MuxTextTrack,
@@ -486,7 +524,7 @@ export default function TextTracksManager({
       await resyncAsset(asset)
 
       toast.push({
-        title: 'Successfully deleted caption track',
+        title: `Successfully deleted ${isChaptersTrack(track) ? 'chapters' : 'caption'} track`,
         status: 'success',
       })
 
@@ -508,7 +546,7 @@ export default function TextTracksManager({
       })
     } catch (error) {
       toast.push({
-        title: 'Failed to delete caption track',
+        title: `Failed to delete ${isChaptersTrack(track) ? 'chapters' : 'caption'} track`,
         status: 'error',
         description: error instanceof Error ? error.message : 'Please try again',
       })
@@ -592,6 +630,71 @@ export default function TextTracksManager({
     return 'Custom'
   }
 
+  const deleteDialog = trackToDelete && (
+    <Dialog
+      animate
+      id={dialogId}
+      header="Delete track"
+      onClose={() => setTrackToDelete(null)}
+      onClickOutside={() => setTrackToDelete(null)}
+      width={1}
+    >
+      <Card
+        padding={3}
+        style={{
+          minHeight: '150px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Stack gap={3}>
+          <Heading size={2}>
+            Are you sure you want to delete &quot;
+            {trackToDelete.name || trackToDelete.language_code || 'Untitled'}&quot;?
+          </Heading>
+          <Text size={2}>This action is irreversible</Text>
+          <Stack gap={4} marginY={4}>
+            <Box>
+              <Button
+                icon={
+                  deletingTrackId === trackToDelete.id ? (
+                    <Spinner
+                      style={{
+                        verticalAlign: 'middle',
+                        display: 'inline-block',
+                        marginTop: '-2px',
+                        width: '0.5em',
+                        height: '0.5em',
+                      }}
+                    />
+                  ) : (
+                    <TrashIcon />
+                  )
+                }
+                fontSize={2}
+                padding={3}
+                text="Delete track"
+                tone="critical"
+                onClick={confirmDelete}
+                disabled={deletingTrackId !== null}
+              />
+            </Box>
+          </Stack>
+        </Stack>
+      </Card>
+    </Dialog>
+  )
+
+  const chaptersList = chaptersTracks.map((track) => (
+    <ChaptersTrackCard
+      key={track.id}
+      track={track}
+      isDeleting={deletingTrackId === track.id}
+      onDelete={setTrackToDelete}
+    />
+  ))
+
   if (visibleTracks.length === 0 && !showAddDialog) {
     return (
       <Stack gap={3}>
@@ -608,6 +711,8 @@ export default function TextTracksManager({
             No captions available. Add captions when uploading a video or add them manually.
           </Text>
         </Card>
+        {chaptersList}
+        {deleteDialog}
         {showAddDialog && (
           <AddCaptionDialog
             asset={asset}
@@ -649,6 +754,8 @@ export default function TextTracksManager({
         />
       ))}
 
+      {chaptersList}
+
       {hasMoreTracks && (
         <Flex justify="center">
           <Button
@@ -663,61 +770,7 @@ export default function TextTracksManager({
         </Flex>
       )}
 
-      {trackToDelete && (
-        <Dialog
-          animate
-          id={dialogId}
-          header="Delete track"
-          onClose={() => setTrackToDelete(null)}
-          onClickOutside={() => setTrackToDelete(null)}
-          width={1}
-        >
-          <Card
-            padding={3}
-            style={{
-              minHeight: '150px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Stack gap={3}>
-              <Heading size={2}>
-                Are you sure you want to delete &quot;
-                {trackToDelete.name || trackToDelete.language_code || 'Untitled'}&quot;?
-              </Heading>
-              <Text size={2}>This action is irreversible</Text>
-              <Stack gap={4} marginY={4}>
-                <Box>
-                  <Button
-                    icon={
-                      deletingTrackId === trackToDelete.id ? (
-                        <Spinner
-                          style={{
-                            verticalAlign: 'middle',
-                            display: 'inline-block',
-                            marginTop: '-2px',
-                            width: '0.5em',
-                            height: '0.5em',
-                          }}
-                        />
-                      ) : (
-                        <TrashIcon />
-                      )
-                    }
-                    fontSize={2}
-                    padding={3}
-                    text="Delete track"
-                    tone="critical"
-                    onClick={confirmDelete}
-                    disabled={deletingTrackId !== null}
-                  />
-                </Box>
-              </Stack>
-            </Stack>
-          </Card>
-        </Dialog>
-      )}
+      {deleteDialog}
 
       {showAddDialog && (
         <AddCaptionDialog

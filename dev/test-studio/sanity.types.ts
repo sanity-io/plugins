@@ -15,6 +15,26 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: schema.json
+export type Summarize = {
+  jobId?: string
+  completedAt?: number
+  title?: string
+  description?: string
+  tags?: Array<string>
+}
+
+export type Moderate = {
+  jobId?: string
+  completedAt?: number
+  exceedsThreshold?: boolean
+  maxScores?: MaxScores
+}
+
+export type MaxScores = {
+  sexual?: number
+  violence?: number
+}
+
 export type Options = {
   placeholder?: string
   defaultValue?: string
@@ -165,6 +185,76 @@ export type UtilsDemoDocument = {
   _updatedAt: string
   _rev: string
   title?: string
+}
+
+export type NaiveHtmlSerializerPage = {
+  _id: string
+  _type: 'naiveHtmlSerializerPage'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  hero?: NaiveHtmlVideoCarousel
+  modules?: Array<
+    {
+      _key: string
+    } & NaiveHtmlVideoCarousel
+  >
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  heroes?: NaiveHtmlHeroSlides
+  quotes?: NaiveHtmlQuoteSlides
+  settings?: {
+    title?: string
+    theme?: string
+  }
+  rows?: Array<{
+    label?: string
+    token?: string
+    _key: string
+  }>
+}
+
+export type NaiveHtmlQuoteSlides = Array<{
+  quote?: string
+  author?: string
+  _type: 'slide'
+  _key: string
+}>
+
+export type NaiveHtmlHeroSlides = Array<{
+  title?: string
+  videoUrl?: string
+  _type: 'slide'
+  _key: string
+}>
+
+export type NaiveHtmlVideoCarousel = {
+  _type: 'naiveHtmlVideoCarousel'
+  heading?: string
+  slides?: Array<{
+    title?: string
+    videoUrl?: string
+    _type: 'slide'
+    _key: string
+  }>
+  margin?: 'spacious' | 'moderate' | 'tight'
 }
 
 export type NaiveHtmlSerializerArticle = {
@@ -541,6 +631,7 @@ export type CodeTest = {
   title?: string
   basicCode?: Code
   codeWithOptions?: Code
+  codeWithDefault: Code
   codeNoFullscreen?: Code
   readOnlyCode?: Code
   codeList?: Array<
@@ -548,6 +639,29 @@ export type CodeTest = {
       _key: string
     } & Code
   >
+  inlineCode?: Array<{
+    children?: Array<
+      | {
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }
+      | ({
+          _key: string
+        } & Code)
+    >
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
 }
 
 export type Code = {
@@ -596,6 +710,22 @@ export type InternationalizedArrayString = Array<
   {
     _key: string
   } & InternationalizedArrayStringValue
+>
+
+export type Issue1956Repro = {
+  _id: string
+  _type: 'issue1956Repro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  subtitles?: InternationalizedArrayFile
+}
+
+export type InternationalizedArrayFile = Array<
+  {
+    _key: string
+  } & InternationalizedArrayFileValue
 >
 
 export type MovieDocument = {
@@ -699,6 +829,23 @@ export type InternationalizedArrayText = Array<
 export type InternationalizedArrayDemoTableValue = {
   _type: 'internationalizedArrayDemoTableValue'
   value?: DemoTable
+  language: string
+}
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
+export type InternationalizedArrayFileValue = {
+  _type: 'internationalizedArrayFileValue'
+  value?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
   language: string
 }
 
@@ -1143,6 +1290,7 @@ export type ShopifyAssetsTest = {
   title?: string
   shopifyAsset?: ShopifyAsset
   shopifyAssetFieldDomain?: ShopifyAsset
+  shopifyAssetFieldDataset?: ShopifyAsset
 }
 
 export type ShopifyAsset = {
@@ -1358,6 +1506,23 @@ export type LocalizedString = {
   en?: string
   es?: string
   fr?: string
+}
+
+export type AssistImageDescriptionRepro = {
+  _id: string
+  _type: 'assistImageDescriptionRepro'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  featuredImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
 }
 
 export type AssistDeepNestingRepro = {
@@ -1584,6 +1749,28 @@ export type MuxVideoAsset = {
   filename?: string
   thumbTime?: number
   data?: MuxAssetData
+  robotsJobs?: Array<
+    {
+      _key: string
+    } & MuxRobotsJob
+  >
+  robotsOutputs?: MuxRobotsOutputs
+  robotsDirectiveRuns?: Array<
+    {
+      _key: string
+    } & MuxRobotsDirectiveRun
+  >
+  robotsPendingCreates?: Array<
+    {
+      _key: string
+    } & MuxRobotsPendingCreate
+  >
+}
+
+export type MuxRobotsOutputs = {
+  _type: 'mux.robotsOutputs'
+  summarize?: Summarize
+  moderate?: Moderate
 }
 
 export type MuxAssetData = {
@@ -1603,6 +1790,7 @@ export type MuxAssetData = {
   max_stored_frame_rate?: number
   mp4_support?: string
   max_resolution_tier?: string
+  thumbnail_time?: number
   tracks?: Array<
     {
       _key: string
@@ -1615,6 +1803,37 @@ export type MuxAssetData = {
   >
   static_renditions?: MuxStaticRenditions
   master?: MuxMasterFile
+}
+
+export type MuxRobotsPendingCreate = {
+  _type: 'mux.robotsPendingCreate'
+  requestId?: string
+  kind?: string
+  workflow?: string
+  directiveId?: string
+  requestedAt?: number
+}
+
+export type MuxRobotsDirectiveRun = {
+  _type: 'mux.robotsDirectiveRun'
+  runId?: string
+  directiveId?: string
+  status?: string
+  startedAt?: number
+  completedAt?: number
+  jobIds?: Array<string>
+}
+
+export type MuxRobotsJob = {
+  _type: 'mux.robotsJob'
+  id?: string
+  workflow?: string
+  status?: string
+  created_at?: number
+  updated_at?: number
+  units_consumed?: number
+  error?: string
+  thumbnailApplied?: boolean
 }
 
 export type MuxMasterFile = {
@@ -1668,13 +1887,6 @@ export type MuxTrack = {
   status?: string
   text_source?: string
   text_type?: string
-}
-
-export type SanityFileAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
 }
 
 export type MediaProduct = {
@@ -1815,6 +2027,9 @@ export type SanityImageAsset = {
 }
 
 export type AllSanitySchemaTypes =
+  | Summarize
+  | Moderate
+  | MaxScores
   | Options
   | Rendition
   | CorePresetsTestReference
@@ -1833,6 +2048,10 @@ export type AllSanitySchemaTypes =
   | IframeExample
   | Slug
   | UtilsDemoDocument
+  | NaiveHtmlSerializerPage
+  | NaiveHtmlQuoteSlides
+  | NaiveHtmlHeroSlides
+  | NaiveHtmlVideoCarousel
   | NaiveHtmlSerializerArticle
   | Blockquote
   | RichTextMinimal
@@ -1861,6 +2080,8 @@ export type AllSanitySchemaTypes =
   | RichDate
   | Issue520Repro
   | InternationalizedArrayString
+  | Issue1956Repro
+  | InternationalizedArrayFile
   | MovieDocument
   | InternationalizedArrayDemoTable
   | DemoTable
@@ -1870,6 +2091,8 @@ export type AllSanitySchemaTypes =
   | InternationalizedPost
   | InternationalizedArrayText
   | InternationalizedArrayDemoTableValue
+  | SanityFileAssetReference
+  | InternationalizedArrayFileValue
   | InternationalizedArrayTextValue
   | InternationalizedArrayStringValue
   | TranslationMetadata
@@ -1930,6 +2153,7 @@ export type AllSanitySchemaTypes =
   | EmbeddingsArticle
   | GoogleTranslateTest
   | LocalizedString
+  | AssistImageDescriptionRepro
   | AssistDeepNestingRepro
   | AssistOverviewHours
   | AssistHoursOfOperation
@@ -1953,13 +2177,16 @@ export type AllSanitySchemaTypes =
   | MuxVideoAssetReference
   | MuxVideo
   | MuxVideoAsset
+  | MuxRobotsOutputs
   | MuxAssetData
+  | MuxRobotsPendingCreate
+  | MuxRobotsDirectiveRun
+  | MuxRobotsJob
   | MuxMasterFile
   | MuxStaticRenditions
   | MuxStaticRenditionFile
   | MuxPlaybackId
   | MuxTrack
-  | SanityFileAssetReference
   | MediaProduct
   | MediaFolderReference
   | MediaFolder

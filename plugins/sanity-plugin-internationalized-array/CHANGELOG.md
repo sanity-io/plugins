@@ -1,5 +1,59 @@
 # sanity-plugin-internationalized-array
 
+## 5.3.10
+
+### Patch Changes
+
+- [#2262](https://github.com/sanity-io/plugins/pull/2262) [`8f457fc`](https://github.com/sanity-io/plugins/commit/8f457fce8509a396755329e2dda52ddfb99429ad) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - `collapsed` starts an object value, such as a file, collapsed inside the language row. The collapse arrow lines up with the language label.
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 5.3.9
+
+No changes in this release.
+
+## 5.3.8
+
+### Patch Changes
+
+- [#2063](https://github.com/sanity-io/plugins/pull/2063) [`8c7098b`](https://github.com/sanity-io/plugins/commit/8c7098bb9246d38789ddfcb176bfcb85afbf7b26) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Field options such as `accept` on an internationalized array field are passed through to each language's underlying value field.
+
+## 5.3.7
+
+### Patch Changes
+
+- [#2106](https://github.com/sanity-io/plugins/pull/2106) [`5b4dd26`](https://github.com/sanity-io/plugins/commit/5b4dd2682911fcbc5ab048fd5892d49c168cc00d) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add `allowRemovingDefaultLanguages` so configured default languages can be removed. They are still added on a new document, and are not inserted again once that document has history.
+
+## 5.3.6
+
+No changes in this release.
+
+## 5.3.5
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 5.3.4
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 5.3.3
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+## 5.3.2
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
+## 5.3.1
+
 ## 5.3.0
 
 ### Minor Changes

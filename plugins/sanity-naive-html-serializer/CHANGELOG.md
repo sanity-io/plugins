@@ -1,5 +1,25 @@
 # sanity-naive-html-serializer
 
+## 5.1.17
+
+### Patch Changes
+
+- [#2084](https://github.com/sanity-io/plugins/pull/2084) [`089abaa`](https://github.com/sanity-io/plugins/commit/089abaaf9fb5849403eaa5185b8b19dda16808d5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Ignore `localize: false` on fields inside nested objects, page-builder modules, and inline object types when sending a document for translation
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 5.1.16
+
+### Patch Changes
+
+- [#2083](https://github.com/sanity-io/plugins/pull/2083) [`9b7e239`](https://github.com/sanity-io/plugins/commit/9b7e239bad85d275766e7bf1df9523194e9c0f5e) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Preserve span mark definitions, including links without an href, when converting portable text to HTML and back. An edited anchor href in the HTML replaces the stored link URL.
+
+## 5.1.15
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
 ## 5.1.14
 
 ### Patch Changes

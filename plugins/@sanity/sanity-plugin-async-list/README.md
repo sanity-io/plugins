@@ -17,8 +17,8 @@ npm install @sanity/sanity-plugin-async-list
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {asyncList} from '@sanity/sanity-plugin-async-list'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -91,9 +91,9 @@ defineField({
 ### Example configurations
 
 ```ts
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 // sanity.config.ts
 import {defineConfig} from 'sanity'
-import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   // ...rest of config
@@ -200,6 +200,28 @@ Provide options for the `client` passed to `loader`.
 ### autocompleteProps
 
 `AutocompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete.
+
+`renderOption`, `renderValue`, and `filterOption` receive `{value: string}` unless you pass an option type argument. Extra fields returned by `loader` are still allowed either way.
+
+```tsx
+type Character = {value: string; name: string; imageUrl: string}
+
+asyncList<Character>({
+  schemaType: 'character',
+  loader: async () => {
+    // ...return [{value, name, imageUrl}]
+    return []
+  },
+  autocompleteProps: {
+    renderOption: (option) => {
+      return <span>{option.name}</span>
+    },
+    renderValue: (value, option) => option?.name ?? value,
+  },
+})
+```
+
+`createAsyncListInput` takes the same type argument.
 
 ## License
 

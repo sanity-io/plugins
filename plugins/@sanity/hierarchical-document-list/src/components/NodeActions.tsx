@@ -38,18 +38,6 @@ const NodeActions = ({nodeProps}: {nodeProps: NodeProps}) => {
             disabled={!isValid}
             onClick={() => operations.duplicateItem(nodeProps)}
           />
-          {/* <MenuItem
-            text="Move up"
-            icon={ArrowUpIcon}
-            disabled={!isValid}
-            onClick={() => operations.moveItemUp(nodeProps)}
-          />
-          <MenuItem
-            text="Move down"
-            icon={ArrowDownIcon}
-            disabled={!isValid}
-            onClick={() => operations.moveItemDown(nodeProps)}
-          /> */}
           <MenuDivider />
           <MenuItem
             text="Open in new tab"

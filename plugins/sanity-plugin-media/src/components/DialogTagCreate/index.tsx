@@ -1,3 +1,4 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
@@ -9,7 +10,6 @@ import {dialogActions} from '../../modules/dialog'
 import {tagsActions} from '../../modules/tags'
 import type {DialogTagCreateProps, TagFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
-import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -41,7 +41,7 @@ const DialogTagCreate = (props: Props) => {
       name: '',
     },
     mode: 'onChange',
-    resolver: zodFormResolver<TagFormData>(tagFormSchema),
+    resolver: zodResolver(tagFormSchema),
   })
 
   const formUpdating = creating
@@ -65,10 +65,12 @@ const DialogTagCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Element, not an inner component: a new component type each render remounts the
+  // footer between mousedown and mouseup (tooltip / layer updates), so the
+  // browser never fires click and Save and close does nothing.
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
-        {/* Submit button */}
         <FormSubmitButton
           disabled={formUpdating || !isDirty || !isValid}
           isValid={isValid}
@@ -79,15 +81,7 @@ const DialogTagCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Create Tag"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Tag" id={id} onClose={handleClose} width={1}>
       {/* Form fields */}
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         {/* Hidden button to enable enter key submissions */}

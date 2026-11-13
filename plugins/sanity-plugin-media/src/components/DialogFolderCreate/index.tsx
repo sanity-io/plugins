@@ -1,3 +1,4 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex, Text} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
@@ -9,7 +10,6 @@ import {dialogActions} from '../../modules/dialog'
 import {foldersActions, selectFolderPathById} from '../../modules/folders'
 import type {DialogFolderCreateProps, FolderFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
-import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -40,7 +40,7 @@ const DialogFolderCreate = (props: Props) => {
       name: '',
     },
     mode: 'onChange',
-    resolver: zodFormResolver<FolderFormData>(folderFormSchema),
+    resolver: zodResolver(folderFormSchema),
   })
 
   const handleClose = () => {
@@ -63,7 +63,8 @@ const DialogFolderCreate = (props: Props) => {
     }
   }, [creatingError, setError])
 
-  const Footer = () => (
+  // Element, not an inner component. See DialogTagCreate.
+  const footer = (
     <Box padding={3}>
       <Flex justify="flex-end">
         <FormSubmitButton
@@ -76,15 +77,7 @@ const DialogFolderCreate = (props: Props) => {
   )
 
   return (
-    <Dialog
-      animate
-      // oxlint-disable-next-line react/static-components
-      footer={<Footer />}
-      header="Create Folder"
-      id={id}
-      onClose={handleClose}
-      width={1}
-    >
+    <Dialog animate footer={footer} header="Create Folder" id={id} onClose={handleClose} width={1}>
       <Box as="form" padding={4} onSubmit={handleSubmit(onSubmit)}>
         <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 

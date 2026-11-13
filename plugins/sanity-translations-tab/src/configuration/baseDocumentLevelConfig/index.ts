@@ -69,11 +69,11 @@ export const baseDocumentLevelConfig = {
       ...customBlockDeserializers,
     ]
 
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,
       blockDeserializers,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     ) as SanityDocument
     return documentLevelPatch(
       id,
@@ -106,11 +106,11 @@ export const legacyDocumentLevelConfig = {
       ...customBlockDeserializers,
     ]
 
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,
       blockDeserializers,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     ) as SanityDocument
     return legacyDocumentLevelPatch(id, deserialized, localeId, client)
   },

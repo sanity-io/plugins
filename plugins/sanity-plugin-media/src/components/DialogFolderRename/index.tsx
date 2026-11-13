@@ -1,3 +1,4 @@
+import {zodResolver} from '@hookform/resolvers/zod'
 import {Box, Flex, Text} from '@sanity/ui'
 import {type ReactNode, useEffect} from 'react'
 import {type SubmitHandler, useForm} from 'react-hook-form'
@@ -9,7 +10,6 @@ import {dialogActions} from '../../modules/dialog'
 import {foldersActions, selectFolderPathById} from '../../modules/folders'
 import type {DialogFolderRenameProps, FolderFormData} from '../../types'
 import sanitizeFormData from '../../utils/sanitizeFormData'
-import zodFormResolver from '../../utils/zodFormResolver'
 import Dialog from '../Dialog'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
@@ -41,7 +41,7 @@ const DialogFolderRename = ({children, dialog}: Props) => {
       name: currentName,
     },
     mode: 'onChange',
-    resolver: zodFormResolver<FolderFormData>(folderFormSchema),
+    resolver: zodResolver(folderFormSchema),
   })
 
   const handleClose = () => {

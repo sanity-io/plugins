@@ -1,5 +1,54 @@
 # @sanity/assist
 
+## 6.3.0
+
+### Minor Changes
+
+- [#2314](https://github.com/sanity-io/plugins/pull/2314) [`679be04`](https://github.com/sanity-io/plugins/commit/679be04716e0af7b5ebac64246750a7720ab73c0) Thanks [@jjburbridge](https://github.com/jjburbridge)! - Add a "Select all" option for target languages in field-level translation
+
+### Patch Changes
+
+- [#2072](https://github.com/sanity-io/plugins/pull/2072) [`0fc19b5`](https://github.com/sanity-io/plugins/commit/0fc19b51183ab3f2b46a4c4b9ac8e2443ce87884) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Translate fields skips fields that are read-only, hidden, or excluded from AI Assist, including internationalized array fields. Those fields are no longer overwritten, and excluded fields no longer fail translation because their schema was omitted.
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+## 6.2.6
+
+### Patch Changes
+
+- [#2240](https://github.com/sanity-io/plugins/pull/2240) [`eab1d7e`](https://github.com/sanity-io/plugins/commit/eab1d7ecefcf59e701c03d1fec00eaae7b91d6a4) Thanks [@raj-codal](https://github.com/raj-codal)! - Build the field ref lookup in linear time, so opening documents with large page-builder schemas no longer freezes the Studio
+
+## 6.2.5
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+## 6.2.4
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+
+## 6.2.3
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+## 6.2.2
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+
+## 6.2.1
+
+### Patch Changes
+
+- [#2000](https://github.com/sanity-io/plugins/pull/2000) [`dc37379`](https://github.com/sanity-io/plugins/commit/dc37379cb6e6a70837456200685931f9ffa237e4) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Create a real draft before AI Assist writes when the document was just published. Generate image description, translate document, and translate fields no longer fail or overwrite published content by targeting `drafts.<id>` while only a virtual draft exists.
+  Fixes [#660](https://github.com/sanity-io/plugins/issues/660) [#663](https://github.com/sanity-io/plugins/issues/663) [#666](https://github.com/sanity-io/plugins/issues/666) [#667](https://github.com/sanity-io/plugins/issues/667)
+
 ## 6.2.0
 
 ### Minor Changes

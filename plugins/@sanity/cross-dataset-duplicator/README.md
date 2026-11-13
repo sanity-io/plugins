@@ -56,8 +56,8 @@ The plugin has some configuration options. These can be set by adding a config f
 ```ts
 // ./sanity.config.ts
 
-import {defineConfig} from 'sanity'
 import {crossDatasetDuplicator} from '@sanity/cross-dataset-duplicator'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   // all other settings...

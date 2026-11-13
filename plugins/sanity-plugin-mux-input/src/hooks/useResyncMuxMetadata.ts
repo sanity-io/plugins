@@ -1,15 +1,10 @@
 import {useMemo, useState} from 'react'
-import {
-  createHookFromObservableFactory,
-  type DocumentStore,
-  useClient,
-  useDocumentStore,
-} from 'sanity'
+import {createHookFromObservableFactory, type DocumentStore, useDocumentStore} from 'sanity'
 
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
 import {isEmptyOrPlaceholderTitle} from '../util/assetTitlePlaceholder'
 import type {VideoAssetDocument} from '../util/types'
-import {SANITY_API_VERSION} from './useClient'
+import {SANITY_API_VERSION, useClient} from './useClient'
 import useMuxAssets from './useMuxAssets'
 import {useSecretsDocumentValues} from './useSecretsDocumentValues'
 
@@ -17,9 +12,7 @@ type ResyncState = 'closed' | 'idle' | 'syncing' | 'done' | 'error'
 
 export default function useResyncMuxMetadata() {
   const documentStore = useDocumentStore()
-  const client = useClient({
-    apiVersion: SANITY_API_VERSION,
-  })
+  const client = useClient()
 
   const [sanityAssets, sanityAssetsLoading] = useSanityAssets(documentStore)
 

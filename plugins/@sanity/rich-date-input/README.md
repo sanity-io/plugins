@@ -15,8 +15,8 @@ npm install @sanity/rich-date-input
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {richDate} from '@sanity/rich-date-input'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   // ...

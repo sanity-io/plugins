@@ -65,7 +65,7 @@ jobs:
 
       - uses: ./.github/actions/setup
         with:
-          node-version: lts/*
+          runtime: node@lts
 
       - name: Compute plugin key
         id: key

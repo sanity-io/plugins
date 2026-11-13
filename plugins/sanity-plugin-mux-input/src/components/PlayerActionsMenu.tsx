@@ -4,6 +4,7 @@ import {ImageIcon} from '@sanity/icons/Image'
 import {LockIcon} from '@sanity/icons/Lock'
 import {PlugIcon} from '@sanity/icons/Plug'
 import {ResetIcon} from '@sanity/icons/Reset'
+import {RobotIcon} from '@sanity/icons/Robot'
 import {SearchIcon} from '@sanity/icons/Search'
 import {SyncIcon} from '@sanity/icons/Sync'
 import {TranslateIcon} from '@sanity/icons/Translate'
@@ -132,6 +133,7 @@ function PlayerActionsMenu(
                   text="Captions"
                   onClick={() => setDialogState('edit-captions')}
                 />
+                <MenuItem icon={RobotIcon} text="Robots" onClick={() => setDialogState('robots')} />
                 <MenuItem
                   icon={SyncIcon}
                   text="Resync from Mux"

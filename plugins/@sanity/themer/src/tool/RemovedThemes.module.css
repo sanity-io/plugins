@@ -1,0 +1,4 @@
+/* A removed theme's thumbnail, dimmed to read as removed */
+.removedThumbnail {
+  opacity: 0.6;
+}

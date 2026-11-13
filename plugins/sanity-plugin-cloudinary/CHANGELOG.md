@@ -1,5 +1,54 @@
 # sanity-plugin-cloudinary
 
+## 2.1.10
+
+### Patch Changes
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+- Updated dependencies [[`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543)]:
+  - @sanity/studio-secrets@4.0.25
+
+## 2.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`19e2fca`](https://github.com/sanity-io/plugins/commit/19e2fca5f1fb6e5d42cdc5c40c6109b2b688f659)]:
+  - @sanity/studio-secrets@4.0.24
+
+## 2.1.8
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+- Updated dependencies [[`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3)]:
+  - @sanity/studio-secrets@4.0.23
+
+## 2.1.7
+
+### Patch Changes
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+- Updated dependencies [[`9a107b5`](https://github.com/sanity-io/plugins/commit/9a107b5085be23d0d0fd6531fe2dac16108f6f22), [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30)]:
+  - @sanity/studio-secrets@4.0.22
+
+## 2.1.6
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2134](https://github.com/sanity-io/plugins/pull/2134) [`d3ceaaa`](https://github.com/sanity-io/plugins/commit/d3ceaaad3f943a886dc412138eaa73e07cc98182) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency nanoid to ^6.0.2
+- Updated dependencies [[`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59)]:
+  - @sanity/studio-secrets@4.0.21
+
+## 2.1.5
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+- Updated dependencies [[`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420)]:
+  - @sanity/studio-secrets@4.0.20
+
 ## 2.1.4
 
 ### Patch Changes

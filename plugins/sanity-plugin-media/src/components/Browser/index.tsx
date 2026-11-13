@@ -78,7 +78,7 @@ const BrowserContent = ({
 
 const Browser = (props: Props) => {
   const client = useVersionedClient()
-  const {excludeTagSlugs, showMediaLibraryAssets} = useToolOptions()
+  const {excludeTagSlugs, locales, showMediaLibraryAssets} = useToolOptions()
 
   return (
     <ReduxProvider
@@ -86,6 +86,7 @@ const Browser = (props: Props) => {
       client={client}
       document={props?.document}
       excludeTagSlugs={excludeTagSlugs}
+      locales={locales}
       selectedAssets={props?.selectedAssets}
       showMediaLibraryAssets={showMediaLibraryAssets}
     >

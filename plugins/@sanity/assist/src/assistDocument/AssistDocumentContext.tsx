@@ -13,7 +13,19 @@ export type AssistDocumentContextValue = (
    * This is the _actual_ id of the current document (ie the document loaded in the pane); it contains draft. versions. prefix ect depending on context
    */
   assistableDocumentId: string
+  /**
+   * True when a real write target exists: a `drafts.*` snapshot, the selected
+   * release version, or the published document for live-edit types.
+   *
+   * After publish, the drafts perspective can still display published values
+   * (a virtual draft) while this is false because `editState.draft` is null.
+   */
   documentIsAssistable: boolean
+  /**
+   * True while the document store still has an in-flight commit (for example
+   * the mutation that materializes a draft from published values).
+   */
+  documentIsSyncing: boolean
   documentSchemaType: ObjectSchemaType
   openInspector: (inspectorName: string, paneParams?: Record<string, string>) => void
   closeInspector: (inspectorName?: string) => void

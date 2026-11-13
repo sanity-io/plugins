@@ -33,7 +33,6 @@ function AssistDocumentInput({documentId, ...props}: ObjectInputProps & {documen
     if (props.schemaType.name !== assistDocumentTypeName) {
       return props.schemaType
     }
-    // oxlint-disable-next-line no-unsafe-type-assertion
     return {
       ...props.schemaType,
       type: {
@@ -41,6 +40,7 @@ function AssistDocumentInput({documentId, ...props}: ObjectInputProps & {documen
         // compatibility with i18nArrays plugin that requires this to be document
         name: 'document',
       },
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as ObjectSchemaType
   }, [props.schemaType])
 

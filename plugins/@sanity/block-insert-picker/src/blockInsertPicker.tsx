@@ -528,9 +528,9 @@ export function BlockInsertPicker({
     // Popover types referenceElement as HTMLElement, but its positioning
     // only ever reads getBoundingClientRect — the standard virtual-element
     // escape hatch for anchoring to a caret rect.
-    // oxlint-disable-next-line no-unsafe-type-assertion
     return {
       getBoundingClientRect: () => cursorRect,
+      // oxlint-disable-next-line no-unsafe-type-assertion
     } as unknown as HTMLElement
   }, [cursorRect])
 

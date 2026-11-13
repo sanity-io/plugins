@@ -49,8 +49,8 @@ export default defineEventHandler(async (event) => {
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {hubSpotInput} from '@sanity/form-toolkit/hubspot'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -123,8 +123,8 @@ export default defineEventHandler(async (event) => {
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {mailchimpInput} from '@sanity/form-toolkit/mailchimp'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -161,8 +161,8 @@ The `formSchema` plugin and `FormRenderer` React component are designed to be us
 First add `formSchema` it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {formSchema} from '@sanity/form-toolkit/form-schema'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -203,8 +203,8 @@ export default defineType({
 Finally, pass a `form` document to the `FormRenderer` component
 
 ```tsx
-import {type FC} from 'react'
 import {FormRenderer, type FormDataProps} from '@sanity/form-toolkit/form-renderer'
+import {type FC} from 'react'
 
 interface NativeFormExampleProps {
   formData: FormDataProps

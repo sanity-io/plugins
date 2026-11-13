@@ -10,6 +10,7 @@ import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 import {structureTool} from 'sanity/structure'
 
 import {issue520Repro} from './issue-520-repro'
+import {issue1956Repro} from './issue-1956-repro'
 
 const internationalizedPost = defineType({
   type: 'document',
@@ -193,6 +194,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
       circularSchemaRepro,
       demoTable,
       movie,
+      issue1956Repro,
       issue520Repro,
     ],
   },
@@ -207,7 +209,7 @@ export const internationalizedArrayExample = definePlugin(() => ({
         {id: 'it', title: 'Italian'},
       ],
       defaultLanguages: ['en'],
-      fieldTypes: ['string', 'text', 'demoTable'],
+      fieldTypes: ['string', 'text', 'file', 'demoTable'],
       buttonLocations: ['document', 'field'],
       languageFilter: {
         documentTypes: ['internationalizedPost', 'lesson'],

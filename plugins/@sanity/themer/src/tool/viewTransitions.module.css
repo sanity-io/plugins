@@ -1,0 +1,172 @@
+/*
+ * The view transition classes the layout's `ViewTransition` boundaries pick by
+ * transition type (`viewTransitions.ts`), and what the snapshots do while they
+ * carry one. React sets the class as the group's `view-transition-class`, which
+ * `::view-transition-*(.class)` selects. Lightning CSS scopes those classes,
+ * and the keyframes they animate with, like any other, so the pairs below stay
+ * matched up within this file. What applies to every transition the layout
+ * starts — timing, reduced motion — is keyed on the transition types instead,
+ * at the end of the file.
+ */
+
+/* The navbar button swaps to its new state in place: no cross-fade of the two */
+::view-transition-new(.navbarButtonUpdate) {
+  animation: none;
+}
+
+::view-transition-old(.navbarButtonUpdate) {
+  display: none;
+}
+
+/*
+ * The Studio stretches into its new width as the sidebar comes and goes:
+ * both snapshots fill the group instead of keeping their aspect ratio
+ */
+::view-transition-old(.resizeStudio),
+::view-transition-new(.resizeStudio) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: fill;
+}
+
+/*
+ * The Studio blurs out of its old width and into its new one as the split copy
+ * comes and goes. The blur sits on the image pair that holds both snapshots,
+ * not on the snapshots themselves: Safari (WebKit, as of Technology Preview
+ * 253) paints a filtered snapshot as raw layer contents, losing the
+ * `object-fit` stretch the snapshots share with `.resizeStudio`, so the Studio
+ * scaled wrongly while it resized there. One blur peaking at the cross-over,
+ * where the two snapshots meet at half opacity, looks the same as the pair of
+ * 12px blurs the snapshots carried before — their visible blur peaked at 6px
+ * there too
+ */
+::view-transition-image-pair(.splitStudio) {
+  animation-name: blurPeak;
+  animation-timing-function: inherit;
+}
+
+::view-transition-old(.splitStudio) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: fill;
+  animation-name: fadeOut;
+}
+
+::view-transition-new(.splitStudio) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: fill;
+  animation-name: fadeIn;
+}
+
+@keyframes blurPeak {
+  50% {
+    filter: blur(6px);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The sidebar slides in from its edge, and out to it */
+::view-transition-new(.panelSlideIn) {
+  animation-name: slideInFromEdge;
+}
+
+::view-transition-old(.panelSlideOut) {
+  animation-name: slideOutToEdge;
+}
+
+@keyframes slideInFromEdge {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideOutToEdge {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/*
+ * The split copy slides in from the side, or out to it — hidden for the first
+ * quarter of the way in, and for the last quarter of the way out
+ */
+::view-transition-new(.splitScreenSlideIn) {
+  animation-name: splitSlideIn;
+}
+
+::view-transition-old(.splitScreenSlideOut) {
+  animation-name: splitSlideOut;
+}
+
+@keyframes splitSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0;
+  }
+}
+
+@keyframes splitSlideOut {
+  75% {
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+/*
+ * The transition types are plain identifiers (`viewTransitions.ts`), since
+ * `sanity-themer` is what userland keys on to take part, as in
+ * `<ViewTransition update={{'sanity-themer': 'auto', default: 'none'}}>`.
+ * Lightning CSS would scope them like class names, so the selectors below
+ * mark them global.
+ */
+
+/* The default timing of every themer view transition */
+:root:global(:active-view-transition-type(sanity-themer))::view-transition-group(*) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* The split copy takes longer to come and go */
+:root:global(
+    :active-view-transition-type(sanity-themer-split-screen-open)
+  )::view-transition-group(*),
+:root:global(
+    :active-view-transition-type(sanity-themer-split-screen-close)
+  )::view-transition-group(*) {
+  animation-duration: 480ms;
+}
+
+/* Switches layouts without animating for users who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  :root:global(:active-view-transition-type(sanity-themer))::view-transition-group(*),
+  :root:global(:active-view-transition-type(sanity-themer))::view-transition-old(*),
+  :root:global(:active-view-transition-type(sanity-themer))::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Keeps the Studio clickable while a themer transition runs */
+:root:global(:active-view-transition-type(sanity-themer))::view-transition {
+  pointer-events: none;
+}

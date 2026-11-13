@@ -2,8 +2,10 @@ import {blue} from '@sanity/color'
 import type {ReactNode} from 'react'
 import {createGlobalStyle} from 'styled-components'
 
-// Adapted from react-sortable-tree/src/tree-node.js
-const ScaffoldStyles = createGlobalStyle`
+// Adapted from react-sortable-tree/src/tree-node.js.
+// Mount once per tree. A copy inside every row makes styled-components rebuild
+// the whole group on each unmount, which hangs the Studio on trees of a few dozen rows.
+export const TreeScaffoldStyles = createGlobalStyle`
   .rst__lineBlock,
   .rst__absoluteLineBlock {
     height: 100%;
@@ -180,12 +182,7 @@ const TreeNodeRendererScaffold = (props: any) => {
     )
   })
 
-  return (
-    <>
-      {scaffold}
-      <ScaffoldStyles />
-    </>
-  )
+  return scaffold
 }
 
 export default TreeNodeRendererScaffold

@@ -50,8 +50,8 @@ The Embeddings Index UI ships with a Semantic reference search input component. 
 You can add the semantic reference search input by importing and adding `embeddingsIndexReferenceInput` as a plugin to `sanity.config.ts` (or `.js`):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {embeddingsIndexReferenceInput} from '@sanity/embeddings-index-ui'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -92,8 +92,8 @@ You can enable a default configuration for the reference inputs through the plug
 Example:
 
 ```ts
-import {defineConfig} from 'sanity'
 import {embeddingsIndexReferenceInput} from '@sanity/embeddings-index-ui'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -133,8 +133,8 @@ manage embeddings indexes in a Studio dashboard. It also lets you test semantic 
 Add `embeddingsIndexDashboard` as a plugin to `sanity.config.ts` (or `.js`):
 
 ```ts
-import {defineConfig} from 'sanity'
 import {embeddingsIndexDashboard} from '@sanity/embeddings-index-ui'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...
@@ -151,8 +151,8 @@ This adds the Embeddings Index API tool to the studio navigation bar, but only w
 If you want to enable the tool based on user access roles:
 
 ```ts
-import {defineConfig} from 'sanity'
 import {embeddingsIndexDashboard} from '@sanity/embeddings-index-ui'
+import {defineConfig} from 'sanity'
 
 export default defineConfig({
   //...

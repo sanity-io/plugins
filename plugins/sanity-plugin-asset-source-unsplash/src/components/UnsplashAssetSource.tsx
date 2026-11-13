@@ -4,11 +4,9 @@ import {lazy, Suspense, useMemo, useRef, useState} from 'react'
 import {type AssetSourceComponentProps, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
-import type {FetcherResult, UnsplashPhoto} from '../types'
+import {fetchUnsplashPhotos} from '../datastores/unsplash'
 import {Loader} from './Loader'
 import {SearchInput} from './SearchInput'
-
-const RESULTS_PER_PAGE = 42
 
 const StyledDialog = styled(Dialog)`
   & > [data-ui='DialogCard'] > [data-ui='Card'] {
@@ -23,36 +21,7 @@ export function UnsplashAssetSource({onClose, onSelect}: AssetSourceComponentPro
   const fetcher = useMemo(
     () =>
       memoize(
-        async function fetcher(query: string, page: number): Promise<FetcherResult> {
-          const searchParams = new URLSearchParams({
-            page: `${page}`,
-            per_page: `${RESULTS_PER_PAGE}`,
-          })
-          if (query.trim()) {
-            searchParams.set('query', query.trim())
-            return client.request<{
-              results: UnsplashPhoto[]
-              total: number
-              total_pages: number
-            }>({
-              url: `/addons/unsplash/search/photos?${searchParams}`,
-              withCredentials: true,
-              method: 'GET',
-            })
-          }
-          searchParams.set('order_by', 'popular')
-          return client
-            .request<UnsplashPhoto[]>({
-              url: `/addons/unsplash/photos?${searchParams}`,
-              withCredentials: true,
-              method: 'GET',
-            })
-            .then((results) => ({
-              results,
-              total: results.length,
-              total_pages: Math.ceil(results.length / RESULTS_PER_PAGE),
-            }))
-        },
+        (query: string, page: number) => fetchUnsplashPhotos(client, query, page),
         (query, page) => JSON.stringify({query, page}),
       ),
     [client],

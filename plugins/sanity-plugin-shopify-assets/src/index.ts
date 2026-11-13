@@ -12,11 +12,12 @@ export * from './types'
 declare module 'sanity' {
   export namespace Schema {
     // here we type up our custom schema definition
-    // options are optional on fields: the plugin-level config provides the default domain
+    // options are optional on fields: plugin config supplies the defaults
     export type ShopifyAssetTypeDef = Omit<ObjectDefinition, 'type' | 'fields'> & {
       type: 'shopify.asset'
       options?: {
         shopifyDomain?: string
+        dataset?: string
       }
     }
     // Adds 'extension-type' as an intrinsic type

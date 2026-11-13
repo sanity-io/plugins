@@ -85,11 +85,11 @@ export const baseFieldLevelConfig = {
       ...customBlockDeserializers,
     ]
 
-    // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     const deserialized = BaseDocumentDeserializer.deserializeDocument(
       document,
       deserializers,
       blockDeserializers,
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion -- BaseDocumentDeserializer returns a loosely typed object
     ) as SanityDocument
     return fieldLevelPatch(id, deserialized, localeId, client, baseLanguage, mergeWithTargetLocale)
   },

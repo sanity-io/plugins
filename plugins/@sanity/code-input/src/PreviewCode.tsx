@@ -11,6 +11,23 @@ const PreviewContainer = styled(Box)`
   position: relative;
 `
 
+// Studio's inline object chip is `height: calc(1em - 1px)`. 13/16em matches
+// Studio's inline preview text and fits in that content box.
+const InlineCodeLabel = styled.span`
+  box-sizing: border-box;
+  display: block;
+  font-size: 0.8125em;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
 /**
  * @public
  */
@@ -18,15 +35,39 @@ export interface PreviewCodeProps extends PreviewProps {
   selection?: CodeInputValue
 }
 
+const inlineCodePreviewMaxLength = 20
+
+function capInlineCodePreview(value: string): string {
+  if (value.length <= inlineCodePreviewMaxLength) return value
+  return `${value.slice(0, inlineCodePreviewMaxLength - 1)}…`
+}
+
+function inlineCodeLabel(props: PreviewCodeProps): string {
+  const firstLine = props.selection?.code?.split('\n')[0]?.trim()
+  if (firstLine) return capInlineCodePreview(firstLine)
+
+  const language = props.selection?.language?.trim()
+  if (language) return capInlineCodePreview(language.toUpperCase())
+
+  return 'UNKNOWN'
+}
+
 /**
  * @public
  */
 export function PreviewCode(props: PreviewCodeProps): React.JSX.Element {
-  const {selection, schemaType: type} = props
+  const {selection, schemaType: type, layout} = props
   // oxlint-disable-next-line no-unsafe-type-assertion - fix later
   const {languageMode} = useLanguageMode(type as CodeSchemaType, props.selection)
 
   const mounted = useMounted()
+
+  if (layout === 'inline') {
+    return (
+      <InlineCodeLabel data-testid="inline-code-preview">{inlineCodeLabel(props)}</InlineCodeLabel>
+    )
+  }
+
   return (
     <PreviewContainer>
       <Card padding={4}>

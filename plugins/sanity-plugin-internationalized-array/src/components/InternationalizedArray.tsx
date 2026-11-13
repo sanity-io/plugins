@@ -69,6 +69,9 @@ function isPristineDocument(
  *   until initial value templates resolve, and the field-level `readOnly`
  *   prop can lag that document-level lock. Skipping the patch until writable
  *   avoids "Attempted to patch a read-only document" toasts.
+ *   With `allowRemovingDefaultLanguages`, those rows are initial values for a
+ *   pristine document only. Once the document has history, a removed row is
+ *   left alone, including when the field value is `undefined`.
  * - **Ordering**: When `restoreOrder` is enabled (default), detects when value
  *   items are out of order relative to the master `languages` list and
  *   automatically re-sorts them. Set `restoreOrder: false` to keep the stored
@@ -93,6 +96,7 @@ export default function InternationalizedArray(
     languages,
     filteredLanguages,
     defaultLanguages,
+    allowRemovingDefaultLanguages,
     buttonAddAll,
     buttonLocations,
     restoreOrder,
@@ -251,6 +255,12 @@ export default function InternationalizedArray(
   })
 
   useEffect(() => {
+    if (allowRemovingDefaultLanguages && !isPristine) {
+      // A pristine document has never existed, so it still receives default languages.
+      // Once it has history, a removed row stays removed.
+      return undefined
+    }
+
     const hasAddedDefaultLanguages = defaultLanguages
       .filter((language) => languages.find((l) => l.id === language))
       .every((language) => addedLanguages.includes(language))
@@ -275,7 +285,15 @@ export default function InternationalizedArray(
       handleAddLanguages(languagesToAdd)
     })
     return () => clearTimeout(timeout)
-  }, [canAutoAddDefaults, handleAddLanguages, defaultLanguages, addedLanguages, languages])
+  }, [
+    allowRemovingDefaultLanguages,
+    isPristine,
+    canAutoAddDefaults,
+    handleAddLanguages,
+    defaultLanguages,
+    addedLanguages,
+    languages,
+  ])
 
   // NOTE: This is reordering and re-setting the whole array, it could be surgical
   const handleRestoreOrder = useCallback(() => {

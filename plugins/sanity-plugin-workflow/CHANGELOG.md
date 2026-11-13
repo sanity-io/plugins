@@ -1,5 +1,69 @@
 # sanity-plugin-workflow
 
+## 3.0.53
+
+### Patch Changes
+
+- [#2306](https://github.com/sanity-io/plugins/pull/2306) [`fb78bd7`](https://github.com/sanity-io/plugins/commit/fb78bd7d6ee504af2275cedd7fac32ea106b0fbc) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.10.1
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
+- [#2089](https://github.com/sanity-io/plugins/pull/2089) [`7012a8c`](https://github.com/sanity-io/plugins/commit/7012a8c4a785054c28e84b4cdec7a7013a762b8f) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix the workflow Edit button crashing Studio on unpublished documents. Draft and version ids are opened with their published id, so the structure tool no longer throws "editOpsOf does not expect a draft id."
+- Updated dependencies [[`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543)]:
+  - sanity-plugin-utils@2.0.23
+
+## 3.0.52
+
+### Patch Changes
+
+- [#2220](https://github.com/sanity-io/plugins/pull/2220) [`567479a`](https://github.com/sanity-io/plugins/commit/567479a4cf58665c1a195307226b5a91e118ec47) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.3.0
+
+## 3.0.51
+
+### Patch Changes
+
+- [#2198](https://github.com/sanity-io/plugins/pull/2198) [`c905155`](https://github.com/sanity-io/plugins/commit/c905155393631a2d2468ae160037c81588e45069) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to ^14.2.0
+
+## 3.0.50
+
+### Patch Changes
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.5
+
+- [#2192](https://github.com/sanity-io/plugins/pull/2192) [`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3) Thanks [@stipsan](https://github.com/stipsan)! - Build the vanilla-extract styles with `identifiers: 'safe'`, so every release gets its own class names. The previous hash covered only the package name and file path, so a release that reordered a file's styles reused the class names of the previous release for different rules, and a page that loaded the stylesheets of both releases styled elements with the wrong rules.
+- Updated dependencies [[`3f25bda`](https://github.com/sanity-io/plugins/commit/3f25bda6bf711cae4a4f4393f664551bbd5e93f3)]:
+  - sanity-plugin-utils@2.0.22
+
+## 3.0.49
+
+### Patch Changes
+
+- [#2164](https://github.com/sanity-io/plugins/pull/2164) [`222ad55`](https://github.com/sanity-io/plugins/commit/222ad55b7cb8a42c19b830b59f70612778e36de8) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency motion to ^14.1.0
+
+- [#2163](https://github.com/sanity-io/plugins/pull/2163) [`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.4
+- Updated dependencies [[`2611f2a`](https://github.com/sanity-io/plugins/commit/2611f2a8fdf07f424f75616bb29886c5fb4b6d30)]:
+  - sanity-plugin-utils@2.0.21
+
+## 3.0.48
+
+### Patch Changes
+
+- [#1988](https://github.com/sanity-io/plugins/pull/1988) [`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency oxc-transform-react to ^0.153.0
+
+- [#2109](https://github.com/sanity-io/plugins/pull/2109) [`5bd1c62`](https://github.com/sanity-io/plugins/commit/5bd1c621dd7d4b150be1fbdfd527c11ca348b848) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency motion to v14
+
+- [#2119](https://github.com/sanity-io/plugins/pull/2119) [`df49d14`](https://github.com/sanity-io/plugins/commit/df49d14338ea46f84e23c0cdbcc740cf2f296dad) Thanks [@squiggler-app](https://github.com/apps/squiggler-app)! - fix(deps): update dependency @tanstack/react-virtual to ^3.14.13
+- Updated dependencies [[`f8a6342`](https://github.com/sanity-io/plugins/commit/f8a634255e429e39767c4f5a355df0acd58a3f59)]:
+  - sanity-plugin-utils@2.0.20
+
+## 3.0.47
+
+### Patch Changes
+
+- [#2046](https://github.com/sanity-io/plugins/pull/2046) [`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420) Thanks [@stipsan](https://github.com/stipsan)! - Raise the minimum versions of the `@sanity/ui` (4.2.7), `@sanity/icons` (5.2.2) and `motion` (13.4.4) dependencies the plugin uses
+- Updated dependencies [[`546e3a9`](https://github.com/sanity-io/plugins/commit/546e3a9477c99d9e54ddaf7bcdcca67cf66e0420)]:
+  - sanity-plugin-utils@2.0.19
+
 ## 3.0.46
 
 ### Patch Changes

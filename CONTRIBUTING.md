@@ -20,7 +20,7 @@ Thank you for your interest in contributing to the Sanity Plugins monorepo! This
 ### Prerequisites
 
 - Node.js (latest LTS)
-- [pnpm](https://pnpm.io/) v11 or later — the exact version is managed via `packageManager` in root `package.json`
+- [pnpm](https://pnpm.io/) v12 or later — the exact version is managed via `packageManager` in root `package.json`
 
 ### Initial Setup
 
@@ -92,7 +92,7 @@ Type checking is [performed by oxlint](https://oxc.rs/blog/2025-12-08-type-aware
 
 ### Testing
 
-The monorepo uses [Vitest v4](https://vitest.dev) for testing.
+The monorepo uses [Vitest v5](https://vitest.dev) for testing.
 
 ```bash
 # Run all tests (non-watch mode)
