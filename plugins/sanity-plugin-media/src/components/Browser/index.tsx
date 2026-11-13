@@ -37,10 +37,9 @@ const BrowserContent = ({
   onClose?: AssetSourceComponentProps['onClose']
   schemaType?: AssetSourceComponentProps['schemaType']
 }) => {
-  const client = useVersionedClient()
   const [portalElement, setPortalElement] = useState<HTMLDivElement | null>(null)
 
-  useBrowserInit(client, schemaType)
+  useBrowserInit(schemaType)
 
   return (
     <PortalProvider element={portalElement}>
@@ -48,7 +47,16 @@ const BrowserContent = ({
         <Dialogs />
         <Notifications />
 
-        <Card data-testid="media-browser" display="flex" height="fill" ref={setPortalElement}>
+        <Card
+          data-testid="media-browser"
+          display="flex"
+          height="fill"
+          // Only an `<Activity>` hide passes `null` here; keeping the element leaves an open
+          // dialog portaled in this card instead of remounting it elsewhere and back on reveal
+          ref={(element) => {
+            if (element) setPortalElement(element)
+          }}
+        >
           <Flex direction="column" flex={1}>
             {/* Header */}
             <Header onClose={onClose} />
