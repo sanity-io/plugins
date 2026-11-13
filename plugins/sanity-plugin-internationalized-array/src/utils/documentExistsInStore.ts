@@ -7,24 +7,32 @@
  */
 export type DocumentPairSnapshots = {
   ready?: boolean
+  scopeId?: string
   draft?: unknown
   published?: unknown
   version?: unknown
 } | null
 
 /**
- * Whether the document currently has a draft, published, or version snapshot
- * in the pair store.
+ * Whether the document this pane is editing currently exists in the pair store.
  *
  * Studio's delete action does not set `useDocumentPane().isDeleting` (that
  * flag is a separate pane field the built-in Delete action never writes). After
  * delete, form `_rev` can also remain on the last displayed snapshot. The pair
- * store clearing `draft` / `published` / `version` is the signal that patching
- * would recreate the document.
+ * store clearing the relevant snapshot is the signal that patching would
+ * recreate the document.
+ *
+ * When editing a version (`scopeId` set), only the version snapshot counts:
+ * discarding a release version leaves the base draft/published pair in the
+ * store, and patching the version would recreate it.
  */
 export function documentExistsInStore(editState: DocumentPairSnapshots): boolean {
   if (!editState || editState.ready === false) {
     return false
+  }
+
+  if (editState.scopeId !== undefined) {
+    return Boolean(editState.version)
   }
 
   return Boolean(editState.draft || editState.published || editState.version)
@@ -32,7 +40,8 @@ export function documentExistsInStore(editState: DocumentPairSnapshots): boolean
 
 /**
  * Whether the pair store has confirmed the document is absent: the store is
- * ready but has no draft, published, or version snapshot.
+ * ready and the snapshot this pane is editing is gone (see
+ * {@link documentExistsInStore} for which snapshots count).
  *
  * Intentionally not the negation of {@link documentExistsInStore}. Loading
  * states (missing `editState` or `ready === false`) are neither "exists" nor
@@ -45,5 +54,5 @@ export function documentMissingFromStore(editState: DocumentPairSnapshots): bool
     return false
   }
 
-  return !editState.draft && !editState.published && !editState.version
+  return !documentExistsInStore(editState)
 }

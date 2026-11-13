@@ -769,6 +769,32 @@ describe('InternationalizedArray', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  test('does not auto-add default languages when a discarded release version leaves the base pair in the store', async () => {
+    mockDocumentPane({
+      editState: {
+        ready: true,
+        scopeId: 'r1',
+        draft: {_id: 'drafts.doc', _rev: 'rev1'},
+        published: null,
+        version: null,
+      },
+    })
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props, DELETED_EVENTS)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   test('does not auto-add default languages when form _rev lingers after the store is empty', async () => {
     // The deleted pane can keep the last displayed snapshot (including `_rev`)
     // while draft/published/version are already null. Patching then recreates

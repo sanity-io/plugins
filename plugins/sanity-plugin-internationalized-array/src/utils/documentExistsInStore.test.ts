@@ -109,3 +109,53 @@ describe('documentMissingFromStore', () => {
     ).toBe(false)
   })
 })
+
+describe('version-scoped panes', () => {
+  test('returns false when a release version was discarded but the base pair remains', () => {
+    expect(
+      documentExistsInStore({
+        ready: true,
+        scopeId: 'r1',
+        draft: {_id: 'drafts.doc'},
+        published: {_id: 'doc'},
+        version: null,
+      }),
+    ).toBe(false)
+  })
+
+  test('returns true when the version snapshot is present', () => {
+    expect(
+      documentExistsInStore({
+        ready: true,
+        scopeId: 'r1',
+        draft: null,
+        published: null,
+        version: {_id: 'versions.r1.doc'},
+      }),
+    ).toBe(true)
+  })
+
+  test('documentMissingFromStore confirms a discarded version even with a base pair', () => {
+    expect(
+      documentMissingFromStore({
+        ready: true,
+        scopeId: 'r1',
+        draft: {_id: 'drafts.doc'},
+        published: null,
+        version: null,
+      }),
+    ).toBe(true)
+  })
+
+  test('documentMissingFromStore stays false while the store is not ready', () => {
+    expect(
+      documentMissingFromStore({
+        ready: false,
+        scopeId: 'r1',
+        draft: null,
+        published: null,
+        version: null,
+      }),
+    ).toBe(false)
+  })
+})
