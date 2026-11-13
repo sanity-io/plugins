@@ -206,7 +206,6 @@ minimumReleaseAgeExclude:
   - vitest
   - yuku-parser
   - cac@7.1.0
-  - i18next@26.4.4
 
 overrides:
   '@types/node': 'catalog:'
