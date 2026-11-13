@@ -69,6 +69,28 @@ describe('documentExistsInStore', () => {
       }),
     ).toBe(true)
   })
+
+  test('when editing a version, only the version snapshot counts as existence', () => {
+    expect(
+      documentExistsInStore({
+        ready: true,
+        scopeId: 'r',
+        draft: {_id: 'drafts.doc'},
+        published: {_id: 'doc'},
+        version: {_id: 'versions.r.doc'},
+      }),
+    ).toBe(true)
+
+    expect(
+      documentExistsInStore({
+        ready: true,
+        scopeId: 'r',
+        draft: {_id: 'drafts.doc'},
+        published: {_id: 'doc'},
+        version: null,
+      }),
+    ).toBe(false)
+  })
 })
 
 describe('documentMissingFromStore', () => {
@@ -105,6 +127,28 @@ describe('documentMissingFromStore', () => {
         draft: {_id: 'drafts.doc', _rev: 'rev1'},
         published: null,
         version: null,
+      }),
+    ).toBe(false)
+  })
+
+  test('when editing a version, absence of version is missing even if the base pair remains', () => {
+    expect(
+      documentMissingFromStore({
+        ready: true,
+        scopeId: 'r',
+        draft: {_id: 'drafts.doc'},
+        published: {_id: 'doc'},
+        version: null,
+      }),
+    ).toBe(true)
+
+    expect(
+      documentMissingFromStore({
+        ready: true,
+        scopeId: 'r',
+        draft: {_id: 'drafts.doc'},
+        published: {_id: 'doc'},
+        version: {_id: 'versions.r.doc'},
       }),
     ).toBe(false)
   })
