@@ -1,7 +1,9 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
-  "globalDependencies": ["pnpm-workspace.yaml"],
+  // turbo cannot parse the v13 pnpm-lock.yaml (vercel/turborepo#15006) and leaves its
+  // dependency hashes empty, so hash the whole lockfile explicitly.
+  "globalDependencies": ["pnpm-lock.yaml", "pnpm-workspace.yaml"],
   "globalEnv": [
     "NODE_ENV",
     "CI",
