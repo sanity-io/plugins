@@ -1,3 +1,4 @@
+import '@nosferatu500/react-sortable-tree/style.css'
 import '@sanity/ui/styles.css'
 import {definePlugin} from 'sanity'
 

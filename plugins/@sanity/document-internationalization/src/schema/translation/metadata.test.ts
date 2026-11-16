@@ -1,5 +1,5 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
-import type {FieldDefinition} from 'sanity'
+import type {FieldDefinition, PreviewConfig} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {describe, expect, test} from 'vitest'
 
@@ -202,5 +202,39 @@ describe('metadata schema', () => {
 
     expect(result?.title).toBe('0 Translations')
     expect(result?.subtitle).toBe('')
+  })
+
+  test('replaces the built-in preview when metadataPreview is provided', () => {
+    const metadataPreview: PreviewConfig = {
+      select: {
+        title: 'translations.0.value.title',
+        language: 'translations.0.language',
+      },
+      prepare({title, language}) {
+        return {
+          title: typeof title === 'string' && title.length > 0 ? title : 'Untitled',
+          subtitle: typeof language === 'string' ? language : '',
+        }
+      },
+    }
+    const schema = createMetadataSchema(schemaTypes, [], true, metadataPreview)
+
+    expect(schema.preview?.select).toEqual(metadataPreview.select)
+    expect(schema.preview?.prepare?.({title: 'Home', language: 'en'})).toEqual({
+      title: 'Home',
+      subtitle: 'en',
+    })
+    expect(schema.preview?.prepare?.({title: '', language: undefined})).toEqual({
+      title: 'Untitled',
+      subtitle: '',
+    })
+  })
+
+  test('keeps the built-in preview when metadataPreview is omitted', () => {
+    const schema = createMetadataSchema(schemaTypes, [], true, undefined)
+
+    expect(
+      schema.preview?.prepare?.({translations: [], documentSchemaTypes: ['page']})?.title,
+    ).toBe('0 Translations')
   })
 })

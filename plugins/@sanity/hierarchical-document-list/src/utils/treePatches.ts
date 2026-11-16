@@ -128,7 +128,7 @@ function getChildrenPaths(node: LocalTreeItem): string[] {
     if (typeof childKey === 'string' && childKey) {
       keyPaths.push(childKey)
     }
-    keyPaths.push(...getChildrenPaths(child as LocalTreeItem))
+    keyPaths.push(...getChildrenPaths(child))
   }
   return keyPaths
 }

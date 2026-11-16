@@ -131,6 +131,31 @@ describe('documentInternationalization plugin', () => {
     expect(types[0]).toMatchObject({name: METADATA_SCHEMA_NAME})
   })
 
+  test('uses metadataPreview for the metadata schema type', () => {
+    const metadataPreview = {
+      select: {title: 'translations.0.value.title'},
+      prepare: () => ({title: 'Home'}),
+    }
+    const plugin = createPlugin({metadataPreview})
+    const [metadataType] = getSchemaTypes(plugin)
+
+    expect(metadataType).toMatchObject({
+      name: METADATA_SCHEMA_NAME,
+      preview: metadataPreview,
+    })
+  })
+
+  test('keeps the built-in metadata preview when metadataPreview is omitted', () => {
+    const plugin = createPlugin()
+    const [metadataType] = getSchemaTypes(plugin)
+
+    expect(metadataType).toMatchObject({
+      preview: {
+        select: {translations: 'translations', documentSchemaTypes: 'schemaTypes'},
+      },
+    })
+  })
+
   describe('unstable_languageFilter', () => {
     test('appends Translations menu for configured schema types with documentId', () => {
       const languageFilter = getLanguageFilter(createPlugin())

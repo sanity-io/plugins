@@ -1,5 +1,17 @@
 # @sanity/assist
 
+## 6.3.0
+
+### Minor Changes
+
+- [#2314](https://github.com/sanity-io/plugins/pull/2314) [`679be04`](https://github.com/sanity-io/plugins/commit/679be04716e0af7b5ebac64246750a7720ab73c0) Thanks [@jjburbridge](https://github.com/jjburbridge)! - Add a "Select all" option for target languages in field-level translation
+
+### Patch Changes
+
+- [#2072](https://github.com/sanity-io/plugins/pull/2072) [`0fc19b5`](https://github.com/sanity-io/plugins/commit/0fc19b51183ab3f2b46a4c4b9ac8e2443ce87884) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Translate fields skips fields that are read-only, hidden, or excluded from AI Assist, including internationalized array fields. Those fields are no longer overwritten, and excluded fields no longer fail translation because their schema was omitted.
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+
 ## 6.2.6
 
 ### Patch Changes

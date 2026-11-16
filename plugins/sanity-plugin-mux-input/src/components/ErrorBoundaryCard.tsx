@@ -4,7 +4,8 @@ import {useToast} from '@sanity/ui/toast'
 import {memo, useCallback, useRef} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {clear} from 'suspend-react'
-import {useErrorBoundary} from 'use-error-boundary'
+// The CommonJS build only exposes the hook as `module.exports`, so a named import breaks under Node ESM
+import useCrashBoundary from 'use-error-boundary'
 
 import {name} from '../util/constants'
 import {type MuxInputProps} from '../util/types'
@@ -16,7 +17,7 @@ function ErrorBoundaryCard(props: Props) {
   const {children, schemaType} = props
   const {push: pushToast} = useToast()
   const errorRef = useRef(null)
-  const {ErrorBoundary, didCatch, error, reset} = useErrorBoundary({
+  const {ErrorBoundary, didCatch, error, reset} = useCrashBoundary({
     // oxlint-disable-next-line no-unstable-nested-components
     onDidCatch: (err, errorInfo) => {
       console.group(err.toString())

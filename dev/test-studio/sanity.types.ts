@@ -187,6 +187,76 @@ export type UtilsDemoDocument = {
   title?: string
 }
 
+export type NaiveHtmlSerializerPage = {
+  _id: string
+  _type: 'naiveHtmlSerializerPage'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  hero?: NaiveHtmlVideoCarousel
+  modules?: Array<
+    {
+      _key: string
+    } & NaiveHtmlVideoCarousel
+  >
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  heroes?: NaiveHtmlHeroSlides
+  quotes?: NaiveHtmlQuoteSlides
+  settings?: {
+    title?: string
+    theme?: string
+  }
+  rows?: Array<{
+    label?: string
+    token?: string
+    _key: string
+  }>
+}
+
+export type NaiveHtmlQuoteSlides = Array<{
+  quote?: string
+  author?: string
+  _type: 'slide'
+  _key: string
+}>
+
+export type NaiveHtmlHeroSlides = Array<{
+  title?: string
+  videoUrl?: string
+  _type: 'slide'
+  _key: string
+}>
+
+export type NaiveHtmlVideoCarousel = {
+  _type: 'naiveHtmlVideoCarousel'
+  heading?: string
+  slides?: Array<{
+    title?: string
+    videoUrl?: string
+    _type: 'slide'
+    _key: string
+  }>
+  margin?: 'spacious' | 'moderate' | 'tight'
+}
+
 export type NaiveHtmlSerializerArticle = {
   _id: string
   _type: 'naiveHtmlSerializerArticle'
@@ -1978,6 +2048,10 @@ export type AllSanitySchemaTypes =
   | IframeExample
   | Slug
   | UtilsDemoDocument
+  | NaiveHtmlSerializerPage
+  | NaiveHtmlQuoteSlides
+  | NaiveHtmlHeroSlides
+  | NaiveHtmlVideoCarousel
   | NaiveHtmlSerializerArticle
   | Blockquote
   | RichTextMinimal

@@ -11,6 +11,12 @@ import type {DefaultDocumentNodeResolver, UserViewComponent} from 'sanity/struct
 
 import {formatHtml} from './formatHtml'
 import {ImportHtmlAction} from './ImportHtmlAction'
+import {
+  naiveHtmlHeroSlides,
+  naiveHtmlQuoteSlides,
+  naiveHtmlSerializerPage,
+  naiveHtmlVideoCarousel,
+} from './page'
 import {serializeDocumentToHtml} from './serializeDocumentToHtml'
 
 const naiveHtmlSerializerArticle = defineType({
@@ -133,11 +139,13 @@ const HtmlSerializeView: UserViewComponent = ({document}) => {
   )
 }
 
+const HTML_PREVIEW_TYPES = new Set(['naiveHtmlSerializerArticle', 'naiveHtmlSerializerPage'])
+
 export const sanityNaiveHtmlSerializerDefaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
   {schemaType},
 ) => {
-  if (schemaType === 'naiveHtmlSerializerArticle') {
+  if (HTML_PREVIEW_TYPES.has(schemaType)) {
     return S.document().views([
       S.view.form(),
       S.view.component(HtmlSerializeView).title('HTML Preview'),
@@ -149,7 +157,15 @@ export const sanityNaiveHtmlSerializerDefaultDocumentNode: DefaultDocumentNodeRe
 
 export const sanityNaiveHtmlSerializerExample = definePlugin(() => ({
   name: 'sanity-naive-html-serializer-example',
-  schema: {types: [naiveHtmlSerializerArticle]},
+  schema: {
+    types: [
+      naiveHtmlSerializerArticle,
+      naiveHtmlVideoCarousel,
+      naiveHtmlHeroSlides,
+      naiveHtmlQuoteSlides,
+      naiveHtmlSerializerPage,
+    ],
+  },
   document: {
     actions: (previous, {schemaType}) => {
       if (schemaType === 'naiveHtmlSerializerArticle') {

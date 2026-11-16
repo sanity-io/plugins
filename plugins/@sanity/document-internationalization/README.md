@@ -254,6 +254,37 @@ export const defineConfig({
       // Optional
       // Controls whether translation.metadata documents are visible in Omnisearch
       metadataOmnisearchVisibility: true, // defaults to true
+
+      // Optional
+      // Replaces the preview of translation.metadata documents in reference fields,
+      // document lists, and Omnisearch. The default preview is the translation count,
+      // language ids, and schema type names.
+      //
+      // Each translations entry stores the language on `language` and the referenced
+      // document on `value`. Select paths are static, so read a few indexes and pick
+      // the language inside `prepare`. Custom metadataFields can be selected by name.
+      metadataPreview: {
+        select: {
+          title0: 'translations.0.value.title',
+          language0: 'translations.0.language',
+          title1: 'translations.1.value.title',
+          language1: 'translations.1.language',
+          schemaTypes: 'schemaTypes',
+        },
+        prepare({title0, language0, title1, language1, schemaTypes}) {
+          const translations = [
+            {language: language0, title: title0},
+            {language: language1, title: title1},
+          ]
+          const preferred =
+            translations.find((translation) => translation.language === 'en') ?? translations[0]
+
+          return {
+            title: preferred?.title || 'Untitled',
+            subtitle: (schemaTypes ?? []).join(', '),
+          }
+        },
+      },
     })
   ]
 })

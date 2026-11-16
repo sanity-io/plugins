@@ -1,5 +1,19 @@
 # @sanity/document-internationalization
 
+## 6.3.0
+
+### Minor Changes
+
+- [#2058](https://github.com/sanity-io/plugins/pull/2058) [`e9e0b2e`](https://github.com/sanity-io/plugins/commit/e9e0b2ed4931aec0be20d967184a4f49f4440423) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Add a `metadataPreview` option to replace the preview of `translation.metadata` documents in reference fields, lists, and Omnisearch
+
+### Patch Changes
+
+- [#2309](https://github.com/sanity-io/plugins/pull/2309) [`3b4029b`](https://github.com/sanity-io/plugins/commit/3b4029bde80d7ae101ca6a7a524bbd8c695c273e) Thanks [@stipsan](https://github.com/stipsan)! - Fix translations validation failing in a Content Release when the referenced translation documents exist only as versions in that release
+
+- [#2299](https://github.com/sanity-io/plugins/pull/2299) [`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Update tsdown and @tsdown/css to ^0.23.5
+- Updated dependencies [[`afd1a60`](https://github.com/sanity-io/plugins/commit/afd1a601c29b14b3323e39e38a4640f1725cb543)]:
+  - sanity-plugin-utils@2.0.23
+
 ## 6.2.46
 
 No changes in this release.

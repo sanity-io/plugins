@@ -1,9 +1,9 @@
 // Adaptation of Sanity's createSearchQuery for our limited use case:
 // https://github.com/sanity-io/sanity/blob/next/packages/sanity/src/core/search/weighted/createSearchQuery.ts
-import {compact, toLower, trim, uniq, words} from 'lodash'
 
 const SPECIAL_CHARS = /([^!@#$%^&*(),\\/?";:{}|[\]+<>\s-])+/g
 const STRIP_EDGE_CHARS = /(^[.]+)|([.]+$)/
+const WORD_CHARS = /[\p{L}\p{M}\p{N}]+/gu
 
 function tokenize(string: string): string[] {
   return (string.match(SPECIAL_CHARS) || []).map((token) => token.replace(STRIP_EDGE_CHARS, ''))
@@ -31,7 +31,7 @@ function toGroqParams(terms: string[]): Record<string, string> {
 function extractTermsFromQuery(query: string): string[] {
   const quotedQueries = [] as string[]
   const unquotedQuery = query.replace(/("[^"]*")/g, (match) => {
-    if (words(match).length > 1) {
+    if ((match.match(WORD_CHARS) || []).length > 1) {
       quotedQueries.push(match)
       return ''
     }
@@ -39,14 +39,14 @@ function extractTermsFromQuery(query: string): string[] {
   })
 
   // Lowercase and trim quoted queries
-  const quotedTerms = quotedQueries.map((str) => trim(toLower(str)))
+  const quotedTerms = quotedQueries.map((str) => str.toLowerCase().trim())
 
   /**
    * Convert (remaining) search query into an array of deduped, sanitized tokens.
    * All white space and special characters are removed.
    * e.g. "The saint of Saint-Germain-des-Prés" =\> ['the', 'saint', 'of', 'germain', 'des', 'pres']
    */
-  const remainingTerms = uniq(compact(tokenize(toLower(unquotedQuery))))
+  const remainingTerms = [...new Set(tokenize(unquotedQuery.toLowerCase()).filter(Boolean))]
 
   return [...quotedTerms, ...remainingTerms]
 }

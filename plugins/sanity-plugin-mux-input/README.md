@@ -163,19 +163,37 @@ For reference, here's an example `mux.videoAsset` document:
 
 ## Playing videos in the frontend
 
-We recommend using [Mux Player](https://www.mux.com/player) to properly display your videos, through packages like `@mux/mux-player` and `@mux/mux-player-react`. Here's an example of how you can use the Mux Player to display a video in a React component:
+We recommend using [Video.js](https://videojs.org) to properly display your videos, through `@videojs/react` with the Mux media (`@videojs/mux-video`) and the Mux Data extension (`@videojs/mux-data`):
+
+```bash
+npm install @videojs/react @videojs/mux-video @videojs/mux-data
+```
+
+Here's an example of how you can use Video.js to display a video in a React component:
 
 ```tsx
 'use client'
 
-import MuxPlayer from '@mux/mux-player-react'
+import '@videojs/react/video/skin.css'
+import {MuxData} from '@videojs/react/extensions/mux-data'
+import {MuxVideo} from '@videojs/react/media/mux-video'
+import {VideoPlayer, VideoSkin} from '@videojs/react/video'
 
-export default function MuxVideo({playbackId, title}: {playbackId?: string; title?: string}) {
+export default function MuxVideoPlayer({playbackId, title}: {playbackId?: string; title?: string}) {
   if (!playbackId) return null
 
-  return <MuxPlayer playbackId={playbackId} metadata={title ? {video_title: title} : undefined} />
+  return (
+    <VideoPlayer title={title}>
+      <VideoSkin style={{aspectRatio: '16 / 9'}}>
+        <MuxVideo source={{playbackId}} playsInline crossOrigin="anonymous" />
+        <MuxData metadata={title ? {video_title: title} : undefined} />
+      </VideoSkin>
+    </VideoPlayer>
+  )
 }
 ```
+
+For signed playback, pass each token in its own group of the `source`: `playback.token` (audience `v`), `poster.token` (audience `t`) and `storyboard.token` (audience `s`). If you used Mux Player before, follow the [Mux Player migration guide](https://videojs.org/docs/framework/react/guides/migrate-from-mux-player/).
 
 💡 For an end-to-end frontend integration walkthrough, see the [official Mux + Sanity documentation](https://www.mux.com/docs/integrations/sanity).
 
