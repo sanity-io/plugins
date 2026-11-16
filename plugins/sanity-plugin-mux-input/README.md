@@ -497,7 +497,7 @@ The plugin runs every workflow and directive on the Robots v1 API. Jobs and dire
 - **Translate audio** can also add the dub's subtitles to the video, with their own name. On an audio-only video, turn off **Attach the result to the Mux asset**: Mux returns the dub as a download instead.
 - Directives made with Robots v0 can't be run from the Studio. Make a v1 copy in the Mux dashboard (open the directive and choose **Create v1 copy**) and put its ID in `defaultDirectiveIds`. Until then, uploads still attach the v0 directive and Mux runs it on v0; the Robots panel and the upload dialog point out which ones. See [Migrate Robots Directives from Beta to GA](https://www.mux.com/docs/guides/robots-migrate-directives-to-v1).
 
-Studios on older plugin versions keep running on v0 until Mux retires it.
+Upgrade every Studio that uses the same dataset. Older plugin versions keep working on v0 until Mux retires it, but they can't read the jobs this version starts on v1, and when they store a newer Summarize or Moderate result they drop the Analyze structure result that **Apply summary** uses.
 
 ### Access token
 
