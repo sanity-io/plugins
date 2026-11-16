@@ -1,5 +1,11 @@
 # sanity-plugin-mux-input
 
+## 5.3.1
+
+### Patch Changes
+
+- [#2318](https://github.com/sanity-io/plugins/pull/2318) [`95b1ef7`](https://github.com/sanity-io/plugins/commit/95b1ef79e5b1118ea00913cdefa53a77377109e5) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Fix importing the plugin under Node ESM (for example a Studio embedded in Next.js, or Node scripts that load `sanity.config.ts`), which crashed with "Named export 'compact' not found". The plugin no longer depends on `lodash`, and imports `use-error-boundary` in a way that works for its CommonJS build.
+
 ## 5.3.0
 
 ### Minor Changes
