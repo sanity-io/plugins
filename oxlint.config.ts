@@ -84,7 +84,6 @@ export default defineConfig({
         'jsx-a11y/media-has-caption': 'off',
         'jsx-a11y/label-has-associated-control': 'off',
         'unicorn/prefer-add-event-listener': 'off',
-        'no-restricted-imports': 'off',
         'no-await-in-loop': 'off',
         'typescript/consistent-return': 'off',
         'import/no-commonjs': 'off',

@@ -1,7 +1,6 @@
 // Adapted from:
 // https://github.com/sanity-io/sanity/blob/current/packages/sanity/src/structure/components/paneItem/PaneItemPreview.tsx
 import {Inline} from '@sanity/ui'
-import {isNumber, isString} from 'lodash'
 import {isValidElement, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import type {SanityDocument, SchemaType} from 'sanity'
@@ -38,8 +37,8 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
   const {icon, layout, presence, schemaType, value} = props
   const title =
     (isRecord(value['title']) && isValidElement(value['title'])) ||
-    isString(value['title']) ||
-    isNumber(value['title'])
+    typeof value['title'] === 'string' ||
+    typeof value['title'] === 'number'
       ? value['title']
       : null
 
