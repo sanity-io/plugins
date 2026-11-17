@@ -1,3 +1,4 @@
+import {dequal} from 'dequal/lite'
 import {assign, not, setup, type SnapshotFrom} from 'xstate'
 
 import type {BuildThemeOptions} from '../theme/options'
@@ -104,6 +105,20 @@ function revokeObjectUrl(url: string) {
 }
 
 /**
+ * The images of this session that another tab's state leaves behind: of
+ * themes it no longer has, and of themes it gave another palette — another
+ * image, picked over there
+ */
+function staleImageSlugs(context: ThemerMachineContext, state: ThemerState): string[] {
+  return Object.keys(context.images).filter((slug) => {
+    const current = context.custom.find((theme) => theme.slug === slug)
+    const next = state.custom.find((theme) => theme.slug === slug)
+
+    return !current || !next || !dequal(current.palette, next.palette)
+  })
+}
+
+/**
  * The themes of the themer tool and the sidebar's way through them: which
  * `flow` the sidebar is in — picking a theme from the `list`, with its
  * dialogs for pasting a shared code and for the applied theme's snippet,
@@ -168,16 +183,27 @@ export const themerMachine = setup({
   },
   actions: {
     // Another tab's persisted state replaces this one's: themes, order and
-    // all. The images of this session stay, they are this tab's
-    sync: assign((_, params: {state: ThemerState}) => ({
-      active: params.state.active,
-      custom: params.state.custom,
-      removed: params.state.removed,
-      order: params.state.order,
-    })),
+    // all. The images of this session stay, they are this tab's — except
+    // those of themes the other tab deleted or gave another image
+    sync: assign(({context}, params: {state: ThemerState}) => {
+      const stale = new Set(staleImageSlugs(context, params.state))
+
+      return {
+        active: params.state.active,
+        custom: params.state.custom,
+        removed: params.state.removed,
+        order: params.state.order,
+        images: Object.fromEntries(
+          Object.entries(context.images).filter(([slug]) => !stale.has(slug)),
+        ),
+      }
+    }),
     // The image of a replaced palette or a deleted theme is released from memory
     revokeImage: (_, params: {url: string | undefined}) => {
       if (params.url) revokeObjectUrl(params.url)
+    },
+    revokeImages: (_, params: {urls: string[]}) => {
+      for (const url of params.urls) revokeObjectUrl(url)
     },
     pick: assign((_, params: {slug: string}) => ({
       active: params.slug === CONFIG_SLUG ? null : params.slug,
@@ -298,6 +324,8 @@ export const themerMachine = setup({
         active: context.active === params.slug ? null : context.active,
         custom: context.custom.filter((theme) => theme.slug !== params.slug),
         removed: context.removed.filter((slug) => slug !== params.slug),
+        // Nothing left to keep a place in line for
+        order: context.order.filter((slug) => slug !== params.slug),
         images,
       }
     }),
@@ -474,7 +502,15 @@ export const themerMachine = setup({
           ],
         },
         'themes.sync': {
-          actions: {type: 'sync', params: ({event}) => ({state: event.state})},
+          actions: [
+            {
+              type: 'revokeImages',
+              params: ({context, event}) => ({
+                urls: staleImageSlugs(context, event.state).map((slug) => context.images[slug]),
+              }),
+            },
+            {type: 'sync', params: ({event}) => ({state: event.state})},
+          ],
         },
         'flow.list': '.list',
         'flow.removed': {
