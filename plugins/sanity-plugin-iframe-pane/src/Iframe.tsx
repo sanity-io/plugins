@@ -321,6 +321,7 @@ function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
     setReloading,
     ref: iframe,
   } = props
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   function handleIframeLoad() {
     setLoading(false)
@@ -358,6 +359,7 @@ function Frame(props: FrameProps & {ref?: React.Ref<HTMLIFrameElement>}) {
           src={url.toString()}
           initial={['background', iframeSize]}
           variants={iframeVariants}
+          custom={prefersReducedMotion}
           animate={[
             loading ? 'background' : 'active',
             reloading ? 'reloading' : 'idle',
@@ -397,10 +399,14 @@ const iframeVariants = {
   reloading: {
     scale: [1, 1, 1, 0.98],
   },
-  active: {
-    opacity: [0, 0, 1],
+  // Not keyframes: motion replays keyframes whenever any label in `animate` changes,
+  // which would fade the preview out every time `reloading` toggles.
+  active: (prefersReducedMotion: boolean) => ({
+    opacity: 1,
     scale: 1,
-  },
+    // Wait for the spinner to fade out before fading in
+    transition: prefersReducedMotion ? {duration: 0} : {opacity: {delay: 0.4, duration: 0.4}},
+  }),
 }
 
 function Loading({iframeSize}: {iframeSize: IframeSizeKey}) {
