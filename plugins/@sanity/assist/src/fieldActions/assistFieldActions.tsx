@@ -201,7 +201,8 @@ export const assistFieldActions: DocumentFieldAction = {
       // oxlint-disable-next-line no-map-spread
       return (formStateRef.current ? getConditionalMembers(formStateRef.current) : []).flatMap(
         (cm) => {
-          const path = stringToPath(cm.path)
+          // the document itself has an empty path string, which stringToPath rejects
+          const path = cm.path ? stringToPath(cm.path) : []
           if (path.some((s) => typeof s === 'number')) {
             //agent actions does not support indexed paths
             return []
