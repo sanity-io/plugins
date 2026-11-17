@@ -16,6 +16,7 @@ import {ThemeList} from './ThemeList'
 import {resolveThemes} from './themes'
 import {TooltipButton} from './TooltipButton'
 import {useIsTooSmallForSplitScreen} from './useIsTooSmallForSplitScreen'
+import {useLegacyThemePaste} from './useLegacyThemePaste'
 
 import * as styles from './ThemerSidebar.module.css'
 
@@ -32,6 +33,9 @@ const VIEW_TITLES = {
  * Studio's document footer: one primary action, with the rest of its actions
  * behind a menu button, and the way back to the list where the flow is not
  * the list.
+ * While it shows, pasting a themer.sanity.build URL imports its theme: a
+ * closed sidebar is hidden rather than unmounted, which tears down the paste
+ * listener along with its other effects.
  *
  * @internal
  */
@@ -49,6 +53,8 @@ export function ThemerSidebar({
     (snapshot) => resolveThemes(snapshot.context),
     dequal,
   )
+
+  useLegacyThemePaste({actorRef})
 
   return (
     <Card height="fill">

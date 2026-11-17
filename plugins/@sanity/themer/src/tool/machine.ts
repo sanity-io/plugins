@@ -83,6 +83,8 @@ export type ThemerEvent =
   | {type: 'flow.removed'}
   /** Opens the dialog for adding a shared theme code by hand, from the list */
   | {type: 'dialog.paste'}
+  /** Opens the dialog for importing a themer.sanity.build theme by its URL, from the list */
+  | {type: 'dialog.import'}
   /** Opens the dialog with the applied theme's `buildTheme` snippet, from the list */
   | {type: 'dialog.snippet'}
   /** Closes whichever dialog is open */
@@ -106,7 +108,8 @@ function revokeObjectUrl(url: string) {
 /**
  * The themes of the themer tool and the sidebar's way through them: which
  * `flow` the sidebar is in — picking a theme from the `list`, with its
- * dialogs for pasting a shared code and for the applied theme's snippet,
+ * dialogs for pasting a shared code, for importing a themer.sanity.build URL
+ * and for the applied theme's snippet,
  * `edit`ing one of the user's own themes, or restoring `removed` ones — and,
  * in a parallel `theme` region, whether another theme was just applied. The
  * context carries the persisted state (the applied theme, the user's themes
@@ -485,17 +488,22 @@ export const themerMachine = setup({
       states: {
         list: {
           initial: 'idle',
-          // The list's dialogs — for a shared code pasted by hand, and for the
-          // applied theme's snippet — are states of the list, so that leaving
-          // it, as adding a theme does for the editor, closes them
+          // The list's dialogs — for a shared code pasted by hand, for a
+          // themer.sanity.build URL to import, and for the applied theme's
+          // snippet — are states of the list, so that leaving it, as adding a
+          // theme does for the editor, closes them
           states: {
             idle: {
               on: {
                 'dialog.paste': 'pasting',
+                'dialog.import': 'importing',
                 'dialog.snippet': {guard: 'hasAppliedTheme', target: 'snippet'},
               },
             },
             pasting: {
+              on: {'dialog.close': 'idle'},
+            },
+            importing: {
               on: {'dialog.close': 'idle'},
             },
             snippet: {
