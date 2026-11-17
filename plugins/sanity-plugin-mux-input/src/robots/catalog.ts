@@ -92,6 +92,7 @@ export interface RobotsParamField {
   /** `number`. */
   min?: number
   max?: number
+  /** `number`: only for integers. Without it, the input takes any fraction. */
   step?: number
   /** `number`: the spec types it as an integer. */
   integer?: boolean
@@ -152,7 +153,6 @@ const SCOPE_FIELDS: RobotsParamField[] = [
     name: 'output_steering.scope.start_time',
     label: 'Start time (seconds)',
     min: 0,
-    step: 1,
     section: SCOPE_SECTION,
   },
   {
@@ -160,7 +160,6 @@ const SCOPE_FIELDS: RobotsParamField[] = [
     name: 'output_steering.scope.end_time',
     label: 'End time (seconds)',
     min: 0,
-    step: 1,
     section: SCOPE_SECTION,
   },
 ]
@@ -683,7 +682,6 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         name: 'target_duration.min',
         label: 'Minimum highlight length (seconds)',
         min: 0,
-        step: 1,
         section: HIGHLIGHT_LENGTH_SECTION,
       },
       {
@@ -691,7 +689,6 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         name: 'target_duration.max',
         label: 'Maximum highlight length (seconds)',
         min: 0,
-        step: 1,
         section: HIGHLIGHT_LENGTH_SECTION,
       },
       {
@@ -954,7 +951,6 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         helpText: '0–1. Defaults to 0.7.',
         min: 0,
         max: 1,
-        step: 0.05,
       },
       {
         kind: 'number',
@@ -963,7 +959,6 @@ export const ROBOTS_CATALOG: RobotsWorkflowDefinition[] = [
         helpText: '0–1. Defaults to 0.8.',
         min: 0,
         max: 1,
-        step: 0.05,
       },
       {
         kind: 'number',
@@ -1502,6 +1497,14 @@ function workflowErrors(
       if (context.isAudioOnly === true && context.hasCaptions === false) {
         errors.push(
           'This audio-only video has no caption track, and it is analyzed from its captions. Generate captions first.',
+        )
+      }
+      break
+    case 'moderate':
+      // Without frames, only what is said can be moderated. Mux answers 409 `track_not_ready`.
+      if (context.isAudioOnly === true && context.hasCaptions === false) {
+        errors.push(
+          'This audio-only video has no caption track, and it is moderated from what is said. Generate captions first.',
         )
       }
       break

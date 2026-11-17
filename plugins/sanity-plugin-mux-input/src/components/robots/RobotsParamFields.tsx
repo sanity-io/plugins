@@ -427,7 +427,8 @@ function Control({
           type="number"
           min={field.min}
           max={field.max}
-          step={field.step}
+          // A fraction off a numeric step reads as invalid in the browser, though it's sent.
+          step={field.step ?? 'any'}
           value={value === undefined ? '' : String(value)}
           // Empty means "leave this parameter out", not zero.
           onChange={(event) =>
