@@ -23,24 +23,24 @@ vi.mock('sanity', () => ({
 
 const theme = buildTheme()
 
+let prefersReducedMotion = false
+
 beforeAll(() => {
   // jsdom has no matchMedia; @sanity/ui queries it for color scheme and reduced motion.
-  // oxlint-disable-next-line no-unsafe-type-assertion
-  window.matchMedia ??= ((query: string) =>
-    ({
+  Object.defineProperty(window, 'matchMedia', {
+    configurable: true,
+    value: (query: string) => ({
       addEventListener: () => {},
-      addListener: () => {},
-      dispatchEvent: () => false,
-      matches: false,
+      matches: prefersReducedMotion && query.includes('prefers-reduced-motion: reduce'),
       media: query,
-      onchange: null,
       removeEventListener: () => {},
-      removeListener: () => {},
-    }) as unknown as MediaQueryList) as typeof window.matchMedia
+    }),
+  })
 })
 
 afterEach(() => {
   cleanup()
+  prefersReducedMotion = false
 })
 
 function createDocument(title: string): SanityDocument {
@@ -126,5 +126,15 @@ describe('Iframe', () => {
     const lowest = await lowestOpacityOver(iframe)
 
     expect(lowest).toBe(1)
+  })
+
+  test('shows the preview without fading in when reduced motion is preferred', async () => {
+    prefersReducedMotion = true
+    renderIframe(createDocument('Before'), {url: 'https://example.com/preview'})
+
+    const iframe = await screen.findByTitle('preview')
+    fireEvent.load(iframe)
+
+    await vi.waitFor(() => expect(readOpacity(iframe)).toBe(1), {timeout: 200, interval: 10})
   })
 })
