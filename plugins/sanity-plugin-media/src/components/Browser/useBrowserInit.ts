@@ -1,19 +1,13 @@
-import type {MutationEvent, SanityClient} from '@sanity/client'
-import groq from 'groq'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import type {Dispatch} from 'redux'
 import type {AssetSourceComponentProps} from 'sanity'
 
 import {inputs} from '../../config/searchFacets'
-import {FOLDER_DOCUMENT_NAME, TAG_DOCUMENT_NAME} from '../../constants'
 import {assetsActions} from '../../modules/assets'
 import {foldersActions} from '../../modules/folders'
 import {searchActions} from '../../modules/search'
 import {tagsActions} from '../../modules/tags'
 import type {RootReducerState} from '../../modules/types'
-import type {Asset, Tag} from '../../types'
-import {buildExcludeMediaLibraryFragment} from '../../utils/constructFilter'
 
 function getMediaTagNames(schemaType?: AssetSourceComponentProps['schemaType']): string[] {
   const mediaTags = (schemaType?.options as {mediaTags?: string[]} | undefined)?.mediaTags
@@ -24,101 +18,44 @@ function getMediaTagNames(schemaType?: AssetSourceComponentProps['schemaType']):
   return Array.from(unique)
 }
 
-function createAssetHandler(dispatch: Dispatch) {
-  return (update: MutationEvent) => {
-    const {documentId, result, transition} = update
-
-    switch (transition) {
-      case 'appear':
-        dispatch(assetsActions.listenerCreateQueue({asset: result as Asset}))
-        break
-      case 'disappear':
-        dispatch(assetsActions.listenerDeleteQueue({assetId: documentId}))
-        break
-      case 'update':
-        dispatch(assetsActions.listenerUpdateQueue({asset: result as Asset}))
-        break
-      default:
-        break
-    }
-  }
-}
-
-function createTagHandler(dispatch: Dispatch) {
-  return (update: MutationEvent) => {
-    const {documentId, result, transition} = update
-
-    switch (transition) {
-      case 'appear':
-        dispatch(tagsActions.listenerCreateQueue({tag: result as Tag}))
-        break
-      case 'disappear':
-        dispatch(tagsActions.listenerDeleteQueue({tagId: documentId}))
-        break
-      case 'update':
-        dispatch(tagsActions.listenerUpdateQueue({tag: result as Tag}))
-        break
-      default:
-        break
-    }
-  }
-}
-
-export function useBrowserInit(
-  client: SanityClient,
-  schemaType?: AssetSourceComponentProps['schemaType'],
-): void {
+/**
+ * Loads the browser's tags and folders, starts the listeners and applies the configured
+ * `mediaTags` facets, once per browser: effects run again when an `<Activity>` boundary shows
+ * the tool again, and repeating these would clear and refetch data the store already has.
+ */
+export function useBrowserInit(schemaType?: AssetSourceComponentProps['schemaType']): void {
   const dispatch = useDispatch()
   const tagsByIds = useSelector((state: RootReducerState) => state.tags.byIds)
   const tagsFetchCount = useSelector((state: RootReducerState) => state.tags.fetchCount)
-  const showMediaLibraryAssets = useSelector(
-    (state: RootReducerState) => state.assets.showMediaLibraryAssets,
-  )
 
   const tagNames = getMediaTagNames(schemaType)
   const hasMediaTags = tagNames.length > 0
 
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
+
     if (!hasMediaTags) {
       dispatch(searchActions.facetsClear())
     }
 
     dispatch(tagsActions.fetchRequest())
-
-    // Fetch all folders
     dispatch(foldersActions.fetchRequest())
 
-    const excludeMediaLibraryFragment = buildExcludeMediaLibraryFragment(showMediaLibraryAssets)
-    const excludeMediaLibraryClause = excludeMediaLibraryFragment
-      ? ` && ${excludeMediaLibraryFragment}`
-      : ''
+    dispatch(assetsActions.listenRequest())
+    dispatch(tagsActions.listenRequest())
+    dispatch(foldersActions.listenRequest())
+  }, [dispatch, hasMediaTags])
 
-    const assetSubscription = client
-      .listen(
-        groq`*[_type in ["sanity.fileAsset", "sanity.imageAsset"] && !(_id in path("drafts.**"))${excludeMediaLibraryClause}]`,
-      )
-      .subscribe(createAssetHandler(dispatch))
-
-    const tagSubscription = client
-      .listen(groq`*[_type == "${TAG_DOCUMENT_NAME}" && !(_id in path("drafts.**"))]`)
-      .subscribe(createTagHandler(dispatch))
-
-    const folderSubscription = client
-      .listen(groq`*[_type == "${FOLDER_DOCUMENT_NAME}" && !(_id in path("drafts.**"))]`)
-      .subscribe(() => dispatch(foldersActions.fetchRequest()))
-
-    return () => {
-      assetSubscription.unsubscribe()
-      tagSubscription.unsubscribe()
-      folderSubscription.unsubscribe()
-    }
-  }, [client, dispatch, hasMediaTags, showMediaLibraryAssets])
-
-  // When mediaTags are configured, wait for the tag fetch to complete then apply facets.
-  // Dispatching clear + add synchronously keeps all actions within assetsSearchEpic's
-  // 400ms debounce window, so the browser performs exactly one asset fetch on open.
+  // When mediaTags are configured, apply them as facets once the tags have arrived
+  // (`fetchCount` is -1 until the fetch completes). Dispatching clear + add synchronously
+  // keeps all actions within assetsSearchEpic's 400ms debounce window, so the browser
+  // performs exactly one asset fetch on open.
+  const facetsApplied = useRef(false)
   useEffect(() => {
-    if (!hasMediaTags || tagsFetchCount < 0) return
+    if (!hasMediaTags || tagsFetchCount < 0 || facetsApplied.current) return
+    facetsApplied.current = true
 
     const tagFacetInput = inputs.tag
     if (tagFacetInput.type !== 'searchable') return

@@ -2,7 +2,7 @@ import {createSelector, createSlice, type PayloadAction} from '@reduxjs/toolkit'
 import type {ClientError, Patch} from '@sanity/client'
 import groq from 'groq'
 import {nanoid} from 'nanoid'
-import {from, of} from 'rxjs'
+import {EMPTY, from, of} from 'rxjs'
 import {
   catchError,
   debounceTime,
@@ -182,6 +182,9 @@ const foldersSlice = createSlice({
       state.fetching = true
       delete state.fetchingError
     },
+    listenRequest() {
+      //
+    },
     panelVisibleSet(state, action: PayloadAction<{panelVisible: boolean}>) {
       state.panelVisible = action.payload.panelVisible
     },
@@ -298,6 +301,28 @@ export const foldersRefreshEpic: MyEpic = (action$) =>
     ),
     debounceTime(300),
     mergeMap(() => of(foldersSlice.actions.fetchRequest())),
+  )
+
+/**
+ * Re-fetches the folder tree on folder mutations for the lifetime of the store, so changes
+ * made while the browser is hidden (the Studio keeps recently used tools mounted) still
+ * reach it.
+ */
+export const foldersListenEpic: MyEpic = (action$, _state$, {client}) =>
+  action$.pipe(
+    filter(foldersSlice.actions.listenRequest.match),
+    switchMap(() =>
+      client
+        .listen(groq`*[_type == "${FOLDER_DOCUMENT_NAME}" && !(_id in path("drafts.**"))]`)
+        .pipe(
+          map(() => foldersSlice.actions.fetchRequest()),
+          // A failed listener must not take the root epic, and the rest of the browser, with it
+          catchError((error: unknown) => {
+            console.error(error)
+            return EMPTY
+          }),
+        ),
+    ),
   )
 
 export const foldersCurrentFolderEpic: MyEpic = (action$) =>

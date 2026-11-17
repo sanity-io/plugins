@@ -104,6 +104,37 @@ describe('assets slice', () => {
     expect(state.order.field).toBe('size')
   })
 
+  it('listenerCreateQueueComplete refreshes known assets and adds new ones', () => {
+    let state = stateWithOneAsset()
+    const refreshed = {...minimalImage, title: 'Renamed'}
+    const added = {...minimalImage, _id: 'img-2'} as ImageAsset
+    state = assetsReducer(
+      state,
+      assetsActions.listenerCreateQueueComplete({assets: [refreshed, added]}),
+    )
+    expect(state.allIds).toEqual(['img-1', 'img-2'])
+    expect(state.byIds['img-1']!.asset.title).toBe('Renamed')
+    expect(state.byIds['img-2']).toEqual({
+      _type: 'asset',
+      asset: added,
+      picked: false,
+      updating: false,
+    })
+  })
+
+  it('insertUploads does not list an asset the listener already added', () => {
+    let state = stateWithOneAsset()
+    // The listener's `appear` landed before `uploadComplete` for the same asset
+    state = assetsReducer(state, assetsActions.insertUploads({results: {sha1: 'img-1'}}))
+    expect(state.allIds).toEqual(['img-1'])
+
+    state = assetsReducer(
+      state,
+      assetsActions.insertUploads({results: {sha2: 'img-2', sha3: null}}),
+    )
+    expect(state.allIds).toEqual(['img-1', 'img-2'])
+  })
+
   it('listenerDeleteQueueComplete removes assets', () => {
     let state = stateWithOneAsset()
     state = assetsReducer(state, assetsActions.listenerDeleteQueueComplete({assetIds: ['img-1']}))
