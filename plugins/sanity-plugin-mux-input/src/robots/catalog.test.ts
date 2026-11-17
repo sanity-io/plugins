@@ -195,6 +195,14 @@ describe('moderate transcript', () => {
     expect(params).not.toHaveProperty('include_transcript')
     expect(params['language_code']).toBe('en')
   })
+
+  test('an audio-only video needs captions, while a video falls back to its frames', () => {
+    expect(errorsFor('moderate', {}, {isAudioOnly: true, hasCaptions: false})).toEqual([
+      'This audio-only video has no caption track, and it is moderated from what is said. Generate captions first.',
+    ])
+    expect(errorsFor('moderate', {}, {isAudioOnly: true, hasCaptions: true})).toEqual([])
+    expect(errorsFor('moderate', {}, {isAudioOnly: false, hasCaptions: false})).toEqual([])
+  })
 })
 
 describe('moderate on_flagged', () => {
@@ -343,6 +351,13 @@ describe('numbers', () => {
     ])
     expect(errorsFor('moderate', {'thresholds.sexual': 0.65})).toEqual([])
     expect(errorsFor('summarize', {'output_steering.scope.start_time': 1.5})).toEqual([])
+  })
+
+  test('steps only whole-number inputs, so the browser takes any fraction elsewhere', () => {
+    const numbers = ROBOTS_CATALOG.flatMap((definition) => definition.params).filter(
+      (field) => field.kind === 'number',
+    )
+    expect(numbers.filter((field) => field.step !== undefined && !field.integer)).toEqual([])
   })
 
   test('enforces the documented bounds', () => {

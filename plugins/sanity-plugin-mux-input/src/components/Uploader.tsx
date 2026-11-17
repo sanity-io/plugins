@@ -7,7 +7,7 @@ import {takeUntil, tap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 import {PatchEvent, set, setIfMissing} from 'sanity'
 
-import {uploadFile, uploadUrl} from '../actions/upload'
+import {discardUpload, uploadFile, uploadUrl} from '../actions/upload'
 import {DialogStateProvider} from '../context/DialogStateContext'
 import {type DialogState, type SetDialogState} from '../hooks/useDialogState'
 import {isServerError, isValidUrl} from '../util/asserters'
@@ -170,7 +170,7 @@ export default function Uploader(props: Props) {
         const docId = uploadingDocumentId.current
         uploadingDocumentId.current = null
 
-        props.client.delete(docId).catch((err) => {
+        discardUpload(props.client, docId).catch((err) => {
           console.warn('Failed to cleanup orphaned upload document:', err)
         })
       }
@@ -233,7 +233,7 @@ export default function Uploader(props: Props) {
             cancelUploadButton.observable.pipe(
               tap(() => {
                 if (uploadingDocumentId.current) {
-                  void props.client.delete(uploadingDocumentId.current)
+                  void discardUpload(props.client, uploadingDocumentId.current)
                   uploadingDocumentId.current = null
                 }
               }),
