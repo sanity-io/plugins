@@ -5,12 +5,8 @@ import {fromString as pathFromString} from '@sanity/util/paths'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useState, type MouseEvent} from 'react'
 import {filter, firstValueFrom} from 'rxjs'
-import {
-  useDocumentOperation,
-  useDocumentPairPermissions,
-  useDocumentStore,
-  useTranslation,
-} from 'sanity'
+import {useDocumentOperation, useDocumentPairPermissions, useDocumentStore} from 'sanity'
+import {useTranslation} from 'sanity/i18n'
 import {structureLocaleNamespace} from 'sanity/structure'
 import {usePaneRouter} from 'sanity/structure'
 
