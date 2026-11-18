@@ -3,6 +3,8 @@ import type {RobotsAdvisory, RobotsCapability} from './types'
 
 export const ROBOTS_PRICING_URL = 'https://www.mux.com/docs/pricing/overview#mux-robots-pricing'
 export const ROBOTS_DIRECTIVES_DOCS_URL = 'https://www.mux.com/docs/guides/robots-directives'
+export const ROBOTS_DIRECTIVES_MIGRATION_URL =
+  'https://www.mux.com/docs/guides/robots-migrate-directives-to-v1'
 export const ROBOTS_UPLOAD_DIRECTIVES_GUIDE_URL =
   'https://github.com/sanity-io/plugins/tree/main/plugins/sanity-plugin-mux-input#directives-on-upload'
 export const ROBOTS_ACCESS_TOKENS_URL = 'https://dashboard.mux.com/settings/access-tokens'
