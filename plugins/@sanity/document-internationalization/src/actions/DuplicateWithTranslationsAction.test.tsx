@@ -44,9 +44,13 @@ vi.mock('sanity', async (importOriginal) => {
         operationEvents: mockOperationEvents,
       },
     })),
-    useTranslation: vi.fn(() => ({t: (key: string) => key})),
   }
 })
+
+vi.mock('sanity/i18n', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('sanity/i18n')>()),
+  useTranslation: vi.fn(() => ({t: (key: string) => key})),
+}))
 
 vi.mock('sanity/router', () => ({
   useRouter: vi.fn(() => ({navigateIntent: mockNavigateIntent})),

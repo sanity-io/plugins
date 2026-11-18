@@ -105,6 +105,11 @@ catalogs:
     react-dom: ^19.2
     sanity: ^5 || ^6.0.0-0
     styled-components: ^6.1
+  # `sanity` peer for plugins that import from `sanity/i18n`, which the 6.x line
+  # gained in 6.25.0 and the next major ships too (referenced as
+  # `catalog:peer-next-major`).
+  peer-next-major:
+    sanity: ^6.25.0 || ^7.0.0-0
   # `sanity-plugin-media` validates its forms with zod v4, which `zodResolver`
   # only supports from @hookform/resolvers 5.1. The default catalog stays on v4
   # for `sanity-plugin-dashboard-widget-vercel`, whose yup 0.32 schemas predate
