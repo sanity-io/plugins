@@ -1,5 +1,6 @@
 import {describe, expect, test} from 'vitest'
 
+import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
 import {assetUrl, videoPreviewSources} from './utils'
 
 describe('assetUrl', () => {
@@ -195,5 +196,43 @@ describe('videoPreviewSources', () => {
         poster: true,
       }),
     ).toEqual({src: url})
+  })
+})
+
+describe('videoPreviewSources with the prepared list preview value', () => {
+  // `cloudinary.asset`'s preview `prepare()` swaps `url` for the derived URL, so it must
+  // also say the URL is derived; otherwise a preview transformation lands in front of the
+  // editor's chosen one and changes its framing.
+  const prepare = (selection: Record<string, unknown>) =>
+    (
+      cloudinaryAssetSchema.preview as {
+        prepare: (s: Record<string, unknown>) => {
+          value: Parameters<typeof videoPreviewSources>[0] & {url: string}
+        }
+      }
+    ).prepare(selection).value
+
+  const options = {transformation: 'q_auto,w_640', poster: true}
+
+  test('leaves a derived video alone', () => {
+    const derived = 'https://res.cloudinary.com/demo/video/upload/c_crop,w_100,h_100/v1/clip.mp4'
+    const value = prepare({
+      url: 'https://res.cloudinary.com/demo/video/upload/v1/clip.mp4',
+      derived,
+      resource_type: 'video',
+      type: 'upload',
+    })
+
+    expect(value.url).toBe(derived)
+    expect(videoPreviewSources(value, value.url, options)).toEqual({src: derived})
+  })
+
+  test('still transforms an original video', () => {
+    const original = 'https://res.cloudinary.com/demo/video/upload/v1/clip.mp4'
+    const value = prepare({url: original, resource_type: 'video', type: 'upload'})
+
+    expect(videoPreviewSources(value, value.url, options).src).toBe(
+      'https://res.cloudinary.com/demo/video/upload/q_auto,w_640/v1/clip.mp4',
+    )
   })
 })
