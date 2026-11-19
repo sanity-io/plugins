@@ -3,9 +3,10 @@ import {useSecrets} from '@sanity/studio-secrets'
 import {Flex, Text} from '@sanity/ui'
 
 import type {CloudinaryAsset} from '../types'
-import {assetUrl} from '../utils'
+import {assetUrl, videoPreviewSources} from '../utils'
 import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
+import {useVideoPreviewOptions} from './VideoPreviewOptions'
 
 interface ComponentProps {
   layout?: 'default' | 'block'
@@ -15,6 +16,7 @@ interface ComponentProps {
 const AssetPreview = ({value, layout}: ComponentProps) => {
   const {secrets} = useSecrets<Secrets>(namespace)
   const cloudName = secrets?.cloudName
+  const videoPreview = useVideoPreviewOptions()
 
   if (!value || !cloudName) {
     return null
@@ -26,7 +28,8 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
   }
 
   switch (value.resource_type) {
-    case 'video':
+    case 'video': {
+      const sources = videoPreviewSources(value, url, videoPreview)
       return (
         <Flex
           align="center"
@@ -34,9 +37,10 @@ const AssetPreview = ({value, layout}: ComponentProps) => {
             maxWidth: layout === 'default' ? '80px' : '100%',
           }}
         >
-          <VideoPlayer src={url} kind="player" />
+          <VideoPlayer {...sources} preload={videoPreview.preload} kind="player" />
         </Flex>
       )
+    }
     case 'raw':
       return (
         <Flex align="center">
