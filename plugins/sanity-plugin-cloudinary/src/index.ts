@@ -4,18 +4,25 @@ import {type AssetSource, definePlugin, isArrayOfObjectsInputProps} from 'sanity
 import {CloudinaryAssetSource} from './components/asset-source/CloudinaryAssetSource'
 import {CloudinaryIcon} from './components/asset-source/Icon'
 import {AssetListFunctions} from './components/AssetListFunctions'
+import {videoPreviewStudio} from './components/VideoPreviewOptions'
 import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
 import {cloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 import {cloudinaryAssetContextCustom} from './schema/cloudinaryAssetContextCustom'
 import {cloudinaryAssetDerivedSchema} from './schema/cloudinaryAssetDerived'
 import {cloudinaryAssetDocument} from './schema/cloudinaryAssetDocument'
 import {cloudinaryAssetReference} from './schema/cloudinaryAssetReference'
+import type {CloudinaryPluginConfig} from './types'
 
 export {type CloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 export {type CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'
 export {type CloudinaryAssetContextCustom} from './schema/cloudinaryAssetContextCustom'
 
-export type {AssetDocument, CloudinaryAsset} from './types'
+export type {
+  AssetDocument,
+  CloudinaryAsset,
+  CloudinaryPluginConfig,
+  CloudinaryVideoPreviewOptions,
+} from './types'
 
 export {
   cloudinaryAssetSchema,
@@ -26,8 +33,9 @@ export {
   cloudinaryAssetReference,
 }
 
-export const cloudinaryReferencePlugin = definePlugin({
+export const cloudinaryReferencePlugin = definePlugin<CloudinaryPluginConfig | void>((config) => ({
   name: 'cloudinary-reference',
+  studio: videoPreviewStudio(config),
   schema: {
     types: [
       cloudinaryAssetDocument,
@@ -38,10 +46,11 @@ export const cloudinaryReferencePlugin = definePlugin({
       cloudinaryAssetContextCustom,
     ],
   },
-})
+}))
 
-export const cloudinarySchemaPlugin = definePlugin({
+export const cloudinarySchemaPlugin = definePlugin<CloudinaryPluginConfig | void>((config) => ({
   name: 'cloudinary-schema',
+  studio: videoPreviewStudio(config),
   form: {
     components: {
       input: (props) => {
@@ -65,7 +74,7 @@ export const cloudinarySchemaPlugin = definePlugin({
       cloudinaryAssetContextCustom,
     ],
   },
-})
+}))
 
 export const cloudinaryImageSource: AssetSource = {
   name: 'cloudinary-image',

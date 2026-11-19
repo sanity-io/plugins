@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest'
 
-import {assetUrl} from './utils'
+import {assetUrl, videoPreviewSources} from './utils'
 
 describe('assetUrl', () => {
   test('builds a scaled url-gen preview URL when cloudName and public_id are provided', () => {
@@ -150,5 +150,50 @@ describe('assetUrl', () => {
 
     expect(url).toBe('https://res.cloudinary.com/demo/image/upload/a_45/v1/folder/sample.jpg')
     expect(url).not.toContain('c_scale')
+  })
+})
+
+describe('videoPreviewSources', () => {
+  const video = {resource_type: 'video', type: 'upload'}
+  const original = 'https://res.cloudinary.com/demo/video/upload/v1/folder/clip.mov'
+
+  test('leaves the URL alone when no options are set', () => {
+    expect(videoPreviewSources(video, original, {})).toEqual({src: original})
+  })
+
+  test('plays a transformed copy and falls back to the original', () => {
+    expect(videoPreviewSources(video, original, {transformation: 'q_auto,w_640'})).toEqual({
+      src: 'https://res.cloudinary.com/demo/video/upload/q_auto,w_640/v1/folder/clip.mov',
+      fallbackSrc: original,
+      poster: undefined,
+    })
+  })
+
+  test('builds a first-frame poster, with the transformation when one is set', () => {
+    expect(videoPreviewSources(video, original, {poster: true}).poster).toBe(
+      'https://res.cloudinary.com/demo/video/upload/so_0/v1/folder/clip.jpg',
+    )
+    expect(
+      videoPreviewSources(video, `${original}?_a=x`, {poster: true, transformation: 'w_640'})
+        .poster,
+    ).toBe('https://res.cloudinary.com/demo/video/upload/so_0,w_640/v1/folder/clip.jpg?_a=x')
+  })
+
+  test.each([
+    ['signed URLs', video, 'https://res.cloudinary.com/demo/video/upload/s--abc123--/v1/clip.mp4'],
+    ['authenticated assets', {resource_type: 'video', type: 'authenticated'}, original],
+    [
+      'derived videos',
+      {...video, derived: [{_type: 'cloudinary.assetDerived', raw_transformation: 'w_100'}]},
+      'https://res.cloudinary.com/demo/video/upload/w_100/v1/folder/clip.mp4',
+    ],
+    ['images', {resource_type: 'image', type: 'upload'}, original],
+  ])('leaves %s alone', (_, asset, url) => {
+    expect(
+      videoPreviewSources(asset as Parameters<typeof videoPreviewSources>[0], url, {
+        transformation: 'q_auto',
+        poster: true,
+      }),
+    ).toEqual({src: url})
   })
 })
