@@ -204,7 +204,7 @@ const assetsSlice = createSlice({
             state.allIds.push(asset._id)
           }
           const existing = state.byIds[asset._id]
-          // Preserve pick/updating across search refreshes (e.g. replace dialog clearing filters)
+          // Preserve pick/updating across search refreshes
           state.byIds[asset._id] = {
             _type: 'asset',
             asset: asset,
