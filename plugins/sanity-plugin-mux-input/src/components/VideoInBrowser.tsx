@@ -1,9 +1,9 @@
 import {CheckmarkIcon} from '@sanity/icons/Checkmark'
 import {EditIcon} from '@sanity/icons/Edit'
 import {LockIcon} from '@sanity/icons/Lock'
-import {PlayIcon} from '@sanity/icons/Play'
 import {Button, Card, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
+import {PlayIcon} from '@videojs/react/icons'
 import {useCallback, useState} from 'react'
 
 import {DRMWarningDialog, useDrmPlaybackWarningContext} from '../context/DrmPlaybackWarningContext'
@@ -11,8 +11,8 @@ import {THUMBNAIL_ASPECT_RATIO} from '../util/constants'
 import {getPlaybackPolicy} from '../util/getPlaybackPolicy'
 import {type VideoAssetDocument} from '../util/types'
 import IconInfo from './IconInfo'
-import {AudioIcon} from './icons/Audio'
 import {PlayButton} from './PlayButton'
+import {AudioArtwork} from './PreviewSkin'
 import VideoMetadata from './VideoMetadata'
 import VideoPlayer, {assetIsAudio} from './VideoPlayer'
 import VideoThumbnail from './VideoThumbnail'
@@ -130,22 +130,15 @@ export default function VideoInBrowser({
           />
         )}
         {renderVideo === 'render-video' ? (
-          <VideoPlayer asset={asset} autoPlay forceAspectRatio={THUMBNAIL_ASPECT_RATIO} />
+          <VideoPlayer asset={asset} autoPlay compact forceAspectRatio={THUMBNAIL_ASPECT_RATIO} />
         ) : (
           <PlayButton onClick={onClickPlay}>
             <div data-play>
               <PlayIcon />
             </div>
             {assetIsAudio(asset) ? (
-              <div
-                style={{
-                  aspectRatio: THUMBNAIL_ASPECT_RATIO,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <AudioIcon width="3em" height="3em" />
+              <div style={{aspectRatio: THUMBNAIL_ASPECT_RATIO, position: 'relative'}}>
+                <AudioArtwork />
               </div>
             ) : (
               <VideoThumbnail asset={asset} />

@@ -1,5 +1,5 @@
 import {Card, Text} from '@sanity/ui'
-import {useEffect, useMemo, useRef} from 'react'
+import {useEffect, useMemo} from 'react'
 
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useCancelUpload} from '../hooks/useCancelUpload'
@@ -55,21 +55,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
     return files.some((file) => file.status === 'preparing')
     // oxlint-disable-next-line react/preserve-manual-memoization
   }, [asset?.data?.static_renditions?.status, asset?.data?.static_renditions?.files])
-  const playRef = useRef<HTMLDivElement>(null)
-  const muteRef = useRef<HTMLDivElement>(null)
   const handleCancelUpload = useCancelUpload(asset, onChange)
-
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.innerHTML = 'button svg { vertical-align: middle; }'
-
-    if (playRef.current?.shadowRoot) {
-      playRef.current.shadowRoot.appendChild(style)
-    }
-    if (muteRef?.current?.shadowRoot) {
-      muteRef.current.shadowRoot.appendChild(style.cloneNode(true))
-    }
-  }, [])
 
   useEffect(() => {
     if (asset?.status === 'errored') {
@@ -103,7 +89,7 @@ const Player = ({asset, buttons, readOnly, onChange, config}: Props) => {
         deferPlayer
         readOnly={readOnly}
       >
-        {buttons && <TopControls slot="top-chrome">{buttons}</TopControls>}
+        {buttons && <TopControls>{buttons}</TopControls>}
         {isPreparingStaticRenditions && (
           <Card
             padding={2}

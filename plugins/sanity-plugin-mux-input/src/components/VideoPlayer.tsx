@@ -1,6 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
-import {PlayIcon} from '@sanity/icons/Play'
 import {Card, Text} from '@sanity/ui'
+import {PlayIcon} from '@videojs/react/icons'
 import type {MuxSource} from '@videojs/react/media/mux-video'
 import {lazy, type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
 
@@ -30,6 +30,7 @@ export default function VideoPlayer({
   hlsConfig,
   deferPlayer = false,
   readOnly,
+  compact,
   ...props
 }: PropsWithChildren<{
   asset: VideoAssetDocument
@@ -44,6 +45,8 @@ export default function VideoPlayer({
   deferPlayer?: boolean
   readOnly?: boolean
   autoPlay?: boolean
+  /** Use the minimal preview controls, for small players such as the Videos tool cards. */
+  compact?: boolean
 }>) {
   const client = useClient()
   const {dialogState} = useDialogStateContext()
@@ -105,10 +108,7 @@ export default function VideoPlayer({
     props.forceAspectRatio || (Number.isNaN(width) ? 16 / 9 : width! / height!)
   let aspectRatio = Math.max(MIN_ASPECT_RATIO, targetAspectRatio)
   if (isAudio) {
-    aspectRatio = props.forceAspectRatio
-      ? // Make it wider when forcing aspect ratio to balance with videos' rendering height (audio players overflow a bit)
-        props.forceAspectRatio * 1.2
-      : AUDIO_ASPECT_RATIO
+    aspectRatio = props.forceAspectRatio ?? AUDIO_ASPECT_RATIO
   }
 
   /* We use Suspense here because `generateJwt` and related functions use suspend()
@@ -126,7 +126,7 @@ export default function VideoPlayer({
       >
         {source && poster && (
           <>
-            {isAudio && (
+            {isAudio && !compact && (
               <AudioIcon
                 style={{
                   padding: '0.5em',
@@ -148,9 +148,10 @@ export default function VideoPlayer({
                   source={source}
                   poster={isAudio ? undefined : poster}
                   audio={isAudio}
+                  compact={compact}
                   autoPlay={deferPlayer || props.autoPlay}
                   style={{
-                    ...(!isAudio && {height: '100%'}),
+                    ...((!isAudio || compact) && {height: '100%'}),
                     width: '100%',
                     ...(isAudio && {alignSelf: 'end'}),
                   }}
@@ -170,7 +171,7 @@ export default function VideoPlayer({
                     style={{width: '100%', height: '100%', display: 'block', objectFit: 'contain'}}
                   />
                 )}
-                <div data-play style={{opacity: 1}}>
+                <div data-play style={{opacity: 1, scale: 1}}>
                   <PlayIcon />
                 </div>
               </PlayButton>

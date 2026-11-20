@@ -9,6 +9,7 @@ import type {CSSProperties, RefCallback} from 'react'
 import {css, styled} from 'styled-components'
 
 import {PLUGIN_VERSION} from '../constants'
+import {PreviewAudioSkin, PreviewVideoSkin} from './PreviewSkin'
 
 export interface MuxMediaPlayerProps {
   source: MuxSource
@@ -17,6 +18,8 @@ export interface MuxMediaPlayerProps {
   autoPlay?: boolean | undefined
   style?: CSSProperties | undefined
   ref?: RefCallback<HTMLMediaElement> | undefined
+  /** Use the minimal preview skin instead of the full skin. */
+  compact?: boolean | undefined
 }
 
 const skinStyles = css`
@@ -44,6 +47,7 @@ export default function MuxMediaPlayer({
   autoPlay,
   style,
   ref,
+  compact,
 }: MuxMediaPlayerProps) {
   const mediaProps = {
     ref,
@@ -55,22 +59,26 @@ export default function MuxMediaPlayer({
   } as const
 
   if (audio) {
+    const Skin = compact ? PreviewAudioSkin : StyledAudioSkin
+
     return (
       <AudioPlayer>
-        <StyledAudioSkin style={style}>
+        <Skin style={style}>
           <MuxAudio {...mediaProps} />
           <MuxData metadata={metadata} />
-        </StyledAudioSkin>
+        </Skin>
       </AudioPlayer>
     )
   }
 
+  const Skin = compact ? PreviewVideoSkin : StyledVideoSkin
+
   return (
     <VideoPlayer title="" poster={poster}>
-      <StyledVideoSkin style={style}>
+      <Skin style={style}>
         <MuxVideo {...mediaProps} />
         <MuxData metadata={metadata} />
-      </StyledVideoSkin>
+      </Skin>
     </VideoPlayer>
   )
 }
