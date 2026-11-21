@@ -2074,7 +2074,6 @@ snapshots:
 					"version": "5.104.0",
 				},
 				"@xstate/react": "catalog:",
-				"object-hash": "3.0.0",
 				"react-hook-form": "catalog:",
 				"react-time-ago": {
 					"specifier": "^7.4.4",
@@ -2094,10 +2093,6 @@ snapshots:
 				"@sanity/dashboard": "workspace:*",
 				"@sanity/tsconfig": "catalog:",
 				"@sanity/tsdown-config": "catalog:",
-				"@types/object-hash": {
-					"specifier": "^3.0.6",
-					"version": "3.0.6",
-				},
 				"@types/react": "catalog:",
 				"@types/react-dom": "catalog:",
 				"oxc-transform-react": "catalog:",
@@ -18154,10 +18149,6 @@ snapshots:
 			},
 		},
 
-		"@types/object-hash@3.0.6": {
-			"integrity": "sha512-fOBV8C1FIu2ELinoILQ+ApxcUKz4ngq+IWUYrxSGjXzzjUALijilampwkMgEtJ+h2njAW3pi853QpzNVCHB73w==",
-		},
-
 		"@types/parse-json@4.0.2": {
 			"integrity": "sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==",
 		},
@@ -27722,11 +27713,6 @@ snapshots:
 		"object-assign@4.1.1": {
 			"integrity": "sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==",
 			"engines": {"node": ">=0.10.0"},
-		},
-
-		"object-hash@3.0.0": {
-			"integrity": "sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==",
-			"engines": {"node": ">= 6"},
 		},
 
 		"object-inspect@1.13.4": {
