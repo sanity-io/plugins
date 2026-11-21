@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@formium/client": "^0.1.4",
-    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@sanity/sanity-plugin-async-list": "workspace:^",
     "@sanity/ui": "catalog:",
     "h3": "^1.15.11",
@@ -55,7 +54,6 @@
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
     "@testing-library/react": "catalog:",
-    "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

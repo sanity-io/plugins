@@ -1273,10 +1273,6 @@ snapshots:
 					"specifier": "^0.1.4",
 					"version": "0.1.4",
 				},
-				"@mailchimp/mailchimp_marketing": {
-					"specifier": "^3.0.80",
-					"version": "3.0.80",
-				},
 				"@sanity/sanity-plugin-async-list": "workspace:^",
 				"@sanity/ui": "catalog:",
 				"h3": {
@@ -1289,10 +1285,6 @@ snapshots:
 				"@sanity/tsconfig": "catalog:",
 				"@sanity/tsdown-config": "catalog:",
 				"@testing-library/react": "catalog:",
-				"@types/mailchimp__mailchimp_marketing": {
-					"specifier": "^3.0.22",
-					"version": "3.0.22",
-				},
 				"@types/node": {
 					"specifier": "^24.19.2",
 					"version": "24.19.2",
@@ -10269,21 +10261,6 @@ snapshots:
 			},
 		},
 
-		"@mailchimp/mailchimp_marketing@3.0.80": {
-			"integrity": "sha512-Cgz0xPb+1DUjmrl5whAsmqfAChBko+Wf4/PLQE4RvwfPlcq2agfHr1QFiXEhZ8e+GQwQ3hZQn9iLGXwIXwxUCg==",
-			"engines": {"node": ">=10.0.0"},
-			"peerDependencies": {
-				"supports-color": {
-					"version": "10.2.2",
-					"below": true,
-				},
-			},
-			"dependencies": {
-				"dotenv": "8.6.0",
-				"superagent": "3.8.1",
-			},
-		},
-
 		"@manypkg/find-root@3.1.0": {
 			"integrity": "sha512-BcSqCyKhBVZ5YkSzOiheMCV41kqAFptW6xGqYSTjkVTl9XQpr+pqHhwgGCOHQtjDCv7Is6EFyA14Sm5GVbVABA==",
 			"engines": {"node": ">=20.0.0"},
@@ -18111,10 +18088,6 @@ snapshots:
 			"integrity": "sha512-+K1NIO8I+F9/wNulfVvu23QYd0Pe9/OCqRrim4NoYIf1VoEDL90Ve4ClzpyqBLc7NpGGWRvYNCKZ1BE/Jpf8dQ==",
 		},
 
-		"@types/mailchimp__mailchimp_marketing@3.0.22": {
-			"integrity": "sha512-zvVrjNWMB2sYCLjRLOc3xImqFpFJcOn1TVTcyw5t1fwbN8dAJxTbNfd0e25bQGjfIiDbsNaNt+kburboABK93A==",
-		},
-
 		"@types/markdown-it@14.2.0": {
 			"integrity": "sha512-NoQ2yGlLWj4wpxMs+TYmRKk3thDrQ97agr7sFqfLsAlvoS8SNQuTrlObhFqG9iugdTtgOE9jpJ6FNM4ZGsa5xQ==",
 			"dependencies": {
@@ -21848,10 +21821,6 @@ snapshots:
 			"integrity": "sha512-UrQVSUur14tNX6tiP4y8T4w4FeJAX3bi2cIv0pu/DTLFNxoq7z2Yh83Vfzztj6Px3X/lubqQ9IrPp7Bpn6p4MQ==",
 		},
 
-		"component-emitter@1.3.1": {
-			"integrity": "sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==",
-		},
-
 		"compressible@2.0.18": {
 			"integrity": "sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==",
 			"engines": {"node": ">= 0.6"},
@@ -21981,10 +21950,6 @@ snapshots:
 		"cookie@0.7.2": {
 			"integrity": "sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==",
 			"engines": {"node": ">= 0.6"},
-		},
-
-		"cookiejar@2.1.4": {
-			"integrity": "sha512-LDx6oHrK+PhzLKJU9j5S7/Y3jM/mUHvD/DeI1WQmJn652iPC5Y4TBzC9l+5OMOXlyTTA+SmVUPm0HQUwpD5Jqw==",
 		},
 
 		"copy-to-clipboard@3.3.3": {
@@ -22409,20 +22374,6 @@ snapshots:
 			},
 		},
 
-		"debug@3.2.7": {
-			"integrity": "sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==",
-			"peerDependencies": {
-				"supports-color": {
-					"specifier": "*",
-					"version": "10.2.2",
-					"optional": true,
-				},
-			},
-			"dependencies": {
-				"ms": "2.1.3",
-			},
-		},
-
 		"debug@4.3.4": {
 			"integrity": "sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==",
 			"engines": {"node": ">=6.0"},
@@ -22824,11 +22775,6 @@ snapshots:
 		"dotenv@17.4.2": {
 			"integrity": "sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==",
 			"engines": {"node": ">=12"},
-		},
-
-		"dotenv@8.6.0": {
-			"integrity": "sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==",
-			"engines": {"node": ">=10"},
 		},
 
 		"drizzle-orm@0.45.3": {
@@ -24169,10 +24115,6 @@ snapshots:
 			"dependencies": {
 				"fetch-blob": "3.2.0",
 			},
-		},
-
-		"formidable@1.2.6": {
-			"integrity": "sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==",
 		},
 
 		"forwarded@0.2.0": {
@@ -26984,11 +26926,6 @@ snapshots:
 			"engines": {"node": ">= 8"},
 		},
 
-		"methods@1.1.2": {
-			"integrity": "sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==",
-			"engines": {"node": ">= 0.6"},
-		},
-
 		"micro@9.3.5-canary.3": {
 			"integrity": "sha512-viYIo9PefV+w9dvoIBh1gI44Mvx1BOk67B4BpC2QK77qdY0xZF0Q+vWLt/BII6cLkIc8rLmSIcJaB/OrXXKe1g==",
 			"engines": {"node": ">= 8.0.0"},
@@ -27062,12 +26999,6 @@ snapshots:
 			"dependencies": {
 				"mime-db": "1.54.0",
 			},
-		},
-
-		"mime@1.6.0": {
-			"integrity": "sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==",
-			"engines": {"node": ">=4"},
-			"hasBin": true,
 		},
 
 		"mime@3.0.0": {
@@ -32152,29 +32083,6 @@ snapshots:
 
 		"stylis@4.3.6": {
 			"integrity": "sha512-yQ3rwFWRfwNUY7H5vpU0wfdkNSnvnJinhF9830Swlaxl03zsOjCfmX0ugac+3LtK0lYSgwL/KXc8oYL3mG4YFQ==",
-		},
-
-		"superagent@3.8.1": {
-			"integrity": "sha512-VMBFLYgFuRdfeNQSMLbxGSLfmXL/xc+OO+BZp41Za/NRDBet/BNbkRJrYzCUu0u4GU0i/ml2dtT8b9qgkw9z6Q==",
-			"engines": {"node": ">= 4.0"},
-			"peerDependencies": {
-				"supports-color": {
-					"version": "10.2.2",
-					"below": true,
-				},
-			},
-			"dependencies": {
-				"component-emitter": "1.3.1",
-				"cookiejar": "2.1.4",
-				"debug": "3.2.7",
-				"extend": "3.0.2",
-				"form-data": "2.5.6",
-				"formidable": "1.2.6",
-				"methods": "1.1.2",
-				"mime": "1.6.0",
-				"qs": "6.16.0",
-				"readable-stream": "2.3.8",
-			},
 		},
 
 		"supports-color@10.2.2": {
