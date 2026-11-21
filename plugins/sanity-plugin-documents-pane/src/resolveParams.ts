@@ -1,5 +1,3 @@
-import delve from 'dlv'
-
 import type {DocumentVersionsCollection, DocumentsPaneQueryParams} from './types'
 
 interface ResolveParamsOptions {
@@ -10,9 +8,15 @@ interface ResolveParamsOptions {
 
 type ResolveParamsReturn = undefined | Record<string, string>
 
-function defaultResolver(
-  options: ResolveParamsOptions,
-): Record<string, string | undefined> | undefined {
+function getPath(obj: unknown, path: string): unknown {
+  let value = obj
+  for (const key of path.split('.')) {
+    value = value ? Reflect.get(new Object(value), key) : undefined
+  }
+  return value
+}
+
+function defaultResolver(options: ResolveParamsOptions): Record<string, unknown> | undefined {
   const {params, document, useDraft} = options
 
   if (!params || typeof params === 'function') {
@@ -25,10 +29,10 @@ function defaultResolver(
     return undefined
   }
 
-  const resolved: Record<string, string | undefined> = {}
+  const resolved: Record<string, unknown> = {}
 
   for (const [key, path] of Object.entries(params)) {
-    resolved[key] = delve(doc, path)
+    resolved[key] = getPath(doc, path)
   }
 
   return resolved
