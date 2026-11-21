@@ -1,8 +1,7 @@
 import {Box, Text} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useMachine} from '@xstate/react'
-import {useEffect, useRef} from 'react'
-import useDeepCompareEffect from 'use-deep-compare-effect'
+import {useEffect, useEffectEvent, useRef} from 'react'
 
 import {WIDGET_NAME} from '../../constants'
 import useDeployments from '../../hooks/useDeployments'
@@ -70,23 +69,32 @@ const Deployments = (props: Props) => {
     }
   }, [error, isFetching, isSuccess, refreshStateTransition])
 
-  useDeepCompareEffect(() => {
+  const {deployHook, deployLimit, name, projectId, teamId, token} = deploymentTarget
+
+  const onDeploymentTargetChange = useEffectEvent(() => {
     if (!refreshState.matches('refreshing')) {
       refreshStateTransition({type: 'REFRESH'})
     }
-  }, [deploymentTarget])
+  })
+  useEffect(() => {
+    onDeploymentTargetChange()
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- refresh when any field of the target changes; the object itself is new on every render
+  }, [deployHook, deployLimit, name, projectId, teamId, token])
 
-  useDeepCompareEffect(() => {
+  const pushErrorToast = useEffectEvent((targetName: string) => {
+    toast.push({
+      closable: true,
+      description: `Unable to fetch deployments for ${targetName}`,
+      duration: 8000,
+      status: 'error',
+      title: WIDGET_NAME,
+    })
+  })
+  useEffect(() => {
     if (isError) {
-      toast.push({
-        closable: true,
-        description: `Unable to fetch deployments for ${deploymentTarget.name}`,
-        duration: 8000,
-        status: 'error',
-        title: WIDGET_NAME,
-      })
+      pushErrorToast(name)
     }
-  }, [deploymentTarget, isError])
+  }, [isError, name])
 
   const hasFetched = typeof deployments !== 'undefined'
   const hasDeployments = deployments && deployments.length > 0

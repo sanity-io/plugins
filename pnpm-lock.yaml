@@ -2080,10 +2080,6 @@ snapshots:
 					"specifier": "^7.4.4",
 					"version": "7.4.4",
 				},
-				"use-deep-compare-effect": {
-					"specifier": "^1.8.1",
-					"version": "1.8.1",
-				},
 				"xstate": "catalog:",
 				"yup": {
 					"specifier": "^0.32.11",
@@ -33190,21 +33186,6 @@ snapshots:
 					"specifier": "*",
 					"version": "19.3.1",
 				},
-			},
-		},
-
-		"use-deep-compare-effect@1.8.1": {
-			"integrity": "sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==",
-			"engines": {"node": ">=10", "npm": ">=6"},
-			"peerDependencies": {
-				"react": {
-					"specifier": ">=16.13",
-					"version": "19.3.1",
-				},
-			},
-			"dependencies": {
-				"@babel/runtime": "7.29.7",
-				"dequal": "2.0.3",
 			},
 		},
 
