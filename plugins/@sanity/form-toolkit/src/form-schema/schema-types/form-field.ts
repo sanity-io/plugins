@@ -1,4 +1,4 @@
-import {LuTextCursorInput} from 'react-icons/lu'
+import {StringIcon} from '@sanity/icons/String'
 import {defineField, defineType} from 'sanity'
 
 import {ValidationType} from '../components/validation-type'
@@ -46,7 +46,7 @@ export const formFieldType = defineType({
   name: 'formField',
   title: 'Form Field',
   type: 'object',
-  icon: LuTextCursorInput,
+  icon: StringIcon,
   fields: [
     defineField({
       name: 'type',
