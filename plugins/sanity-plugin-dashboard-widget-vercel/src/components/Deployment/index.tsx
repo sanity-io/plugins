@@ -1,9 +1,7 @@
 import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {useMemo} from 'react'
-// oxlint-disable-next-line import/no-unassigned-import
-import 'react-time-ago/locale/en'
-import ReactTimeAgo from 'react-time-ago'
+import {useRelativeTime} from 'sanity'
 
 import {type Vercel} from '../../types'
 import StatusDot from '../StatusDot'
@@ -17,6 +15,7 @@ const Deployment = (props: Props) => {
   const {deployment} = props
 
   const date = useMemo(() => new Date(deployment.created), [deployment.created])
+  const age = useRelativeTime(date, {minimal: true})
 
   const commitMessage = deployment?.meta?.['githubCommitMessage']
   const commitRef = deployment?.meta?.['githubCommitRef']
@@ -101,9 +100,7 @@ const Deployment = (props: Props) => {
       {/* Age */}
       <TableCell variant="age">
         <Flex align="center">
-          <Text size={1}>
-            <ReactTimeAgo date={date} locale="en-US" timeStyle="mini" />
-          </Text>
+          <Text size={1}>{age}</Text>
         </Flex>
       </TableCell>
 
