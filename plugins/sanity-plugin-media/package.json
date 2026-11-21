@@ -51,7 +51,6 @@
     "@sanity/ui": "catalog:",
     "@sanity/uuid": "catalog:",
     "@tanem/react-nprogress": "^5.0.63",
-    "copy-to-clipboard": "^3.3.3",
     "date-fns": "catalog:",
     "filesize": "^9.0.11",
     "groq": "catalog:",

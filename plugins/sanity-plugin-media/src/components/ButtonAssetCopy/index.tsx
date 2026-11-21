@@ -1,7 +1,6 @@
 import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {Button, Text} from '@sanity/ui'
 import {Popover} from '@sanity/ui/popover'
-import copy from 'copy-to-clipboard'
 import {useEffect, useRef, useState} from 'react'
 
 import {usePortalPopoverProps} from '../../hooks/usePortalPopoverProps'
@@ -17,16 +16,21 @@ const ButtonAssetCopy = ({disabled, url}: Props) => {
   const [popoverVisible, setPopoverVisible] = useState(false)
 
   const handleClick = () => {
-    if (refPopoverTimeout.current) {
-      clearTimeout(refPopoverTimeout.current)
-    }
+    navigator.clipboard.writeText(url).then(
+      () => {
+        if (refPopoverTimeout.current) {
+          clearTimeout(refPopoverTimeout.current)
+        }
 
-    setPopoverVisible(true)
-    copy(url)
-
-    refPopoverTimeout.current = setTimeout(() => {
-      setPopoverVisible(false)
-    }, 1250)
+        setPopoverVisible(true)
+        refPopoverTimeout.current = setTimeout(() => {
+          setPopoverVisible(false)
+        }, 1250)
+      },
+      (err: unknown) => {
+        console.error('[sanity-plugin-media] Failed to copy URL:', err)
+      },
+    )
   }
 
   // Effects
