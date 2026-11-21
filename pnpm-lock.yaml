@@ -2128,20 +2128,12 @@ snapshots:
 					"version": "6.23.0-next.41",
 				},
 				"@sanity/uuid": "catalog:",
-				"dlv": {
-					"specifier": "^1.1.3",
-					"version": "1.1.3",
-				},
 				"rxjs": "catalog:",
 				"sanity-plugin-utils": "workspace:^",
 			},
 			"devDependencies": {
 				"@sanity/tsconfig": "catalog:",
 				"@sanity/tsdown-config": "catalog:",
-				"@types/dlv": {
-					"specifier": "^1.1.5",
-					"version": "1.1.5",
-				},
 				"@types/react": "catalog:",
 				"@types/react-dom": "catalog:",
 				"oxc-transform-react": "catalog:",
@@ -18049,10 +18041,6 @@ snapshots:
 			"integrity": "sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==",
 		},
 
-		"@types/dlv@1.1.5": {
-			"integrity": "sha512-JHOWNfiWepAhfwlSw17kiWrWrk6od2dEQgHltJw9AS0JPFoLZJBge5+Dnil2NfdjAvJ/+vGSX60/BRW20PpUXw==",
-		},
-
 		"@types/doctrine@0.0.9": {
 			"integrity": "sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==",
 		},
@@ -22721,10 +22709,6 @@ snapshots:
 			"dependencies": {
 				"path-type": "4.0.0",
 			},
-		},
-
-		"dlv@1.1.3": {
-			"integrity": "sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==",
 		},
 
 		"doc-path@4.1.4": {
