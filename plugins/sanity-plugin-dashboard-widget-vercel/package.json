@@ -50,7 +50,6 @@
     "object-hash": "3.0.0",
     "react-hook-form": "catalog:",
     "react-time-ago": "^7.4.4",
-    "use-deep-compare-effect": "^1.8.1",
     "xstate": "catalog:",
     "yup": "^0.32.11"
   },
