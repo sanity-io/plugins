@@ -2,12 +2,12 @@ import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {CloseIcon} from '@sanity/icons/Close'
 import {UploadIcon} from '@sanity/icons/Upload'
 import {Box, Button, Flex, Inline, Text} from '@sanity/ui'
-import pluralize from 'pluralize'
 
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'
 import {useDropzoneActions} from '../../contexts/DropzoneDispatchContext'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import useTypedSelector from '../../hooks/useTypedSelector'
+import {pluralize} from '../../utils/pluralize'
 
 type Props = {
   onClose?: () => void

@@ -1,5 +1,4 @@
 import {Box, Button, Flex, Label} from '@sanity/ui'
-import pluralize from 'pluralize'
 import {useDispatch} from 'react-redux'
 import {useColorSchemeValue} from 'sanity'
 
@@ -10,6 +9,7 @@ import {assetsActions, selectAssetsPicked} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {DIALOG_ACTIONS} from '../../modules/dialog/actions'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import {pluralize} from '../../utils/pluralize'
 import {isImageAsset} from '../../utils/typeGuards'
 
 const PickedBar = () => {
