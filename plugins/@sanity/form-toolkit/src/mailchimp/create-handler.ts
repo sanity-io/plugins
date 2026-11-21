@@ -1,6 +1,9 @@
-import mailchimp from '@mailchimp/mailchimp_marketing'
-
 import createHandler from '../shared/create-handler'
+
+interface MailchimpList {
+  id: string
+  [key: string]: unknown
+}
 
 interface MailchimpSignupForm {
   signup_form_url: string
@@ -15,20 +18,28 @@ export async function fetchMailchimpData({
   key: string
   server: string
 }): Promise<unknown> {
-  mailchimp.setConfig({
-    apiKey: key,
-    server: server,
-  })
-  const response = await mailchimp.lists.getAllLists()
-  if (!('lists' in response)) {
+  async function getJson(path: string): Promise<Record<string, unknown>> {
+    const response = await fetch(`https://${server}.api.mailchimp.com/3.0${path}`, {
+      headers: {Authorization: `Basic ${btoa(`anystring:${key}`)}`},
+    })
+    const body: Record<string, unknown> = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      const detail = typeof body['detail'] === 'string' ? `: ${body['detail']}` : ''
+      throw new Error(`Mailchimp request to ${path} failed with status ${response.status}${detail}`)
+    }
+    return body
+  }
+
+  const {lists} = await getJson('/lists')
+  if (!Array.isArray(lists)) {
     throw new Error('Failed to fetch Mailchimp lists')
   }
   const signupFormsPerList = await Promise.all(
-    response.lists.map(async (list) => {
-      const {signup_forms: signupForms}: {signup_forms: MailchimpSignupForm[]} =
-        // @ts-expect-error getListSignupForms is missing from the mailchimp typings
-        await mailchimp.lists.getListSignupForms(list.id)
-      return signupForms.map((form) => ({
+    lists.map(async (list: MailchimpList) => {
+      const {signup_forms: signupForms} = await getJson(
+        `/lists/${encodeURIComponent(list.id)}/signup-forms`,
+      )
+      return (Array.isArray(signupForms) ? signupForms : []).map((form: MailchimpSignupForm) => ({
         list,
         form,
         value: form.signup_form_url,
