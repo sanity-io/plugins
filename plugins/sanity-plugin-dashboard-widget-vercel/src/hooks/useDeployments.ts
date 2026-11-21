@@ -8,12 +8,23 @@ type Options = {
   enabled?: boolean
 }
 
+// FNV-1a: lets a token change refetch without storing the token itself in the query cache
+function fingerprint(value: string): string {
+  let hash = 0x811c9dc5
+  for (let i = 0; i < value.length; i++) {
+    hash = Math.imul(hash ^ value.charCodeAt(i), 0x01000193)
+  }
+  return (hash >>> 0).toString(36)
+}
+
 const useDeployments = (deploymentTarget: Sanity.DeploymentTargetConfig, options?: Options) => {
   const fetchUrl = fetcher(deploymentTarget)
 
-  // `token` is left out so it isn't stored in the query cache; `queryFn` always uses the current one
-  const {deployHook, deployLimit, name, projectId, teamId} = deploymentTarget
-  const queryKey = ['vercel-deployments', {deployHook, deployLimit, name, projectId, teamId}]
+  const {deployHook, deployLimit, name, projectId, teamId, token} = deploymentTarget
+  const queryKey = [
+    'vercel-deployments',
+    {deployHook, deployLimit, name, projectId, teamId, token: fingerprint(token)},
+  ]
 
   // Fetch deployments
   const deployParams = new URLSearchParams()
