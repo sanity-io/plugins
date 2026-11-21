@@ -1,5 +1,4 @@
 import {useQuery} from '@tanstack/react-query'
-import hash from 'object-hash'
 
 import {API_ENDPOINT_ALIASES, API_ENDPOINT_DEPLOYMENTS} from '../constants'
 import {type Sanity, type Vercel} from '../types'
@@ -12,6 +11,10 @@ type Options = {
 const useDeployments = (deploymentTarget: Sanity.DeploymentTargetConfig, options?: Options) => {
   const fetchUrl = fetcher(deploymentTarget)
 
+  // `token` is left out so it isn't stored in the query cache; `queryFn` always uses the current one
+  const {deployHook, deployLimit, name, projectId, teamId} = deploymentTarget
+  const queryKey = ['vercel-deployments', {deployHook, deployLimit, name, projectId, teamId}]
+
   // Fetch deployments
   const deployParams = new URLSearchParams()
   deployParams.set('limit', String(deploymentTarget?.deployLimit))
@@ -23,7 +26,7 @@ const useDeployments = (deploymentTarget: Sanity.DeploymentTargetConfig, options
     error: deploymentsError,
     refetch,
   } = useQuery<{deployments: Vercel.Deployment[]}>({
-    queryKey: [hash(deploymentTarget)],
+    queryKey,
     queryFn: () => fetchUrl(API_ENDPOINT_DEPLOYMENTS, deployParams),
     enabled: options?.enabled ?? true,
     refetchInterval: 20000, // ms
@@ -51,7 +54,7 @@ const useDeployments = (deploymentTarget: Sanity.DeploymentTargetConfig, options
       prev?: number
     }
   }>({
-    queryKey: [hash(deploymentTarget), 'aliases'],
+    queryKey: [...queryKey, 'aliases'],
     queryFn: () => fetchUrl(API_ENDPOINT_ALIASES, aliasParams),
     enabled: !!deploymentsData,
     refetchOnMount: false,
