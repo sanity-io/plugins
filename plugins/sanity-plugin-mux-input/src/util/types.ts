@@ -1,6 +1,5 @@
 import type {MuxSource} from '@videojs/react/media/mux-video'
 import type {ObjectInputProps} from 'sanity'
-import type {PartialDeep} from 'type-fest'
 
 import type {RobotsFields} from '../robots/types'
 
@@ -584,6 +583,13 @@ export interface MuxAsset {
   /** Seconds. Set by Robots' find-best-thumbnails with `update_asset_thumbnail`. */
   thumbnail_time?: number
 }
+
+// Makes nested object keys optional, but leaves arrays as they are
+type PartialDeep<T> = T extends readonly unknown[]
+  ? T
+  : T extends object
+    ? {[K in keyof T]?: PartialDeep<T[K]>}
+    : T
 
 export interface VideoAssetDocument extends RobotsFields {
   _id: string
