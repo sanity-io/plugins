@@ -1,6 +1,5 @@
 import {Button, Dialog, Flex, Stack, Text, TextInput} from '@sanity/ui'
 import {type ChangeEvent, useId, useMemo, useState} from 'react'
-import {getDevicePixelRatio} from 'use-device-pixel-ratio'
 
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
@@ -42,7 +41,7 @@ export default function EditThumbnailDialog({asset, currentTime = 0}: Props) {
       .catch(setSaveThumbnailError)
       .finally(() => setSaving(false))
   }
-  const width = 300 * getDevicePixelRatio({maxDpr: 2})
+  const width = 300 * Math.min(Math.max(1, Math.floor(globalThis.devicePixelRatio || 1)), 2)
 
   if (saveThumbnailError) {
     // @TODO handle errors more gracefully
