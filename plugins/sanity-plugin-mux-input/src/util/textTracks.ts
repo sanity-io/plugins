@@ -1,7 +1,7 @@
 import type {SanityClient} from '@sanity/client'
 
 import {getAsset} from '../actions/assets'
-import {generateJwt} from './generateJwt'
+import {generateJwtAsync} from './generateJwt'
 import {getPlaybackId} from './getPlaybackPolicy'
 import {getPlaybackPolicy} from './getPlaybackPolicy'
 import {isCaptionTrack} from './tracks'
@@ -199,7 +199,7 @@ export async function downloadVttFile(
   let downloadUrl = `https://stream.mux.com/${playbackId}/text/${track.id}.vtt`
 
   if (playbackPolicy === 'signed' || playbackPolicy === 'drm') {
-    const token = generateJwt(client, playbackId, 'v')
+    const token = await generateJwtAsync(client, playbackId, 'v')
     downloadUrl += `?token=${token}`
   }
 

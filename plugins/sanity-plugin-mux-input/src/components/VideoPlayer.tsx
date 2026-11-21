@@ -2,7 +2,15 @@ import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {PlayIcon} from '@sanity/icons/Play'
 import {Card, Text} from '@sanity/ui'
 import type {MuxSource} from '@videojs/react/media/mux-video'
-import {lazy, type PropsWithChildren, Suspense, useMemo, useRef, useState} from 'react'
+import {
+  lazy,
+  type PropsWithChildren,
+  Suspense,
+  useDeferredValue,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import {useDialogStateContext} from '../context/DialogStateContext'
 import {useClient} from '../hooks/useClient'
@@ -57,10 +65,15 @@ export default function VideoPlayer({
 
   // Robots `moderate` can delete every playback ID; the notice below says how to restore one.
   const hasPlaybackIds = !!asset.data?.playback_ids?.length
+  // Signing a new token suspends. Deriving the player and poster from a deferred asset keeps the
+  // current ones on screen meanwhile, instead of suspending to the nearest Suspense boundary.
+  const signingAsset = useDeferredValue<VideoAssetDocument | null>(asset, null)
+  const canSign = !!signingAsset?.data?.playback_ids?.length
   /* Playback ID that will be used to play the video */
-  const playbackId = hasPlaybackIds ? getPlaybackId(asset, ['public', 'signed', 'drm']) : undefined
+  const playbackId = canSign ? getPlaybackId(signingAsset, ['public', 'signed', 'drm']) : undefined
   // Strings, so an unrelated document change doesn't sign a new token and reload the player.
-  const policy = playbackId ? getPlaybackPolicyById(asset, playbackId)?.policy : undefined
+  const policy =
+    signingAsset && playbackId ? getPlaybackPolicyById(signingAsset, playbackId)?.policy : undefined
 
   const signTokens = useMemo(() => {
     if (!playbackId || (policy !== 'signed' && policy !== 'drm')) return undefined
@@ -90,15 +103,15 @@ export default function VideoPlayer({
       : undefined
 
   const poster = useMemo(() => {
-    if (!hasPlaybackIds) return undefined
+    if (!signingAsset || !canSign) return undefined
     return tryWithSuspend(
-      () => getPosterSrc({asset, client, width: thumbnailWidth}),
+      () => getPosterSrc({asset: signingAsset, client, width: thumbnailWidth}),
       (e: Error) => {
         setError(e)
         return undefined
       },
     )
-  }, [asset, client, thumbnailWidth, hasPlaybackIds])
+  }, [signingAsset, client, thumbnailWidth, canSign])
 
   const [width, height] = (asset?.data?.aspect_ratio ?? '16:9').split(':').map(Number)
   const targetAspectRatio =
@@ -111,8 +124,6 @@ export default function VideoPlayer({
       : AUDIO_ASPECT_RATIO
   }
 
-  /* We use Suspense here because `generateJwt` and related functions use suspend()
-   under the hood */
   return (
     <>
       <Card

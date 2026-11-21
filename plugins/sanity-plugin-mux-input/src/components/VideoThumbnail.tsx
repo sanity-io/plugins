@@ -1,6 +1,6 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Card, type CardTone, Spinner, Stack, Text} from '@sanity/ui'
-import {Suspense, useMemo, useRef, useState} from 'react'
+import {Suspense, useDeferredValue, useMemo, useRef, useState} from 'react'
 import {styled} from 'styled-components'
 
 import {useClient} from '../hooks/useClient'
@@ -45,13 +45,18 @@ export default function VideoThumbnail({
   const [status, setStatus] = useState<ImageStatus>('loading')
   const [error, setError] = useState<string | null>(null)
 
+  // Signing a new token suspends. Deferring the asset shows the spinner (or the previous
+  // thumbnail) meanwhile, instead of suspending to the nearest Suspense boundary.
+  const signingAsset = useDeferredValue<typeof asset | null>(asset, null)
+
   const thumbnailSrc = useMemo(() => {
+    if (!signingAsset) return undefined
     return tryWithSuspend(
       () => {
         let thumbnail: MuxAnimatedThumbnailUrl | MuxThumbnailUrl | undefined
 
-        if (staticImage) thumbnail = getPosterSrc({asset, client, width: posterWidth})
-        else thumbnail = getAnimatedPosterSrc({asset, client, width: posterWidth})
+        if (staticImage) thumbnail = getPosterSrc({asset: signingAsset, client, width: posterWidth})
+        else thumbnail = getAnimatedPosterSrc({asset: signingAsset, client, width: posterWidth})
         return thumbnail
       },
       (err: Error) => {
@@ -60,7 +65,7 @@ export default function VideoThumbnail({
         return undefined
       },
     )
-  }, [asset, client, posterWidth, staticImage])
+  }, [signingAsset, client, posterWidth, staticImage])
 
   function handleLoad() {
     setStatus('loaded')
