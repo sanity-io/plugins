@@ -1,6 +1,6 @@
 import {CloseIcon} from '@sanity/icons/Close'
+import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {useCallback, useMemo} from 'react'
-import {GiSoapExperiment} from 'react-icons/gi'
 import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
@@ -29,7 +29,7 @@ const useAddExperimentAction = (
   return {
     title: `Add ${experimentNameOverride}`,
     type: 'action',
-    icon: GiSoapExperiment,
+    icon: SplitVerticalIcon,
     onAction: handleAddAction,
     renderAsButton: true,
   }

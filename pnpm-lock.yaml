@@ -354,10 +354,6 @@ snapshots:
 					"specifier": "^7.90.0",
 					"version": "7.90.0",
 				},
-				"react-icons": {
-					"specifier": "^5.7.0",
-					"version": "5.7.0",
-				},
 				"react-is": {
 					"specifier": "^19.3.1",
 					"version": "19.3.1",
@@ -1277,13 +1273,13 @@ snapshots:
 					"specifier": "^3.0.80",
 					"version": "3.0.80",
 				},
+				"@sanity/icons": "catalog:",
 				"@sanity/sanity-plugin-async-list": "workspace:^",
 				"@sanity/ui": "catalog:",
 				"h3": {
 					"specifier": "^1.15.11",
 					"version": "1.15.11",
 				},
-				"react-icons": "catalog:",
 			},
 			"devDependencies": {
 				"@sanity/tsconfig": "catalog:",
@@ -1485,7 +1481,6 @@ snapshots:
 				"@sanity/ui": "catalog:",
 				"@sanity/uuid": "catalog:",
 				"dequal": "catalog:",
-				"react-icons": "catalog:",
 				"suspend-react": "catalog:",
 			},
 			"devDependencies": {
@@ -29921,16 +29916,6 @@ snapshots:
 				"@babel/runtime": "7.29.7",
 				"html-parse-stringify": "4.0.1",
 				"use-sync-external-store": "1.7.0",
-			},
-		},
-
-		"react-icons@5.7.0": {
-			"integrity": "sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==",
-			"peerDependencies": {
-				"react": {
-					"specifier": "*",
-					"version": "19.3.1",
-				},
 			},
 		},
 
