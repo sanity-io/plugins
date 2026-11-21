@@ -1,7 +1,5 @@
 import type {IncomingMessage, ServerResponse} from 'node:http'
 
-import {defineEventHandler, type H3Event} from 'h3' // For Nuxt.js/Nitro
-
 // Utility function to detect the framework at runtime
 const detectFramework = (): string => {
   if (process.env['NEXT_RUNTIME']) {
@@ -78,11 +76,16 @@ const createHandler = (handlerFunc: () => Promise<unknown>) => {
       await handlerLogic({req, res})
     }
   } else if (framework === 'nuxt') {
-    return defineEventHandler(async (event: H3Event) => {
-      const req = event.node.req
-      const res = event.node.res
-      return handlerLogic({req, res})
-    })
+    // h3 treats functions marked with `__is_handler__` as event handlers, which is all its
+    // `defineEventHandler` does for a function. `event` is the part of an h3 v1 event we read.
+    return Object.assign(
+      async (event: {node: {req: IncomingMessage; res: ServerResponse}}) => {
+        const req = event.node.req
+        const res = event.node.res
+        return handlerLogic({req, res})
+      },
+      {__is_handler__: true},
+    )
   } else if (framework === 'sveltekit') {
     return {
       GET: async ({request}: {request: Request}) => {
