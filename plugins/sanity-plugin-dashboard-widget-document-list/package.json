@@ -42,14 +42,12 @@
   },
   "dependencies": {
     "@sanity/ui": "catalog:",
-    "lodash-es": "catalog:",
     "rxjs": "catalog:"
   },
   "devDependencies": {
     "@sanity/dashboard": "workspace:*",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/lodash-es": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "oxc-transform-react": "catalog:",

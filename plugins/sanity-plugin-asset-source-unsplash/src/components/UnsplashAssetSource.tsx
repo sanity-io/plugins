@@ -1,7 +1,6 @@
 import {Dialog, Stack, Box} from '@sanity/ui'
-import memoize from 'lodash-es/memoize.js'
 import {lazy, Suspense, useMemo, useRef, useState} from 'react'
-import {type AssetSourceComponentProps, useClient} from 'sanity'
+import {type AssetSourceComponentProps, type SanityClient, useClient} from 'sanity'
 import {styled} from 'styled-components'
 
 import {fetchUnsplashPhotos} from '../datastores/unsplash'
@@ -16,16 +15,22 @@ const StyledDialog = styled(Dialog)`
 
 const UnsplashAssetSourceGallery = lazy(() => import('./UnsplashPhotoGallery'))
 
+function createCachedFetcher(client: SanityClient) {
+  const cache = new Map<string, ReturnType<typeof fetchUnsplashPhotos>>()
+  return (query: string, page: number) => {
+    const key = JSON.stringify({query, page})
+    let result = cache.get(key)
+    if (!result) {
+      result = fetchUnsplashPhotos(client, query, page)
+      cache.set(key, result)
+    }
+    return result
+  }
+}
+
 export function UnsplashAssetSource({onClose, onSelect}: AssetSourceComponentProps) {
   const client = useClient({apiVersion: '2022-09-01'})
-  const fetcher = useMemo(
-    () =>
-      memoize(
-        (query: string, page: number) => fetchUnsplashPhotos(client, query, page),
-        (query, page) => JSON.stringify({query, page}),
-      ),
-    [client],
-  )
+  const fetcher = useMemo(() => createCachedFetcher(client), [client])
 
   const [query, setQuery] = useState('')
   const scrollContainerRef = useRef<HTMLDivElement>(null)

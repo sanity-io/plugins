@@ -1,4 +1,3 @@
-import uniqBy from 'lodash-es/uniqBy.js'
 import {type Observable, of as observableOf} from 'rxjs'
 import {delay, mergeMap, switchMap, tap} from 'rxjs/operators'
 import type {SanityClient, SanityDocument} from 'sanity'
@@ -23,7 +22,9 @@ function prepareDocumentList(
         const foundDraft = drafts.find((draft) => draft._id === draftId(doc))
         return foundDraft || doc
       })
-      return uniqBy(outgoing, '_id')
+      return outgoing.filter(
+        (doc, index) => outgoing.findIndex((other) => other._id === doc._id) === index,
+      )
     })
     .catch((error) => {
       throw new Error(`Problems fetching docs ${ids.join(', ')}. Error: ${error.message}`)
