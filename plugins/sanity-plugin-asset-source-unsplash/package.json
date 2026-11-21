@@ -43,13 +43,11 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "lodash-es": "catalog:",
     "react-photo-album": "catalog:"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
-    "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "oxc-transform-react": "catalog:",
