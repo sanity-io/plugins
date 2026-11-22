@@ -219,6 +219,25 @@ describe('ReplaceAssetsOverview', () => {
     expect(screen.getByText('image-0.png')).toBeTruthy()
   })
 
+  it('shows an image once when it shifts onto the next page', async () => {
+    const user = userEvent.setup()
+    const firstPage = Array.from({length: REPLACEMENT_PAGE_SIZE}, (_, index) =>
+      image(`image-${index}`),
+    )
+    // An upload while the dialog is open pushes the last image of page one onto page two.
+    const shifted = image(`image-${REPLACEMENT_PAGE_SIZE - 1}`)
+    fetchMock.mockImplementation((_query: string, params: FetchParams) =>
+      of(params.start === 0 ? firstPage : [shifted, image('image-last', 'last.png')]),
+    )
+    renderWithProviders(<Harness />)
+    await screen.findByText('image-0.png')
+
+    await user.click(screen.getByRole('button', {name: 'load more'}))
+
+    expect(await screen.findByText('last.png')).toBeTruthy()
+    expect(screen.getAllByText(`image-${REPLACEMENT_PAGE_SIZE - 1}.png`)).toHaveLength(1)
+  })
+
   it('starts from the first page when returning to earlier filters', async () => {
     const user = userEvent.setup()
     const firstPage = Array.from({length: REPLACEMENT_PAGE_SIZE}, (_, index) =>

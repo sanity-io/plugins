@@ -77,7 +77,7 @@ describe('constructReplacementQuery', () => {
   it('pages through results', () => {
     const {params, query} = constructReplacementQuery({...base, pageIndex: 2})
 
-    expect(query).toContain('[$start...$end]')
+    expect(query).toContain('| order(_createdAt desc, _id desc) [$start...$end]')
     expect(params.start).toBe(2 * REPLACEMENT_PAGE_SIZE)
     expect(params.end).toBe(3 * REPLACEMENT_PAGE_SIZE)
   })

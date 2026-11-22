@@ -91,7 +91,7 @@ export function constructReplacementQuery({
     size,
     title,
     url
-  } | order(_createdAt desc) [$start...$end]`
+  } | order(_createdAt desc, _id desc) [$start...$end]`
 
   return {params, query}
 }

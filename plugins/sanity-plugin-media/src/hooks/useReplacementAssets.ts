@@ -18,12 +18,32 @@ type PageRequest = {
 type Result = {
   error?: string
   hasMore: boolean
-  items: ImageAsset[]
   key: string
+  /** One entry per loaded page, as returned by the server. */
+  pages: ImageAsset[][]
   requestId: string
 }
 
 const requestIdOf = ({attempt, key, pageIndex}: PageRequest) => `${key}|${pageIndex}|${attempt}`
+
+/**
+ * Flattens loaded pages, keeping the first occurrence of each asset. Offset paging can
+ * return the same asset on two pages when images are uploaded or deleted while the dialog
+ * is open, which would otherwise render a repeated card with a duplicate key.
+ */
+function mergePages(pages: ImageAsset[][]): ImageAsset[] {
+  const seen = new Set<string>()
+  const items: ImageAsset[] = []
+  for (const page of pages) {
+    for (const asset of page) {
+      if (!seen.has(asset._id)) {
+        seen.add(asset._id)
+        items.push(asset)
+      }
+    }
+  }
+  return items
+}
 
 /**
  * Pages through candidate replacement images with local state, so the replace dialog
@@ -78,12 +98,11 @@ export function useReplacementAssets({
       next: (page) => {
         setResult((previous) => {
           // Keep earlier pages for the same filters; drop results for previous filters.
-          const earlierPages =
-            previous?.key === key ? previous.items.slice(0, pageIndex * REPLACEMENT_PAGE_SIZE) : []
+          const earlierPages = previous?.key === key ? previous.pages.slice(0, pageIndex) : []
           return {
             hasMore: page.length === REPLACEMENT_PAGE_SIZE,
-            items: [...earlierPages, ...page],
             key,
+            pages: [...earlierPages, page],
             requestId: currentRequestId,
           }
         })
@@ -92,8 +111,8 @@ export function useReplacementAssets({
         setResult((previous) => ({
           error: error instanceof Error ? error.message : 'Internal error',
           hasMore: previous?.key === key ? previous.hasMore : false,
-          items: previous?.key === key ? previous.items : [],
           key,
+          pages: previous?.key === key ? previous.pages : [],
           requestId: currentRequestId,
         }))
       },
@@ -114,6 +133,8 @@ export function useReplacementAssets({
     tagId,
   ])
 
+  const items = mergePages(result?.pages ?? [])
+
   const loading = result?.requestId !== requestId
   const error = loading ? undefined : result?.error
   const hasMore = !loading && !error && result?.key === key && result.hasMore
@@ -132,7 +153,7 @@ export function useReplacementAssets({
     error,
     hasMore,
     // While new filters load, keep showing the previous results instead of flashing empty.
-    items: result?.items ?? [],
+    items,
     loading,
     loadMore,
     retry,
