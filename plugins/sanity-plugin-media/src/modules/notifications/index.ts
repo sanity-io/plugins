@@ -1,11 +1,11 @@
 import {type PayloadAction, createSlice} from '@reduxjs/toolkit'
 import type {UnknownAction} from '@reduxjs/toolkit'
-import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'
 import {of} from 'rxjs'
 import {bufferTime, filter, mergeMap} from 'rxjs/operators'
 
 import type {HttpError, ImageAsset, MyEpic} from '../../types'
+import {pluralize} from '../../utils/pluralize'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {foldersActions} from '../folders'

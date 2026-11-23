@@ -1,5 +1,4 @@
 import {Box, Button, Flex, Inline, Stack, Text, Tree, TreeItem} from '@sanity/ui'
-import pluralize from 'pluralize'
 import {type ReactNode, useMemo, useState} from 'react'
 import {useDispatch} from 'react-redux'
 
@@ -8,6 +7,7 @@ import {assetsActions} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
 import {selectFolderTree} from '../../modules/folders'
 import type {DialogFolderMoveProps, FolderTreeNode} from '../../types'
+import {pluralize} from '../../utils/pluralize'
 import Dialog from '../Dialog'
 
 const getExpandedIdSet = (

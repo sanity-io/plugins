@@ -1,10 +1,10 @@
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit'
-import pluralize from 'pluralize'
 import {ofType} from 'redux-observable'
 import {EMPTY, of} from 'rxjs'
 import {filter, mergeMap} from 'rxjs/operators'
 
 import type {AssetItem, Dialog, MyEpic, Tag} from '../../types'
+import {pluralize} from '../../utils/pluralize'
 import {assetsActions} from '../assets'
 import {ASSETS_ACTIONS} from '../assets/actions'
 import {foldersActions} from '../folders'
