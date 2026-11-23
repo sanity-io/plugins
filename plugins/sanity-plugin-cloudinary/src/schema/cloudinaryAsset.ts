@@ -98,15 +98,20 @@ export const cloudinaryAssetSchema = defineType({
     select: {
       url: 'url',
       resource_type: 'resource_type',
+      type: 'type',
       derived: 'derived.0.url',
     },
-    prepare({url, derived, resource_type}) {
+    prepare({url, derived, resource_type, type}) {
       return {
         title: url,
         value: {
           title: url,
           resource_type,
+          type,
           url: derived || url,
+          // Keep the derived marker with its URL so the video preview knows `url` is the
+          // editor's chosen transformation and must not be transformed again.
+          derived: derived ? [{url: derived}] : undefined,
         },
       }
     },
