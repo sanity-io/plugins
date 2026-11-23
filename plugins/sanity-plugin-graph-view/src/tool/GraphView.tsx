@@ -7,7 +7,6 @@ import {useEffect, useState} from 'react'
 import ForceGraph2D from 'react-force-graph-2d'
 import {useClient, useUserColorManager, type SanityClient, type SanityDocument} from 'sanity'
 import {useRouter} from 'sanity/router'
-import {v4 as uuidv4} from 'uuid'
 
 import {GraphRoot, GraphWrapper, HoverNode, Legend, LegendBadge, LegendRow} from './GraphViewStyle'
 import {sortBy, loadImage, sizeOf, truncate} from './utils'
@@ -143,7 +142,7 @@ class GraphData {
     let session = this.sessions.find((s) => s.user.id === user.id && s.doc?._id === docNode.doc._id)
     if (!session) {
       session = new Session()
-      session.id = uuidv4()
+      session.id = crypto.randomUUID()
       session.user = user
       session.startTime = Date.now()
       session.doc = docNode.doc
