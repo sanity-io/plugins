@@ -2742,7 +2742,6 @@ snapshots:
 		"plugins/sanity-plugin-utils": {
 			"name": "sanity-plugin-utils",
 			"dependencies": {
-				"@sanity/asset-utils": "catalog:",
 				"@sanity/icons": "catalog:",
 				"@sanity/image-url": "catalog:",
 				"@sanity/ui": "catalog:",
