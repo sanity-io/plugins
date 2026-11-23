@@ -2076,10 +2076,6 @@ snapshots:
 				"@xstate/react": "catalog:",
 				"object-hash": "3.0.0",
 				"react-hook-form": "catalog:",
-				"react-time-ago": {
-					"specifier": "^7.4.4",
-					"version": "7.4.4",
-				},
 				"use-deep-compare-effect": {
 					"specifier": "^1.8.1",
 					"version": "1.8.1",
@@ -25846,13 +25842,6 @@ snapshots:
 			"integrity": "sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==",
 		},
 
-		"javascript-time-ago@2.6.4": {
-			"integrity": "sha512-7K/Z37LuwVaxxjutUDd1pXpznufPcox0b1UYu00ksAMMlV6IsxIvduwL3kgfPxuBVF8jVj7nhrKMPDslMq94aQ==",
-			"dependencies": {
-				"relative-time-format": "1.1.12",
-			},
-		},
-
 		"jerrypick@1.1.2": {
 			"integrity": "sha512-YKnxXEekXKzhpf7CLYA0A+oDP8V0OhICNCr5lv96FvSsDEmrb0GKM776JgQvHTMjr7DTTPEVv/1Ciaw0uEWzBA==",
 			"engines": {"node": ">=12"},
@@ -30112,25 +30101,6 @@ snapshots:
 			},
 		},
 
-		"react-time-ago@7.4.4": {
-			"integrity": "sha512-g1qqiEgIYgKvK6ySxyVq9nZ/s5mKbugY5fsgc0lB9suwVpbj58f47T578IqSkyzbe+kO6pk1ITmfTOTM8VizRw==",
-			"peerDependencies": {
-				"react": {
-					"specifier": ">=0.16.8",
-					"version": "19.3.1",
-				},
-				"react-dom": {
-					"specifier": ">=0.16.8",
-					"version": "19.3.1",
-				},
-			},
-			"dependencies": {
-				"javascript-time-ago": "2.6.4",
-				"memoize-one": "6.0.0",
-				"prop-types": "15.8.1",
-			},
-		},
-
 		"react-transition-group@4.4.5": {
 			"integrity": "sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==",
 			"peerDependencies": {
@@ -30377,10 +30347,6 @@ snapshots:
 			"dependencies": {
 				"jsesc": "3.1.0",
 			},
-		},
-
-		"relative-time-format@1.1.12": {
-			"integrity": "sha512-qaZBjmRIuXLfuLnzgqpFdBPa5W0euSX1tMnoMUHGPphLwJmrt8xbNiOIHrlvYOD6oNJ0M5owPCZyPibI8de5pQ==",
 		},
 
 		"require-directory@2.1.1": {
