@@ -1,5 +1,12 @@
 # @sanity/document-internationalization
 
+## 6.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`80a626b`](https://github.com/sanity-io/plugins/commit/80a626bd5d4ad5657d3d2876651d97c1f0e68905)]:
+  - sanity-plugin-utils@2.0.24
+
 ## 6.3.0
 
 ### Minor Changes

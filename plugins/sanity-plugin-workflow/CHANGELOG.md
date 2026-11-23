@@ -1,5 +1,12 @@
 # sanity-plugin-workflow
 
+## 3.0.54
+
+### Patch Changes
+
+- Updated dependencies [[`80a626b`](https://github.com/sanity-io/plugins/commit/80a626bd5d4ad5657d3d2876651d97c1f0e68905)]:
+  - sanity-plugin-utils@2.0.24
+
 ## 3.0.53
 
 ### Patch Changes

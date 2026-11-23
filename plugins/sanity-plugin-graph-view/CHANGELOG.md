@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.30
+
+### Patch Changes
+
+- [#2334](https://github.com/sanity-io/plugins/pull/2334) [`79117df`](https://github.com/sanity-io/plugins/commit/79117df704f1f46fd57368d8fba9f25d44ae7611) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `uuid` dependency. Session ids are now created with the built-in `crypto.randomUUID()`.
+
 ## 5.0.29
 
 ### Patch Changes

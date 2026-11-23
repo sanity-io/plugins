@@ -1,5 +1,11 @@
 # sanity-plugin-utils
 
+## 2.0.24
+
+### Patch Changes
+
+- [#2330](https://github.com/sanity-io/plugins/pull/2330) [`80a626b`](https://github.com/sanity-io/plugins/commit/80a626bd5d4ad5657d3d2876651d97c1f0e68905) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `@sanity/asset-utils` dependency. `useImageUrlBuilderImage` now types its `source` argument with `SanityImageSource` from `@sanity/image-url`, the type the image URL builder itself accepts.
+
 ## 2.0.23
 
 ### Patch Changes

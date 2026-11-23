@@ -1,5 +1,11 @@
 # @sanity/themer
 
+## 0.11.0
+
+### Minor Changes
+
+- [#2347](https://github.com/sanity-io/plugins/pull/2347) [`44fbd3f`](https://github.com/sanity-io/plugins/commit/44fbd3fdf519450bec4eed487f58423c792312b1) Thanks [@stipsan](https://github.com/stipsan)! - The themer tool can generate a theme from a description with Sanity Agent Actions. The generated theme is added to the list and applied, and can be undone or edited.
+
 ## 0.10.7
 
 ### Patch Changes
