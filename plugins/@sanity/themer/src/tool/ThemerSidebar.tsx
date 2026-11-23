@@ -50,16 +50,28 @@ export function ThemerSidebar({
   // Studios whose client predates Agent Actions have nothing to generate with
   const canGenerate = canGenerateThemes(client)
   const [generatorOpen, setGeneratorOpen] = useState(false)
-  const generationRef = useRef<AbortController | null>(null)
+  const requestRef = useRef<AbortController | null>(null)
+  const sessionRef = useRef<AbortController | null>(null)
   const closeGenerator = () => {
-    generationRef.current?.abort()
+    requestRef.current?.abort()
     setGeneratorOpen(false)
   }
   const inList = view.name === 'list'
 
-  // A theme that arrives while the list is out of sight would apply under whatever is open
+  // One session for as long as the list is on screen. Closing the bar aborts
+  // the request itself. Leaving the list, or closing the themer, ends the
+  // session: the themer only hides this sidebar, and that tears the effect
+  // down, so the cleanup aborts the session — and the request linked to it —
+  // before a result can apply a theme with no bar left to undo it.
   useEffect(() => {
-    if (!inList) generationRef.current?.abort()
+    const session = new AbortController()
+
+    sessionRef.current = session
+    if (!inList) session.abort()
+
+    return () => {
+      session.abort()
+    }
   }, [inList])
 
   const {themes, removed, active} = useSelector(
@@ -147,7 +159,7 @@ export function ThemerSidebar({
             active={active}
             generator={
               canGenerate && generatorOpen
-                ? {client, onClose: closeGenerator, controllerRef: generationRef}
+                ? {client, onClose: closeGenerator, requestRef, sessionRef}
                 : null
             }
             removed={removed}
