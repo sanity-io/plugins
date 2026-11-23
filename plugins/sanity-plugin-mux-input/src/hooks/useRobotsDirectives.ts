@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import {listRobotsDirectives} from '../actions/robots'
 import {capabilityFromError} from '../robots/capability'
 import type {RobotsCapability, RobotsDirective} from '../robots/types'
+import {linkedVersion} from '../robots/versions'
 import {useClient} from './useClient'
 
 /** One page. A page that comes back full may not be all of them. */
@@ -48,6 +49,17 @@ export function directiveNamesById(
     for (const directive of listing.directives) names[directive.id] = directive.name || directive.id
   }
   return names
+}
+
+/**
+ * Listed directives made with Robots v0. They still run when an upload attaches them, but the
+ * Studio only runs v1 directives itself.
+ */
+export function v0DirectiveIds(listing: RobotsDirectiveListing): string[] {
+  if (listing.status !== 'loaded') return []
+  return listing.directives
+    .filter((directive) => linkedVersion(directive) === 'v0')
+    .map((directive) => directive.id)
 }
 
 /** Configured ids a complete listing doesn't have. A failed or full listing is no evidence. */

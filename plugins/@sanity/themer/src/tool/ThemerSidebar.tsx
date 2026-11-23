@@ -3,12 +3,15 @@ import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {Box, Card, Flex, Text} from '@sanity/ui'
 import {useSelector} from '@xstate/react'
 import {dequal} from 'dequal/lite'
-import {Activity, startTransition} from 'react'
+import {Activity, startTransition, useEffect, useRef, useState} from 'react'
+import {useClient} from 'sanity'
 
 import type {ThemerView} from '#context'
 import type {ThemerProps} from '#types'
 
 import {addThemerTransitionType} from './addThemerTransitionType'
+import {AnimatedSparklesIcon} from './AnimatedSparklesIcon'
+import {AGENT_API_VERSION, canGenerateThemes} from './generateTheme'
 import type {ThemerSnapshot} from './machine'
 import {RemovedThemes} from './RemovedThemes'
 import {ThemeEditor} from './ThemeEditor'
@@ -43,6 +46,21 @@ export function ThemerSidebar({
 }: Pick<ThemerProps, 'actorRef' | 'dispatch' | 'navbarHeight' | 'split'>) {
   const view = useSelector(actorRef, selectView, sameView)
   const isTooSmallForSplitScreen = useIsTooSmallForSplitScreen()
+  const client = useClient({apiVersion: AGENT_API_VERSION})
+  // Studios whose client predates Agent Actions have nothing to generate with
+  const canGenerate = canGenerateThemes(client)
+  const [generatorOpen, setGeneratorOpen] = useState(false)
+  const generationRef = useRef<AbortController | null>(null)
+  const closeGenerator = () => {
+    generationRef.current?.abort()
+    setGeneratorOpen(false)
+  }
+  const inList = view.name === 'list'
+
+  // A theme that arrives while the list is out of sight would apply under whatever is open
+  useEffect(() => {
+    if (!inList) generationRef.current?.abort()
+  }, [inList])
 
   const {themes, removed, active} = useSelector(
     actorRef,
@@ -71,6 +89,19 @@ export function ThemerSidebar({
             {/* Packed without gaps, so the title still fits next to them at the
                 narrowest sidebar width */}
             <Flex>
+              {canGenerate && view.name === 'list' && (
+                <TooltipButton
+                  aria-pressed={generatorOpen}
+                  data-testid="themer-generate"
+                  icon={AnimatedSparklesIcon}
+                  mode="bleed"
+                  onClick={() => (generatorOpen ? closeGenerator() : setGeneratorOpen(true))}
+                  padding={2}
+                  selected={generatorOpen}
+                  tone="primary"
+                  tooltip="Generate a theme from a description, with AI credits"
+                />
+              )}
               {!isTooSmallForSplitScreen && (
                 <TooltipButton
                   aria-pressed={split}
@@ -111,7 +142,17 @@ export function ThemerSidebar({
         </Card>
 
         <Activity key="list" mode={view.name === 'list' ? 'visible' : 'hidden'}>
-          <ThemeList actorRef={actorRef} active={active} removed={removed} themes={themes} />
+          <ThemeList
+            actorRef={actorRef}
+            active={active}
+            generator={
+              canGenerate && generatorOpen
+                ? {client, onClose: closeGenerator, controllerRef: generationRef}
+                : null
+            }
+            removed={removed}
+            themes={themes}
+          />
         </Activity>
         {view.name === 'edit' && (
           <ThemeEditor

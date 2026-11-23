@@ -1,5 +1,5 @@
 import {uuid as generateUuid} from '@sanity/uuid'
-import {concat, defer, from, type Observable, of, throwError} from 'rxjs'
+import {concat, defer, from, lastValueFrom, type Observable, of, throwError} from 'rxjs'
 import {catchError, mergeMap, switchMap} from 'rxjs/operators'
 import type {SanityClient} from 'sanity'
 
@@ -46,6 +46,14 @@ function cancelUpload(client: SanityClient, uuid: string) {
     method: 'DELETE',
     query: PLUGIN_VERSION_QUERY,
   })
+}
+
+/**
+ * Drops an unfinished upload: the proxy cancels it in Mux and deletes its document. When the
+ * proxy can't, only the document is deleted, and Mux lets the upload time out.
+ */
+export function discardUpload(client: SanityClient, uuid: string): Promise<unknown> {
+  return lastValueFrom(cancelUpload(client, uuid)).catch(() => client.delete(uuid))
 }
 
 export function uploadUrl({
@@ -211,7 +219,7 @@ function getUpload(client: SanityClient, assetId: string) {
   })
 }
 
-function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse> {
+export function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse> {
   const maxTries = 10
   let pollInterval: number
   let tries = 0
@@ -222,6 +230,8 @@ function pollUpload(client: SanityClient, uuid: string): Promise<UploadResponse>
       try {
         upload = await getUpload(client, uuid)
       } catch (err) {
+        // A cancelled upload or a deleted document fails every time, so stop asking.
+        clearInterval(pollInterval)
         reject(err)
         return
       }

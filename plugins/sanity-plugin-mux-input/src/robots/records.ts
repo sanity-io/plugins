@@ -7,6 +7,7 @@ import {
   type RobotsDirectiveRunRecord,
   type RobotsFields,
   type RobotsJob,
+  type RobotsAnalyzeStructureOutput,
   type RobotsJobRecord,
   type RobotsModerateOutput,
   type RobotsOutputs,
@@ -15,6 +16,7 @@ import {
   type RobotsWorkflow,
   robotsJobErrorMessage,
 } from './types'
+import {linkedVersion, ROBOTS_API_VERSION} from './versions'
 
 /**
  * What Mux says, turned into what `mux.videoAsset` stores. Every merge returns the same
@@ -32,6 +34,9 @@ export interface RobotsDocumentState extends RobotsFields {
 
 /** A job or run unfinished for longer than this stops keeping the poll alive. */
 const ROBOTS_STALE_JOB_MS = 6 * 60 * 60 * 1000
+
+/** Mux deletes a job 30 days after it ran. */
+const MUX_JOB_RETENTION_S = 30 * 24 * 60 * 60
 
 /** Ids become `_key`s and keyed patch paths, so anything else is never stored. */
 const SAFE_KEY = /^[A-Za-z0-9_-]+$/
@@ -87,23 +92,58 @@ export function mergeJobRecords(
   return changed ? next : existing
 }
 
-function extractSummarizeOutput(job: RobotsJob): RobotsSummarizeOutput | undefined {
-  const outputs = job.outputs ?? {}
+function textOutput(outputs: Record<string, unknown>, key: string): string | undefined {
+  return typeof outputs[key] === 'string' ? outputs[key] : undefined
+}
+
+function tagsOutput(outputs: Record<string, unknown>): string[] | undefined {
   const tags = Array.isArray(outputs['tags'])
     ? outputs['tags'].filter((tag): tag is string => typeof tag === 'string')
     : []
+  return tags.length > 0 ? tags : undefined
+}
+
+function extractSummarizeOutput(job: RobotsJob): RobotsSummarizeOutput | undefined {
+  const outputs = job.outputs ?? {}
   const output = compact<RobotsSummarizeOutput>({
     jobId: job.id,
     completedAt: job.updated_at,
-    title: typeof outputs['title'] === 'string' ? outputs['title'] : undefined,
-    description: typeof outputs['description'] === 'string' ? outputs['description'] : undefined,
-    tags: tags.length > 0 ? tags : undefined,
+    title: textOutput(outputs, 'title'),
+    description: textOutput(outputs, 'description'),
+    tags: tagsOutput(outputs),
   })
   return output.title || output.description || output.tags ? output : undefined
 }
 
+function extractAnalyzeStructureOutput(job: RobotsJob): RobotsAnalyzeStructureOutput | undefined {
+  const outputs = job.outputs ?? {}
+  const output = compact<RobotsAnalyzeStructureOutput>({
+    jobId: job.id,
+    completedAt: job.updated_at,
+    title: textOutput(outputs, 'title'),
+    summary: textOutput(outputs, 'summary'),
+    tags: tagsOutput(outputs),
+  })
+  return output.title || output.summary || output.tags ? output : undefined
+}
+
+/** What v1 Moderate checks, each reported with a status. v0 reports neither. */
+const MODERATED_SURFACES = ['thumbnail_moderation', 'transcript_moderation']
+
+/** A v1 Moderate job that checked neither the frames nor the captions says nothing about the video. */
+export function moderatedNothing(outputs: Record<string, unknown>): boolean {
+  const statuses = MODERATED_SURFACES.map((key) => {
+    const surface = outputs[key]
+    return surface && typeof surface === 'object'
+      ? (surface as {status?: unknown}).status
+      : undefined
+  })
+  return statuses.some((status) => status !== undefined) && !statuses.includes('completed')
+}
+
 function extractModerateOutput(job: RobotsJob): RobotsModerateOutput | undefined {
   const outputs = job.outputs ?? {}
+  if (moderatedNothing(outputs)) return undefined
   const maxScores = (outputs['max_scores'] ?? {}) as Record<string, unknown>
   const scores = compact({
     sexual: typeof maxScores['sexual'] === 'number' ? maxScores['sexual'] : undefined,
@@ -141,7 +181,7 @@ function isNewerOutput(
   return candidateAt > currentAt || (candidateAt === currentAt && candidate.jobId > current.jobId)
 }
 
-function newestOutput<T extends {jobId: string; completedAt?: number}>(
+export function newestOutput<T extends {jobId: string; completedAt?: number}>(
   current: T | undefined,
   candidates: (T | undefined)[],
 ): T | undefined {
@@ -162,12 +202,49 @@ function mergeRobotsOutputs(
     existing?.summarize,
     completed.filter((job) => job.workflow === 'summarize').map(extractSummarizeOutput),
   )
+  const analyzeStructure = newestOutput(
+    existing?.analyzeStructure,
+    completed
+      .filter((job) => job.workflow === 'analyze-structure')
+      .map(extractAnalyzeStructureOutput),
+  )
   const moderate = newestOutput(
     existing?.moderate,
     completed.filter((job) => job.workflow === 'moderate').map(extractModerateOutput),
   )
-  if (summarize === existing?.summarize && moderate === existing?.moderate) return existing
-  return compact<RobotsOutputs>({_type: 'mux.robotsOutputs', summarize, moderate})
+  if (
+    summarize === existing?.summarize &&
+    analyzeStructure === existing?.analyzeStructure &&
+    moderate === existing?.moderate
+  ) {
+    return existing
+  }
+  return compact<RobotsOutputs>({
+    _type: 'mux.robotsOutputs',
+    summarize,
+    analyzeStructure,
+    moderate,
+  })
+}
+
+/** What the document kept of a job's output, in Mux's shape, for once Mux has deleted the job. */
+export function keptJobOutputs(
+  outputs: RobotsOutputs | undefined,
+  jobId: string,
+): Record<string, unknown> | undefined {
+  if (outputs?.summarize?.jobId === jobId) {
+    const {title, description, tags} = outputs.summarize
+    return compact({title, description, tags})
+  }
+  if (outputs?.analyzeStructure?.jobId === jobId) {
+    const {title, summary, tags} = outputs.analyzeStructure
+    return compact({title, summary, tags})
+  }
+  if (outputs?.moderate?.jobId === jobId) {
+    const {exceedsThreshold, maxScores} = outputs.moderate
+    return compact({exceeds_threshold: exceedsThreshold, max_scores: maxScores})
+  }
+  return undefined
 }
 
 /** Records every job read for the asset and folds in the newest outputs. */
@@ -318,6 +395,38 @@ export function activeJobs<T extends {status?: string; created_at?: number}>(
   return jobs.filter((job) => !isTerminalStatus(job.status) && isRecent(job.created_at, now))
 }
 
+/**
+ * Workflows with a v0 job in progress, from a Studio on an older plugin or a v0 directive. v1
+ * refuses a duplicate with a 409 only within its own version, so a run of one of these bills twice.
+ */
+export function workflowsRunningOnV0(jobs: RobotsJob[], now = Date.now()): ReadonlySet<string> {
+  return new Set(
+    activeJobs(jobs, now)
+      .filter((job) => linkedVersion(job) === 'v0')
+      .map((job) => job.workflow),
+  )
+}
+
+/**
+ * A record the job list leaves out (list items carry `_links`), old enough that Mux has deleted
+ * the job: only what the document recorded is left.
+ */
+export function isDeletedByMux(
+  job: Pick<RobotsJob, 'created_at' | '_links'>,
+  now = Date.now(),
+): boolean {
+  return (
+    !job._links &&
+    typeof job.created_at === 'number' &&
+    now / 1000 - job.created_at > MUX_JOB_RETENTION_S
+  )
+}
+
+/** A record Mux deleted before the Studio saw it finish has no status worth showing. */
+export function shownJobStatus(job: RobotsJob, now = Date.now()): RobotsJob['status'] | undefined {
+  return isDeletedByMux(job, now) && !isTerminalStatus(job.status) ? undefined : job.status
+}
+
 /** Directive runs that may still dispatch work, which carries the loop between workflows. */
 export function activeDirectiveRuns(
   runs: RobotsDirectiveRun[],
@@ -370,6 +479,7 @@ function newPendingCreate(
     requestId,
     ...fields,
     requestedAt: Math.floor(nowMs / 1000),
+    apiVersion: ROBOTS_API_VERSION,
   }
 }
 
@@ -448,6 +558,17 @@ interface MatchCandidate {
   at: number
 }
 
+/**
+ * A v1 create is never resolved by a v0 job, from a v0 directive or an older Studio. A placeholder
+ * without a version, from before Robots v1, matches either.
+ */
+function isSameVersion(pending: RobotsPendingCreate, job: RobotsJob): boolean {
+  const wanted =
+    pending.apiVersion === 'v0' || pending.apiVersion === 'v1' ? pending.apiVersion : undefined
+  const version = linkedVersion(job)
+  return !wanted || !version || version === wanted
+}
+
 function closestTo(requestedAt: number, candidates: MatchCandidate[]): MatchCandidate | undefined {
   return candidates.toSorted(
     (a, b) =>
@@ -493,6 +614,7 @@ export function matchPendingCreates(
       pending.kind === 'job'
         ? jobs.flatMap((job) =>
             job.workflow === pending.workflow &&
+            isSameVersion(pending, job) &&
             !recordedJobIds.has(job.id) &&
             typeof job.created_at === 'number'
               ? [{id: job.id, at: job.created_at}]
@@ -714,6 +836,7 @@ export type RobotsJobDetailState = 'loaded' | 'unreadable' | 'unread'
 export function unitsCell(
   job: RobotsJob,
   detail: RobotsJobDetailState,
+  now = Date.now(),
 ): {label: string; isLoadable: boolean} {
   if (job.status === 'errored' || job.status === 'cancelled') {
     return {label: 'Not charged', isLoadable: false}
@@ -721,6 +844,7 @@ export function unitsCell(
   if (typeof job.units_consumed === 'number') {
     return {label: String(job.units_consumed), isLoadable: false}
   }
+  if (isDeletedByMux(job, now)) return {label: 'Unavailable', isLoadable: false}
   if (!isTerminalStatus(job.status)) return {label: 'Not counted yet', isLoadable: false}
   if (detail === 'unreadable') return {label: 'Unavailable', isLoadable: false}
   if (detail === 'loaded') return {label: 'Not reported', isLoadable: false}
@@ -728,6 +852,12 @@ export function unitsCell(
 }
 
 // --- Thumbnails ---
+
+/** Whether Mux reports it couldn't set the asset's thumbnail. Absent until the job completes. */
+function thumbnailUpdateFailed(job: RobotsJob): boolean {
+  const updates = job.outputs?.['asset_updates'] as {thumbnail?: {status?: unknown}} | undefined
+  return updates?.thumbnail?.status === 'failed'
+}
 
 /** Recent jobs only: an old one must not overwrite a thumbnail someone picked since. */
 export function thumbnailJobsToApply(
@@ -745,6 +875,7 @@ export function thumbnailJobsToApply(
       job.workflow === 'find-best-thumbnails' &&
       job.status === 'completed' &&
       job.parameters?.['update_asset_thumbnail'] === true &&
+      !thumbnailUpdateFailed(job) &&
       unapplied.has(job.id) &&
       isRecent(job.updated_at ?? job.created_at, now),
   )

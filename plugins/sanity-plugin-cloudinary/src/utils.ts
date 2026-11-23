@@ -5,6 +5,7 @@ import type {
   CloudinaryAsset,
   CloudinaryAssetResponse,
   CloudinaryMediaLibrary,
+  CloudinaryVideoPreviewOptions,
   InsertHandlerParams,
   ShowHandlerParams,
 } from './types'
@@ -249,4 +250,56 @@ export function decodeSourceId(sourceId: string): CloudinaryAssetResponse | unde
     // Do nothing
   }
   return sourceIdDecoded
+}
+
+export type VideoPreviewSources = {
+  src: string
+  fallbackSrc?: string
+  poster?: string
+}
+
+const SIGNED_URL = /\/s--[^/]+--\//
+
+/**
+ * Apply the plugin's opt-in `videoPreview` options to a video's preview URL. Returns the
+ * URL unchanged unless an option asks for a transformation and the asset can take one.
+ */
+export function videoPreviewSources(
+  asset: Pick<CloudinaryAsset, 'derived' | 'resource_type' | 'type'>,
+  url: string,
+  options: CloudinaryVideoPreviewOptions,
+): VideoPreviewSources {
+  const {transformation, poster} = options
+  const transformable =
+    asset.resource_type === 'video' &&
+    !asset.derived?.length &&
+    (!asset.type || asset.type === 'upload') &&
+    url.includes('/video/upload/') &&
+    // A transformation changes the path a signature covers, so a signed URL would break.
+    !SIGNED_URL.test(url)
+
+  if (!transformable) {
+    return {src: url}
+  }
+
+  return {
+    src: transformation ? withTransformation(url, transformation) : url,
+    // When Cloudinary refuses the transformation, the browser moves on to the next <source>.
+    fallbackSrc: transformation ? url : undefined,
+    poster: poster
+      ? asJpg(withTransformation(url, transformation ? `so_0,${transformation}` : 'so_0'))
+      : undefined,
+  }
+}
+
+function withTransformation(url: string, transformation: string): string {
+  return url.replace('/video/upload/', `/video/upload/${transformation}/`)
+}
+
+function asJpg(url: string): string {
+  const [path = '', query] = url.split('?')
+  const lastSlash = path.lastIndexOf('/')
+  const lastDot = path.lastIndexOf('.')
+  const base = lastDot > lastSlash ? path.slice(0, lastDot) : path
+  return query === undefined ? `${base}.jpg` : `${base}.jpg?${query}`
 }

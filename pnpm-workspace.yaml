@@ -124,6 +124,8 @@ dedupeDirectDeps: true
 
 dedupePeers: true
 linkWorkspacePackages: deep
+lockfile:
+  format: v13
 strictPeerDependencies: false
 
 # minimumReleaseAge defaults to 1440 (1 day) since pnpm v11 — do not set it
@@ -206,7 +208,6 @@ minimumReleaseAgeExclude:
   - vitest
   - yuku-parser
   - cac@7.1.0
-  - i18next@26.4.4
 
 overrides:
   '@types/node': 'catalog:'

@@ -14,6 +14,7 @@ import {useId, useRef} from 'react'
 
 import type {ThemerProps} from '#types'
 
+import {GenerateThemeBar, type GenerateThemeBarProps} from './GenerateThemeBar'
 import {ImageFileInput} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
 import type {ThemerSnapshot} from './machine'
@@ -43,7 +44,11 @@ export function ThemeList({
   themes,
   removed,
   active,
-}: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'>) {
+  generator,
+}: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'> & {
+  /** The bar that generates a theme from a description, while it is open */
+  generator: Pick<GenerateThemeBarProps, 'client' | 'onClose' | 'controllerRef'> | null
+}) {
   const {addThemeFromClipboard} = useThemeCodes({actorRef})
   // Which of the list's dialogs is open is the machine's: a state of the list flow
   const dialog = useSelector(actorRef, selectDialog)
@@ -65,6 +70,14 @@ export function ThemeList({
   return (
     // The list's own box is the query container of its grid (`ThemeList.module.css`)
     <Flex className={styles.root} direction="column" flex={1}>
+      {generator && (
+        <GenerateThemeBar
+          actorRef={actorRef}
+          client={generator.client}
+          onClose={generator.onClose}
+          controllerRef={generator.controllerRef}
+        />
+      )}
       <ScrollArea padding={3}>
         <Stack gap={4}>
           {/* The group tells a column from a grid by measuring the cards, and

@@ -1,8 +1,8 @@
+import type {Dispatch} from '@reduxjs/toolkit'
 import type {MutationEvent, SanityClient} from '@sanity/client'
 import groq from 'groq'
 import {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import type {Dispatch} from 'redux'
 import type {AssetSourceComponentProps} from 'sanity'
 
 import {inputs} from '../../config/searchFacets'

@@ -2,9 +2,10 @@ import {useSecrets} from '@sanity/studio-secrets'
 import {DiffFromTo} from 'sanity'
 
 import type {CloudinaryAsset} from '../types'
-import {assetUrl} from '../utils'
+import {assetUrl, videoPreviewSources} from '../utils'
 import {namespace, type Secrets} from './SecretsConfigView'
 import VideoPlayer from './VideoPlayer'
+import {useVideoPreviewOptions} from './VideoPreviewOptions'
 
 type Props = {
   value: CloudinaryAsset | undefined
@@ -13,6 +14,7 @@ type Props = {
 const CloudinaryDiffPreview = ({value}: Props) => {
   const {secrets} = useSecrets<Secrets>(namespace)
   const cloudName = secrets?.cloudName
+  const videoPreview = useVideoPreviewOptions()
 
   if (!value) {
     return null
@@ -29,7 +31,11 @@ const CloudinaryDiffPreview = ({value}: Props) => {
           justifyContent: 'space-between',
         }}
       >
-        <VideoPlayer src={url} kind="diff" />
+        <VideoPlayer
+          {...videoPreviewSources(value, url, videoPreview)}
+          preload={videoPreview.preload}
+          kind="diff"
+        />
       </section>
     )
   }

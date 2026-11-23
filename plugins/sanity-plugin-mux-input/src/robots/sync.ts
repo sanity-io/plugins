@@ -133,6 +133,21 @@ export const EMPTY_ROBOTS_SNAPSHOT: RobotsSyncSnapshot = {
   links: new Map(),
 }
 
+/** v1 also answers 409 when the asset or a caption track isn't ready yet. */
+const NOT_READY_TYPES: ReadonlySet<string> = new Set(['asset_not_ready', 'track_not_ready'])
+
+/**
+ * Runs go to v1 only. A v0 directive is 404 there, and the picker marks one only when the
+ * directive list has loaded.
+ */
+const DIRECTIVE_NOT_ON_V1: RobotsToast = {
+  status: 'error',
+  title: 'Mux has no Robots v1 directive with this ID',
+  description:
+    'It may have been deleted, or made with Robots v0, which the Studio doesn’t run. A ' +
+    'developer can create a v1 copy in the Mux dashboard.',
+}
+
 const isRefusal = (error: unknown): error is RobotsRequestError =>
   error instanceof RobotsRequestError &&
   error.status !== undefined &&
@@ -544,7 +559,7 @@ export class RobotsSyncStore {
 
   private async readDetail(job: RobotsJob): Promise<boolean> {
     try {
-      const detail = (await getRobotsJob(this.client, job.workflow, job.id)).data
+      const detail = (await getRobotsJob(this.client, job)).data
       // The single-job GET can trail the list. Kept out of `details`, it can't undo the list's
       // terminal status, and it's read again a few times.
       const reads = (this.trailingDetails.get(job.id)?.reads ?? 0) + 1
@@ -796,11 +811,23 @@ export class RobotsSyncStore {
   private settleRefusal(
     pending: RobotsPendingCreate,
     error: RobotsRequestError,
-    alreadyRunning: string,
+    {alreadyRunning, notFound}: {alreadyRunning: string; notFound?: RobotsToast},
     notify: Notify,
   ) {
     this.settle([pending])
     this.removePlaceholders([pending.requestId])
+    if (notFound && error.status === 404 && error.muxAnswered) {
+      notify(notFound)
+      return
+    }
+    if (error.status === 409 && error.type && NOT_READY_TYPES.has(error.type)) {
+      notify({
+        status: 'warning',
+        title: 'This video isn’t ready for this run yet',
+        description: error.message,
+      })
+      return
+    }
     if (error.status === 409) {
       notify({status: 'warning', title: alreadyRunning})
       this.readEverything()
@@ -852,7 +879,10 @@ export class RobotsSyncStore {
           this.settleRefusal(
             pending,
             error,
-            'This workflow is already running on this video with the same settings.',
+            {
+              alreadyRunning:
+                'This workflow is already running on this video with the same settings.',
+            },
             notify,
           )
         } else {
@@ -899,7 +929,10 @@ export class RobotsSyncStore {
           this.settleRefusal(
             pending,
             error,
-            'This directive is already running on this video.',
+            {
+              alreadyRunning: 'This directive is already running on this video.',
+              notFound: DIRECTIVE_NOT_ON_V1,
+            },
             notify,
           )
         } else {
@@ -930,7 +963,7 @@ export class RobotsSyncStore {
   async cancelJob(job: RobotsJob, notify: Notify) {
     this.set({cancellingJobIds: new Set([...this.snapshot.cancellingJobIds, job.id])})
     try {
-      await cancelRobotsJob(this.client, job.id)
+      await cancelRobotsJob(this.client, job)
     } catch (error) {
       // A 409 means it finished first; the refresh below shows how.
       if (!(error instanceof RobotsRequestError && error.status === 409)) {

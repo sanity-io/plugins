@@ -252,6 +252,38 @@ Video assets gets a video player preview in the Studio
 }
 ```
 
+### Video preview options
+
+By default the preview player streams the stored URL, which is the full-size original. To
+cut the bandwidth previews use, pass `videoPreview` to `cloudinarySchemaPlugin` (or
+`cloudinaryReferencePlugin`). Every option is off unless you set it.
+
+```javascript
+cloudinarySchemaPlugin({
+  videoPreview: {
+    // Play a small copy instead of the original
+    transformation: 'q_auto,w_640',
+    // Load nothing until the editor presses play
+    preload: 'none',
+    // Show a still of the first frame before playback
+    poster: true,
+  },
+})
+```
+
+- `transformation`: Cloudinary generates the transformed video the first time it's
+  requested, and that counts toward your plan's transformation usage. It saves the most when
+  originals are large or previewed often. If Cloudinary rejects the transformation (for
+  example, because the original is over your plan's limit for on-the-fly video
+  transformations), the player falls back to the original.
+- `preload`: `'none'` stops the browser from downloading any video before playback. It
+  doesn't create any transformations.
+- `poster`: one image per video, built from the first frame with `transformation` applied
+  if set.
+
+Signed URLs, private or authenticated assets, and videos with a Media Library derived
+transformation always play as stored.
+
 ## License
 
 MIT-licensed. See LICENSE.

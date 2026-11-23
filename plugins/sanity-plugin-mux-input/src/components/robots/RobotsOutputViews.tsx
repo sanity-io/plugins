@@ -5,12 +5,14 @@ import {
   asRows,
   asStrings,
   EM_DASH,
+  formatMediaSpan,
+  formatMediaTime,
   formatOffset,
-  formatOffsetMs,
   formatScore,
   formatText,
 } from '../../robots/format'
-import type {RobotsWorkflow} from '../../robots/types'
+import {moderatedNothing} from '../../robots/records'
+import type {RobotsJobWorkflow} from '../../robots/types'
 import {RobotsJsonBlock} from './RobotsJsonBlock'
 import {RobotsNote} from './RobotsNote'
 
@@ -63,30 +65,147 @@ function Tags({tags, tone = 'default'}: {tags: string[]; tone?: 'default' | 'pri
   )
 }
 
-const SUMMARIZE: OutputView = {
-  hasContent: (outputs) =>
+/** v1 reports each asset update a job was asked for under `asset_updates`. */
+function assetUpdates(outputs: Outputs): {
+  title?: unknown
+  chapters?: unknown
+  thumbnail?: unknown
+} {
+  const updates = outputs['asset_updates']
+  return updates && typeof updates === 'object' ? updates : {}
+}
+
+const TITLE_UPDATE = {
+  done: 'The title was written to the Mux video. Resync the video to see it in the Studio.',
+  failed: 'Mux couldn’t write the title to the video.',
+}
+
+const CHAPTERS_UPDATE = {
+  done: 'The chapters were added to the Mux video as its chapters track.',
+  failed: 'Mux couldn’t add these chapters to the video. They’re still listed below.',
+}
+
+const THUMBNAIL_UPDATE = {
+  done: 'Mux set the best frame as the video’s thumbnail.',
+  failed: 'Mux couldn’t set the video’s thumbnail, so the Studio kept its own.',
+}
+
+/** The outcome of an asset update, or `unreported` when the job reports none. */
+function AssetUpdateNote({
+  assetUpdate,
+  done,
+  failed,
+  unreported = null,
+}: {
+  assetUpdate: unknown
+  done: string
+  failed: string
+  unreported?: ReactElement | null
+}) {
+  const status = (assetUpdate as {status?: unknown} | undefined)?.status
+  if (status === 'updated' || status === 'created') {
+    return <RobotsNote tone="positive">{done}</RobotsNote>
+  }
+  if (status === 'failed') return <RobotsNote tone="caution">{failed}</RobotsNote>
+  return unreported
+}
+
+/** Summarize calls the text `description`, Analyze structure `summary`. */
+function hasSummary(outputs: Outputs, textKey: 'description' | 'summary'): boolean {
+  return (
     typeof outputs['title'] === 'string' ||
-    typeof outputs['description'] === 'string' ||
-    asStrings(outputs['tags']).length > 0,
-  render: (outputs) => (
-    <Stack gap={4}>
+    typeof outputs[textKey] === 'string' ||
+    asStrings(outputs['tags']).length > 0
+  )
+}
+
+function Summary({outputs, textKey}: {outputs: Outputs; textKey: 'description' | 'summary'}) {
+  const text = outputs[textKey]
+  const tags = asStrings(outputs['tags'])
+  return (
+    <>
       {typeof outputs['title'] === 'string' && (
         <Labelled label="Title">
           <Text size={1}>{outputs['title']}</Text>
         </Labelled>
       )}
-      {typeof outputs['description'] === 'string' && (
-        <Labelled label="Description">
-          <Text size={1}>{outputs['description']}</Text>
+      {typeof text === 'string' && (
+        <Labelled label={textKey === 'summary' ? 'Summary' : 'Description'}>
+          <Text size={1}>{text}</Text>
         </Labelled>
       )}
-      {asStrings(outputs['tags']).length > 0 && (
+      {tags.length > 0 && (
         <Labelled label="Tags">
-          <Tags tags={asStrings(outputs['tags'])} />
+          <Tags tags={tags} />
         </Labelled>
       )}
+    </>
+  )
+}
+
+const SUMMARIZE: OutputView = {
+  hasContent: (outputs) => hasSummary(outputs, 'description'),
+  render: (outputs) => (
+    <Stack gap={4}>
+      <AssetUpdateNote assetUpdate={assetUpdates(outputs).title} {...TITLE_UPDATE} />
+      <Summary outputs={outputs} textKey="description" />
     </Stack>
   ),
+}
+
+interface ModeratedSurface {
+  status?: unknown
+  skip_reason?: unknown
+  skip_message?: unknown
+}
+
+function surfaceOf(outputs: Outputs, key: string): ModeratedSurface {
+  const surface = outputs[key]
+  return surface && typeof surface === 'object' ? surface : {}
+}
+
+/** Skips a reader expects (no frames on audio-only, the transcript turned off) get no note. */
+const MODERATED_SURFACES = [
+  {
+    key: 'thumbnail_moderation',
+    name: 'the frames',
+    expectedSkip: 'no_video_track',
+    skipped: 'The frames weren’t moderated',
+  },
+  {
+    key: 'transcript_moderation',
+    name: 'what is said',
+    expectedSkip: 'disabled',
+    skipped: 'What is said wasn’t moderated',
+  },
+]
+
+/** v1 reports what each surface moderated; v0 reports neither. */
+function ModeratedSurfaceNotes({outputs}: {outputs: Outputs}) {
+  return MODERATED_SURFACES.map(({key, name, expectedSkip, skipped}) => {
+    const surface = surfaceOf(outputs, key)
+    if (surface.status === 'failed') {
+      // The scores only come from the other surface when it was moderated.
+      const scoredBy = MODERATED_SURFACES.find(
+        (other) => other.key !== key && surfaceOf(outputs, other.key).status === 'completed',
+      )?.name
+      return (
+        <RobotsNote key={key} tone="caution">
+          {scoredBy
+            ? `Mux couldn’t moderate ${name}, so the scores come from ${scoredBy}.`
+            : `Mux couldn’t moderate ${name}.`}
+        </RobotsNote>
+      )
+    }
+    if (surface.status !== 'skipped' || surface.skip_reason === expectedSkip) return null
+    return (
+      <RobotsNote key={key}>
+        {typeof surface.skip_message === 'string'
+          ? `${skipped}: ${surface.skip_message}`
+          : `${skipped}.`}
+      </RobotsNote>
+    )
+  })
 }
 
 const MODERATE: OutputView = {
@@ -95,20 +214,30 @@ const MODERATE: OutputView = {
     Object.keys(outputs['max_scores'] ?? {}).length > 0,
   render: (outputs) => (
     <Stack gap={3}>
-      <Flex>
-        <Badge
-          tone={outputs['exceeds_threshold'] ? 'critical' : 'positive'}
-          fontSize={1}
-          padding={2}
-        >
-          {outputs['exceeds_threshold'] ? 'Exceeds a threshold' : 'Within thresholds'}
-        </Badge>
-      </Flex>
-      {Object.entries((outputs['max_scores'] ?? {}) as Outputs).map(([category, score]) => (
-        <Text key={category} size={1}>
-          Highest {category} score: {formatScore(score)}
-        </Text>
-      ))}
+      <ModeratedSurfaceNotes outputs={outputs} />
+      {moderatedNothing(outputs) ? (
+        <RobotsNote tone="caution">
+          Mux moderated nothing in this video, so this result doesn’t say whether it’s within the
+          thresholds.
+        </RobotsNote>
+      ) : (
+        <>
+          <Flex>
+            <Badge
+              tone={outputs['exceeds_threshold'] ? 'critical' : 'positive'}
+              fontSize={1}
+              padding={2}
+            >
+              {outputs['exceeds_threshold'] ? 'Exceeds a threshold' : 'Within thresholds'}
+            </Badge>
+          </Flex>
+          {Object.entries((outputs['max_scores'] ?? {}) as Outputs).map(([category, score]) => (
+            <Text key={category} size={1}>
+              Highest {category} score: {formatScore(score)}
+            </Text>
+          ))}
+        </>
+      )}
     </Stack>
   ),
 }
@@ -144,25 +273,24 @@ const ASK_QUESTIONS: OutputView = {
   ),
 }
 
-/** `asset_update` is present only when the job ran with `update_asset_chapters`. */
-function ChaptersAssetUpdateNote({assetUpdate}: {assetUpdate: unknown}) {
-  const status = (assetUpdate as {status?: unknown} | undefined)?.status
-  if (status === 'created') {
-    return (
-      <RobotsNote tone="positive">
-        The chapters were added to the Mux video as its chapters track.
-      </RobotsNote>
-    )
-  }
-  if (status === 'failed') {
-    return (
-      <RobotsNote tone="caution">
-        Mux couldn’t add these chapters to the video. They’re still listed below.
-      </RobotsNote>
-    )
-  }
+/**
+ * Present only when the job ran with `update_asset_chapters`: v1 reports it in
+ * `asset_updates.chapters`, v0 in `asset_update`.
+ */
+function chaptersAssetUpdate(outputs: Outputs): unknown {
+  return assetUpdates(outputs).chapters ?? outputs['asset_update']
+}
+
+function Chapters({chapters}: {chapters: Outputs[]}) {
   return (
-    <RobotsNote>These chapters weren’t added to the Mux video; they’re listed below.</RobotsNote>
+    <Stack gap={2}>
+      {chapters.map((chapter, index) => (
+        // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
+        <Text key={index} size={1}>
+          {formatOffset(chapter['start_time'])} — {formatText(chapter['title'])}
+        </Text>
+      ))}
+    </Stack>
   )
 }
 
@@ -170,15 +298,16 @@ const GENERATE_CHAPTERS: OutputView = {
   hasContent: (outputs) => asRows(outputs['chapters']).length > 0,
   render: (outputs) => (
     <Stack gap={3}>
-      <ChaptersAssetUpdateNote assetUpdate={outputs['asset_update']} />
-      <Stack gap={2}>
-        {asRows(outputs['chapters']).map((chapter, index) => (
-          // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
-          <Text key={index} size={1}>
-            {formatOffset(chapter['start_time'])} — {formatText(chapter['title'])}
-          </Text>
-        ))}
-      </Stack>
+      <AssetUpdateNote
+        assetUpdate={chaptersAssetUpdate(outputs)}
+        {...CHAPTERS_UPDATE}
+        unreported={
+          <RobotsNote>
+            These chapters weren’t added to the Mux video; they’re listed below.
+          </RobotsNote>
+        }
+      />
+      <Chapters chapters={asRows(outputs['chapters'])} />
     </Stack>
   ),
 }
@@ -203,11 +332,11 @@ function Narratives({moment}: {moment: Outputs}) {
   )
 }
 
-const FIND_KEY_MOMENTS: OutputView = {
-  hasContent: (outputs) => asRows(outputs['moments']).length > 0,
-  render: (outputs) => (
+/** Find key moments calls them `moments`, Analyze structure `key_moments`. */
+function KeyMoments({moments}: {moments: Outputs[]}) {
+  return (
     <Stack gap={2}>
-      {asRows(outputs['moments']).map((moment, index) => {
+      {moments.map((moment, index) => {
         const concepts = [
           ...asStrings(moment['notable_audible_concepts']),
           ...asRows(moment['notable_visual_concepts']).map((concept) =>
@@ -219,7 +348,7 @@ const FIND_KEY_MOMENTS: OutputView = {
             // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
             key={index}
             title={formatText(moment['title'])}
-            meta={`${formatOffsetMs(moment['start_ms'])} – ${formatOffsetMs(moment['end_ms'])} · score ${formatScore(moment['overall_score'])}`}
+            meta={`${formatMediaSpan(moment)} · score ${formatScore(moment['overall_score'])}`}
           >
             <Narratives moment={moment} />
             {concepts.length > 0 && <Tags tags={[...new Set(concepts)]} tone="primary" />}
@@ -227,19 +356,23 @@ const FIND_KEY_MOMENTS: OutputView = {
         )
       })}
     </Stack>
-  ),
+  )
 }
 
-const FIND_SCENES: OutputView = {
-  hasContent: (outputs) => asRows(outputs['scenes']).length > 0,
-  render: (outputs) => (
+const FIND_KEY_MOMENTS: OutputView = {
+  hasContent: (outputs) => asRows(outputs['moments']).length > 0,
+  render: (outputs) => <KeyMoments moments={asRows(outputs['moments'])} />,
+}
+
+function Scenes({scenes}: {scenes: Outputs[]}) {
+  return (
     <Stack gap={2}>
-      {asRows(outputs['scenes']).map((scene, index) => (
+      {scenes.map((scene, index) => (
         <RowCard
           // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
           key={index}
           title={formatText(scene['title'])}
-          meta={`${formatOffsetMs(scene['start_ms'])} – ${formatOffsetMs(scene['end_ms'])}`}
+          meta={formatMediaSpan(scene)}
         >
           <Text size={1}>
             {String(
@@ -252,25 +385,88 @@ const FIND_SCENES: OutputView = {
         </RowCard>
       ))}
     </Stack>
-  ),
+  )
+}
+
+/** v0 only: its jobs still show until Mux deletes them. */
+const FIND_SCENES: OutputView = {
+  hasContent: (outputs) => asRows(outputs['scenes']).length > 0,
+  render: (outputs) => <Scenes scenes={asRows(outputs['scenes'])} />,
+}
+
+const STRUCTURE_LISTS = ['chapters', 'scenes', 'key_moments']
+
+/** Mux always returns the lists; what the document kept of a deleted job has none of them. */
+const ANALYZE_STRUCTURE: OutputView = {
+  hasContent: (outputs) =>
+    hasSummary(outputs, 'summary') || STRUCTURE_LISTS.some((key) => Array.isArray(outputs[key])),
+  render: (outputs) => {
+    const updates = assetUpdates(outputs)
+    const chapters = asRows(outputs['chapters'])
+    const scenes = asRows(outputs['scenes'])
+    const moments = asRows(outputs['key_moments'])
+    return (
+      <Stack gap={4}>
+        <AssetUpdateNote assetUpdate={updates.title} {...TITLE_UPDATE} />
+        <AssetUpdateNote assetUpdate={updates.chapters} {...CHAPTERS_UPDATE} />
+        <Summary outputs={outputs} textKey="summary" />
+        {Array.isArray(outputs['chapters']) && (
+          <Labelled label="Chapters">
+            {chapters.length > 0 ? (
+              <Chapters chapters={chapters} />
+            ) : (
+              <Text size={1} muted>
+                Mux made none. Chapters need at least a minute of the video.
+              </Text>
+            )}
+          </Labelled>
+        )}
+        {Array.isArray(outputs['scenes']) && (
+          <Labelled label="Scenes">
+            {scenes.length > 0 ? (
+              <Scenes scenes={scenes} />
+            ) : (
+              <Text size={1} muted>
+                Mux found none. An audio-only video never has scenes.
+              </Text>
+            )}
+          </Labelled>
+        )}
+        {Array.isArray(outputs['key_moments']) && (
+          <Labelled label="Key moments">
+            {moments.length > 0 ? (
+              <KeyMoments moments={moments} />
+            ) : (
+              <Text size={1} muted>
+                None qualified.
+              </Text>
+            )}
+          </Labelled>
+        )}
+      </Stack>
+    )
+  },
 }
 
 const FIND_BEST_THUMBNAILS: OutputView = {
   hasContent: (outputs) => asRows(outputs['best_thumbnails']).length > 0,
   render: (outputs) => (
-    <Stack gap={2}>
-      {asRows(outputs['best_thumbnails']).map((thumbnail, index) => (
-        <RowCard
-          // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
-          key={index}
-          title={`At ${formatOffsetMs(thumbnail['timestamp_ms'])}`}
-          meta={`Score ${formatScore(thumbnail['overall'])}`}
-        >
-          {typeof thumbnail['description'] === 'string' && (
-            <Text size={1}>{thumbnail['description']}</Text>
-          )}
-        </RowCard>
-      ))}
+    <Stack gap={3}>
+      <AssetUpdateNote assetUpdate={assetUpdates(outputs).thumbnail} {...THUMBNAIL_UPDATE} />
+      <Stack gap={2}>
+        {asRows(outputs['best_thumbnails']).map((thumbnail, index) => (
+          <RowCard
+            // oxlint-disable-next-line react/no-array-index-key -- read-only output, never reorders
+            key={index}
+            title={`At ${formatMediaTime(thumbnail['time'], thumbnail['timestamp_ms'])}`}
+            meta={`Score ${formatScore(thumbnail['overall'])}`}
+          >
+            {typeof thumbnail['description'] === 'string' && (
+              <Text size={1}>{thumbnail['description']}</Text>
+            )}
+          </RowCard>
+        ))}
+      </Stack>
     </Stack>
   ),
 }
@@ -305,26 +501,39 @@ const ENGAGEMENT_INSIGHTS: OutputView = {
   },
 }
 
-/** The result is a track on the Mux video; the payload shows its ids and any temporary URLs. */
+/**
+ * The new track's id: `track_id` in v1 and premium captions, `uploaded_track_id` in v0, and
+ * `caption_track_id` for the dub's subtitles.
+ */
+const ATTACHED_TRACK_KEYS = ['track_id', 'uploaded_track_id', 'caption_track_id']
+
+/** The payload shows the new track's ids, or the temporary URLs when nothing was attached. */
 const TRACK_PRODUCING: OutputView = {
   hasContent: () => true,
   render: (outputs) => (
     <Stack gap={3}>
-      <RobotsNote tone="positive">
-        The generated track is on the Mux video. The Studio picks it up when the job finishes;
-        resync the video if it hasn’t shown up yet.
-      </RobotsNote>
+      {ATTACHED_TRACK_KEYS.some((key) => typeof outputs[key] === 'string') ? (
+        <RobotsNote tone="positive">
+          The generated track is on the Mux video. The Studio picks it up when the job finishes;
+          resync the video if it hasn’t shown up yet.
+        </RobotsNote>
+      ) : (
+        <RobotsNote>
+          Nothing was attached to the Mux video. The temporary download links below expire.
+        </RobotsNote>
+      )}
       <RobotsJsonBlock value={outputs} what="this output" />
     </Stack>
   ),
 }
 
-export const OUTPUT_VIEWS: Record<RobotsWorkflow, OutputView> = {
+export const OUTPUT_VIEWS: Record<RobotsJobWorkflow, OutputView> = {
   'summarize': SUMMARIZE,
   'moderate': MODERATE,
   'ask-questions': ASK_QUESTIONS,
   'generate-chapters': GENERATE_CHAPTERS,
   'find-key-moments': FIND_KEY_MOMENTS,
+  'analyze-structure': ANALYZE_STRUCTURE,
   'find-scenes': FIND_SCENES,
   'find-best-thumbnails': FIND_BEST_THUMBNAILS,
   'generate-engagement-insights': ENGAGEMENT_INSIGHTS,

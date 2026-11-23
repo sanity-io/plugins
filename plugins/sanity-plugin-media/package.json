@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-media",
-  "version": "6.6.3",
+  "version": "6.6.4",
   "description": "This version of `sanity-plugin-media` is for Sanity Studio V3.",
   "keywords": [
     "asset",
@@ -64,7 +64,6 @@
     "react-redux": "^9.3.0",
     "react-select": "^5.10.2",
     "react-virtuoso": "^4.18.11",
-    "redux": "^5.0.1",
     "redux-observable": "3.0.0-rc.2",
     "rxjs": "catalog:",
     "zod": "^4.6.7"

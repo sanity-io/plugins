@@ -1,4 +1,4 @@
-import type {SanityImageSource} from '@sanity/asset-utils'
+import type {SanityImageSource} from '@sanity/image-url'
 import {useMemo} from 'react'
 import type {ImageUrlBuilder, SourceClientOptions} from 'sanity'
 
