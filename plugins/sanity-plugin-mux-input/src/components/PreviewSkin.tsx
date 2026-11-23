@@ -87,6 +87,7 @@ const OverlayBar = styled(Bar)`
 
   &:not([data-visible]):not(:has(:focus-visible)) {
     opacity: 0;
+    pointer-events: none;
   }
 `
 
@@ -95,7 +96,6 @@ const AudioRoot = styled(Container)`
   display: block;
   overflow: hidden;
   border-radius: 0.1875rem;
-  color: white;
 `
 
 const AudioBar = styled(Bar)`
