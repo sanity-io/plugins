@@ -7,8 +7,10 @@ import {
   applyRobotsJobs,
   applyThumbnail,
   hasUnfinishedRobotsWork,
+  isDeletedByMux,
   jobsNeedingDetail,
   jobsWithHistory,
+  keptJobOutputs,
   matchPendingCreates,
   mergeJobRecords,
   newPendingDirectiveRunCreate,
@@ -19,10 +21,12 @@ import {
   resolvePendingCreatesFromReads,
   resolvePendingJobCreate,
   type RobotsDocumentState,
+  shownJobStatus,
   thumbnailJobsToApply,
   unitsCell,
+  workflowsRunningOnV0,
 } from './records'
-import type {RobotsDirectiveRun, RobotsJob} from './types'
+import type {RobotsDirectiveRun, RobotsJob, RobotsPendingCreate} from './types'
 
 const ASSET = 'asset-1'
 const NOW_S = 1_800_000_000
@@ -133,6 +137,61 @@ describe('outputs', () => {
     expect(applyRobotsJobs(doc(), [elsewhere, summaryOnly], ASSET).robotsOutputs).toBeUndefined()
   })
 
+  test('keep the newest Analyze structure title, summary and tags under their own key', () => {
+    const analyzed = job('s', {
+      workflow: 'analyze-structure',
+      updated_at: NOW_S,
+      parameters: {asset_id: ASSET},
+      outputs: {
+        title: 'Uploading with Mux',
+        summary: 'A developer uploads a video.',
+        tags: ['uploads'],
+        chapters: [{start_time: 0, end_time: 60, title: 'Upload'}],
+        scenes: [],
+        key_moments: [],
+      },
+    })
+    const state = applyRobotsJobs(doc(), [analyzed, summarized('a', NOW_S - 30, 'Old')], ASSET)
+    expect(state.robotsOutputs).toEqual({
+      _type: 'mux.robotsOutputs',
+      summarize: {
+        jobId: 'a',
+        completedAt: NOW_S - 30,
+        title: 'Old',
+        description: 'A video',
+        tags: ['a'],
+      },
+      analyzeStructure: {
+        jobId: 's',
+        completedAt: NOW_S,
+        title: 'Uploading with Mux',
+        summary: 'A developer uploads a video.',
+        tags: ['uploads'],
+      },
+    })
+    expect(applyRobotsJobs(state, [analyzed], ASSET)).toBe(state)
+  })
+
+  test('never store a v1 Moderate result that checked neither frames nor captions', () => {
+    const moderated = (outputs: Record<string, unknown>) =>
+      job('m', {
+        workflow: 'moderate',
+        updated_at: NOW_S,
+        parameters: {asset_id: ASSET},
+        outputs: {exceeds_threshold: false, max_scores: {sexual: 0, violence: 0}, ...outputs},
+      })
+    const nothing = moderated({
+      thumbnail_moderation: {status: 'failed'},
+      transcript_moderation: {status: 'skipped', skip_reason: 'disabled'},
+    })
+    expect(applyRobotsJobs(doc(), [nothing], ASSET).robotsOutputs).toBeUndefined()
+    const framesOnly = moderated({
+      thumbnail_moderation: {status: 'completed'},
+      transcript_moderation: {status: 'skipped', skip_reason: 'disabled'},
+    })
+    expect(applyRobotsJobs(doc(), [framesOnly], ASSET).robotsOutputs?.moderate?.jobId).toBe('m')
+  })
+
   test('keep moderate scores', () => {
     const moderated = job('m', {
       workflow: 'moderate',
@@ -241,6 +300,24 @@ describe('pending creates', () => {
       expect(
         matchPendingCreates([pending], [job('near', {created_at: NOW_S})], [], state).size,
       ).toBe(0)
+    })
+
+    test('a v1 placeholder never resolves to a v0 job; one from before v1 matches either', () => {
+      const v0Job = job('v0-job', {
+        created_at: NOW_S,
+        _links: {self: {href: '/robots/v0/jobs/summarize/v0-job'}},
+      })
+      expect(pending.apiVersion).toBe('v1')
+      expect(matchPendingCreates([pending], [v0Job], [], doc()).size).toBe(0)
+      const older: RobotsPendingCreate = {
+        _key: 'req1',
+        _type: 'mux.robotsPendingCreate',
+        requestId: 'req1',
+        kind: 'job',
+        workflow: 'summarize',
+        requestedAt: NOW_S,
+      }
+      expect(matchPendingCreates([older], [v0Job], [], doc()).get('req1')).toBe('v0-job')
     })
 
     test('prefers the id this tab got back from its own create', () => {
@@ -371,7 +448,40 @@ describe('unitsCell', () => {
     [job('a'), 'loaded', 'Not reported', false],
     [job('a'), 'unread', 'Not loaded', true],
   ] as const)('%#: %s', (entry, detail, label, isLoadable) => {
-    expect(unitsCell(entry, detail)).toEqual({label, isLoadable})
+    expect(unitsCell(entry, detail, NOW_MS)).toEqual({label, isLoadable})
+  })
+
+  test('a job Mux deleted has no units to load, and an unfinished one no status', () => {
+    const old = job('old', {created_at: NOW_S - 31 * 24 * 60 * 60})
+    expect(isDeletedByMux(old, NOW_MS)).toBe(true)
+    expect(isDeletedByMux(job('recent'), NOW_MS)).toBe(false)
+    const stillListed = {...old, _links: {self: {href: '/robots/v1/jobs/summarize/old'}}}
+    expect(isDeletedByMux(stillListed, NOW_MS)).toBe(false)
+    expect(unitsCell(old, 'unread', NOW_MS)).toEqual({label: 'Unavailable', isLoadable: false})
+    expect(unitsCell({...old, units_consumed: 7}, 'unread', NOW_MS).label).toBe('7')
+    expect(shownJobStatus({...old, status: 'processing'}, NOW_MS)).toBeUndefined()
+    expect(shownJobStatus(old, NOW_MS)).toBe('completed')
+    expect(shownJobStatus(job('recent', {status: 'processing'}), NOW_MS)).toBe('processing')
+  })
+})
+
+describe('kept outputs', () => {
+  const outputs = {
+    _type: 'mux.robotsOutputs' as const,
+    summarize: {jobId: 'sum', completedAt: NOW_S, title: 'T', description: 'D', tags: ['a']},
+    analyzeStructure: {jobId: 'as', completedAt: NOW_S, title: 'T', summary: 'S'},
+    moderate: {jobId: 'mod', exceedsThreshold: false, maxScores: {sexual: 0.1}},
+  }
+
+  test('give back what the document stored for a job, in Mux’s shape', () => {
+    expect(keptJobOutputs(outputs, 'sum')).toEqual({title: 'T', description: 'D', tags: ['a']})
+    expect(keptJobOutputs(outputs, 'as')).toEqual({title: 'T', summary: 'S'})
+    expect(keptJobOutputs(outputs, 'mod')).toEqual({
+      exceeds_threshold: false,
+      max_scores: {sexual: 0.1},
+    })
+    expect(keptJobOutputs(outputs, 'other')).toBeUndefined()
+    expect(keptJobOutputs(undefined, 'sum')).toBeUndefined()
   })
 })
 
@@ -393,11 +503,46 @@ describe('thumbnails', () => {
     expect(thumbnailJobsToApply(applied, [thumbnails], NOW_MS)).toEqual([])
   })
 
+  test('skips a job whose thumbnail update Mux reports as failed', () => {
+    const failed = {...thumbnails, outputs: {asset_updates: {thumbnail: {status: 'failed'}}}}
+    const updated = {...thumbnails, outputs: {asset_updates: {thumbnail: {status: 'updated'}}}}
+    const recorded = applyRobotsJobs(doc({data: {thumbnail_time: 3}}), [thumbnails], ASSET)
+    expect(thumbnailJobsToApply(recorded, [failed], NOW_MS)).toEqual([])
+    expect(thumbnailJobsToApply(recorded, [updated], NOW_MS)).toEqual([updated])
+  })
+
   test('skips jobs that did not ask, old jobs, and a missing thumbnail_time', () => {
     const noAsk = {...thumbnails, parameters: {asset_id: ASSET}}
     const recorded = applyRobotsJobs(doc(), [thumbnails, noAsk], ASSET)
     expect(thumbnailJobsToApply(recorded, [noAsk], NOW_MS)).toEqual([])
     expect(thumbnailJobsToApply(recorded, [thumbnails], NOW_MS + 7 * 60 * 60 * 1000)).toEqual([])
     expect(applyThumbnail(recorded, ['t'], ASSET)).toBe(recorded)
+  })
+})
+
+describe('v0 jobs still running', () => {
+  const v0 = (workflow: RobotsJob['workflow'], status: RobotsJob['status']) =>
+    job(`${workflow}-v0`, {
+      workflow,
+      status,
+      _links: {self: {href: `/robots/v0/jobs/${workflow}/${workflow}-v0`}},
+    })
+
+  test('name only unfinished jobs that v0 lists', () => {
+    expect(
+      workflowsRunningOnV0(
+        [
+          v0('summarize', 'processing'),
+          v0('moderate', 'completed'),
+          job('chapters-v1', {
+            workflow: 'generate-chapters',
+            status: 'pending',
+            _links: {self: {href: '/robots/v1/jobs/generate-chapters/chapters-v1'}},
+          }),
+          job('unlinked', {workflow: 'ask-questions', status: 'pending'}),
+        ],
+        NOW_MS,
+      ),
+    ).toEqual(new Set(['summarize']))
   })
 })

@@ -30,13 +30,12 @@ function NodeStates({
       {nodeStates.map((node, index) => {
         // A step stays "dispatched" for good; once its job is listed, the job says how it went.
         const job = node.job_id ? jobsById.get(node.job_id) : undefined
+        const workflow = node.workflow ?? node.workflow_name
         return (
           <Flex key={node.job_id ?? node.reference_id ?? index} align="center" gap={3} wrap="wrap">
             <Box flex={1} style={{minWidth: '8rem'}}>
               <Text size={1}>
-                {node.workflow_name
-                  ? workflowLabel(node.workflow_name)
-                  : (node.reference_id ?? `Step ${index + 1}`)}
+                {workflow ? workflowLabel(workflow) : (node.reference_id ?? `Step ${index + 1}`)}
               </Text>
             </Box>
             {job ? (
