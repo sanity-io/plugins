@@ -21,7 +21,7 @@ import {
 import {Code} from '@sanity/ui/code'
 import {Menu, MenuItem} from '@sanity/ui/menu'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type ComponentType, useId, useState} from 'react'
+import {type ComponentType, type ReactNode, useId, useState} from 'react'
 import * as ui5 from 'ui5'
 
 import {
@@ -159,8 +159,8 @@ function HeadingV5() {
       <ui5.Heading as="h3" size={2}>
         Heading
       </ui5.Heading>
-      <ui5.Heading as="h4" muted size={1}>
-        Muted heading
+      <ui5.Heading as="h4" size={1}>
+        Smaller heading
       </ui5.Heading>
     </ui5.VStack>
   )
@@ -184,16 +184,6 @@ function EyebrowV5() {
       <ui5.Eyebrow muted size={1}>
         Muted eyebrow
       </ui5.Eyebrow>
-    </ui5.VStack>
-  )
-}
-
-function LabelV5() {
-  return (
-    <ui5.VStack gap={2}>
-      <ui5.Label>Label</ui5.Label>
-      <ui5.Label disabled>Disabled label</ui5.Label>
-      <ui5.Label error>Label with an error</ui5.Label>
     </ui5.VStack>
   )
 }
@@ -352,14 +342,33 @@ function CheckboxV4() {
   )
 }
 
+function LabelledV5({children, label}: {children: ReactNode; label: string}) {
+  return (
+    <ui5.Flex alignItems="center" as="label" gap={2}>
+      {children}
+      <ui5.Text size={1}>{label}</ui5.Text>
+    </ui5.Flex>
+  )
+}
+
 function CheckboxV5() {
   return (
     <ui5.Flex flexWrap="wrap" gap={3}>
-      <ui5.Checkbox label="Off" />
-      <ui5.Checkbox defaultChecked label="On" />
-      <ui5.Checkbox indeterminate label="Mixed" />
-      <ui5.Checkbox defaultChecked disabled label="Disabled" />
-      <ui5.Checkbox defaultChecked error label="Error" />
+      <LabelledV5 label="Off">
+        <ui5.Checkbox />
+      </LabelledV5>
+      <LabelledV5 label="On">
+        <ui5.Checkbox defaultChecked />
+      </LabelledV5>
+      <LabelledV5 label="Mixed">
+        <ui5.Checkbox indeterminate />
+      </LabelledV5>
+      <LabelledV5 label="Disabled">
+        <ui5.Checkbox defaultChecked disabled />
+      </LabelledV5>
+      <LabelledV5 label="Error">
+        <ui5.Checkbox defaultChecked hasError />
+      </LabelledV5>
     </ui5.Flex>
   )
 }
@@ -381,10 +390,15 @@ function RadioV5() {
 
   return (
     <ui5.Flex flexWrap="wrap" gap={3}>
-      <ui5.Radio label="Off" name={name} />
-      <ui5.Radio defaultChecked label="On" name={name} />
-      <ui5.Radio defaultChecked disabled label="Disabled" />
-      <ui5.Radio defaultChecked error label="Error" />
+      <LabelledV5 label="Off">
+        <ui5.Radio name={name} />
+      </LabelledV5>
+      <LabelledV5 label="On">
+        <ui5.Radio defaultChecked name={name} />
+      </LabelledV5>
+      <LabelledV5 label="Disabled">
+        <ui5.Radio defaultChecked disabled />
+      </LabelledV5>
     </ui5.Flex>
   )
 }
@@ -402,10 +416,18 @@ function SwitchV4() {
 function SwitchV5() {
   return (
     <ui5.Flex flexWrap="wrap" gap={3}>
-      <ui5.Switch label="Off" />
-      <ui5.Switch defaultChecked label="On" />
-      <ui5.Switch defaultChecked disabled label="Disabled" />
-      <ui5.Switch defaultChecked error label="Error" />
+      <LabelledV5 label="Off">
+        <ui5.Switch />
+      </LabelledV5>
+      <LabelledV5 label="On">
+        <ui5.Switch defaultChecked />
+      </LabelledV5>
+      <LabelledV5 label="Disabled">
+        <ui5.Switch defaultChecked disabled />
+      </LabelledV5>
+      <LabelledV5 label="Error">
+        <ui5.Switch defaultChecked hasError />
+      </LabelledV5>
     </ui5.Flex>
   )
 }
@@ -576,9 +598,8 @@ const CATALOG: CatalogEntry[] = [
   },
   {name: 'Card', classes: ['sui-Card', 'sui-border'], V4: CardV4, V5: CardV5},
   {name: 'Text', classes: ['sui-Text', 'sui-text-muted'], V4: TextV4, V5: TextV5},
-  {name: 'Heading', classes: ['sui-Heading', 'sui-text-muted'], V4: HeadingV4, V5: HeadingV5},
+  {name: 'Heading', classes: ['sui-Heading'], V4: HeadingV4, V5: HeadingV5},
   {name: 'Eyebrow', classes: ['sui-Eyebrow', 'sui-text-muted'], V4: EyebrowV4, V5: EyebrowV5},
-  {name: 'Label', classes: ['sui-Label', 'sui-Text', 'sui-text-muted'], V5: LabelV5},
   {name: 'Code', classes: ['sui-Code'], V4: CodeV4, V5: CodeV5},
   {
     name: 'Link',
@@ -609,19 +630,19 @@ const CATALOG: CatalogEntry[] = [
   },
   {
     name: 'Checkbox',
-    classes: ['sui-Checkbox', 'sui-CheckboxInput', 'sui-CheckboxMark'],
+    classes: ['sui-Checkbox', 'sui-CheckboxInput'],
     V4: CheckboxV4,
     V5: CheckboxV5,
   },
   {
     name: 'Radio',
-    classes: ['sui-Radio', 'sui-RadioInput', 'sui-RadioMark'],
+    classes: ['sui-Radio', 'sui-RadioInput'],
     V4: RadioV4,
     V5: RadioV5,
   },
   {
     name: 'Switch',
-    classes: ['sui-Switch', 'sui-SwitchInput', 'sui-SwitchMark'],
+    classes: ['sui-Switch', 'sui-SwitchInput'],
     V4: SwitchV4,
     V5: SwitchV5,
   },

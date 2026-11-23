@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "@sanity/icons": "catalog:",
-    "@sanity/mutator": "catalog:",
+    "@sanity/mutator": "catalog:studio",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "@sanity/uuid": "catalog:",
     "rxjs": "catalog:",
     "sanity-plugin-utils": "workspace:^"
@@ -66,7 +66,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "catalog:peer-i18n",
     "sanity-plugin-internationalized-array": "workspace:^"
   },
   "engines": {

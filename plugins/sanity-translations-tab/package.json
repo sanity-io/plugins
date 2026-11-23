@@ -41,7 +41,7 @@
     "@portabletext/to-html": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "sanity-naive-html-serializer": "workspace:^"
   },
   "devDependencies": {

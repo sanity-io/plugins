@@ -4,7 +4,8 @@ import {ToastProvider} from '@sanity/ui/toast'
 import {cleanup, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {of, Subject} from 'rxjs'
-import {type AssetSourceComponentProps, ColorSchemeProvider} from 'sanity'
+import type {AssetSourceComponentProps} from 'sanity'
+import {ColorSchemeProvider} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 vi.mock('../Image', () => ({default: () => null}))

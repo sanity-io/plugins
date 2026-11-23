@@ -41,7 +41,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "lodash-es": "catalog:"
   },
   "devDependencies": {

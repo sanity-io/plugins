@@ -40,7 +40,7 @@
     "@sanity/asset-utils": "catalog:",
     "@sanity/image-url": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "lodash-es": "catalog:",
     "motion": "catalog:"
   },
