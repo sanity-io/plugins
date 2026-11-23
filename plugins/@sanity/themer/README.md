@@ -155,7 +155,7 @@ Each card previews a tiny Studio in both light and dark mode. Select a card to a
 
 ### 3. Make it yours
 
-Start from scratch, duplicate a preset, or [use colors from an image](#use-colors-from-an-image).
+Start from scratch, duplicate a preset, [use colors from an image](#use-colors-from-an-image), or [generate one from a description](#generate-a-theme-from-a-description).
 
 Your custom theme has separate **light** and **dark** mode cards. Each has:
 
@@ -180,6 +180,15 @@ Choose an image to generate a starting palette.
 - Light and dark muted colors tint the backgrounds.
 
 Try the swatch variants to preview different starting colors, or select **I'm feeling lucky** to let the tool pick one.
+
+### Generate a theme from a description
+
+Select the sparkles button in the sidebar header and describe a theme, like _cozy autumn forest, high contrast_.
+
+[Sanity Agent Actions](https://www.sanity.io/docs/agent-actions/introduction) pick the colors of both modes, and the tool checks them before it adds the theme to your list and applies it. **Undo** takes the theme back out and applies the one from before; **Edit** opens it in the editor.
+
+- Every attempt uses one of your organization's [AI credits](https://www.sanity.io/docs/platform-management/how-ai-credits-work). An unusable reply is retried, up to three attempts.
+- The button only shows in Studios whose client supports Agent Actions.
 
 ### Organize and share themes
 

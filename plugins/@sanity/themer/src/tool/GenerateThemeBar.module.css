@@ -1,0 +1,38 @@
+/* The bar slides in below the header it was opened from */
+.bar {
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Progress, the result and the failure swap in place as a generation moves on */
+.status {
+  transition:
+    opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* A failure lists what was wrong with the last reply, one problem per line */
+.message {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+@starting-style {
+  .bar,
+  .status {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @starting-style {
+    .bar {
+      transform: translateY(-4px);
+    }
+
+    .status {
+      transform: translateY(-2px);
+    }
+  }
+}
