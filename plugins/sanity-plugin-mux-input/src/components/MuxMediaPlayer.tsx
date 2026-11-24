@@ -5,7 +5,7 @@ import {MuxData} from '@videojs/react/extensions/mux-data'
 import {MuxAudio} from '@videojs/react/media/mux-audio'
 import {MuxVideo, type MuxSource} from '@videojs/react/media/mux-video'
 import {VideoPlayer, VideoSkin} from '@videojs/react/video'
-import type {CSSProperties, RefCallback} from 'react'
+import {type CSSProperties, type RefCallback, useEffect, useState} from 'react'
 import {css, styled} from 'styled-components'
 
 import {PLUGIN_VERSION} from '../constants'
@@ -49,9 +49,19 @@ export default function MuxMediaPlayer({
   ref,
   compact,
 }: MuxMediaPlayerProps) {
+  // Video.js configures a new player while rendering it. React can discard that render and retry,
+  // as when a new caption track remounts the player mid-update, and every discarded player would
+  // load the stream and keep retrying it, never destroyed. Without a source until this player has
+  // mounted, only the one React commits loads.
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
+    setIsMounted(true)
+  }, [])
+
   const mediaProps = {
     ref,
-    source,
+    source: isMounted ? source : undefined,
     autoPlay,
     playsInline: true,
     preload: 'metadata',

@@ -1,5 +1,11 @@
 # sanity-plugin-media
 
+## 6.6.4
+
+### Patch Changes
+
+- [#2328](https://github.com/sanity-io/plugins/pull/2328) [`503d566`](https://github.com/sanity-io/plugins/commit/503d566e55675d5acac0083604875ab0629f5115) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the direct `redux` dependency. The only use was a type import, which now comes from `@reduxjs/toolkit`.
+
 ## 6.6.3
 
 ### Patch Changes

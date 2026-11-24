@@ -3,9 +3,11 @@ import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {workflowLabel} from '../../robots/catalog'
 import {formatTimestamp} from '../../robots/format'
 import {
+  isDeletedByMux,
   jobTableRows,
   type PendingCreateRow,
   type RobotsJobDetailState,
+  shownJobStatus,
   unitsCell,
 } from '../../robots/records'
 import type {RobotsJob} from '../../robots/types'
@@ -43,7 +45,8 @@ function JobRow({job, ...props}: {job: RobotsJob} & RobotsJobTableProps) {
   const units = unitsCell(job, detailStateOf(job, props.detailedJobIds, props.failedDetailIds))
   const isLoadingUnits =
     props.loadingDetailIds.has(job.id) || (units.isLoadable && props.pendingDetailIds.has(job.id))
-  const isRunning = job.status === 'pending' || job.status === 'processing'
+  const status = shownJobStatus(job)
+  const isRunning = status === 'pending' || status === 'processing'
 
   let action = (
     <Button
@@ -76,6 +79,12 @@ function JobRow({job, ...props}: {job: RobotsJob} & RobotsJobTableProps) {
         Cancelled before it produced output
       </Text>
     )
+  } else if (!status) {
+    action = (
+      <Text size={1} muted>
+        Mux deleted it before the Studio saw it finish
+      </Text>
+    )
   }
 
   return (
@@ -87,6 +96,7 @@ function JobRow({job, ...props}: {job: RobotsJob} & RobotsJobTableProps) {
           </Text>
           <Flex align="center" gap={1} wrap="wrap">
             <Text size={1} muted>
+              {isDeletedByMux(job) && 'Deleted by Mux · '}
               {formatTimestamp(job.created_at)} · Mux AI units:
             </Text>
             {units.isLoadable ? (
@@ -106,7 +116,7 @@ function JobRow({job, ...props}: {job: RobotsJob} & RobotsJobTableProps) {
             )}
           </Flex>
         </Stack>
-        <RobotsStatusBadge kind="job" status={job.status} />
+        <RobotsStatusBadge kind="job" status={status} />
         <Box>{action}</Box>
       </Flex>
     </Card>

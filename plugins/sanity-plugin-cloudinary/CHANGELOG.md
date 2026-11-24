@@ -1,5 +1,11 @@
 # sanity-plugin-cloudinary
 
+## 2.2.0
+
+### Minor Changes
+
+- [#2326](https://github.com/sanity-io/plugins/pull/2326) [`30dd019`](https://github.com/sanity-io/plugins/commit/30dd019b97fcbd8bd8f949af7ebcc58c2e7d6342) Thanks [@JaiiR320](https://github.com/JaiiR320)! - Add an opt-in `videoPreview` option to `cloudinarySchemaPlugin` and `cloudinaryReferencePlugin` to cut the bandwidth of video previews in the Studio. `transformation` plays a transformed copy (for example `'q_auto,w_640'`) instead of the original and falls back to the original if Cloudinary rejects it, `preload: 'none'` loads nothing until the editor presses play, and `poster: true` shows a still of the first frame. Nothing changes unless you set these options.
+
 ## 2.1.10
 
 ### Patch Changes
