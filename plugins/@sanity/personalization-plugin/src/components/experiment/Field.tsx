@@ -1,5 +1,5 @@
 import {CloseIcon} from '@sanity/icons/Close'
-import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
+import {TiersIcon} from '@sanity/icons/Tiers'
 import {useCallback, useMemo} from 'react'
 import {
   defineDocumentFieldAction,
@@ -29,7 +29,7 @@ const useAddExperimentAction = (
   return {
     title: `Add ${experimentNameOverride}`,
     type: 'action',
-    icon: SplitVerticalIcon,
+    icon: TiersIcon,
     onAction: handleAddAction,
     renderAsButton: true,
   }
