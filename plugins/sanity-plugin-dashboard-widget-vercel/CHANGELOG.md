@@ -1,5 +1,11 @@
 # sanity-plugin-dashboard-widget-vercel
 
+## 4.0.34
+
+### Patch Changes
+
+- [#2343](https://github.com/sanity-io/plugins/pull/2343) [`409238d`](https://github.com/sanity-io/plugins/commit/409238d548b3e4a12a04ef7fceb2be0b4fd26499) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `react-time-ago` dependency. The deployment age now uses Sanity Studio's `useRelativeTime`, so it follows the Studio's locale and reads like other relative times in the Studio (for example "5 min" instead of "5m").
+
 ## 4.0.33
 
 ### Patch Changes

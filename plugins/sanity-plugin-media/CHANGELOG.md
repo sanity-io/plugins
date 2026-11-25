@@ -1,5 +1,13 @@
 # sanity-plugin-media
 
+## 6.6.5
+
+### Patch Changes
+
+- [#2337](https://github.com/sanity-io/plugins/pull/2337) [`140dbd5`](https://github.com/sanity-io/plugins/commit/140dbd57ef5e3b0f1de8c435bf97a44a8315509e) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `pluralize` dependency. The plugin only pluralizes "asset", "file" and "image", which a small local helper now handles.
+
+- [#2352](https://github.com/sanity-io/plugins/pull/2352) [`f6f9e04`](https://github.com/sanity-io/plugins/commit/f6f9e0420f9a1d7e83f1c7805afb5bef7883cc12) Thanks [@stipsan](https://github.com/stipsan)! - Replace the `WithReferringDocuments` component, which is removed in the next major version of `sanity`, with the `useReferringDocuments` hook.
+
 ## 6.6.4
 
 ### Patch Changes
