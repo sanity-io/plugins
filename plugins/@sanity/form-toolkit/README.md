@@ -86,7 +86,7 @@ The Mailchimp integration fetches all signup forms across all lists in your Mail
 
 ### Usage
 
-This plugin requires you to set up your own API route to fetch against Mailchimp's API. You'll need to pass an API key and server prefix to the underlying Mailchimp marketing client. Learn how to get a Mailchimp API key [here](https://mailchimp.com/help/about-api-keys/).
+This plugin requires you to set up your own API route to fetch against Mailchimp's API. You'll need to pass an API key and server prefix, which the handler uses to call Mailchimp's Marketing API. Learn how to get a Mailchimp API key [here](https://mailchimp.com/help/about-api-keys/).
 
 There's an "out of the box" handler for Next.js API routes:
 
