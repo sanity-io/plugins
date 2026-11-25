@@ -158,12 +158,12 @@ fields: [
 When editors open a document with this field, they can:
 
 1. Enter a **default value** (shown to users not in an experiment)
-2. Click the <img src="./beaker.svg" alt="beaker icon" width="28"> **beaker icon** ("Add experiment") to assign an experiment
+2. Click the <img src="./tiers.svg" alt="tiers icon" width="28"> **tiers icon** ("Add experiment") to assign an experiment
 3. Enter **variant-specific values** for each variant in the experiment
 
-![Field-level experiment — click the beaker icon to add an experiment](./field-experiment.png)
+![Field-level experiment — click the tiers icon to add an experiment](./field-experiment.png)
 
-> 💡 **Tip:** Look for the <img src="./beaker.svg" alt="beaker icon" width="28"> beaker icon in the field toolbar — clicking it opens the experiment picker where you can assign an experiment and enter variant-specific values.
+> 💡 **Tip:** Look for the <img src="./tiers.svg" alt="tiers icon" width="28"> tiers icon in the field toolbar — clicking it opens the experiment picker where you can assign an experiment and enter variant-specific values.
 
 ## Loading Experiments
 
@@ -275,9 +275,9 @@ Note that the `name` key in the field definition is used to name the generated f
 
 You can use this plugin to A/B test entire pages by experimenting on reference fields. This is useful when you want to show completely different page content to different user segments.
 
-![Page-level experiment — click the beaker icon to add an experiment](./page-experiment.png)
+![Page-level experiment — click the tiers icon to add an experiment](./page-experiment.png)
 
-> 💡 **Tip:** Just like field-level experiments, click the <img src="./beaker.svg" alt="beaker icon" width="28"> beaker icon on the reference field to assign an experiment and configure variant-specific pages.
+> 💡 **Tip:** Just like field-level experiments, click the <img src="./tiers.svg" alt="tiers icon" width="28"> tiers icon on the reference field to assign an experiment and configure variant-specific pages.
 
 ### Step 1: Configure the Plugin with a Reference Field
 
