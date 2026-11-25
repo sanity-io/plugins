@@ -26,7 +26,7 @@ import {
   useState,
 } from 'react'
 import {useDispatch} from 'react-redux'
-import {WithReferringDocuments, useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue, useReferringDocuments} from 'sanity'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
@@ -50,6 +50,16 @@ const REFERENCE_COUNT_VISIBILITY_DELAY = 750
 type Props = {
   id: string
   selected: boolean
+}
+
+// An empty field list returns the full referring documents, not just `_id` and `_type`
+const REFERRING_DOCUMENT_FIELDS: [] = []
+
+// Its own component so the referring documents listener only exists while the count is rendered
+function ReferenceCount({id}: {id: string}) {
+  const {isLoading, referringDocuments} = useReferringDocuments(id, REFERRING_DOCUMENT_FIELDS)
+  const uniqueDocuments = getUniqueDocuments(referringDocuments)
+  return isLoading ? <>-</> : <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
 }
 
 const ContainerGrid = styled<
@@ -399,22 +409,7 @@ const TableRowAsset = (props: Props) => {
         }}
       >
         <Text muted size={1} style={{lineHeight: '2em'}} textOverflow="ellipsis">
-          {referenceCountVisible ? (
-            <WithReferringDocuments // oxlint-disable-line no-deprecated -- deferred to a follow-up PR
-              id={id}
-            >
-              {({isLoading, referringDocuments}) => {
-                const uniqueDocuments = getUniqueDocuments(referringDocuments)
-                return isLoading ? (
-                  <>-</>
-                ) : (
-                  <>{Array.isArray(uniqueDocuments) ? uniqueDocuments.length : 0}</>
-                )
-              }}
-            </WithReferringDocuments>
-          ) : (
-            <>-</>
-          )}
+          {referenceCountVisible ? <ReferenceCount id={id} /> : <>-</>}
         </Text>
       </Box>
 
