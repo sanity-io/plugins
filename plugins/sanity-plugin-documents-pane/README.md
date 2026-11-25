@@ -40,7 +40,7 @@ The `.options()` configuration works as follows:
 
 - `query` (string, required) A string defining the entire GROQ query that will select documents to list.
 - `params` (object or function, optional)
-  - Object: a [dot-notated string](https://www.npmjs.com/package/dlv) from the document object to a field, to use as variables in the query.
+  - Object: a dot-notated path (for example `author._ref`) from the document object to a field, to use as variables in the query.
   - Function: a function that receives the various displayed, draft, and published versions of the document, and returns an object of query parameters. Return null if the parameters cannot be resolved.
 - `useDraft` (bool, optional, default: `false`) When populating the `params` values, it will use the `published` version of the document by default. Not permitted if using a function for `params` as the function will determine which version of the document to use.
 - `debug` (bool, optional, default: `false`) In case of an error or the query returning no documents, setting to `true` will display the query and params that were used.
