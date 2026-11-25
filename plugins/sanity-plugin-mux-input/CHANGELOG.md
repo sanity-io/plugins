@@ -1,5 +1,17 @@
 # sanity-plugin-mux-input
 
+## 5.4.0
+
+### Minor Changes
+
+- [#2322](https://github.com/sanity-io/plugins/pull/2322) [`39e599a`](https://github.com/sanity-io/plugins/commit/39e599a4bd3d99df3783d0c1e58c14bf02ff0032) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Run Mux Robots on the v1 API. New jobs and directive runs use v1, and jobs and directive runs Robots v0 created, before the upgrade or from v0 directives attached to uploads, are still read on v0, so their outputs keep reaching the video document. **Analyze structure** replaces **Find scenes**, which v1 doesn't have: one run returns a title, summary, tags, chapters, scenes and key moments, also on audio-only videos, and **Apply summary** uses the newest of it and Summarize. **Translate captions** and **Translate audio** can name the new track, and **Translate audio** can also add the dub's subtitles. **Captions to read** lists the video's own caption languages, since v1 reads only an exact language match. **Moderate** also moderates what is said in the captions by default, as Robots v1 does, and can be limited to the sampled frames. **Edit captions** replaces the original track and keeps its name by default, or keeps the original under a new name for the edited track. Key moment lengths are set in seconds. Jobs Mux deleted after 30 days are marked as such, and their output shows what the video document kept. Directives made with Robots v0 can't be run from the Studio, and the Robots panel and upload dialog say which configured ones to replace with a v1 copy. Requires the Mux proxy with Robots v1 routes. Upgrade every Studio that uses the same dataset: older versions can't read the v1 jobs this one starts, and drop the stored Analyze structure result when they store a newer Summarize or Moderate result.
+
+### Patch Changes
+
+- [#2322](https://github.com/sanity-io/plugins/pull/2322) [`2801b4b`](https://github.com/sanity-io/plugins/commit/2801b4b47c0bf2536688a4897e8dcec702c97143) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Fix the video player flooding the network with requests, and stalling, when a new caption or audio track becomes ready while it is open
+
+- [#2322](https://github.com/sanity-io/plugins/pull/2322) [`bd29ac5`](https://github.com/sanity-io/plugins/commit/bd29ac5645c360fa8a1412978525eeb59c4786c6) Thanks [@R-Delfino95](https://github.com/R-Delfino95)! - Cancelling an upload also cancels it in Mux, and an upload whose status can't be read stops checking it
+
 ## 5.3.1
 
 ### Patch Changes

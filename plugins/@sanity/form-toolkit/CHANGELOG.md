@@ -1,5 +1,11 @@
 # @sanity/form-toolkit
 
+## 3.0.25
+
+### Patch Changes
+
+- [#2344](https://github.com/sanity-io/plugins/pull/2344) [`ecfb88e`](https://github.com/sanity-io/plugins/commit/ecfb88e8b7b6f49d40fb0263eef9e52de855312c) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `react-icons` dependency. The form and form field schema types now use icons from `@sanity/icons`, matching the rest of the Studio.
+
 ## 3.0.24
 
 ### Patch Changes
