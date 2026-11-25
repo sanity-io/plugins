@@ -8,9 +8,10 @@ import {
   useSchema,
   PreviewCard,
   Preview,
-  DocumentStatusIndicator,
-  DocumentStatus,
-  useDocumentVersionInfo,
+  DocumentVersionsStatusIndicator,
+  DocumentVersionsStatus,
+  useDocumentVersions,
+  getPublishedId,
 } from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
@@ -44,8 +45,8 @@ export function Document({
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-  const versionsInfo = useDocumentVersionInfo(doc._id)
+  const documentGroupId = getPublishedId(doc._id)
+  const {versions} = useDocumentVersions({documentId: documentGroupId})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -58,14 +59,7 @@ export function Document({
     return null
   }
 
-  const tooltip = (
-    // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-    <DocumentStatus
-      draft={versionsInfo.draft}
-      published={versionsInfo.published}
-      versions={versionsInfo.versions}
-    />
-  )
+  const tooltip = <DocumentVersionsStatus documentGroupId={documentGroupId} />
 
   return (
     <PreviewCard
@@ -113,12 +107,7 @@ export function Document({
 
             <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only */}
-                <DocumentStatusIndicator
-                  draft={versionsInfo.draft}
-                  published={versionsInfo.published}
-                  versions={versionsInfo.versions}
-                />
+                <DocumentVersionsStatusIndicator documentVersions={versions} />
               </Flex>
             </Tooltip>
           </Flex>
