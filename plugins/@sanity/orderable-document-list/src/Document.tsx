@@ -2,19 +2,20 @@ import {ChevronDownIcon} from '@sanity/icons/ChevronDown'
 import {ChevronUpIcon} from '@sanity/icons/ChevronUp'
 import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {AvatarCounter, Card, Box, Button, Flex, Text} from '@sanity/ui'
-import {Tooltip} from '@sanity/ui/tooltip'
 import {useContext} from 'react'
 import {
   useSchema,
   PreviewCard,
   Preview,
-  DocumentStatusIndicator,
-  DocumentStatus,
-  useDocumentVersionInfo,
+  DocumentVersionsStatus,
+  DocumentVersionsStatusIndicator,
+  getPublishedId,
+  useDocumentVersions,
 } from 'sanity'
 import {usePaneRouter} from 'sanity/structure'
 
 import {OrderableContext} from './OrderableContext'
+import {PreviewTooltip} from './PreviewTooltip'
 import type {SanityDocumentWithOrder} from './types'
 
 export interface DocumentProps {
@@ -30,6 +31,7 @@ export interface DocumentProps {
   isFirst: boolean
   isLast: boolean
   dragBadge: number | false
+  disableTooltip: boolean
 }
 
 export function Document({
@@ -40,12 +42,13 @@ export function Document({
   isFirst,
   isLast,
   dragBadge,
+  disableTooltip,
 }: DocumentProps) {
   const {showIncrements} = useContext(OrderableContext)
   const schema = useSchema()
   const router = usePaneRouter()
-  // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-  const versionsInfo = useDocumentVersionInfo(doc._id)
+  const publishedId = getPublishedId(doc._id)
+  const {versions, loading: versionsLoading} = useDocumentVersions({documentId: publishedId})
 
   const {ChildLink, groupIndex, routerPanesState} = router
 
@@ -58,14 +61,7 @@ export function Document({
     return null
   }
 
-  const tooltip = (
-    // oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only
-    <DocumentStatus
-      draft={versionsInfo.draft}
-      published={versionsInfo.published}
-      versions={versionsInfo.versions}
-    />
-  )
+  const tooltip = <DocumentVersionsStatus documentGroupId={publishedId} />
 
   return (
     <PreviewCard
@@ -108,20 +104,17 @@ export function Document({
           </Flex>
         )}
         <Box style={{width: `100%`}}>
-          <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
-            <Preview layout="default" value={doc} schemaType={schemaType} />
+          <PreviewTooltip content={tooltip} disabled={disableTooltip}>
+            <Flex flex={1} align="center" justify="space-between" paddingRight={3}>
+              <Preview layout="default" value={doc} schemaType={schemaType} />
 
-            <Tooltip content={tooltip} portal placement="right" boundaryElement={null}>
               <Flex align="center" style={{flexShrink: 0}}>
-                {/* oxlint-disable-next-line typescript/no-deprecated -- the replacements are sanity 6.11+ only */}
-                <DocumentStatusIndicator
-                  draft={versionsInfo.draft}
-                  published={versionsInfo.published}
-                  versions={versionsInfo.versions}
-                />
+                {!versionsLoading && (
+                  <DocumentVersionsStatusIndicator documentVersions={versions} />
+                )}
               </Flex>
-            </Tooltip>
-          </Flex>
+            </Flex>
+          </PreviewTooltip>
         </Box>
         {dragBadge && (
           <Card tone="default" marginRight={4} radius={5}>
