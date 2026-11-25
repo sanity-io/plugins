@@ -147,6 +147,39 @@ describe('ReplaceAssetsOverview', () => {
     await waitFor(() => expect(lastFetchParams().tagId).toBe('tag-1'))
   })
 
+  it('leaves tags hidden by excludeTags out of the tag filter', async () => {
+    const hiddenTag = {
+      _id: 'tag-hidden',
+      _type: 'media.tag',
+      name: {_type: 'slug', current: 'internal'},
+    } as Tag
+    const preloaded = createTestRootState()
+    preloaded.assets.excludeTagSlugs = ['internal']
+    preloaded.tags.allIds = ['tag-1', 'tag-hidden']
+    preloaded.tags.byIds = {
+      'tag-1': {_type: 'tag', picked: false, tag, updating: false},
+      'tag-hidden': {_type: 'tag', picked: false, tag: hiddenTag, updating: false},
+    }
+
+    renderWithProviders(<Harness />, {preloaded})
+    await screen.findByText('image-a.png')
+
+    expect(screen.getByRole('option', {name: 'campaign'})).toBeTruthy()
+    expect(screen.queryByRole('option', {name: 'internal'})).toBeNull()
+  })
+
+  it('hides the tag filter when every tag is excluded', async () => {
+    const preloaded = createTestRootState()
+    preloaded.assets.excludeTagSlugs = ['campaign']
+    preloaded.tags.allIds = ['tag-1']
+    preloaded.tags.byIds = {'tag-1': {_type: 'tag', picked: false, tag, updating: false}}
+
+    renderWithProviders(<Harness />, {preloaded})
+    await screen.findByText('image-a.png')
+
+    expect(screen.queryByRole('combobox', {name: 'Filter by tag'})).toBeNull()
+  })
+
   it('filters by folder, listing nested folders by path', async () => {
     const user = userEvent.setup()
     const preloaded = createTestRootState()

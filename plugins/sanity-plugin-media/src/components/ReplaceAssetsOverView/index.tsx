@@ -43,10 +43,13 @@ const ReplaceAssetsOverview = (props: Props) => {
   const {folderId, searchInput, tagId} = filterState
 
   const tags = useTypedSelector(selectTags)
+  const excludeTagSlugs = useTypedSelector((state) => state.assets.excludeTagSlugs)
   const folderTree = useTypedSelector(selectFolderTree)
   const folders = flattenFolderTree(folderTree)
+  // Images with an excluded tag are never listed, so filtering by one could only come up empty.
   const sortedTags = tags
     .map((item) => item.tag)
+    .filter((tag) => !excludeTagSlugs.includes(tag.name.current))
     .sort((a, b) => a.name.current.localeCompare(b.name.current))
 
   const [searchQuery, setSearchQuery] = useState(() => searchInput.trim())
