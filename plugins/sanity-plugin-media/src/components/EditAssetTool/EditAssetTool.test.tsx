@@ -29,9 +29,7 @@ vi.mock('sanity', async (importOriginal) => {
   return {
     ...actual,
     useFormValue: () => ({_id: 'doc-1', _type: 'article'}),
-    useDocumentStore: () => ({}),
-    WithReferringDocuments: ({children}: {children: (args: unknown) => unknown}) =>
-      children({isLoading: false, referringDocuments: []}),
+    useReferringDocuments: () => ({isLoading: false, referringDocuments: []}),
   }
 })
 const asset = {

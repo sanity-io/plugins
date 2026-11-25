@@ -5,7 +5,7 @@ import groq from 'groq'
 import {type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type SubmitHandler, useForm, useFormState} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
-import {WithReferringDocuments, useColorSchemeValue, useDocumentStore} from 'sanity'
+import {useColorSchemeValue, useReferringDocuments} from 'sanity'
 
 import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import {getAssetFormSchema} from '../../formSchema'
@@ -30,6 +30,9 @@ import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
 import Details, {type DetailsProps} from './Details'
 
+// An empty field list returns the full referring documents, not just `_id` and `_type`
+const REFERRING_DOCUMENT_FIELDS: [] = []
+
 function renderDefaultDetails(props: DetailsProps) {
   return <Details {...props} />
 }
@@ -47,8 +50,6 @@ const DialogAssetEdit = (props: Props) => {
 
   const client = useVersionedClient()
   const scheme = useColorSchemeValue()
-
-  const documentStore = useDocumentStore()
 
   const dispatch = useDispatch()
   const assetItem = useTypedSelector((state) => selectAssetById(state, String(assetId))) // TODO: check casting
@@ -147,6 +148,11 @@ const DialogAssetEdit = (props: Props) => {
   const {errors, isDirty, isValid} = useFormState({control})
 
   const formUpdating = !assetItem || assetItem?.updating
+  const {isLoading, referringDocuments} = useReferringDocuments(
+    currentAsset?._id ?? '',
+    REFERRING_DOCUMENT_FIELDS,
+  )
+  const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)
 
   const handleClose = useCallback(() => {
     dispatch(dialogActions.remove({id}))
@@ -416,89 +422,70 @@ const DialogAssetEdit = (props: Props) => {
       */}
       <Flex direction={['column-reverse', 'column-reverse', 'row-reverse']}>
         <Box flex={1} marginTop={[5, 5, 0]} padding={4}>
-          <WithReferringDocuments // oxlint-disable-line no-deprecated -- deferred to a follow-up PR
-            // oxlint-disable-next-line no-deprecated -- deferred to a follow-up PR
-            documentStore={documentStore}
-            id={currentAsset._id}
-          >
-            {({isLoading, referringDocuments}) => {
-              const uniqueReferringDocuments = getUniqueDocuments(referringDocuments)
-              return (
-                <>
-                  {/* Tabs */}
-                  <TabList gap={2}>
-                    <Tab
-                      aria-controls="details-panel"
-                      disabled={formUpdating}
-                      id="details-tab"
-                      label="Details"
-                      onClick={() => setTabSection('details')}
-                      selected={tabSection === 'details'}
-                      size={2}
-                    />
-                    <Tab
-                      aria-controls="references-panel"
-                      disabled={formUpdating}
-                      id="references-tab"
-                      label={`References${
-                        !isLoading && Array.isArray(uniqueReferringDocuments)
-                          ? ` (${uniqueReferringDocuments.length})`
-                          : ''
-                      }`}
-                      onClick={() => setTabSection('references')}
-                      selected={tabSection === 'references'}
-                      size={2}
-                    />
-                  </TabList>
+          {/* Tabs */}
+          <TabList gap={2}>
+            <Tab
+              aria-controls="details-panel"
+              disabled={formUpdating}
+              id="details-tab"
+              label="Details"
+              onClick={() => setTabSection('details')}
+              selected={tabSection === 'details'}
+              size={2}
+            />
+            <Tab
+              aria-controls="references-panel"
+              disabled={formUpdating}
+              id="references-tab"
+              label={`References${
+                !isLoading && Array.isArray(uniqueReferringDocuments)
+                  ? ` (${uniqueReferringDocuments.length})`
+                  : ''
+              }`}
+              onClick={() => setTabSection('references')}
+              selected={tabSection === 'references'}
+              size={2}
+            />
+          </TabList>
 
-                  {/* Form fields */}
-                  <Box as="form" marginTop={4} onSubmit={handleSubmit(onSubmit)}>
-                    {/* Deleted notification */}
-                    {!assetItem && (
-                      <Card marginBottom={3} padding={3} radius={2} shadow={1} tone="critical">
-                        <Text size={1}>This file cannot be found – it may have been deleted.</Text>
-                      </Card>
-                    )}
+          {/* Form fields */}
+          <Box as="form" marginTop={4} onSubmit={handleSubmit(onSubmit)}>
+            {/* Deleted notification */}
+            {!assetItem && (
+              <Card marginBottom={3} padding={3} radius={2} shadow={1} tone="critical">
+                <Text size={1}>This file cannot be found – it may have been deleted.</Text>
+              </Card>
+            )}
 
-                    {/* Hidden button to enable enter key submissions */}
-                    <button style={{display: 'none'}} tabIndex={-1} type="submit" />
+            {/* Hidden button to enable enter key submissions */}
+            <button style={{display: 'none'}} tabIndex={-1} type="submit" />
 
-                    {/* Panel: details */}
-                    <TabPanel
-                      aria-labelledby="details"
-                      hidden={tabSection !== 'details'}
-                      id="details-panel"
-                    >
-                      {CustomDetails ? (
-                        <CustomDetails
-                          {...detailsProps}
-                          renderDefaultDetails={renderDefaultDetails}
-                        />
-                      ) : (
-                        <Details {...detailsProps} />
-                      )}
-                    </TabPanel>
+            {/* Panel: details */}
+            <TabPanel
+              aria-labelledby="details"
+              hidden={tabSection !== 'details'}
+              id="details-panel"
+            >
+              {CustomDetails ? (
+                <CustomDetails {...detailsProps} renderDefaultDetails={renderDefaultDetails} />
+              ) : (
+                <Details {...detailsProps} />
+              )}
+            </TabPanel>
 
-                    {/* Panel: References */}
-                    <TabPanel
-                      aria-labelledby="references"
-                      hidden={tabSection !== 'references'}
-                      id="references-panel"
-                    >
-                      <Box marginTop={5}>
-                        {assetItem?.asset && (
-                          <DocumentList
-                            documents={uniqueReferringDocuments}
-                            isLoading={isLoading}
-                          />
-                        )}
-                      </Box>
-                    </TabPanel>
-                  </Box>
-                </>
-              )
-            }}
-          </WithReferringDocuments>
+            {/* Panel: References */}
+            <TabPanel
+              aria-labelledby="references"
+              hidden={tabSection !== 'references'}
+              id="references-panel"
+            >
+              <Box marginTop={5}>
+                {assetItem?.asset && (
+                  <DocumentList documents={uniqueReferringDocuments} isLoading={isLoading} />
+                )}
+              </Box>
+            </TabPanel>
+          </Box>
         </Box>
 
         <Box flex={1} padding={4}>
