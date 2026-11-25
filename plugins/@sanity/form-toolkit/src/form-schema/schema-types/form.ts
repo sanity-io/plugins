@@ -1,4 +1,4 @@
-import {FaWpforms} from 'react-icons/fa'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {defineField, defineType, type SchemaTypeDefinition} from 'sanity'
 
 import type {FieldsOption} from '..'
@@ -10,7 +10,7 @@ export const formType = (fields: FieldsOption): SchemaTypeDefinition => {
     name: 'form',
     title: 'Form',
     type: 'document',
-    icon: FaWpforms,
+    icon: DocumentTextIcon,
     fields: [
       defineField({
         name: 'title',

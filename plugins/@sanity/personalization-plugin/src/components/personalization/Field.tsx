@@ -1,6 +1,6 @@
 import {CloseIcon} from '@sanity/icons/Close'
+import {UsersIcon} from '@sanity/icons/Users'
 import {useCallback, useMemo} from 'react'
-import {IoMdPeople} from 'react-icons/io'
 import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
@@ -29,7 +29,7 @@ const useAddPersonalizationAction = (
   return {
     title: `Add ${personalizationNameOverride}`,
     type: 'action',
-    icon: IoMdPeople,
+    icon: UsersIcon,
     onAction: handleAddAction,
     renderAsButton: true,
   }
