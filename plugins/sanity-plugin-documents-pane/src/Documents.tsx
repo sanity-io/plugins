@@ -3,13 +3,13 @@ import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
 import {
-  DefaultPreview,
   getPublishedId,
   Preview,
   useSchema,
   type ListenQueryOptions,
   type SanityDocument,
 } from 'sanity'
+import {DefaultPreview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
 import {usePaneRouter} from 'sanity/structure'
 

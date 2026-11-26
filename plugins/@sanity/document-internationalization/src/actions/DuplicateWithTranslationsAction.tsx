@@ -4,9 +4,7 @@ import {uuid} from '@sanity/uuid'
 import {useCallback, useMemo, useState} from 'react'
 import {filter, firstValueFrom} from 'rxjs'
 import {
-  DEFAULT_STUDIO_CLIENT_OPTIONS,
   type Id,
-  InsufficientPermissionsMessage,
   type PatchOperations,
   useClient,
   useCurrentUser,
@@ -16,6 +14,10 @@ import {
   type DocumentActionProps,
   type DocumentActionDescription,
 } from 'sanity'
+import {
+  DEFAULT_STUDIO_CLIENT_OPTIONS,
+  InsufficientPermissionsMessage,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {useTranslation} from 'sanity/i18n'
 import {useRouter} from 'sanity/router'

@@ -3,7 +3,6 @@ import {Box, Button, type ButtonProps, Card} from '@sanity/ui'
 import {type CSSProperties, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import {
-  DefaultPreview,
   getPreviewStateObservable,
   getPreviewValueWithFallback,
   SanityDefaultPreview,
@@ -12,6 +11,7 @@ import {
   useDocumentPreviewStore,
   useSchema,
 } from 'sanity'
+import {DefaultPreview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useIntentLink} from 'sanity/router'
 
 interface ResultPreviewProps {

@@ -4,13 +4,13 @@ import {Box, Button, Flex} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import {
   type ArrayInputFunctionsProps,
-  ArrayOfObjectsFunctions,
   type ArraySchemaType,
   insert,
   type ObjectSchemaType,
   PatchEvent,
   setIfMissing,
 } from 'sanity'
+import {ArrayOfObjectsFunctions} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {cloudinaryAssetSchema} from '../schema/cloudinaryAsset'
 import type {InsertHandlerParams} from '../types'

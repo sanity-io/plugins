@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
-import {FormField, type FormNodePresence, PatchEvent, type Path} from 'sanity'
+import {type FormNodePresence, PatchEvent, type Path} from 'sanity'
+import {FormField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import TreeEditor from './components/TreeEditor'
 import type {StoredTreeItem, TreeFieldSchema} from './types'

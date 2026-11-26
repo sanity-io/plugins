@@ -1,4 +1,5 @@
-import {DiffFromTo, type SchemaType} from 'sanity'
+import {type SchemaType} from 'sanity'
+import {DiffFromTo} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {AprimoCDNPreview} from './AprimoCDNPreview'
 

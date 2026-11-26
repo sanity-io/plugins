@@ -15,7 +15,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {FormFieldHeaderText} from 'sanity'
+import {FormFieldHeaderText} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {CustomInputResult, GetUserInput} from '../fieldActions/useUserInput'
 import {getInstructionTitle} from '../helpers/misc'

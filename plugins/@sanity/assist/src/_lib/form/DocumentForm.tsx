@@ -6,12 +6,12 @@ import {
   createPatchChannel,
   type DocumentMutationEvent,
   type DocumentRebaseEvent,
-  FormBuilder,
   fromMutationPatches,
   type PatchMsg,
   useDocumentPresence,
   useDocumentStore,
 } from 'sanity'
+import {FormBuilder} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useDocumentPane} from 'sanity/structure'
 
 import {assistFormId} from './constants'

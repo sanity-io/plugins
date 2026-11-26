@@ -6,7 +6,6 @@ import {useObservable} from 'react-rx'
 import type {SanityDocument, SchemaType} from 'sanity'
 import {
   type DocumentPresence,
-  DocumentPreviewPresence,
   type DocumentPreviewStore,
   type GeneralPreviewLayoutKey,
   getPreviewStateObservable,
@@ -14,6 +13,7 @@ import {
   isRecord,
   SanityDefaultPreview,
 } from 'sanity'
+import {DocumentPreviewPresence} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {DraftStatus} from './DraftStatus'
 import {PublishedStatus} from './PublishedStatus'

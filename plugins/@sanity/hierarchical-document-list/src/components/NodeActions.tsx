@@ -4,7 +4,7 @@ import {LaunchIcon} from '@sanity/icons/Launch'
 import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
-import {IntentButton as IntentLink} from 'sanity'
+import {IntentLink} from 'sanity/router'
 
 import useTreeOperations from '../hooks/useTreeOperations'
 import type {NodeProps} from '../types'

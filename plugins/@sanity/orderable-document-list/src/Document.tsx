@@ -4,14 +4,11 @@ import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {AvatarCounter, Card, Box, Button, Flex, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useContext} from 'react'
+import {useSchema, PreviewCard, Preview, useDocumentVersionInfo} from 'sanity'
 import {
-  useSchema,
-  PreviewCard,
-  Preview,
-  DocumentStatusIndicator,
   DocumentStatus,
-  useDocumentVersionInfo,
-} from 'sanity'
+  DocumentStatusIndicator,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {usePaneRouter} from 'sanity/structure'
 
 import {OrderableContext} from './OrderableContext'
