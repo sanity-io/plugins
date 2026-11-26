@@ -1,13 +1,13 @@
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {Card, Flex, Stack, Text} from '@sanity/ui'
 import groq from 'groq'
-import pluralize from 'pluralize'
 import {useEffect, useState} from 'react'
 import {useColorSchemeValue} from 'sanity'
 
 import useVersionedClient from '../../hooks/useVersionedClient'
 import type {ImageAsset} from '../../types'
 import imageDprUrl from '../../utils/imageDprUrl'
+import {pluralize} from '../../utils/pluralize'
 import Image from '../Image'
 
 type Props = {

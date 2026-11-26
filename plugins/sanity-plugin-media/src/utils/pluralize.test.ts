@@ -12,5 +12,7 @@ describe('pluralize', () => {
   it('returns the plural without a count', () => {
     expect(pluralize('file')).toBe('files')
     expect(pluralize('image')).toBe('images')
+    expect(pluralize('document', 1)).toBe('document')
+    expect(pluralize('document', 3)).toBe('documents')
   })
 })
