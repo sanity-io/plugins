@@ -1,5 +1,4 @@
-import {PatchEvent, type PathSegment, setIfMissing} from 'sanity'
-import {prefixPath} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {PatchEvent, type PathSegment, prefixPath, setIfMissing} from 'sanity'
 
 import type {LocalTreeItem, NodeProps} from '../types'
 import {

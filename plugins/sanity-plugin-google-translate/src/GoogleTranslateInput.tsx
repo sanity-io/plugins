@@ -2,9 +2,8 @@ import {Box, Button, Text, Flex, Stack} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
-import {MemberField, MemberFieldError, set, unset} from 'sanity'
+import {MemberField, MemberFieldSet, MemberFieldError, set, unset} from 'sanity'
 import type {FieldMember, InputProps, ObjectInputProps} from 'sanity'
-import {MemberFieldSet} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {extractLanguageFromCode} from './helpers/extractLanguageFromCode'
 import {getLanguageFromMember} from './helpers/getLanguageFromMember'
@@ -213,6 +212,7 @@ export function GoogleTranslateInput(props: ObjectInputProps) {
               <MemberFieldSet
                 key={member.key}
                 member={member}
+                // @ts-expect-error - MemberFieldSet renderInput typings do not match custom callback
                 renderInput={renderInput}
                 renderPreview={props.renderPreview}
                 renderField={props.renderField}
