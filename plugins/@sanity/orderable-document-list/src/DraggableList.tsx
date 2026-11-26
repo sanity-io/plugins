@@ -9,7 +9,7 @@ import {Box, Card} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useEffect, useState, useMemo, useCallback, type CSSProperties} from 'react'
 import type {PatchOperations} from 'sanity'
-import {usePaneRouter} from 'sanity/structure'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 
 import {Document} from './Document'
 import {useSanityClient} from './helpers/client'

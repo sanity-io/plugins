@@ -1,11 +1,9 @@
 import {Schema} from '@sanity/schema'
+import {defineType, type ObjectSchemaType, type SanityDocumentLike} from 'sanity'
 import {
-  defineType,
-  type ObjectSchemaType,
   pathToString,
-  type SanityDocumentLike,
   typed,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {describe, expect, test} from 'vitest'
 
 import {

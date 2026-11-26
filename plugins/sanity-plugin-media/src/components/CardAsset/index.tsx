@@ -15,7 +15,7 @@ import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled, css} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'

@@ -1,15 +1,11 @@
 import {Card, Text} from '@sanity/ui'
 import {type ChangeEvent, useCallback, useMemo} from 'react'
+import {type FormPatch, set, type StringInputProps, unset, useFormValue} from 'sanity'
 import {
-  type FormPatch,
   getPublishedId,
   type PatchEvent,
-  set,
-  type StringInputProps,
-  unset,
   useDocumentOperation,
-  useFormValue,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {ExperimentType} from '../..'
 import {Select} from '../Select'

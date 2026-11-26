@@ -2,7 +2,8 @@ import {ClipboardIcon} from '@sanity/icons/Clipboard'
 import {Box, Button, Card, Flex, Stack, Text, TextArea} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {type DocumentActionComponent, useDocumentOperation} from 'sanity'
+import {type DocumentActionComponent} from 'sanity'
+import {useDocumentOperation} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {articleFromHtml, type ArticleImport} from './articleFromHtml'
 

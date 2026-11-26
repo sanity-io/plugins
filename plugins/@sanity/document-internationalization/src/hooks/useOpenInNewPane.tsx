@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 import {useRouter} from 'sanity/router'
-import {usePaneRouter} from 'sanity/structure'
 
 export function useOpenInNewPane(id?: string | null, type?: string): () => void {
   const router = useRouter()

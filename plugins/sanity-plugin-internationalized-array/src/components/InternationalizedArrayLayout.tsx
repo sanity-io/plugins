@@ -1,4 +1,5 @@
-import {useSchema, type DocumentLayoutProps} from 'sanity'
+import {type DocumentLayoutProps} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import type {PluginConfig} from '../types'
 import {hasInternationalizedArrayField} from '../utils/hasInternationalizedArrayField'

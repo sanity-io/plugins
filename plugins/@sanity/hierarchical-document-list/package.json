@@ -42,9 +42,9 @@
     "@nosferatu500/react-sortable-tree": "^7.1.0",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
-    "@sanity/mutator": "catalog:",
+    "@sanity/mutator": "catalog:studio",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:"
+    "@sanity/util": "catalog:studio"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
@@ -61,7 +61,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "catalog:peer-internals",
     "styled-components": "catalog:peer"
   },
   "engines": {

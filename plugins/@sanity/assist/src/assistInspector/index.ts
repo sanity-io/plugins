@@ -1,5 +1,6 @@
 import {SparklesIcon} from '@sanity/icons/Sparkles'
-import {type DocumentInspector, typed} from 'sanity'
+import {type DocumentInspector} from 'sanity'
+import {typed} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {pluginTitle} from '../constants'
 import {type AssistInspectorRouteParams, fieldPathParam, instructionParam} from '../types'

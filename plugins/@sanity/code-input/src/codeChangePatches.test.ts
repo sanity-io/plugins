@@ -1,4 +1,5 @@
-import {PatchEvent, setIfMissing, type FormPatch} from 'sanity'
+import {setIfMissing, type FormPatch} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {describe, expect, test} from 'vitest'
 
 import {codeChangePatches} from './codeChangePatches'

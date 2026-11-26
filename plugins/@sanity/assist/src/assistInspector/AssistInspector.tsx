@@ -4,21 +4,21 @@ import {PlayIcon} from '@sanity/icons/Play'
 import {RetryIcon} from '@sanity/icons/Retry'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {type PropsWithChildren, useCallback, useMemo, useRef, useState} from 'react'
+import {type DocumentInspectorProps} from 'sanity'
 import {
-  type DocumentInspectorProps,
   PerspectiveProvider,
   PresenceOverlay,
   VirtualizerScrollInstanceProvider,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {
   DocumentInspectorHeader,
   type DocumentPaneNode,
   DocumentPaneProvider,
   PaneRouterContext,
   type PaneRouterContextValue,
-  useDocumentPane,
   usePaneRouter,
-} from 'sanity/structure'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
+import {useDocumentPane} from 'sanity/structure'
 import {styled} from 'styled-components'
 
 import {DocumentForm} from '../_lib/form'

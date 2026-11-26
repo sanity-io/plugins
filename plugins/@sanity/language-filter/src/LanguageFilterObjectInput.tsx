@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
-import {type ObjectInputProps, type ObjectMember, useFormValue, useSchema} from 'sanity'
+import {type ObjectInputProps, type ObjectMember, useFormValue} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import {isLanguageFilterEnabled} from './filterField'
 import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'

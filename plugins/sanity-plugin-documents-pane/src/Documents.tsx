@@ -2,16 +2,15 @@ import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
+import {type ListenQueryOptions, type SanityDocument} from 'sanity'
+import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
 import {
-  DefaultPreview,
   getPublishedId,
   Preview,
-  useSchema,
-  type ListenQueryOptions,
-  type SanityDocument,
-} from 'sanity'
-import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
-import {usePaneRouter} from 'sanity/structure'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {DefaultPreview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 
 import Debug from './Debug'
 import DuplicateDocument from './DuplicateDocument'

@@ -2,8 +2,14 @@
 
 import {DocumentIcon} from '@sanity/icons/Document'
 import {useMemo} from 'react'
-import type {CollatedHit, SanityDocument, SchemaType} from 'sanity'
-import {PreviewCard, useDocumentPresence, useDocumentPreviewStore, useSchema} from 'sanity'
+import type {SanityDocument, SchemaType} from 'sanity'
+import type {CollatedHit} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {
+  PreviewCard,
+  useDocumentPresence,
+  useDocumentPreviewStore,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 import {IntentLink} from 'sanity/router'
 
 import {MissingSchemaType} from './MissingSchemaType'

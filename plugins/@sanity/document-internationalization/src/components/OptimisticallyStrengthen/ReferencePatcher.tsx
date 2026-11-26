@@ -1,5 +1,9 @@
 import {useEffect} from 'react'
-import {PatchEvent, unset, useUnstableObserveDocument} from 'sanity'
+import {unset} from 'sanity'
+import {
+  PatchEvent,
+  useUnstableObserveDocument,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useDocumentPane} from 'sanity/structure'
 
 import type {TranslationReference} from '../../types'

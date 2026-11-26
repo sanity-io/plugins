@@ -7,11 +7,11 @@ import {
   type FormSetIfMissingPatch,
   insert,
   isSanityDocument,
-  PatchEvent,
   setIfMissing,
   useGetFormValue,
-  useSchema,
 } from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 import {useDocumentPane} from 'sanity/structure'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'

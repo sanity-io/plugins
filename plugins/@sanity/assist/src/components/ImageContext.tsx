@@ -1,6 +1,7 @@
 import {createContext, useEffect, useMemo, useState} from 'react'
-import {type InputProps, pathToString} from 'sanity'
-import {usePaneRouter} from 'sanity/structure'
+import {type InputProps} from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
 import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'

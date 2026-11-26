@@ -17,9 +17,22 @@ vi.mock('sanity', async (importOriginal) => {
     ...actual,
     useClient: () => ({request: mockRequest}),
     useWorkspace: () => mockUseWorkspace(),
-    TextWithTone: ({children}: {children: React.ReactNode}) => <div>{children}</div>,
   }
 })
+
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1')
+      >()
+    return {
+      ...actual,
+      TextWithTone: ({children}: {children: React.ReactNode}) => <div>{children}</div>,
+    }
+  },
+)
 
 vi.mock('@sanity/ui/toast', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@sanity/ui/toast')>()

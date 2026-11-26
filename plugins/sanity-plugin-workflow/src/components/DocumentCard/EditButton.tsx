@@ -1,6 +1,6 @@
 import {EditIcon} from '@sanity/icons/Edit'
 import {Button} from '@sanity/ui'
-import {getPublishedId} from 'sanity'
+import {getPublishedId} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useRouter} from 'sanity/router'
 
 type EditButtonProps = {

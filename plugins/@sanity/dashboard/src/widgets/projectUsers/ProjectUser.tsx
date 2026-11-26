@@ -1,6 +1,7 @@
 import {RobotIcon} from '@sanity/icons/Robot'
 import {Box, Flex, rem, Stack, Text} from '@sanity/ui'
-import {useListFormat, type User, UserAvatar} from 'sanity'
+import {useListFormat, type User} from 'sanity'
+import {UserAvatar} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 const Root = styled(Flex)`

@@ -1,10 +1,10 @@
+import {useFormValue} from 'sanity'
 import {
   getPublishedId,
   getVersionFromId,
   useDocumentOperation,
-  useFormValue,
-  useSchema,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import {type SummaryTargetField, summaryTargetFields} from '../robots/applySummary'
 

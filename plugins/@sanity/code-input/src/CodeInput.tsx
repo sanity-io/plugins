@@ -1,6 +1,7 @@
 import {Box, Stack, Text} from '@sanity/ui'
 import {Suspense, useCallback} from 'react'
-import {MemberField, type ObjectInputProps, type RenderInputCallback, set} from 'sanity'
+import {type ObjectInputProps, type RenderInputCallback, set} from 'sanity'
+import {MemberField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {codeChangePatches} from './codeChangePatches'
 import {EditorContainer, FullscreenEditor} from './CodeInputFullscreen'

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import {act, renderHook} from '@testing-library/react'
-import {PatchEvent} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {describe, expect, test, vi} from 'vitest'
 
 import {useDraftDelayedTask} from './useDraftDelayedTask'

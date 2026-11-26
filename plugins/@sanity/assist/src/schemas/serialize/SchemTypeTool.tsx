@@ -1,7 +1,8 @@
 import {SyncIcon} from '@sanity/icons/Sync'
 import {Box, Button, Card, Flex, Label, Spinner, Stack} from '@sanity/ui'
 import {useCallback, useMemo, useState} from 'react'
-import {useClient, useSchema} from 'sanity'
+import {useClient} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import {useListeningQuery} from '../../_lib/useListeningQuery'
 import {assistSerializedTypeName, type SerializedSchemaType} from '../../types'

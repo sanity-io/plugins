@@ -4,16 +4,15 @@ import {Inline} from '@sanity/ui'
 import {isValidElement, useMemo} from 'react'
 import {useObservable} from 'react-rx'
 import type {SanityDocument, SchemaType} from 'sanity'
+import {type DocumentPreviewStore, type GeneralPreviewLayoutKey} from 'sanity'
 import {
   type DocumentPresence,
-  DocumentPreviewPresence,
-  type DocumentPreviewStore,
-  type GeneralPreviewLayoutKey,
   getPreviewStateObservable,
   getPreviewValueWithFallback,
   isRecord,
   SanityDefaultPreview,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {DocumentPreviewPresence} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {DraftStatus} from './DraftStatus'
 import {PublishedStatus} from './PublishedStatus'

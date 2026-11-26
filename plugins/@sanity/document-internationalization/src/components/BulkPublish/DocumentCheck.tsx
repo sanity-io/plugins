@@ -1,6 +1,11 @@
 import {Card, Spinner} from '@sanity/ui'
 import {useEffect, useMemo} from 'react'
-import {Preview, useEditState, useSchema, useValidationStatus} from 'sanity'
+import {
+  Preview,
+  useEditState,
+  useValidationStatus,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 type DocumentCheckProps = {
   id: string
@@ -20,7 +25,7 @@ export default function DocumentCheck(props: DocumentCheckProps) {
   const editState = useEditState(id, '')
   const documentType = editState.draft?._type ?? editState.published?._type ?? ''
   // oxlint-disable-next-line no-useless-default-assignment
-  const {isValidating, validation = []} = useValidationStatus(id, documentType, false)
+  const {isValidating, validation = []} = useValidationStatus(id, documentType)
   const schema = useSchema()
 
   const validationHasErrors = useMemo(() => {

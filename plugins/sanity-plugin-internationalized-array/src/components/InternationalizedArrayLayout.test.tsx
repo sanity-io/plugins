@@ -1,6 +1,6 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import {cleanup, render, screen} from '@testing-library/react'
-import type {DocumentLayoutProps} from 'sanity'
+import type {DocumentLayoutProps} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {CONFIG_DEFAULT} from '../constants'
@@ -14,10 +14,23 @@ vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
-    useSchema: () => mockUseSchema(),
     isDocumentSchemaType: (schemaType: {jsonType?: string}) => schemaType?.jsonType === 'object',
   }
 })
+
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1')
+      >()
+    return {
+      ...actual,
+      useSchema: () => mockUseSchema(),
+    }
+  },
+)
 
 vi.mock('./InternationalizedArrayContext', () => ({
   InternationalizedArrayProvider: ({

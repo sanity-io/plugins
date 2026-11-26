@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
-import {PatchEvent, unset} from 'sanity'
+import {unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {deleteAssetOnMux} from '../actions/assets'
 import {useClient} from '../hooks/useClient'

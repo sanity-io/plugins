@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
-import {type Path, pathToString} from 'sanity'
+import {type Path} from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {documentRootKey, type StudioInstruction} from '../types'
 

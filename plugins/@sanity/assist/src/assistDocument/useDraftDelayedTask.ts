@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useEffectEvent, useRef} from 'react'
-import {PatchEvent} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 export interface DraftDelayedTaskArgs<T> {
   documentOnChange: (event: PatchEvent) => void

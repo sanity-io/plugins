@@ -1,5 +1,6 @@
 import {type ContextType, useContext, useMemo} from 'react'
-import {type ObjectSchemaType, useSchema} from 'sanity'
+import {type ObjectSchemaType} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 import {PortableTextMemberSchemaTypesContext} from 'sanity/_singletons'
 
 import type {PickerItemsContext} from './types'

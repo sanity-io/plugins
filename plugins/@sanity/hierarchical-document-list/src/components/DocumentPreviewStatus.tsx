@@ -2,7 +2,9 @@ import {EditIcon} from '@sanity/icons/Edit'
 import {PublishIcon} from '@sanity/icons/Publish'
 import {Box, Inline, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {type SanityDocument, TextWithTone, useRelativeTime} from 'sanity'
+import {type SanityDocument} from 'sanity'
+import {useRelativeTime} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {TextWithTone} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import type {DocumentPair} from '../types'
 

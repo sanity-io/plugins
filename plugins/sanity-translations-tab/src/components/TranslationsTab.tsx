@@ -3,7 +3,7 @@ import {ToastProvider} from '@sanity/ui/toast'
 import {randomKey} from '@sanity/util/content'
 import {useMemo} from 'react'
 import type {SanityDocument} from 'sanity'
-import {useSchema} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import {useClient} from '../hooks/useClient'
 import {useSecrets} from '../hooks/useSecrets'

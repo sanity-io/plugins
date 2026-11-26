@@ -1,6 +1,7 @@
 import {Box, Button, Card, ErrorBoundary, Flex, Stack, Text} from '@sanity/ui'
 import {type ErrorInfo, type PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {type InputProps, isArraySchemaType, PatchEvent, unset} from 'sanity'
+import {type InputProps, isArraySchemaType, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import {isPortableTextArray} from '../helpers/typeUtils'

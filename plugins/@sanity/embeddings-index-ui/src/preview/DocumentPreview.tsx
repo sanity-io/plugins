@@ -2,16 +2,15 @@ import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Box, Button, type ButtonProps, Card} from '@sanity/ui'
 import {type CSSProperties, useMemo} from 'react'
 import {useObservable} from 'react-rx'
+import {type SanityDocument, type SchemaType} from 'sanity'
 import {
-  DefaultPreview,
   getPreviewStateObservable,
   getPreviewValueWithFallback,
   SanityDefaultPreview,
-  type SanityDocument,
-  type SchemaType,
   useDocumentPreviewStore,
-  useSchema,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {DefaultPreview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 import {useIntentLink} from 'sanity/router'
 
 interface ResultPreviewProps {

@@ -1,7 +1,7 @@
 import {Box, type ButtonTone, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import type {ComponentType, PropsWithChildren} from 'react'
-import {TextWithTone} from 'sanity'
+import {TextWithTone} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 type InfoIconProps = PropsWithChildren & {
   icon: ComponentType

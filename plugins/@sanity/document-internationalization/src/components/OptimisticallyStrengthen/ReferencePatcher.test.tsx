@@ -1,6 +1,6 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import {cleanup, render} from '@testing-library/react'
-import {PatchEvent} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {ThemeWrapper} from '../../test/component-helpers'
@@ -12,13 +12,19 @@ const mockUseUnstableObserveDocument = vi.fn()
 const mockOnChange = vi.fn()
 const mockUseDocumentPane = vi.fn()
 
-vi.mock('sanity', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('sanity')>()
-  return {
-    ...actual,
-    useUnstableObserveDocument: (id: string) => mockUseUnstableObserveDocument(id),
-  }
-})
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver')
+      >()
+    return {
+      ...actual,
+      useUnstableObserveDocument: (id: string) => mockUseUnstableObserveDocument(id),
+    }
+  },
+)
 
 vi.mock('sanity/structure', () => ({
   useDocumentPane: () => mockUseDocumentPane(),

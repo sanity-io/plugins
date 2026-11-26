@@ -18,7 +18,8 @@ import {
 } from 'react'
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
-import {PatchEvent, set, type StringInputProps, unset, useClient} from 'sanity'
+import {set, type StringInputProps, unset, useClient} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import type {MarkdownOptions} from '../schema'

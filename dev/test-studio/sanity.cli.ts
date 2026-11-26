@@ -25,10 +25,8 @@ export default defineCliConfig({
   api: {projectId, dataset},
   deployment: {
     appId,
-    // Auto-updates vendor builds hardcode `react-dom-client.production.js`, which bypasses
-    // the `react-dom/client` → `react-dom/profiling` alias below. Disable when profiling so
-    // the alias can take effect; keep enabled for non-Vercel sanity deploys.
-    autoUpdates: !reactProductionProfiling,
+    // Temporary until the module CDN serves the Studio v7 private-internals subpaths.
+    autoUpdates: false,
   },
   reactCompiler: {transform: 'oxc'},
   typegen: {formatGeneratedCode: false},

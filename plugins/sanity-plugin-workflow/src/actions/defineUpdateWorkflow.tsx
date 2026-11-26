@@ -4,10 +4,10 @@ import {useToast} from '@sanity/ui/toast'
 import {
   type DocumentActionDescription,
   useCurrentUser,
-  useValidationStatus,
   type DocumentActionProps,
   useClient,
 } from 'sanity'
+import {useValidationStatus} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {useWorkflowContext} from '../components/WorkflowContext'
 import {API_VERSION} from '../constants'
@@ -28,7 +28,7 @@ function useUpdateWorkflow(
   const {assignees = []} = metadata ?? {}
 
   // TODO: Shouldn't the document action props contain this?
-  const {validation, isValidating} = useValidationStatus(id, type, false)
+  const {validation, isValidating} = useValidationStatus(id, type)
   const hasValidationErrors =
     currentState?.requireValidation &&
     !isValidating &&

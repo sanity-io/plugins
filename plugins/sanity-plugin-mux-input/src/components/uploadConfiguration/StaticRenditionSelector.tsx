@@ -1,6 +1,6 @@
 import {Checkbox, Flex, Label, Radio, Stack, Text} from '@sanity/ui'
 import {type ActionDispatch, useMemo, useState} from 'react'
-import {FormField} from 'sanity'
+import {FormField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {type StaticRenditionResolution, type UploadConfig} from '../../util/types'
 import {type UploadConfigurationStateAction} from '../UploadConfiguration'

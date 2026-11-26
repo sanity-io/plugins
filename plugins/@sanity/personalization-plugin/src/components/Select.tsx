@@ -1,6 +1,7 @@
 import {Select as SanitySelect} from '@sanity/ui'
 import type {ChangeEvent} from 'react'
-import type {FormPatch, PatchEvent, StringInputProps} from 'sanity'
+import type {FormPatch, StringInputProps} from 'sanity'
+import type {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {SelectOption} from './experiment/Input'
 

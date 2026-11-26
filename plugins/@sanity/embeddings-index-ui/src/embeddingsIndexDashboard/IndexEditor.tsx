@@ -1,7 +1,7 @@
 import {AddIcon} from '@sanity/icons/Add'
 import {Box, Button, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
 import {type SubmitEvent, useCallback, useEffect, useId, useRef, useState} from 'react'
-import {useSchema} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import {type IndexState, type NamedIndex} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'

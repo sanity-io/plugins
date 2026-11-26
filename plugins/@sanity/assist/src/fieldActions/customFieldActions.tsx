@@ -10,8 +10,8 @@ import {
   type Path,
   type SanityDocumentLike,
   type SchemaType,
-  useWorkspaceSchemaId,
 } from 'sanity'
+import {useWorkspaceSchemaId} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {randomKey} from '../_lib/randomKey'
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'

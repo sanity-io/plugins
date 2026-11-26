@@ -1,5 +1,6 @@
 import {type ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
-import {type ObjectSchemaType, type Schema, useSchema} from 'sanity'
+import {type ObjectSchemaType, type Schema} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import type {AssistPluginConfig} from '../plugin'
 import {serializeSchema} from '../schemas/serialize/serializeSchema'

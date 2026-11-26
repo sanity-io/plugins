@@ -1,6 +1,7 @@
 import {Button, Stack, Box, Label, Text, Card, Flex, Grid, Container, TextInput} from '@sanity/ui'
 import {type SubmitEvent, useState} from 'react'
-import {useSchema, useClient, type SanityDocument} from 'sanity'
+import {useClient, type SanityDocument} from 'sanity'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 
 import type {PluginConfig} from '../types'
 import Duplicator from './Duplicator'

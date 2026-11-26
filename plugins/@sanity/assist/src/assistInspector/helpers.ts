@@ -9,16 +9,21 @@ import {extractWithPath} from '@sanity/mutator'
 import {type ComponentType, useMemo} from 'react'
 import {
   type ArraySchemaType,
-  isKeySegment,
   isObjectSchemaType,
   type ObjectSchemaType,
   type Path,
-  pathToString,
   type SanityDocumentLike,
   type SchemaType,
-  stringToPath,
 } from 'sanity'
-import {type PaneRouterContextValue, usePaneRouter} from 'sanity/structure'
+import {
+  isKeySegment,
+  pathToString,
+  stringToPath,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {
+  type PaneRouterContextValue,
+  usePaneRouter,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 
 import {useAiAssistanceConfig} from '../assistLayout/AiAssistanceConfigContext'
 import {isAssistSupported} from '../helpers/assistSupported'

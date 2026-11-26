@@ -9,10 +9,10 @@ import {
   useDocumentOperation,
   useDocumentPairPermissions,
   useDocumentStore,
-  useTranslation,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
+import {useTranslation} from 'sanity/i18n'
 import {structureLocaleNamespace} from 'sanity/structure'
-import {usePaneRouter} from 'sanity/structure'
 
 interface DuplicateDocumentProps {
   id: string

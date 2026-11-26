@@ -13,11 +13,14 @@ import type {PickerInsertEvent} from './types'
 // arrayTypeName fallback path — the member-schema context stays at its null
 // default) and the member-items context for open-on-insert; both modules are
 // mocked, mirroring blockInsertPicker.test.tsx.
-vi.mock('sanity', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
   useFormCallbacks: () => ({
     onPathOpen: () => {},
     onSetPathCollapsed: () => {},
   }),
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1', () => ({
   useSchema: () => ({
     get: (name: string) => {
       if (name === 'testContent') {

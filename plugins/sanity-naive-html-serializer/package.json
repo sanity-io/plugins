@@ -39,9 +39,9 @@
   "dependencies": {
     "@portabletext/block-tools": "catalog:",
     "@portabletext/to-html": "catalog:",
-    "@sanity/mutator": "catalog:",
-    "@sanity/schema": "catalog:",
-    "@sanity/util": "catalog:"
+    "@sanity/mutator": "catalog:studio",
+    "@sanity/schema": "catalog:studio",
+    "@sanity/util": "catalog:studio"
   },
   "devDependencies": {
     "@portabletext/types": "catalog:",

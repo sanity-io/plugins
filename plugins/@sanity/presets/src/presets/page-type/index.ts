@@ -1,5 +1,4 @@
 import {
-  ALL_FIELDS_GROUP,
   type ArrayDefinition,
   defineArrayMember,
   defineField,
@@ -7,6 +6,7 @@ import {
   type FieldDefinition,
   type SchemaTypeDefinition,
 } from 'sanity'
+import {ALL_FIELDS_GROUP} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {definePresetType} from '../../definePresetType'
 

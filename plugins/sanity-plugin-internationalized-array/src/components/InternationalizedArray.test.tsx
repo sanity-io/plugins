@@ -10,8 +10,6 @@ const mockGetFormValue = vi.fn()
 vi.mock('sanity', () => ({
   useFormValue: vi.fn(() => 'article'),
   useGetFormValue: vi.fn(() => mockGetFormValue),
-  ArrayOfObjectsItem: () => <div data-testid="array-item" />,
-  MemberItemError: () => <div data-testid="member-error" />,
   set: vi.fn((value: unknown) => ({type: 'set', value})),
   setIfMissing: vi.fn((value: unknown) => ({type: 'setIfMissing', value})),
   insert: vi.fn((items: unknown[], position: string, path: unknown[]) => ({
@@ -20,6 +18,11 @@ vi.mock('sanity', () => ({
     position,
     path,
   })),
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
+  ArrayOfObjectsItem: () => <div data-testid="array-item" />,
+  MemberItemError: () => <div data-testid="member-error" />,
 }))
 
 vi.mock('sanity/structure', () => ({

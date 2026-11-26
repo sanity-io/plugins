@@ -1,11 +1,9 @@
 import {useCallback} from 'react'
+import {type FieldMember, type InputProps, type PrimitiveInputElementProps} from 'sanity'
 import {
-  type FieldMember,
-  type InputProps,
   MemberField,
   type MemberFieldProps,
-  type PrimitiveInputElementProps,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {LanguageInput} from './LanguageInput'
 import type {CodeInputLanguage} from './types'

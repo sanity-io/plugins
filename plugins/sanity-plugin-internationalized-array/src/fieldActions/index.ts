@@ -5,10 +5,10 @@ import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
   type DocumentFieldActionProps,
-  PatchEvent,
   setIfMissing,
   useFormValue,
 } from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useDocumentPane} from 'sanity/structure'
 
 import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'

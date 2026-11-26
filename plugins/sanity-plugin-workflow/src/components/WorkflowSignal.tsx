@@ -1,5 +1,6 @@
 import {useEffect} from 'react'
-import {type ObjectInputProps, getPublishedId} from 'sanity'
+import {type ObjectInputProps} from 'sanity'
+import {getPublishedId} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {useWorkflowContext} from './WorkflowContext'
 

@@ -1,6 +1,7 @@
 import type {SanityDocument} from '@sanity/client'
 import {Box, Card, Text} from '@sanity/ui'
-import {collate, useSchema} from 'sanity'
+import {collate} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
 import {styled} from 'styled-components'
 
 import {DocumentPreview} from '../documentPreview/DocumentPreview'

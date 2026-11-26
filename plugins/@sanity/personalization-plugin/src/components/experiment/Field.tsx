@@ -7,10 +7,10 @@ import {
   type DocumentFieldActionProps,
   type FormPatch,
   type ObjectFieldProps,
-  type PatchEvent,
   set,
   unset,
 } from 'sanity'
+import {type PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {clearChildrenGroups} from '../../utils/clearChildGroups'
 

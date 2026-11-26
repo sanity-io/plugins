@@ -2,8 +2,16 @@ import {HelpCircleIcon} from '@sanity/icons/HelpCircle'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {type ReactNode, useMemo} from 'react'
-import {Preview, type SanityDocument, type SchemaType, TextWithTone, useSchema} from 'sanity'
-import {type RouterPaneGroup, usePaneRouter} from 'sanity/structure'
+import {type SanityDocument, type SchemaType} from 'sanity'
+import {Preview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {
+  TextWithTone,
+  useSchema,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/1'
+import {
+  type RouterPaneGroup,
+  usePaneRouter,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver/structure'
 
 import useTreeOperations from '../hooks/useTreeOperations'
 import type {LocalTreeItem} from '../types'

@@ -2,16 +2,14 @@ import {Box, type BoxProps, Flex, focusFirstDescendant, Spinner, Text} from '@sa
 import type React from 'react'
 import {type HTMLProps, useEffect, useEffectEvent, useMemo, useRef} from 'react'
 import {tap} from 'rxjs/operators'
+import {type DocumentMutationEvent, type DocumentRebaseEvent, type PatchMsg} from 'sanity'
 import {
   createPatchChannel,
-  type DocumentMutationEvent,
-  type DocumentRebaseEvent,
-  FormBuilder,
   fromMutationPatches,
-  type PatchMsg,
   useDocumentPresence,
   useDocumentStore,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {FormBuilder} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {useDocumentPane} from 'sanity/structure'
 
 import {assistFormId} from './constants'

@@ -1,6 +1,10 @@
 import {Box, Flex, Spinner} from '@sanity/ui'
 import {useCallback, useEffect} from 'react'
-import {type PatchEvent, useDocumentOperation, useEditState} from 'sanity'
+import {
+  type PatchEvent,
+  useDocumentOperation,
+  useEditState,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import DeskWarning from './components/DeskWarning'
 import TreeEditor from './components/TreeEditor'

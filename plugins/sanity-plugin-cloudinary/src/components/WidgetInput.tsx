@@ -1,7 +1,8 @@
 import {PlugIcon} from '@sanity/icons/Plug'
 import {Button, Flex, Grid, Stack} from '@sanity/ui'
 import {useCallback} from 'react'
-import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
+import {type ObjectInputProps, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import type {CloudinaryAsset} from '../types'

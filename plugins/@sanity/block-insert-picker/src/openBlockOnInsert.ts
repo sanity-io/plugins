@@ -1,5 +1,5 @@
 import {useCallback, useContext, useEffect, useRef} from 'react'
-import {useFormCallbacks} from 'sanity'
+import {useFormCallbacks} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {PortableTextMemberItemsContext} from 'sanity/_singletons'
 
 /**

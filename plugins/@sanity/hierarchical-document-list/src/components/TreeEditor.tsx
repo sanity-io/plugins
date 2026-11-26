@@ -5,7 +5,7 @@ import {AddCircleIcon} from '@sanity/icons/AddCircle'
 import {Box, Button, Card, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import type {PatchEvent} from 'sanity'
+import type {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import useAllItems from '../hooks/useAllItems'
 import useLocalTree from '../hooks/useLocalTree'
