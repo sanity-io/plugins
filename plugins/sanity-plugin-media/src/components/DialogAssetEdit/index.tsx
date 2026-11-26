@@ -261,8 +261,15 @@ const DialogAssetEdit = (props: Props) => {
   }, [client, currentAsset, locales])
 
   // Submit react-hook-form
-  const onSubmit: SubmitHandler<AssetFormData> = useCallback(
-    (formData) => {
+  //
+  // `closeDialog` decides between the two save buttons. Omitting `closeDialogId`
+  // is what keeps the dialog open: dialogClearOnAssetUpdateEpic only dismisses a
+  // dialog when the completed action carries one. The asset listener above then
+  // resets the form against the saved asset, so the buttons return to their
+  // disabled state and the tooltip picks up the new 'Last updated' time without
+  // the editor losing their place.
+  const submitAsset = useCallback(
+    (formData: AssetFormData, closeDialog: boolean) => {
       if (!assetItem?.asset) {
         return
       }
@@ -278,7 +285,7 @@ const DialogAssetEdit = (props: Props) => {
       dispatch(
         assetsActions.updateRequest({
           asset: assetItem?.asset,
-          closeDialogId: assetItem?.asset._id,
+          ...(closeDialog && {closeDialogId: assetItem?.asset._id}),
           formData: {
             ...sanitizedFormData,
             // Map tags to sanity references
@@ -301,6 +308,16 @@ const DialogAssetEdit = (props: Props) => {
       )
     },
     [assetItem?.asset, currentAsset, dispatch],
+  )
+
+  const onSubmit: SubmitHandler<AssetFormData> = useCallback(
+    (formData) => submitAsset(formData, true),
+    [submitAsset],
+  )
+
+  const onSubmitAndKeepOpen: SubmitHandler<AssetFormData> = useCallback(
+    (formData) => submitAsset(formData, false),
+    [submitAsset],
   )
 
   // Listen for asset mutations and update snapshot
@@ -385,6 +402,7 @@ const DialogAssetEdit = (props: Props) => {
             isValid={isValid}
             lastUpdated={currentAsset?._updatedAt}
             onClick={handleSubmit(onSubmit)}
+            onSave={handleSubmit(onSubmitAndKeepOpen)}
           />
         </Flex>
       </Stack>
