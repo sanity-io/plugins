@@ -78,9 +78,7 @@ vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
-    WithReferringDocuments: ({children}: {children: (args: unknown) => unknown}) =>
-      children({isLoading: false, referringDocuments: []}),
-    useDocumentStore: () => ({}),
+    useReferringDocuments: () => ({isLoading: false, referringDocuments: []}),
   }
 })
 

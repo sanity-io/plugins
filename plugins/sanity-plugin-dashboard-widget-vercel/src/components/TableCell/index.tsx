@@ -19,7 +19,7 @@ const TableCell = (props: Props) => {
 
   switch (variant) {
     case 'age':
-      cellWidth = '50px'
+      cellWidth = '110px'
       break
     case 'branch':
       cellWidth = '300px'

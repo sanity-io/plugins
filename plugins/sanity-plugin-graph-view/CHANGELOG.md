@@ -1,5 +1,11 @@
 # sanity-plugin-graph-view
 
+## 5.0.31
+
+### Patch Changes
+
+- [#2335](https://github.com/sanity-io/plugins/pull/2335) [`5888e0a`](https://github.com/sanity-io/plugins/commit/5888e0aec923e57d8d55b4c39a399ff65ebc0239) Thanks [@pedrobonamin](https://github.com/pedrobonamin)! - Remove the `polished` dependency. Graph colours now use `rgba` from `@sanity/ui/theme`, which produces the same values.
+
 ## 5.0.30
 
 ### Patch Changes

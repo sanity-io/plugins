@@ -1,6 +1,6 @@
 {
   "name": "@sanity/form-toolkit",
-  "version": "3.0.24",
+  "version": "3.0.25",
   "description": "Tool kit for integrating forms with a Sanity Studio",
   "keywords": [
     "sanity",
@@ -46,10 +46,10 @@
   "dependencies": {
     "@formium/client": "^0.1.4",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "@sanity/icons": "catalog:",
     "@sanity/sanity-plugin-async-list": "workspace:^",
     "@sanity/ui": "catalog:",
-    "h3": "^1.15.11",
-    "react-icons": "catalog:"
+    "h3": "^1.15.11"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",
