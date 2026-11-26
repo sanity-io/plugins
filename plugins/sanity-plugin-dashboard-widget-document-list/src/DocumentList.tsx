@@ -1,6 +1,5 @@
 import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
-import intersection from 'lodash-es/intersection.js'
 import {type ReactNode, useEffect, useMemo, useState} from 'react'
 import {
   getPublishedId,
@@ -69,7 +68,11 @@ function DocumentList(props: DocumentListConfig): ReactNode {
 
     return {
       assembledQuery: `*[_type in $types] | order(${order}) [0...${limit * 2}]`,
-      params: {types: types ? intersection(types, documentTypes) : documentTypes},
+      params: {
+        types: types
+          ? [...new Set(types)].filter((type) => documentTypes.includes(type))
+          : documentTypes,
+      },
     }
   }, [schema, query, queryParams, order, limit, types])
 
