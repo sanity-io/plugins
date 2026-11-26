@@ -11,7 +11,6 @@ import {
   type Theme,
   type ThemeColorSchemeKey,
 } from '@sanity/ui'
-import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {type DragEvent, memo, type MouseEvent, type RefObject} from 'react'
 import {useDispatch} from 'react-redux'
@@ -34,7 +33,6 @@ import Image from '../Image'
 type Props = {
   id: string
   selected: boolean
-  source?: string
 }
 
 const CardWrapper = styled(Flex)`
@@ -102,10 +100,9 @@ const StyledWarningOutlineIcon = styled(WarningFilledIcon)(({theme}) => {
 })
 
 const CardAsset = (props: Props) => {
-  const {id, selected, source} = props
+  const {id, selected} = props
 
   const scheme = useColorSchemeValue()
-  const toast = useToast()
 
   // Refs
   const shiftPressed: RefObject<boolean> = useKeyPress('shift')
@@ -115,31 +112,11 @@ const CardAsset = (props: Props) => {
   const lastPicked = useTypedSelector((state) => state.assets.lastPicked)
   const assetsPicked = useTypedSelector(selectAssetsPicked)
   const item = useTypedSelector((state) => selectAssetById(state, id))
-  // Dialog carries the replace target so search refetch (which clears allIds/picks) is safe.
-  const dialogReplaceAssetId = useTypedSelector((state) => {
-    if (source !== 'replace-asset') {
-      return undefined
-    }
-    const dialog = state.dialog.items.find((d) => d.type === 'dialogAllAssets')
-    return dialog?.type === 'dialogAllAssets' ? dialog.assetId : undefined
-  })
-
   const asset = item?.asset
   const error = item?.error
   const isOpaque = item?.asset?.metadata?.isOpaque
   const picked = item?.picked
   const updating = item?.updating
-
-  // Prefer dialog assetId; fall back to the single currently-picked asset (not lastPicked).
-  const assetToReplaceId =
-    dialogReplaceAssetId ??
-    (source === 'replace-asset' && assetsPicked.length === 1
-      ? assetsPicked[0]?.asset._id
-      : undefined)
-
-  const assetToReplace = useTypedSelector((state) =>
-    assetToReplaceId ? selectAssetById(state, assetToReplaceId) : undefined,
-  )
 
   const {isMultiSelect, onSelect} = useAssetSourceActions()
 
@@ -148,28 +125,9 @@ const CardAsset = (props: Props) => {
     return null
   }
 
-  const handleReplaceAsset = () => {
-    if (!assetToReplaceId || !isImageAsset(asset) || assetToReplace?.updating) {
-      return
-    }
-
-    dispatch(assetsActions.updateImageReferences({asset, id: assetToReplaceId}))
-    toast.push({
-      status: 'info',
-      title:
-        'Updating in progress. Depending on the amount of changes, this could take a few minutes.',
-    })
-    dispatch(dialogActions.clear())
-  }
-
   // Callbacks
   const handleAssetClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
-
-    if (source === 'replace-asset') {
-      handleReplaceAsset()
-      return
-    }
 
     if (selected) {
       return
@@ -205,11 +163,6 @@ const CardAsset = (props: Props) => {
   const handleContextActionClick = (e: MouseEvent) => {
     e.stopPropagation()
 
-    if (source === 'replace-asset') {
-      handleReplaceAsset()
-      return
-    }
-
     if (selected) {
       return
     }
@@ -224,7 +177,7 @@ const CardAsset = (props: Props) => {
   }
 
   // Dragging a picked asset drags every picked asset; dragging an unpicked asset drags only itself.
-  const draggable = !selected && !updating && source !== 'replace-asset'
+  const draggable = !selected && !updating
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
     const assetIds = picked ? assetsPicked.map((pickedItem) => pickedItem.asset._id) : [asset._id]
