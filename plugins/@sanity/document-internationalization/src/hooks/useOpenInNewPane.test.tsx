@@ -16,7 +16,7 @@ vi.mock('sanity/router', () => ({
   }),
 }))
 
-vi.mock('sanity/structure', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-structure', () => ({
   usePaneRouter: () => mockUsePaneRouter(),
 }))
 
