@@ -17,7 +17,12 @@ import {
 } from '@sanity/ui'
 import {Popover} from '@sanity/ui/popover'
 import {type Ref, useCallback, useMemo, useState} from 'react'
-import {StatusButton, type StatusButtonProps, typed, useClient} from 'sanity'
+import {useClient} from 'sanity'
+import {
+  StatusButton,
+  type StatusButtonProps,
+  typed,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {keyframes, styled} from 'styled-components'
 
 import {TimeAgo} from '../components/TimeAgo'

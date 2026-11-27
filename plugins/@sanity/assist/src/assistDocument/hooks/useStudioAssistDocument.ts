@@ -1,5 +1,6 @@
 import {useEffect, useMemo} from 'react'
-import {type ObjectSchemaType, typed, useClient, useCurrentUser} from 'sanity'
+import {type ObjectSchemaType, useClient, useCurrentUser} from 'sanity'
+import {typed} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {maxHistoryVisibilityMs} from '../../constants'
 import {assistDocumentId, assistTasksStatusId} from '../../helpers/ids'

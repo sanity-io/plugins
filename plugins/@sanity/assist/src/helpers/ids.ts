@@ -1,4 +1,10 @@
-import {getDraftId, getPublishedId, getVersionFromId, getVersionId, isVersionId} from 'sanity'
+import {
+  getDraftId,
+  getPublishedId,
+  getVersionFromId,
+  getVersionId,
+  isVersionId,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {assistDocumentIdPrefix, assistDocumentStatusIdPrefix} from '../types'
 

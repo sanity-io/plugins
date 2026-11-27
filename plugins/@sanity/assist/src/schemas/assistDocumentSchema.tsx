@@ -6,18 +6,15 @@ import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {ThListIcon} from '@sanity/icons/ThList'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {isValidElement} from 'react'
+import {isValidElement, lazy} from 'react'
 import {defineArrayMember, defineField, defineType, type ObjectSchemaType} from 'sanity'
 
-import {AssistDocumentForm} from '../assistDocument/components/AssistDocumentForm'
 import {FieldRefPreview} from '../assistDocument/components/FieldRefPreview'
 import {HiddenFieldTitle} from '../assistDocument/components/generic/HiddenFieldTitle'
 import {IconInput} from '../assistDocument/components/instruction/appearance/IconInput'
 import {InstructionVisibility} from '../assistDocument/components/instruction/appearance/InstructionVisibility'
 import {FieldRefPathInput} from '../assistDocument/components/instruction/FieldRefInput'
-import {InstructionInput} from '../assistDocument/components/instruction/InstructionInput'
 import {InstructionOutputField} from '../assistDocument/components/instruction/InstructionOutputField'
-import {InstructionOutputInput} from '../assistDocument/components/instruction/InstructionOutputInput'
 import {PromptInput} from '../assistDocument/components/instruction/PromptInput'
 import {InstructionsArrayField} from '../assistDocument/components/InstructionsArrayField'
 import {InstructionsArrayInput} from '../assistDocument/components/InstructionsArrayInput'
@@ -38,6 +35,16 @@ import {
   userInputTypeName,
 } from '../types'
 import {contextDocumentSchema} from './contextDocumentSchema'
+
+const AssistDocumentForm = lazy(
+  () => import('../assistDocument/components/AssistDocumentForm.lazy'),
+)
+const InstructionInput = lazy(
+  () => import('../assistDocument/components/instruction/InstructionInput.lazy'),
+)
+const InstructionOutputInput = lazy(
+  () => import('../assistDocument/components/instruction/InstructionOutputInput.lazy'),
+)
 
 /**
  * The validation rule resolves the selected path against the same field-ref tree the field picker
