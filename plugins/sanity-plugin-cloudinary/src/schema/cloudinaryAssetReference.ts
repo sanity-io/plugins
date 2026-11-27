@@ -1,6 +1,9 @@
+import {lazy} from 'react'
 import {defineType} from 'sanity'
 
-import CloudinaryReferenceInput from '../components/CloudinaryReferenceInput'
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const CloudinaryReferenceInput = lazy(() => import('../components/CloudinaryReferenceInput'))
 
 export const cloudinaryAssetReference = defineType({
   name: 'cloudinaryAssetReference',

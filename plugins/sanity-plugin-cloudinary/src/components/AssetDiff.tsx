@@ -1,5 +1,5 @@
 import {useSecrets} from '@sanity/studio-secrets'
-import {DiffFromTo} from 'sanity'
+import {DiffFromTo} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {CloudinaryAsset} from '../types'
 import {assetUrl, videoPreviewSources} from '../utils'
