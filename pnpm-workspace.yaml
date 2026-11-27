@@ -110,11 +110,13 @@ catalogs:
   peer-i18n:
     sanity: ^6.25.0 || ^7.0.0-0
   # Peer range for plugins that import Studio form/diff/preview helpers from
-  # `sanity/_dangerously_use_private_internals_that_do_not_follow_semver`. That entry
-  # first ships in 6.17.0 (sanity-io/sanity#14724); v7 removes the same symbols from
-  # the public `sanity` export.
+  # `sanity/_dangerously_use_private_internals_that_do_not_follow_semver` (and its
+  # nested `/1`, `/structure`, `/router` subpaths). The barrel first ships in 6.17.0
+  # (sanity-io/sanity#14724), but those nested exports are v7-only — a Studio 6.x
+  # install satisfies `^6.17.0` then fails to resolve the modules — so this catalog
+  # requires `^7.0.0-0`.
   peer-internals:
-    sanity: ^6.17.0 || ^7.0.0-0
+    sanity: ^7.0.0-0
   # Runtime `dependencies` of published plugins on Studio monorepo packages. They accept
   # both majors, so a Studio v6 or v7 install dedupes them against its own copy; the
   # default catalog pins the prerelease this branch develops against.

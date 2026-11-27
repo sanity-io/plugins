@@ -34,4 +34,4 @@
 'sanity-translations-tab': major
 ---
 
-Support Sanity Studio v7 by importing form, diff, preview and document helpers from `sanity/_dangerously_use_private_internals_that_do_not_follow_semver` (the public `sanity` export no longer provides them). `useSchema` and `TextWithTone` come from that entry's `/1` subpath, and pane-router helpers come from its `/structure` subpath. Requires `sanity` `^6.17.0` or `^7`. Studios on earlier versions should stay on the previous major of this plugin.
+Support Sanity Studio v7 by importing form, diff, preview and document helpers from `sanity/_dangerously_use_private_internals_that_do_not_follow_semver` (the public `sanity` export no longer provides them). `useSchema` and `TextWithTone` come from that entry's `/1` subpath, and pane-router helpers come from its `/structure` subpath. Requires `sanity` `^7` (those nested subpaths are not on Studio 6.x). Studios on earlier versions should stay on the previous major of this plugin.

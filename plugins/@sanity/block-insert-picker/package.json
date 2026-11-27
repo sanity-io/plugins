@@ -63,7 +63,7 @@
   "peerDependencies": {
     "@portabletext/editor": "^7.10.7",
     "react": "catalog:peer",
-    "sanity": "^6.17.0 || ^7.0.0-0",
+    "sanity": "catalog:peer-internals",
     "styled-components": "catalog:peer"
   },
   "engines": {
