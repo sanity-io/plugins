@@ -1,0 +1,5 @@
+/* The converted theme's thumbnail, about as big as a theme card in the sidebar */
+.preview {
+  width: 160px;
+  max-width: 100%;
+}

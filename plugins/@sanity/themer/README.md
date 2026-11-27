@@ -195,6 +195,7 @@ Select the sparkles button in the sidebar header and describe a theme, like _coz
 - **Reorder:** drag cards, or move them from their menus. The order is saved between sessions.
 - **Share:** copy a theme's short code from its menu.
 - **Import:** paste a code into the list, or use the paste button—even in another Studio.
+- **Convert a hosted theme:** paste a themer.sanity.build URL. See [Migrating from themer.sanity.build](#migrating-from-themersanitybuild).
 - **Remove or restore:** themes can be removed and brought back.
 
 <details>
@@ -227,6 +228,13 @@ With `prefers-reduced-motion`, both the sidebar and split preview change layouts
    +import {buildThemeFromUrl} from '@sanity/themer-legacy'
    +const theme = buildThemeFromUrl('https://themer.sanity.build/api/hues?preset=verdant&primary=22fca8')
    ```
+
+**Want a modern `buildTheme` theme instead?** Convert it in the [Studio tool](#studio-tool):
+
+1. Open **Themer** and paste the hosted URL, or the whole import line, anywhere except a text field. You can also choose **Add from URL** in the list's menu. The tool adds the converted theme and opens it in the editor.
+2. Back in the list, choose **Show theme code** and use the snippet in place of the URL import.
+
+The converted colors come close to the hosted ones, but they don't match exactly.
 
 **Already importing from `@sanity/themer/legacy`?** Switch to `@sanity/themer-legacy`. The old import is deprecated and will be removed in `@sanity/themer@1.0`.
 
