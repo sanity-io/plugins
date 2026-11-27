@@ -1,7 +1,9 @@
+import {lazy} from 'react'
 import {definePlugin} from 'sanity'
 
-import {GoogleTranslateInput} from './GoogleTranslateInput'
 import type {GoogleTranslateSchemaOptions} from './types'
+
+const GoogleTranslateInput = lazy(() => import('./GoogleTranslateInput.lazy'))
 
 export const googleTranslate = definePlugin(() => {
   return {
