@@ -9,13 +9,13 @@ import {
   type ImageValue,
   insert,
   type ObjectSchemaType,
-  PatchEvent,
   set,
   setIfMissing,
   useClient,
   useFormValue,
-  useResolveInitialValueForType,
 } from 'sanity'
+import {useResolveInitialValueForType} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import Feedback from './Feedback'
 import {type ImageHotspotOptions} from './plugin'
