@@ -1,6 +1,6 @@
 import {Box, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {css, styled} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'

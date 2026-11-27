@@ -1,7 +1,7 @@
 import {Box} from '@sanity/ui'
 import {Controller} from 'react-hook-form'
 import CreatableSelect from 'react-select/creatable'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import useTypedSelector from '../../hooks/useTypedSelector'
 import {reactSelectComponents, reactSelectStyles} from '../../styled/react-select/creatable'
