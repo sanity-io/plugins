@@ -4,7 +4,8 @@ import {type ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react
 import InfiniteScroll from 'react-infinite-scroll-component'
 import {PhotoAlbum} from 'react-photo-album'
 import {BehaviorSubject, type Subscription} from 'rxjs'
-import {type ObjectInputProps, PatchEvent, set, useClient, useDataset, useProjectId} from 'sanity'
+import {type ObjectInputProps, set, useClient, useDataset, useProjectId} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {search} from '../datastores/shopify'
 import type {Asset, PageInfo, ShopifyAPIResponse, ShopifyFile} from '../types'
