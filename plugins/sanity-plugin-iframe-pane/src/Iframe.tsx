@@ -15,13 +15,8 @@ import {
   useState,
   useTransition,
 } from 'react'
-import {
-  type SanityDocument,
-  useActiveWorkspace,
-  useClient,
-  useCurrentUser,
-  usePerspective,
-} from 'sanity'
+import {type SanityDocument, useClient, useCurrentUser, usePerspective} from 'sanity'
+import {useActiveWorkspace} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {suspend} from 'suspend-react'
 
 import {DEFAULT_SIZE, sizes, Toolbar} from './Toolbar'
