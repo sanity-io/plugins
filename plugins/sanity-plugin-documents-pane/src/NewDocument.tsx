@@ -1,7 +1,7 @@
 import {ComposeIcon} from '@sanity/icons/Compose'
 import {Button, Card, Flex} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
-import {usePaneRouter} from 'sanity/structure'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-structure'
 
 import type {DocumentsPaneInitialValueTemplate} from './types'
 
