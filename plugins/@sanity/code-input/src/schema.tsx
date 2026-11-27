@@ -1,10 +1,12 @@
 import {CodeBlockIcon} from '@sanity/icons/CodeBlock'
+import {lazy} from 'react'
 import {defineType, type ObjectDefinition} from 'sanity'
 
-import {CodeInput} from './CodeInput'
 import {getMedia} from './getMedia'
 import {PreviewCode} from './PreviewCode'
 import type {CodeOptions} from './types'
+
+const CodeInput = lazy(() => import('./CodeInput.lazy'))
 
 /**
  * @public
