@@ -2,7 +2,7 @@ import {Checkbox, Flex, Grid, useMediaIndex} from '@sanity/ui'
 import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {type MouseEvent} from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS, PANEL_HEIGHT} from '../../constants'
