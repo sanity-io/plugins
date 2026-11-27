@@ -43,12 +43,13 @@ type GenerateStatus =
 export interface GenerateThemeBarProps extends Pick<ThemerProps, 'actorRef'> {
   client: GenerateThemeClient & AiCreditsClient
   onClose: () => void
+  /** The request that is running. Closing the bar aborts it */
+  requestRef: RefObject<AbortController | null>
   /**
-   * The request that is running, owned by whoever can stop it: closing the bar
-   * or leaving the list ends the request, which this component does not see
-   * when its view is only hidden
+   * Ends with the list: leaving the list or closing the themer aborts it, and
+   * the running request is linked to it so a result can't apply out of sight
    */
-  controllerRef: RefObject<AbortController | null>
+  sessionRef: RefObject<AbortController | null>
 }
 
 const MAX_TITLE_FROM_REQUEST = 32
@@ -75,7 +76,8 @@ export function GenerateThemeBar({
   actorRef,
   client,
   onClose,
-  controllerRef,
+  requestRef,
+  sessionRef,
 }: GenerateThemeBarProps) {
   const [request, setRequest] = useState('')
   const [status, setStatus] = useState<GenerateStatus>({type: 'idle'})
@@ -112,12 +114,27 @@ export function GenerateThemeBar({
 
     if (!description || generating) return
 
-    controllerRef.current?.abort()
+    requestRef.current?.abort()
     const controller = new AbortController()
-    controllerRef.current = controller
+    const session = sessionRef.current
+
+    requestRef.current = controller
     setStatus({type: 'generating', attempt: 1})
     // The button that started this loses focus once it is loading, and Escape has to reach the bar
     fieldRef.current?.focus()
+
+    // Ending the session while the request is still running also ends the bar's
+    // generation, even though the bar is hidden and the prompt call has not
+    // settled. A result that is already showing is left as it is.
+    const endWithSession = () => {
+      controller.abort()
+      if (requestRef.current === controller) {
+        setStatus((current) => (current.type === 'generating' ? {type: 'idle'} : current))
+      }
+    }
+
+    if (session?.signal.aborted) endWithSession()
+    else session?.signal.addEventListener('abort', endWithSession, {once: true})
 
     try {
       const generated = await generateTheme({
@@ -127,8 +144,10 @@ export function GenerateThemeBar({
         onAttempt: (attempt) => setStatus({type: 'generating', attempt}),
       })
 
+      session?.signal.removeEventListener('abort', endWithSession)
+
       if (controller.signal.aborted) {
-        if (controllerRef.current === controller) setStatus({type: 'idle'})
+        if (requestRef.current === controller) setStatus({type: 'idle'})
         return
       }
 
@@ -141,8 +160,10 @@ export function GenerateThemeBar({
 
       setStatus({type: 'generated', slug, title, previous})
     } catch (error) {
+      session?.signal.removeEventListener('abort', endWithSession)
+
       if (controller.signal.aborted) {
-        if (controllerRef.current === controller) setStatus({type: 'idle'})
+        if (requestRef.current === controller) setStatus({type: 'idle'})
         return
       }
 
@@ -158,7 +179,7 @@ export function GenerateThemeBar({
   }
 
   const cancel = () => {
-    controllerRef.current?.abort()
+    requestRef.current?.abort()
     setStatus({type: 'idle'})
   }
 

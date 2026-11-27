@@ -47,7 +47,7 @@ export function ThemeList({
   generator,
 }: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'> & {
   /** The bar that generates a theme from a description, while it is open */
-  generator: Pick<GenerateThemeBarProps, 'client' | 'onClose' | 'controllerRef'> | null
+  generator: Pick<GenerateThemeBarProps, 'client' | 'onClose' | 'requestRef' | 'sessionRef'> | null
 }) {
   const {addThemeFromClipboard} = useThemeCodes({actorRef})
   // Which of the list's dialogs is open is the machine's: a state of the list flow
@@ -75,7 +75,8 @@ export function ThemeList({
           actorRef={actorRef}
           client={generator.client}
           onClose={generator.onClose}
-          controllerRef={generator.controllerRef}
+          requestRef={generator.requestRef}
+          sessionRef={generator.sessionRef}
         />
       )}
       <ScrollArea padding={3}>
