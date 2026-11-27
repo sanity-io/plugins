@@ -5,7 +5,7 @@ import {Box, Button, Card, Dialog, Flex, Label, Radio, Stack, Text} from '@sanit
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'
 import {memo, useEffect, useId, useReducer, useRef, useState} from 'react'
-import {FormField} from 'sanity'
+import {FormField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {useCanRunRobots} from '../hooks/useCanRunRobots'
 import {useFetchFileSize} from '../hooks/useFetchFileSize'

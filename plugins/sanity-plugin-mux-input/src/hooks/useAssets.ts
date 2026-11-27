@@ -1,10 +1,10 @@
 import {useMemo, useState} from 'react'
+import {type DocumentStore} from 'sanity'
 import {
   collate,
   createHookFromObservableFactory,
-  type DocumentStore,
   useDocumentStore,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {SANITY_API_VERSION} from '../hooks/useClient'
 import {createSearchFilter} from '../util/createSearchFilter'

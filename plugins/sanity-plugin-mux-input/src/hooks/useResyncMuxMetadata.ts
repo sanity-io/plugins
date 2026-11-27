@@ -1,5 +1,9 @@
 import {useMemo, useState} from 'react'
-import {createHookFromObservableFactory, type DocumentStore, useDocumentStore} from 'sanity'
+import {type DocumentStore} from 'sanity'
+import {
+  createHookFromObservableFactory,
+  useDocumentStore,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {addKeysToMuxData} from '../util/addKeysToMuxData'
 import {isEmptyOrPlaceholderTitle} from '../util/assetTitlePlaceholder'
