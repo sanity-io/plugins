@@ -3,10 +3,10 @@ import {
   isDocumentSchemaType,
   type ObjectSchemaType,
   type Path,
-  pathToString,
   type SanityDocument,
   type SchemaType,
 } from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 export interface DocumentMember {
   schemaType: SchemaType

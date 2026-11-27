@@ -6,16 +6,14 @@ import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useState} from 'react'
+import {type ObjectSchemaType, type SanityDocument, useClient} from 'sanity'
+import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
 import {
   getDraftId,
   getVersionFromId,
   getVersionId,
   isVersionId,
-  type ObjectSchemaType,
-  type SanityDocument,
-  useClient,
-} from 'sanity'
-import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {METADATA_SCHEMA_NAME} from '../constants'
 import {useOpenInNewPane} from '../hooks/useOpenInNewPane'

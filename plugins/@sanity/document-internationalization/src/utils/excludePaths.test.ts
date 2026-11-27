@@ -1,11 +1,11 @@
 import {
-  createSchema,
   defineArrayMember,
   defineField,
   defineType,
   type ObjectSchemaType,
   type SanityDocument,
 } from 'sanity'
+import {createSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {describe, expect, test} from 'vitest'
 
 import {removeExcludedPaths} from './excludePaths'
