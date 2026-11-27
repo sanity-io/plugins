@@ -1,5 +1,11 @@
 # sanity-plugin-bynder-input
 
+## 5.1.6
+
+### Patch Changes
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.14
+
 ## 5.1.5
 
 ### Patch Changes

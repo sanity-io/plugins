@@ -1,5 +1,15 @@
 # @sanity/themer
 
+## 0.11.1
+
+### Patch Changes
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/icons to ^5.4.0
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.14
+
+- [#2349](https://github.com/sanity-io/plugins/pull/2349) [`eb5ef40`](https://github.com/sanity-io/plugins/commit/eb5ef40d8c872ad3c3532df448fb72aec90ac67f) Thanks [@stipsan](https://github.com/stipsan)! - Closing the themer, or leaving the theme list, stops a theme generation that is still running.
+
 ## 0.11.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @sanity/debug-preview-url-secret-plugin
 
+## 2.0.24
+
+### Patch Changes
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/icons to ^5.4.0
+
 ## 2.0.23
 
 ### Patch Changes

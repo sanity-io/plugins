@@ -1,5 +1,13 @@
 # sanity-plugin-markdown
 
+## 9.0.20
+
+### Patch Changes
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/client to ^8.17.0
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.14
+
 ## 9.0.19
 
 ### Patch Changes
