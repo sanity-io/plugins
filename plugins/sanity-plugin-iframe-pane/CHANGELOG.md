@@ -1,5 +1,15 @@
 # sanity-plugin-iframe-pane
 
+## 5.0.44
+
+### Patch Changes
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/client to ^8.17.0
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/icons to ^5.4.0
+
+- [#2353](https://github.com/sanity-io/plugins/pull/2353) [`0df373a`](https://github.com/sanity-io/plugins/commit/0df373a0282640aae374440eeab0d2391183ae3e) Thanks [@stipsan](https://github.com/stipsan)! - fix(deps): update dependency @sanity/ui to ^4.4.14
+
 ## 5.0.43
 
 ### Patch Changes
