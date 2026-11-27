@@ -20,7 +20,7 @@ export default function DocumentCheck(props: DocumentCheckProps) {
   const editState = useEditState(id, '')
   const documentType = editState.draft?._type ?? editState.published?._type ?? ''
   // oxlint-disable-next-line no-useless-default-assignment
-  const {isValidating, validation = []} = useValidationStatus(id, documentType, false)
+  const {isValidating, validation = []} = useValidationStatus(id, documentType)
   const schema = useSchema()
 
   const validationHasErrors = useMemo(() => {
