@@ -29,7 +29,7 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-vi.mock('sanity/structure', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useDocumentPane: () => mockUseDocumentPane(),
 }))
 

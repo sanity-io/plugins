@@ -23,7 +23,7 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-vi.mock('sanity/structure', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useDocumentPane: vi.fn(() => ({
     onChange: mockOnChange,
     formState: mockFormState,
@@ -187,7 +187,7 @@ describe('internationalizedArrayFieldAction', () => {
     expect(actions[3]!.hidden).toBe(true) // de not in filtered
   })
 
-  test('translate action onAction calls onChange with setIfMissing and insert patches', () => {
+  test('translate action onAction calls onChange with setIfMissing and insert patches', async () => {
     mockUseFormValue.mockReturnValue(undefined)
 
     const {result} = renderHook(() => fieldAction.useAction(createMockFieldActionProps()))
@@ -205,7 +205,7 @@ describe('internationalizedArrayFieldAction', () => {
       action.onAction()
     })
 
-    expect(mockOnChange).toHaveBeenCalledTimes(1)
+    await vi.waitFor(() => expect(mockOnChange).toHaveBeenCalledTimes(1))
     expect(mockOnChange).toHaveBeenCalledWith({
       patches: [
         {
@@ -313,7 +313,7 @@ describe('internationalizedArrayFieldAction', () => {
     expect(addMissing.title).toBe('Add all languages')
   })
 
-  test('add-missing onAction calls onChange with patches for all missing languages', () => {
+  test('add-missing onAction calls onChange with patches for all missing languages', async () => {
     const value = createValues(['en'])
     mockUseFormValue.mockReturnValue(value)
 
@@ -332,7 +332,7 @@ describe('internationalizedArrayFieldAction', () => {
       addMissing.onAction()
     })
 
-    expect(mockOnChange).toHaveBeenCalledTimes(1)
+    await vi.waitFor(() => expect(mockOnChange).toHaveBeenCalledTimes(1))
     expect(mockOnChange).toHaveBeenCalledWith({
       patches: [
         {
