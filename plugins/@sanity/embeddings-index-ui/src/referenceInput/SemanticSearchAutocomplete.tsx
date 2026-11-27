@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {typed} from 'sanity'
+import {typed} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {queryIndex, type QueryResult} from '../api/embeddingsApi'
 import {useApiClient} from '../api/embeddingsApiHooks'
