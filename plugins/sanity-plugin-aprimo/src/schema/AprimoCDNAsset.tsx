@@ -1,5 +1,4 @@
-import {AprimoDiff} from '../components/AprimoDiff'
-import {AprimoWidget} from '../components/AprimoWidget'
+import {AprimoDiff, AprimoWidget} from '../components/lazyComponents'
 
 export const AprimoCDNAssetSchema = {
   type: 'object',

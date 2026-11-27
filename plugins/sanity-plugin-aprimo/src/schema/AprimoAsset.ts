@@ -1,4 +1,4 @@
-import {AprimoWidget} from '../components/AprimoWidget'
+import {AprimoWidget} from '../components/lazyComponents'
 
 export const AprimoAssetSchema = {
   type: 'object',
