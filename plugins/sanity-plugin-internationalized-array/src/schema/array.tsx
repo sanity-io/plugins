@@ -1,5 +1,11 @@
-import {lazy} from 'react'
-import {defineField, type FieldDefinition, type FieldProps, type Rule} from 'sanity'
+import {lazy, Suspense} from 'react'
+import {
+  type ArrayOfObjectsInputProps,
+  defineField,
+  type FieldDefinition,
+  type FieldProps,
+  type Rule,
+} from 'sanity'
 
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
@@ -10,7 +16,20 @@ import {getLanguagesFieldOption} from '../utils/getLanguagesFieldOption'
 
 // It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
 // out of what the studio shell loads.
-const InternationalizedArray = lazy(() => import('../components/InternationalizedArray'))
+const InternationalizedArrayLazy = lazy(() => import('../components/InternationalizedArray'))
+
+/**
+ * The document form suspends as one tree, and that tree includes the field
+ * group tabs. Loading the input here keeps that fallback inside the field,
+ * so the tabs stay mounted and keep the width they already measured.
+ */
+function InternationalizedArray(props: ArrayOfObjectsInputProps) {
+  return (
+    <Suspense fallback={null}>
+      <InternationalizedArrayLazy {...props} />
+    </Suspense>
+  )
+}
 
 type ArrayFactoryConfig = {
   apiVersion: string
