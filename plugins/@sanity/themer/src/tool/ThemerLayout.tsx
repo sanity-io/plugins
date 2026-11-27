@@ -1,17 +1,20 @@
 import {BoundaryElementProvider, Card, Flex} from '@sanity/ui'
 import type {ThemeColorSchemeKey} from '@sanity/ui/theme'
-import {useActorRef} from '@xstate/react'
-import {Activity, lazy, startTransition, useEffect, useState, ViewTransition} from 'react'
+import {
+  Activity,
+  lazy,
+  startTransition,
+  useEffect,
+  useEffectEvent,
+  useState,
+  ViewTransition,
+} from 'react'
 
 import type {PluginConfig} from '#types'
 import type {ThemerProps} from '#types'
 
-import {addThemerTransitionType} from './addThemerTransitionType'
-import {themerMachine} from './machine'
 import {PersistActorSnapshot} from './PersistActorSnapshot'
 import type {ToolReducerState} from './reducer'
-import {resolveActiveThemeOptions} from './selectors'
-import type {readPersistedSnapshot} from './storage'
 import {ThemerNavbarProvider} from './ThemerNavbar'
 import {viewTransitionClasses} from './viewTransitions'
 
@@ -27,16 +30,14 @@ import * as styles from './ThemerLayout.module.css'
  */
 const ResizableSidebar = lazy(() => import('./ResizableSidebar'))
 
-interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
+interface ThemerLayoutProps extends ToolReducerState, Pick<ThemerProps, 'send' | 'snapshot'> {
   children: React.ReactNode
   config: PluginConfig
   dispatch: ThemerProps['dispatch']
-  /** The machine's snapshot as the last session persisted it, for the machine to pick up where it left off */
-  persistedSnapshot: ReturnType<typeof readPersistedSnapshot>
 }
 
 /**
- * Wraps the whole Studio to run the themer machine that the sidebar's flows
+ * Wraps the whole Studio with the themer machine that the sidebar's flows
  * share — the user's themes, which one is applied and which flow the sidebar
  * is in — and renders the sidebar next to the Studio. The sidebar sits at
  * the `layout` level rather than in `activeToolLayout` because the split
@@ -44,8 +45,8 @@ interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
  *
  * Whether the sidebar is open and whether the Studio shows twice comes in as
  * props from the tool reducer in `ThemerProvider`, and goes on to the sidebar
- * as props along with the machine's actor, which the sidebar selects its
- * themes and flow from (see `ThemerProps`): the navbar toggle and the sidebar
+ * as props along with the machine's snapshot, which the sidebar resolves its
+ * themes and flow from, and what sends the machine events (see `ThemerProps`): the navbar toggle and the sidebar
  * dispatch to the reducer inside transitions tagged with a transition type
  * (see `addThemerTransitionType`), and the `ViewTransition` boundaries below
  * pick their classes by that type, so React animates the sidebar sliding in
@@ -59,10 +60,9 @@ interface ThemerLayoutProps extends Omit<ToolReducerState, 'theme'> {
  * the Studio navbar for the sidebar's header — in the Studio proper, not in
  * the split copy, which `ToolShouldDetectNavbarHeightContext` tells apart.
  *
- * The applied theme is the reducer's, provided above this layout in
- * `ThemerProvider`: the machine publishes it synchronously, which React does
- * not animate, so `ThemerThemeCrossfader` hands it to the reducer in a
- * transition of its own. The Studio next to the sidebar always follows the
+ * The applied theme is the machine's, provided above this layout in
+ * `ThemerProvider`, which sends every event in a transition — tagged to
+ * cross-fade when it switches themes. The Studio next to the sidebar always follows the
  * appearance setting (light/dark/system) and the picked theme like any other
  * theme would; the split preview adds a second copy in the opposite scheme
  * on the far side.
@@ -82,14 +82,13 @@ export function ThemerLayout({
   dispatch,
   navbarHeight,
   open,
-  persistedSnapshot,
   prerender,
   prerenderSplitScreen,
   scheme,
+  send,
+  snapshot,
   split,
 }: ThemerLayoutProps & {backgroundColor: string | undefined; scheme: ThemeColorSchemeKey}) {
-  const actorRef = useActorRef(themerMachine, {snapshot: persistedSnapshot})
-
   const oppositeScheme: ThemeColorSchemeKey = scheme === 'dark' ? 'light' : 'dark'
 
   return (
@@ -145,9 +144,10 @@ export function ThemerLayout({
           >
             {prerender && (
               <ResizableSidebar
-                actorRef={actorRef}
                 dispatch={dispatch}
                 navbarHeight={navbarHeight}
+                send={send}
+                snapshot={snapshot}
                 split={split}
               />
             )}
@@ -155,9 +155,8 @@ export function ThemerLayout({
         </Activity>
       </Flex>
 
-      <ThemerThemeCrossfader actorRef={actorRef} dispatch={dispatch} />
-      <RevokeImageUrls actorRef={actorRef} />
-      <PersistActorSnapshot actorRef={actorRef} />
+      <RevokeImageUrls snapshot={snapshot} />
+      <PersistActorSnapshot send={send} snapshot={snapshot} />
     </>
   )
 }
@@ -214,48 +213,15 @@ function StudioPreview({
   )
 }
 
-/**
- * Hands the applied theme to the tool reducer as the machine publishes it —
- * in a transition tagged to cross-fade while the machine says a theme is
- * being switched to, so that editing the applied theme's colors applies live
- * while picking another theme fades the Studio over to it
- */
-function ThemerThemeCrossfader({actorRef, dispatch}: Pick<ThemerProps, 'actorRef' | 'dispatch'>) {
-  useEffect(() => {
-    const subscription = actorRef.subscribe((snapshot) => {
-      const switching = snapshot.hasTag('switching')
-      const theme = resolveActiveThemeOptions(snapshot.context)
-
-      startTransition(() => {
-        if (switching) {
-          addThemerTransitionType('crossfade')
-        }
-        if (!theme) {
-          dispatch({type: 'unset-theme'})
-        } else {
-          dispatch({type: 'set-theme', theme})
-        }
-      })
-    })
-
-    return () => subscription.unsubscribe()
-  }, [actorRef, dispatch])
-
-  return null
-}
-
-function RevokeImageUrls({actorRef}: Pick<ThemerProps, 'actorRef'>) {
+function RevokeImageUrls({snapshot}: Pick<ThemerProps, 'snapshot'>) {
   // The machine releases the image of a palette as it is replaced or its
-  // theme deleted; whatever it still holds goes with the layout — the actor
-  // keeps its last snapshot once stopped
-  useEffect(
-    () => () => {
-      for (const url of Object.values(actorRef.getSnapshot().context.images)) {
-        URL.revokeObjectURL(url)
-      }
-    },
-    [actorRef],
-  )
+  // theme deleted; whatever it still holds goes with the layout
+  const revokeImageUrls = useEffectEvent(() => {
+    for (const url of Object.values(snapshot.context.images)) {
+      URL.revokeObjectURL(url)
+    }
+  })
+  useEffect(() => () => revokeImageUrls(), [])
 
   return null
 }

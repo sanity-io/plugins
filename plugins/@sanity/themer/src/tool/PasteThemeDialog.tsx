@@ -11,9 +11,9 @@ import {useThemeCodes} from './useThemeCodes'
  *
  * @internal
  */
-export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps, 'actorRef'>) {
-  const {actorRef, onClose} = props
-  const {addThemeFromText} = useThemeCodes({actorRef})
+export function PasteThemeDialog(props: {onClose: () => void} & Pick<ThemerProps, 'send'>) {
+  const {onClose, send} = props
+  const {addThemeFromText} = useThemeCodes({send})
   const [text, setText] = useState('')
   const [invalid, setInvalid] = useState(false)
   const id = useId()

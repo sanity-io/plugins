@@ -12,7 +12,7 @@ import {displayTitle} from './themes'
  *
  * @internal
  */
-export function useThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): {
+export function useThemeCodes({send}: Pick<ThemerProps, 'send'>): {
   copyTheme: (theme: SharedTheme) => Promise<void>
   /** Adds the theme in the text, if there is one — the result says whether there was */
   addThemeFromText: (text: string) => boolean
@@ -41,7 +41,7 @@ export function useThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): {
 
     if (!theme) return false
 
-    actorRef.send({type: 'theme.import', title: theme.title, options: theme.options})
+    send({type: 'theme.import', title: theme.title, options: theme.options})
     toast.push({status: 'success', title: `Added ${theme.title}`})
 
     return true
@@ -68,7 +68,7 @@ export function useThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): {
  *
  * @internal
  */
-export function usePasteThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): void {
+export function usePasteThemeCodes({send}: Pick<ThemerProps, 'send'>): void {
   const toast = useToast()
 
   useEffect(() => {
@@ -80,14 +80,14 @@ export function usePasteThemeCodes({actorRef}: Pick<ThemerProps, 'actorRef'>): v
       if (!theme) return
 
       event.preventDefault()
-      actorRef.send({type: 'theme.import', title: theme.title, options: theme.options})
+      send({type: 'theme.import', title: theme.title, options: theme.options})
       toast.push({status: 'success', title: `Added ${theme.title}`})
     }
 
     document.addEventListener('paste', handlePaste)
 
     return () => document.removeEventListener('paste', handlePaste)
-  }, [actorRef, toast])
+  }, [send, toast])
 }
 
 function isEditable(target: EventTarget | null): boolean {

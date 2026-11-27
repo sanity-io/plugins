@@ -200,20 +200,27 @@ export function parseThemerState(input: unknown): ThemerState | null {
 /** The flows a session restores to */
 const flowSchema = v.picklist(['list', 'edit', 'removed'])
 
+const listValueSchema = v.object({list: v.picklist(['idle', 'pasting', 'snippet'])})
+
 /**
  * The machine's state value, as persisted — only what the machine has states
  * for restores. The list's dialogs are states of the list, so a snapshot
- * written while one was open names it; the dialog does not reopen
+ * written while one was open names it; the dialog does not reopen. Earlier
+ * versions of the machine kept the flow in a region of its own, next to the
+ * region of the theme being switched to
  */
-const snapshotValueSchema = v.object({
-  flow: v.union([flowSchema, v.object({list: v.picklist(['idle', 'pasting', 'snippet'])})]),
-  theme: v.picklist(['applied', 'switching']),
-})
+const snapshotValueSchema = v.pipe(
+  v.union([flowSchema, listValueSchema, v.object({flow: v.union([flowSchema, listValueSchema])})]),
+  v.transform((value) => {
+    const flow = typeof value === 'object' && 'flow' in value ? value.flow : value
+    return typeof flow === 'string' ? flow : 'list'
+  }),
+)
 
 /**
  * The machine's persisted snapshot, as `getPersistedSnapshot()` writes it and
- * `createActor` restores it — `status`, `value`, `context`, `historyValue`
- * and `children`, with `output` and `error` left out as `undefined`.
+ * `restoreActor` restores it — `status`, `value`, `context`, `historyValue`,
+ * `children` and `timers`, with `output` and `error` left out as `undefined`.
  *
  * @internal
  */
@@ -221,16 +228,16 @@ export interface PersistedThemerSnapshot {
   status: 'active'
   output: undefined
   error: undefined
-  value: {flow: v.InferOutput<typeof flowSchema>; theme: 'applied' | 'switching'}
+  value: v.InferOutput<typeof flowSchema>
   context: ThemerMachineContext
   historyValue: Record<string, never>
   children: Record<string, never>
+  timers: []
 }
 
 /**
- * A snapshot for the machine to start a session from: the given themes, with
- * nothing being switched to, in the list unless a flow and its subject are
- * given. It is how the themes alone — all that earlier versions persisted —
+ * A snapshot for the machine to start a session from: the given themes, in
+ * the list unless a flow and its subject are given. It is how the themes alone — all that earlier versions persisted —
  * are handed to a machine that only restores snapshots, and what a restored
  * snapshot is made fit for this session as.
  *
@@ -239,25 +246,25 @@ export interface PersistedThemerSnapshot {
 export function snapshotFromState(
   state: ThemerState,
   editing: ThemerMachineContext['editing'] = null,
-  flow: PersistedThemerSnapshot['value']['flow'] = 'list',
+  flow: PersistedThemerSnapshot['value'] = 'list',
 ): PersistedThemerSnapshot {
   return {
     status: 'active',
     output: undefined,
     error: undefined,
-    value: {flow, theme: 'applied'},
+    value: flow,
     context: {...state, editing, images: {}},
     historyValue: {},
     children: {},
+    timers: [],
   }
 }
 
 /**
  * The machine's snapshot as the last session persisted it, made fit for this
  * one: the themes are parsed like any persisted state, the flow keeps its
- * subject or falls back to the list, a dialog that was open is closed, a
- * switch that was under way is over, and the image URLs of the last session
- * are gone with it.
+ * subject or falls back to the list, a dialog that was open is closed, and
+ * the image URLs of the last session are gone with it.
  *
  * @internal
  */
@@ -286,11 +293,9 @@ export const persistedSnapshotSchema = v.pipe(
         ? context.editing
         : null
     const flow =
-      typeof value.flow !== 'string' ||
-      (value.flow === 'edit' && editing === null) ||
-      (value.flow === 'removed' && state.removed.length === 0)
+      (value === 'edit' && editing === null) || (value === 'removed' && state.removed.length === 0)
         ? 'list'
-        : value.flow
+        : value
 
     return snapshotFromState(state, editing, flow)
   }),

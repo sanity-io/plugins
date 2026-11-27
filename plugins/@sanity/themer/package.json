@@ -69,18 +69,18 @@
     "prepack": "turbo run build"
   },
   "dependencies": {
+    "@sanity-labs/xstate-react": "catalog:xstate6",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
     "@sanity/themer-legacy": "^0.2.2",
     "@sanity/ui": "catalog:",
-    "@xstate/react": "catalog:",
     "dequal": "catalog:",
     "motion": "catalog:",
     "react-refractor": "^4.0.0",
     "refractor": "^5.0.0",
     "scroll-into-view-if-needed": "catalog:",
     "valibot": "catalog:",
-    "xstate": "catalog:"
+    "xstate": "catalog:xstate6"
   },
   "devDependencies": {
     "@sanity/tsconfig": "catalog:",

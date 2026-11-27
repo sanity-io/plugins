@@ -18,7 +18,7 @@ import * as styles from './RemovedThemes.module.css'
  *
  * @internal
  */
-export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' | 'removed'>) {
+export function RemovedThemes({removed, send}: Pick<ThemerProps, 'send' | 'removed'>) {
   return (
     <>
       <ScrollArea padding={3}>
@@ -34,14 +34,14 @@ export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' 
               <Flex gap={2} justify="center">
                 <Button
                   mode="ghost"
-                  onClick={() => actorRef.send({type: 'theme.restore', slug: theme.slug})}
+                  onClick={() => send({type: 'theme.restore', slug: theme.slug})}
                   padding={2}
                   text="Restore"
                 />
                 {theme.source === 'custom' && (
                   <Button
                     mode="ghost"
-                    onClick={() => actorRef.send({type: 'theme.delete', slug: theme.slug})}
+                    onClick={() => send({type: 'theme.delete', slug: theme.slug})}
                     padding={2}
                     text="Delete"
                     tone="critical"
@@ -59,7 +59,7 @@ export function RemovedThemes({actorRef, removed}: Pick<ThemerProps, 'actorRef' 
           <Button
             gap={2}
             icon={CheckmarkIcon}
-            onClick={() => actorRef.send({type: 'flow.list'})}
+            onClick={() => send({type: 'flow.list'})}
             padding={2}
             text="Done"
             mode="ghost"

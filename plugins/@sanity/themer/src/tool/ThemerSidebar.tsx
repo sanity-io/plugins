@@ -1,8 +1,6 @@
 import {CloseIcon} from '@sanity/icons/Close'
 import {SplitVerticalIcon} from '@sanity/icons/SplitVertical'
 import {Box, Card, Flex, Text} from '@sanity/ui'
-import {useSelector} from '@xstate/react'
-import {dequal} from 'dequal/lite'
 import {Activity, startTransition, useEffect, useRef, useState} from 'react'
 import {useClient} from 'sanity'
 
@@ -39,12 +37,13 @@ const VIEW_TITLES = {
  * @internal
  */
 export function ThemerSidebar({
-  actorRef,
   dispatch,
   navbarHeight,
+  send,
+  snapshot,
   split,
-}: Pick<ThemerProps, 'actorRef' | 'dispatch' | 'navbarHeight' | 'split'>) {
-  const view = useSelector(actorRef, selectView, sameView)
+}: Pick<ThemerProps, 'dispatch' | 'navbarHeight' | 'send' | 'snapshot' | 'split'>) {
+  const view = viewOf(snapshot)
   const isTooSmallForSplitScreen = useIsTooSmallForSplitScreen()
   const client = useClient({apiVersion: AGENT_API_VERSION})
   // Studios whose client predates Agent Actions have nothing to generate with
@@ -74,11 +73,15 @@ export function ThemerSidebar({
     }
   }, [inList])
 
-  const {themes, removed, active} = useSelector(
-    actorRef,
-    (snapshot) => resolveThemes(snapshot.context),
-    dequal,
-  )
+  // Resolved from the persisted state alone, so that the flow and the images
+  // changing leave the lists as they were
+  const {active: activeSlug, custom, removed: removedSlugs, order} = snapshot.context
+  const {themes, removed, active} = resolveThemes({
+    active: activeSlug,
+    custom,
+    removed: removedSlugs,
+    order,
+  })
 
   return (
     <Card height="fill">
@@ -155,8 +158,9 @@ export function ThemerSidebar({
 
         <Activity key="list" mode={view.name === 'list' ? 'visible' : 'hidden'}>
           <ThemeList
-            actorRef={actorRef}
+            send={send}
             active={active}
+            dialog={dialogOf(snapshot)}
             generator={
               canGenerate && generatorOpen
                 ? {client, onClose: closeGenerator, requestRef, sessionRef}
@@ -168,7 +172,8 @@ export function ThemerSidebar({
         </Activity>
         {view.name === 'edit' && (
           <ThemeEditor
-            actorRef={actorRef}
+            send={send}
+            imageUrl={snapshot.context.images[view.slug]}
             focusTitle={view.focusTitle}
             slug={view.slug}
             split={split}
@@ -176,31 +181,31 @@ export function ThemerSidebar({
           />
         )}
         <Activity key="removed" mode={view.name === 'removed' ? 'visible' : 'hidden'}>
-          <RemovedThemes actorRef={actorRef} removed={removed} />
+          <RemovedThemes send={send} removed={removed} />
         </Activity>
       </Flex>
     </Card>
   )
 }
 
-function selectView(snapshot: ThemerSnapshot): ThemerView {
+function viewOf(snapshot: ThemerSnapshot): ThemerView {
   const {editing} = snapshot.context
 
-  if (snapshot.matches({flow: 'edit'}) && editing) {
+  if (snapshot.matches('edit') && editing) {
     return {name: 'edit', slug: editing.slug, focusTitle: editing.focusTitle}
   }
 
-  if (snapshot.matches({flow: 'removed'})) {
+  if (snapshot.matches('removed')) {
     return {name: 'removed'}
   }
 
   return {name: 'list'}
 }
 
-function sameView(a: ThemerView, b: ThemerView): boolean {
-  if (a.name !== b.name) return false
+/** The dialog the list has open, if any — a state of the machine's list */
+function dialogOf(snapshot: ThemerSnapshot): 'paste' | 'snippet' | null {
+  if (snapshot.matches({list: 'pasting'})) return 'paste'
+  if (snapshot.matches({list: 'snippet'})) return 'snippet'
 
-  return (
-    a.name !== 'edit' || b.name !== 'edit' || (a.slug === b.slug && a.focusTitle === b.focusTitle)
-  )
+  return null
 }

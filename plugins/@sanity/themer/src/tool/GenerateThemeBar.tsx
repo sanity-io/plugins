@@ -3,7 +3,6 @@ import {LaunchIcon} from '@sanity/icons/Launch'
 import {SparklesIcon} from '@sanity/icons/Sparkles'
 import {UndoIcon} from '@sanity/icons/Undo'
 import {Button, Card, Flex, Stack, Text, TextArea} from '@sanity/ui'
-import {useSelector} from '@xstate/react'
 import {type KeyboardEvent, type RefObject, useEffect, useRef, useState} from 'react'
 
 import type {ThemerProps} from '#types'
@@ -18,7 +17,7 @@ import {
   readAiCreditsLimit,
 } from './aiCredits'
 import {type GenerateThemeClient, generateTheme, MAX_GENERATE_ATTEMPTS} from './generateTheme'
-import {CONFIG_SLUG} from './themes'
+import {CONFIG_SLUG, createCustomThemeSlug} from './themes'
 
 import * as styles from './GenerateThemeBar.module.css'
 
@@ -40,7 +39,10 @@ type GenerateStatus =
     }
 
 /** @internal */
-export interface GenerateThemeBarProps extends Pick<ThemerProps, 'actorRef'> {
+export interface GenerateThemeBarProps extends Pick<
+  ThemerProps,
+  'active' | 'removed' | 'send' | 'themes'
+> {
   client: GenerateThemeClient & AiCreditsClient
   onClose: () => void
   /** The request that is running. Closing the bar aborts it */
@@ -73,7 +75,10 @@ function titleFromRequest(request: string): string {
  * @internal
  */
 export function GenerateThemeBar({
-  actorRef,
+  active,
+  removed,
+  send,
+  themes,
   client,
   onClose,
   requestRef,
@@ -84,12 +89,17 @@ export function GenerateThemeBar({
   const [credits, setCredits] = useState<AiCredits | undefined>(undefined)
   const fieldRef = useRef<HTMLTextAreaElement>(null)
   const generatedSlug = status.type === 'generated' ? status.slug : null
-  const generatedExists = useSelector(
-    actorRef,
-    (snapshot) =>
-      generatedSlug !== null &&
-      snapshot.context.custom.some((theme) => theme.slug === generatedSlug),
-  )
+  const generatedExists =
+    generatedSlug !== null &&
+    [...themes, ...removed].some(
+      (theme) => theme.slug === generatedSlug && theme.source === 'custom',
+    )
+  const appliedSlug = active?.slug ?? CONFIG_SLUG
+  // What is applied once a generation comes back, which can be long after it started
+  const appliedSlugRef = useRef(appliedSlug)
+  useEffect(() => {
+    appliedSlugRef.current = appliedSlug
+  })
 
   useEffect(() => {
     const controller = new AbortController()
@@ -151,12 +161,11 @@ export function GenerateThemeBar({
         return
       }
 
-      const previous = actorRef.getSnapshot().context.active ?? CONFIG_SLUG
+      const previous = appliedSlugRef.current
       const title = generated.title ?? titleFromRequest(description)
+      const slug = createCustomThemeSlug()
 
-      actorRef.send({type: 'theme.import', title, options: generated.options})
-      // Importing applies the new theme, so it is the applied one now
-      const slug = actorRef.getSnapshot().context.active ?? CONFIG_SLUG
+      send({type: 'theme.import', title, options: generated.options, slug})
 
       setStatus({type: 'generated', slug, title, previous})
     } catch (error) {
@@ -184,11 +193,11 @@ export function GenerateThemeBar({
   }
 
   const undo = (generated: Extract<GenerateStatus, {type: 'generated'}>) => {
-    const applied = actorRef.getSnapshot().context.active === generated.slug
+    const applied = appliedSlug === generated.slug
 
-    actorRef.send({type: 'theme.delete', slug: generated.slug})
+    send({type: 'theme.delete', slug: generated.slug})
     // Only what the generated theme replaced comes back, not what was picked since
-    if (applied) actorRef.send({type: 'theme.pick', slug: generated.previous})
+    if (applied) send({type: 'theme.pick', slug: generated.previous})
     setStatus({type: 'idle'})
   }
 
@@ -326,7 +335,7 @@ export function GenerateThemeBar({
                   fontSize={1}
                   icon={EditIcon}
                   mode="ghost"
-                  onClick={() => actorRef.send({type: 'theme.edit', slug: status.slug})}
+                  onClick={() => send({type: 'theme.edit', slug: status.slug})}
                   padding={2}
                   text="Edit"
                 />

@@ -110,6 +110,12 @@ catalogs:
   # the `yup@^1` peer of newer resolvers.
   media:
     '@hookform/resolvers': ^6.0.2
+  # `@sanity/themer` runs its machines on the XState v6 beta through
+  # `@sanity-labs/xstate-react`. The default catalog stays on v5 for
+  # `sanity-plugin-dashboard-widget-vercel`, which uses `@xstate/react`.
+  xstate6:
+    '@sanity-labs/xstate-react': ^0.3.0
+    xstate: ^6.0.0-beta.5
 
 # Collapse compatible versions of the same dependency on every install, so the
 # lockfile stays deduped without waiting for the `Dedupe lockfile` workflow to

@@ -1,9 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
-import {createActor, type Snapshot} from 'xstate'
+import type {Snapshot} from 'xstate'
+import {restoreActor} from 'xstate/persist'
 
 import {selectStoredState, themerMachine} from './machine'
 import {snapshotFromState} from './schemas'
-import {type SyncChannel, type SyncLocks, syncThemer} from './sync'
+import {type SyncChannel, type SyncLocks, syncThemer, type ThemerSyncOptions} from './sync'
 import {type CustomTheme, initialThemerState, type ThemerState} from './themes'
 
 const custom: CustomTheme = {slug: 'custom-1', title: 'Mine', options: {light: {accent: '#ff0000'}}}
@@ -125,7 +126,18 @@ function createLocks(grantDelay = 0): SyncLocks {
 
 /** A tab's machine, restored with the given themes — as a session with a persisted snapshot is */
 function startTab(stored: ThemerState = initialThemerState) {
-  return createActor(themerMachine, {snapshot: snapshotFromState(stored)}).start()
+  return restoreActor(themerMachine, snapshotFromState(stored)).start()
+}
+
+/** Syncs a tab's machine, feeding the sync its every snapshot — as the layout does */
+function connect(tab: ReturnType<typeof startTab>, options: ThemerSyncOptions) {
+  const sync = syncThemer(tab.getSnapshot(), (event) => tab.send(event), options)
+  const subscription = tab.subscribe((snapshot) => sync.update(snapshot))
+
+  return () => {
+    subscription.unsubscribe()
+    sync.stop()
+  }
 }
 
 describe('syncing the themer across tabs', () => {
@@ -146,13 +158,13 @@ describe('syncing the themer across tabs', () => {
     const persistA = vi.fn<(snapshot: Snapshot<unknown>) => void>()
     const persistB = vi.fn<(snapshot: Snapshot<unknown>) => void>()
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: persistA,
       openChannel: bus.open,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: persistB,
       openChannel: bus.open,
       locks,
@@ -194,13 +206,13 @@ describe('syncing the themer across tabs', () => {
     const tabA = startTab({...initialThemerState, custom: [custom]})
     const tabB = startTab({...initialThemerState, custom: [custom]})
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: () => {},
       openChannel: () => channelA,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: () => {},
       openChannel: () => channelB,
       locks,
@@ -234,7 +246,7 @@ describe('syncing the themer across tabs', () => {
       },
     ])
     expect(tabA.getSnapshot().context.active).toBe('custom-1')
-    expect(tabA.getSnapshot().matches({flow: 'list'})).toBe(true)
+    expect(tabA.getSnapshot().matches('list')).toBe(true)
 
     stopA()
     stopB()
@@ -247,13 +259,13 @@ describe('syncing the themer across tabs', () => {
     const tabA = startTab({active: 'verdant', custom: [custom], removed: [], order: []})
     const tabB = startTab({active: null, custom: [custom], removed: [], order: []})
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: () => {},
       openChannel: bus.open,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -279,7 +291,7 @@ describe('syncing the themer across tabs', () => {
     const tabA = startTab({...initialThemerState, custom: [custom]})
     const tabC = startTab({...initialThemerState, custom: [custom]})
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: () => {},
       openChannel: bus.open,
       locks: undefined,
@@ -288,7 +300,7 @@ describe('syncing the themer across tabs', () => {
     tabA.send({type: 'theme.pick', slug: 'verdant'})
     await tick()
 
-    const stopC = syncThemer(tabC, {
+    const stopC = connect(tabC, {
       persist: () => {},
       openChannel: () => channelC,
       locks: undefined,
@@ -323,7 +335,7 @@ describe('syncing the themer across tabs', () => {
     const tabA = startTab({...initialThemerState, custom: [custom]})
     const tabB = startTab({...initialThemerState, custom: [custom]})
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -332,7 +344,7 @@ describe('syncing the themer across tabs', () => {
     await tick()
 
     // The second tab changes something before the holder has answered its hello
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -354,7 +366,7 @@ describe('syncing the themer across tabs', () => {
     const locks = createLocks()
     const tabA = startTab({active: 'custom-1', custom: [custom], removed: ['dew'], order: []})
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -364,7 +376,7 @@ describe('syncing the themer across tabs', () => {
 
     // Started from storage the holder had not written to yet
     const tabC = startTab()
-    const stopC = syncThemer(tabC, {
+    const stopC = connect(tabC, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -374,7 +386,6 @@ describe('syncing the themer across tabs', () => {
     await tick()
 
     expect(selectStoredState(tabC.getSnapshot())).toEqual(selectStoredState(tabA.getSnapshot()))
-    expect(tabC.getSnapshot().hasTag('switching')).toBe(true)
 
     stopA()
     stopC()
@@ -387,13 +398,13 @@ describe('syncing the themer across tabs', () => {
     const tabB = startTab({...initialThemerState, custom: [custom]})
     const persistA = vi.fn<(snapshot: Snapshot<unknown>) => void>()
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: persistA,
       openChannel: bus.open,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: () => {},
       openChannel: bus.open,
       locks,
@@ -426,13 +437,13 @@ describe('syncing the themer across tabs', () => {
     const persistA = vi.fn()
     const persistB = vi.fn()
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: persistA,
       openChannel: () => null,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: persistB,
       openChannel: () => null,
       locks,
@@ -458,13 +469,13 @@ describe('syncing the themer across tabs', () => {
     const persistA = vi.fn()
     const persistB = vi.fn()
 
-    const stopA = syncThemer(tabA, {
+    const stopA = connect(tabA, {
       persist: persistA,
       openChannel: bus.open,
       locks,
       schedule: immediately,
     })
-    const stopB = syncThemer(tabB, {
+    const stopB = connect(tabB, {
       persist: persistB,
       openChannel: bus.open,
       locks,
@@ -491,7 +502,7 @@ describe('syncing the themer across tabs', () => {
     const tab = startTab()
     const persist = vi.fn()
 
-    const stop = syncThemer(tab, {
+    const stop = connect(tab, {
       persist,
       openChannel: () => null,
       locks: undefined,
@@ -517,7 +528,7 @@ describe('syncing the themer across tabs', () => {
       }
     }
 
-    const stop = syncThemer(tab, {persist, openChannel: () => null, locks: undefined, schedule})
+    const stop = connect(tab, {persist, openChannel: () => null, locks: undefined, schedule})
     expect(persist).toHaveBeenCalledTimes(1)
 
     // A run of changes is one write, once the browser gets to it
@@ -543,7 +554,7 @@ describe('syncing the themer across tabs', () => {
     const tab = startTab({...initialThemerState, custom: [custom]})
     const before = tab.getSnapshot()
 
-    const stop = syncThemer(tab, {
+    const stop = connect(tab, {
       persist: () => {},
       openChannel: bus.open,
       locks: undefined,

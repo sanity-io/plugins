@@ -1,7 +1,7 @@
 import {dequal} from 'dequal/lite'
-import type {ActorRefFrom, Snapshot} from 'xstate'
+import type {Snapshot} from 'xstate'
 
-import {selectStoredState, type themerMachine} from './machine'
+import {selectStoredState, type ThemerEvent, themerMachine, type ThemerSnapshot} from './machine'
 import {parseThemerState} from './schemas'
 import type {ThemerState} from './themes'
 
@@ -69,6 +69,14 @@ export interface ThemerSyncOptions {
   locks?: SyncLocks | undefined
   /** Defers a persist to an idle moment; returns what cancels it */
   schedule?: (callback: () => void) => () => void
+}
+
+/** A running sync, told of every snapshot of the tab's machine @internal */
+export interface ThemerSync {
+  /** Hands the sync the machine's latest snapshot, to persist and pass on */
+  update(snapshot: ThemerSnapshot): void
+  /** Stops the sync: it lets go of the lock, which hands the persisting on, and closes the channel */
+  stop(): void
 }
 
 function openBroadcastChannel(): SyncChannel | null {
@@ -159,15 +167,16 @@ function tabId(): string {
  * Writes happen when the browser is idle — a run of edits is written once —
  * and as the page hides, so that nothing pending is lost.
  *
- * Returns what stops the sync: it lets go of the lock, which hands the
- * persisting on, and closes the channel.
+ * The sync starts from the machine's snapshot, hears of every later one
+ * through `update`, and reaches the machine through `send`.
  *
  * @internal
  */
 export function syncThemer(
-  actorRef: ActorRefFrom<typeof themerMachine>,
+  snapshot: ThemerSnapshot,
+  send: (event: ThemerEvent) => void,
   options: ThemerSyncOptions,
-): () => void {
+): ThemerSync {
   const {persist, openChannel = openBroadcastChannel, schedule = scheduleIdle} = options
   const channel = openChannel()
   // Without a channel the tabs cannot hear of each other's changes, so each
@@ -179,10 +188,9 @@ export function syncThemer(
   const abort = new AbortController()
   let leader = false
   let cancelPersist: (() => void) | undefined
-  /** Whether another tab's state is being sent into the machine, which is nothing to pass on */
-  let applying = false
+  let latest = snapshot
   /** The persisted state as the other tabs last heard it from this one, or this one from them */
-  let shared = selectStoredState(actorRef.getSnapshot())
+  let shared = selectStoredState(snapshot)
   /** The revision `shared` is at, and the tab whose change it was */
   let revision = 0
   let origin = id
@@ -197,7 +205,7 @@ export function syncThemer(
   const persistNow = () => {
     cancelPersist?.()
     cancelPersist = undefined
-    persist(actorRef.getPersistedSnapshot())
+    persist(themerMachine.getPersistedSnapshot(latest))
   }
   const persistSoon = () => {
     cancelPersist?.()
@@ -231,13 +239,16 @@ export function syncThemer(
     becomeLeader()
   }
 
-  const subscription = actorRef.subscribe((snapshot) => {
+  const update = (next: ThemerSnapshot) => {
+    if (next === latest) return
+
+    latest = next
     if (leader) persistSoon()
-    if (applying) return
 
-    const state = selectStoredState(snapshot)
+    const state = selectStoredState(next)
 
-    // Only changes to what is persisted concern the other tabs — the flow is this tab's
+    // Only changes to what is persisted concern the other tabs — the flow is
+    // this tab's, and what another tab sent is no news to them
     if (dequal(state, shared)) return
 
     shared = state
@@ -245,7 +256,7 @@ export function syncThemer(
     revision += 1
     origin = id
     channel?.post({type: 'state', state, revision, from: id} satisfies SyncMessage)
-  })
+  }
 
   if (channel) {
     channel.listen((data) => {
@@ -292,12 +303,7 @@ export function syncThemer(
 
       shared = message.state
       unchanged = false
-      applying = true
-      try {
-        actorRef.send({type: 'themes.sync', state: message.state})
-      } finally {
-        applying = false
-      }
+      send({type: 'themes.sync', state: message.state})
     })
     channel.post({type: 'hello', from: id} satisfies SyncMessage)
   }
@@ -309,11 +315,13 @@ export function syncThemer(
 
   page?.addEventListener('pagehide', flush)
 
-  return () => {
-    subscription.unsubscribe()
-    page?.removeEventListener('pagehide', flush)
-    flush()
-    abort.abort()
-    channel?.close()
+  return {
+    update,
+    stop: () => {
+      page?.removeEventListener('pagehide', flush)
+      flush()
+      abort.abort()
+      channel?.close()
+    },
   }
 }
