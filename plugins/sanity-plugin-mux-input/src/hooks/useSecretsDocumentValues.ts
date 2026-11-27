@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {useDocumentValues} from 'sanity'
+import {useDocumentValues} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {muxSecretsDocumentId} from '../util/constants'
 import type {Secrets} from '../util/types'

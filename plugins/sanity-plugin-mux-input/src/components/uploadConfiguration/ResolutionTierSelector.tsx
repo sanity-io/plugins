@@ -1,6 +1,6 @@
 import {Flex, Radio, Text} from '@sanity/ui'
 import {type ActionDispatch} from 'react'
-import {FormField} from 'sanity'
+import {FormField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {type UploadConfig} from '../../util/types'
 import {type UploadConfigurationStateAction} from '../UploadConfiguration'

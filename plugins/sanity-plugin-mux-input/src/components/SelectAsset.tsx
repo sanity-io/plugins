@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
-import {PatchEvent, set, setIfMissing, unset} from 'sanity'
+import {set, setIfMissing, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {SetDialogState} from '../hooks/useDialogState'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from '../util/types'
