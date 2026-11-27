@@ -1,6 +1,7 @@
 import {Box, Flex, Text} from '@sanity/ui'
 import {useMemo} from 'react'
-import {useCurrentUser, UserAvatar} from 'sanity'
+import {useCurrentUser} from 'sanity'
+import {UserAvatar} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {User} from '../../types'
 

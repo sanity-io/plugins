@@ -2,7 +2,8 @@ import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {Box, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {TextWithTone, type ValidationMarker} from 'sanity'
+import {type ValidationMarker} from 'sanity'
+import {TextWithTone} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 type ValidationStatusProps = {
   validation: ValidationMarker[]
