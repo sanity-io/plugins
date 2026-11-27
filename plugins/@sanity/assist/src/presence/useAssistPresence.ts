@@ -1,5 +1,9 @@
 import {useMemo} from 'react'
-import {type FormNodePresence, isKeySegment, type Path, stringToPath} from 'sanity'
+import {type FormNodePresence, type Path} from 'sanity'
+import {
+  isKeySegment,
+  stringToPath,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
 import {maxHistoryVisibilityMs, pluginTitle} from '../constants'

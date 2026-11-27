@@ -7,8 +7,8 @@ import {
   type ReferenceSchemaType,
   type Schema,
   type SchemaType,
-  typed,
 } from 'sanity'
+import {typed} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {isAssistSupported} from '../../helpers/assistSupported'
 import {isType} from '../../helpers/typeUtils'

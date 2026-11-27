@@ -2,7 +2,7 @@
 
 import {Button, Card, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
-import {LinearProgress} from 'sanity'
+import {LinearProgress} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 const CardWrapper = styled(Card)`

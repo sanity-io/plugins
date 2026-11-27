@@ -8,4 +8,4 @@ export {AprimoAdditionalFileSchema} from './schema/AdditionalFile'
 
 export type {AprimoAsset, AprimoCDNAsset, AprimoAdditionalFile, AprimoConfig} from './types'
 
-export {AprimoWidget} from './components/AprimoWidget'
+export {AprimoWidget} from './components/lazyComponents'

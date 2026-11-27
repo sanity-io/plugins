@@ -1,8 +1,8 @@
 import {Box} from '@sanity/ui'
 import {useToast, type ToastParams} from '@sanity/ui/toast'
 import {useEffect, useMemo} from 'react'
-import {useSchema} from 'sanity'
 import {Feedback} from 'sanity-plugin-utils'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {DocumentListQuery} from './DocumentListQuery'
 import {ORDER_FIELD_NAME} from './helpers/constants'

@@ -3,7 +3,7 @@ import {buildTheme} from '@sanity/ui/theme'
 import {ToastProvider} from '@sanity/ui/toast'
 import {act, cleanup, render, screen, waitFor} from '@testing-library/react'
 import {of, Subject} from 'rxjs'
-import {ColorSchemeProvider} from 'sanity'
+import {ColorSchemeProvider} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {createMockSanityClient} from '../../__tests__/fixtures/mockSanityClient'

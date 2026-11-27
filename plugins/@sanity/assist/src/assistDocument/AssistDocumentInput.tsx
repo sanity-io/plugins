@@ -1,7 +1,7 @@
 import {useLayer} from '@sanity/ui'
 import {useMemo} from 'react'
 import type {InputProps, ObjectInputProps, ObjectSchemaType} from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {ConnectFromRegion} from '../_lib/connector'
 import {assistFormId} from '../_lib/form/constants'

@@ -33,19 +33,19 @@ catalog:
   '@sanity/color': ^3.0.9
   '@sanity/icons': ^5.2.3
   '@sanity/image-url': ^2.1.1
-  '@sanity/mutator': ^6.19.0
+  '@sanity/mutator': ^7.0.0-next-major.20261127140520
   '@sanity/pkg-utils': ^13.0.12
   '@sanity/preview-url-secret': ^4.1.5
-  '@sanity/schema': ^6.19.0
+  '@sanity/schema': ^7.0.0-next-major.20261127140520
   '@sanity/telemetry': '^1.1.0'
   '@sanity/tsconfig': ^2.2.1
   '@sanity/tsdown-config': ^0.31.2
-  '@sanity/types': ^6.19.0
+  '@sanity/types': ^7.0.0-next-major.20261127140520
   '@sanity/ui': ^4.4.10
-  '@sanity/util': ^6.19.0
+  '@sanity/util': ^7.0.0-next-major.20261127140520
   '@sanity/uuid': ^3.0.3
-  '@sanity/vanilla-extract-vite-plugin': ^0.3.0
-  '@sanity/vision': ^6.19.0
+  '@sanity/vanilla-extract-vite-plugin': ^0.3.5
+  '@sanity/vision': ^7.0.0-next-major.20261127140520
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
   # Pins its `tsdown` peer to the exact release it ships with, so bump it together with `tsdown`
@@ -63,7 +63,7 @@ catalog:
   '@xstate/react': ^6.1.0
   date-fns: ^4.4.0
   dequal: ^2.0.3
-  groq: ^6.19.0
+  groq: ^7.0.0-next-major.20261127140520
   jsdom: ^29.1.1
   lexorank: ^1.0.5
   lodash-es: ^4.18.1
@@ -80,7 +80,7 @@ catalog:
   react-photo-album: ^3.6.0
   react-rx: ^7.1.0
   rxjs: ^7.8.2
-  sanity: ^6.19.0
+  sanity: ^7.0.0-next-major.20261127140520
   scroll-into-view-if-needed: ^3.1.0
   styled-components: ^6.6.0
   stylelint: ^17.16.0
@@ -102,8 +102,27 @@ catalogs:
   peer:
     react: ^19.2
     react-dom: ^19.2
-    sanity: ^5 || ^6.0.0-0
+    sanity: ^5 || ^6.0.0-0 || ^7.0.0-0
     styled-components: ^6.1
+  # Peer range for plugins that import the i18n runtime (`useTranslation`,
+  # `defineLocaleResourceBundle`, …). Studio v7 only exports it from `sanity/i18n`,
+  # which first ships in 6.25.0 (sanity-io/sanity#16078, #16161).
+  peer-i18n:
+    sanity: ^6.25.0 || ^7.0.0-0
+  # Peer range for plugins that import Studio form/diff/preview helpers from
+  # `sanity/_dangerously_use_private_internals_that_do_not_follow_semver`. That entry
+  # first ships in 6.17.0 (sanity-io/sanity#14724); v7 removes the same symbols from
+  # the public `sanity` export.
+  peer-internals:
+    sanity: ^6.17.0 || ^7.0.0-0
+  # Runtime `dependencies` of published plugins on Studio monorepo packages. They accept
+  # both majors, so a Studio v6 or v7 install dedupes them against its own copy; the
+  # default catalog pins the prerelease this branch develops against.
+  studio:
+    '@sanity/mutator': ^6.19.0 || ^7.0.0-0
+    '@sanity/schema': ^6.19.0 || ^7.0.0-0
+    '@sanity/util': ^6.19.0 || ^7.0.0-0
+    groq: ^6.19.0 || ^7.0.0-0
   # `sanity-plugin-media` validates its forms with zod v4, which `zodResolver`
   # only supports from @hookform/resolvers 5.1. The default catalog stays on v4
   # for `sanity-plugin-dashboard-widget-vercel`, whose yup 0.32 schemas predate
@@ -212,17 +231,18 @@ overrides:
   '@types/node': 'catalog:'
   # Type errors happen if there are duplicates of `@sanity/client` in node_modules
   '@sanity/client@8': 'catalog:'
-  # Pin the Sanity Studio monorepo to the `next` dist-tag for compatibility testing.
-  # Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
-  # transitive deps (cli/migrate/portabletext) cannot leave a second major.minor
-  # of those packages in the lockfile.
-  '@sanity/mutator': next
-  '@sanity/schema': next
-  '@sanity/types': next
-  '@sanity/util': next
-  '@sanity/vision': next
-  groq: next
-  sanity: next
+  # The `next-major` branch builds against Sanity Studio v7 prereleases (the `next-major`
+  # dist-tag). Keep mutator/schema/types/util/groq in lockstep with sanity so dts emit and
+  # transitive deps (cli/migrate/portabletext) cannot leave a second major of those
+  # packages in the lockfile. They point at the catalog's semver range rather than the
+  # dist-tag, so installs reuse the locked prerelease instead of re-resolving it.
+  '@sanity/mutator': 'catalog:'
+  '@sanity/schema': 'catalog:'
+  '@sanity/types': 'catalog:'
+  '@sanity/util': 'catalog:'
+  '@sanity/vision': 'catalog:'
+  groq: 'catalog:'
+  sanity: 'catalog:'
   # Keep a single tsx (and thus a single vite types instance) so sanity.cli vite
   # config callbacks type-check cleanly after the catalog tsx bump.
   tsx: 'catalog:'
@@ -286,6 +306,6 @@ trustPolicyExclude:
   - undici@5.29.0
   - vercel@60.1.3
   # @sanity/vision's result diff (@pierre/diffs) depends on it. 1.0.0 was published with
-  # provenance; 1.1.0 and 2.0.0 without it, by a listed maintainer who also publishes
+  # provenance; 1.1.0, 2.0.0 and 2.1.0 without it, by a listed maintainer who also publishes
   # @pierre/diffs (which has never shipped provenance)
-  - '@pierre/theme@2.0.0'
+  - '@pierre/theme@2.1.0'

@@ -1,6 +1,6 @@
 import {Box, Button, Flex, Label} from '@sanity/ui'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {PANEL_HEIGHT} from '../../constants'
 import {useAssetSourceActions} from '../../contexts/AssetSourceDispatchContext'

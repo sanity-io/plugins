@@ -3,8 +3,10 @@ import {UserIcon} from '@sanity/icons/User'
 import {Button, Card, Flex} from '@sanity/ui'
 import {Menu, MenuButton} from '@sanity/ui/menu'
 import {useCallback} from 'react'
-import {useCurrentUser, UserAvatar, useSchema} from 'sanity'
+import {useCurrentUser} from 'sanity'
 import {type UserExtended, UserSelectMenu} from 'sanity-plugin-utils'
+import {UserAvatar} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 type FiltersProps = {
   uniqueAssignedUsers: UserExtended[]

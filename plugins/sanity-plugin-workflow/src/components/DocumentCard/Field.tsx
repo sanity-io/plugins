@@ -1,6 +1,8 @@
 import {Flex, Card, Spinner} from '@sanity/ui'
-import {Preview, type SanityDocument, type StringInputProps, useSchema} from 'sanity'
+import {type SanityDocument, type StringInputProps} from 'sanity'
 import {useListeningQuery, Feedback} from 'sanity-plugin-utils'
+import {Preview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import EditButton from './EditButton'
 

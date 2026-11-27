@@ -1,9 +1,9 @@
 import {definePlugin, type SchemaType} from 'sanity'
 
 import {GoogleMapsInputContext} from './diff/GeoConfigContext'
-import {GeopointDiff} from './diff/GeopointDiff'
-import {GeopointInput, type GeopointInputProps} from './input/GeopointInput'
-import {GeopointRadiusInput, type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
+import {type GeopointInputProps} from './input/GeopointInput'
+import {type GeopointRadiusInputProps} from './input/GeopointRadiusInput'
+import {GeopointDiff, GeopointInput, GeopointRadiusInput} from './lazyComponents'
 import type {GeopointSchemaType, GeopointRadiusSchemaType, GoogleMapsInputConfig} from './types'
 
 export const googleMapsInput = definePlugin<GoogleMapsInputConfig>((config) => {

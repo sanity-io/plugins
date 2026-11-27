@@ -1,7 +1,8 @@
 import {PublishIcon} from '@sanity/icons/Publish'
 import {Box, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-import {TextWithTone, type PreviewValue, type SanityDocument} from 'sanity'
+import {type PreviewValue, type SanityDocument} from 'sanity'
+import {TextWithTone} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {TimeAgo} from './TimeAgo'
 

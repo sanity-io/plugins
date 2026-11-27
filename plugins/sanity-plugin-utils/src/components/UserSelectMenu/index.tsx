@@ -4,7 +4,7 @@ import {RestoreIcon} from '@sanity/icons/Restore'
 import {Badge, Box, Flex, Text, TextInput} from '@sanity/ui'
 import {Menu, MenuItem} from '@sanity/ui/menu'
 import {type ChangeEvent, useRef, useState} from 'react'
-import {UserAvatar} from 'sanity'
+import {UserAvatar} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {type UserExtended} from '../../hooks/useProjectUsers'
 

@@ -6,8 +6,11 @@ import DocumentPreview from './DocumentPreview'
 
 const mockGetSchemaType = vi.fn()
 
-vi.mock('sanity', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
   Preview: ({value}: {value: {_id?: string}}) => <div data-testid="preview">{value?._id}</div>,
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useSchema: () => ({get: mockGetSchemaType}),
 }))
 

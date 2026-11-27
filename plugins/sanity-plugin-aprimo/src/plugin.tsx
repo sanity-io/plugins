@@ -1,6 +1,6 @@
 import {definePlugin, isObjectInputProps, type SchemaType} from 'sanity'
 
-import {AprimoWidget} from './components/AprimoWidget'
+import {AprimoWidget} from './components/lazyComponents'
 import {AprimoAdditionalFileSchema} from './schema/AdditionalFile'
 import {AprimoAssetSchema} from './schema/AprimoAsset'
 import {AprimoCDNAssetSchema} from './schema/AprimoCDNAsset'

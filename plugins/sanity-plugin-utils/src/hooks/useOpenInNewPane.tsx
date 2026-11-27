@@ -1,6 +1,6 @@
 import {useCallback, useContext} from 'react'
-import {RouterContext} from 'sanity/router'
-import {usePaneRouter} from 'sanity/structure'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-structure'
+import {RouterContext} from 'sanity/_singletons'
 
 export function useOpenInNewPane(id?: string, type?: string) {
   const routerContext = useContext(RouterContext)

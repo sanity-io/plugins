@@ -1,7 +1,8 @@
 import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
 import {Button, Card, Flex, Grid, Inline, Stack, Text} from '@sanity/ui'
 import {useCallback, useState} from 'react'
-import {type ObjectInputProps, PatchEvent, unset} from 'sanity'
+import {type ObjectInputProps, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {Asset} from '../types'
 import {resolveShopifyAssetConfig} from '../utils/resolveShopifyAssetConfig'

@@ -16,7 +16,6 @@ vi.mock('sanity', () => ({
     (v: unknown) =>
       typeof v === 'object' && v !== null && '_id' in v && '_type' in v && '_rev' in v,
   ),
-  PatchEvent: {from: vi.fn((patches: unknown) => patches)},
   insert: vi.fn((items: unknown[], position: string, path: unknown[]) => ({
     type: 'insert',
     items,
@@ -29,10 +28,14 @@ vi.mock('sanity', () => ({
     path,
   })),
   useGetFormValue: vi.fn(() => mockGetFormValue),
-  useSchema: vi.fn(() => ({get: vi.fn(() => undefined)})),
 }))
 
-vi.mock('sanity/structure', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2', () => ({
+  PatchEvent: {from: vi.fn((patches: unknown) => patches)},
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
+  useSchema: vi.fn(() => ({get: vi.fn(() => undefined)})),
   useDocumentPane: vi.fn(() => ({
     onChange: mockOnChange,
     formState: mockFormState,

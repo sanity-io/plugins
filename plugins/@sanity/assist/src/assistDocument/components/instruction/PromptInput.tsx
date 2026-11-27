@@ -1,7 +1,8 @@
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {Box, Stack, Text} from '@sanity/ui'
 import {useEffect, useRef} from 'react'
-import {type ArrayOfObjectsInputProps, set, typed} from 'sanity'
+import {type ArrayOfObjectsInputProps, set} from 'sanity'
+import {typed} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import {randomKey} from '../../../_lib/randomKey'

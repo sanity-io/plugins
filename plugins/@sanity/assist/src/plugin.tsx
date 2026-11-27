@@ -1,10 +1,10 @@
 import type {SanityClient} from '@sanity/client'
+import {lazy} from 'react'
 import {definePlugin, isObjectSchemaType} from 'sanity'
 
 import {AssistDocumentInputWrapper} from './assistDocument/AssistDocumentInput'
 import {AssistDocumentLayout} from './assistDocument/AssistDocumentLayout'
 import {AssistFieldWrapper} from './assistFormComponents/AssistField'
-import {AssistFormBlock} from './assistFormComponents/AssistFormBlock'
 import {AssistInlineFormBlock} from './assistFormComponents/AssistInlineFormBlock'
 import {AssistItem} from './assistFormComponents/AssistItem'
 import {assistInspector} from './assistInspector'
@@ -22,6 +22,8 @@ import {createAssistDocumentPresence} from './presence/AssistDocumentPresence'
 import {createSchemaTypes} from './schemas'
 import type {TranslationConfig} from './translate/types'
 import {assistDocumentTypeName, type AssistPreset} from './types'
+
+const AssistFormBlock = lazy(() => import('./assistFormComponents/AssistFormBlock.lazy'))
 
 export interface AssistPluginConfig {
   translate?: TranslationConfig

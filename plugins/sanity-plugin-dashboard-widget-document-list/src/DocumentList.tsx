@@ -2,14 +2,13 @@ import {DashboardWidgetContainer} from '@sanity/dashboard'
 import {Card, Flex, Spinner, Stack} from '@sanity/ui'
 import intersection from 'lodash-es/intersection.js'
 import {type ReactNode, useEffect, useMemo, useState} from 'react'
+import {type SanityDocument, useClient} from 'sanity'
 import {
   getPublishedId,
-  IntentButton,
   Preview,
-  type SanityDocument,
-  useClient,
-  useSchema,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {IntentButton} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {getSubscription} from './sanityConnector'
 

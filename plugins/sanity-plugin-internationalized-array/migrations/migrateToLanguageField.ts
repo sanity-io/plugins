@@ -1,4 +1,4 @@
-import {defineMigration, set} from 'sanity/migrate'
+import {defineMigration, type SetOp} from 'sanity/migrate'
 
 /**
  * The property which will be used to store the language identifier from v5.
@@ -53,11 +53,15 @@ export function migrateToLanguageField(documentTypes: string[]) {
           return undefined
         }
 
-        return set({
-          ...node,
-          _key: undefined,
-          [LANGUAGE_FIELD_NAME]: oldKey,
-        })
+        // Studio v7's `sanity/migrate` no longer exports the `set` helper, so build the operation it returns
+        return {
+          type: 'set',
+          value: {
+            ...node,
+            _key: undefined,
+            [LANGUAGE_FIELD_NAME]: oldKey,
+          },
+        } satisfies SetOp<unknown>
       },
     },
   })

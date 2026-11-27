@@ -1,6 +1,6 @@
 import {Box, Button, Card, ErrorBoundary, Flex, Stack, Text} from '@sanity/ui'
 import {type ErrorInfo, type PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {type InputProps, isArraySchemaType, PatchEvent, unset} from 'sanity'
+import {type InputProps, isArraySchemaType, unset} from 'sanity'
 import {styled} from 'styled-components'
 
 import {isPortableTextArray} from '../helpers/typeUtils'
@@ -19,9 +19,7 @@ export function SafeValueInput(props: InputProps) {
   )
 }
 
-export function ErrorWrapper(
-  props: PropsWithChildren<{onChange: (patchEvent: PatchEvent) => void}>,
-) {
+export function ErrorWrapper(props: PropsWithChildren<{onChange: InputProps['onChange']}>) {
   const {onChange} = props
   const [error, setError] = useState<Error | undefined>()
 
@@ -30,7 +28,7 @@ export function ErrorWrapper(
   }, [])
 
   const unsetValue = useCallback(() => {
-    onChange(PatchEvent.from(unset()))
+    onChange(unset())
     setError(undefined)
   }, [onChange])
   const dismiss = useCallback(() => setError(undefined), [])

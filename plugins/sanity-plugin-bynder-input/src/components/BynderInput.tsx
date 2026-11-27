@@ -1,7 +1,8 @@
 import type {CompactViewProps, PortalConfig, AdditionalInfo} from '@bynder/compact-view'
 import {Box, Button, Flex} from '@sanity/ui'
 import {useState, lazy, useTransition} from 'react'
-import {type ObjectInputProps, PatchEvent, set, unset} from 'sanity'
+import {type ObjectInputProps, set, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {BynderAssetOptions, BynderAssetValue} from '../schema/bynder.asset'
 

@@ -1,7 +1,7 @@
 import {LinkIcon} from '@sanity/icons/Link'
 import {Box, Flex, Stack, Text} from '@sanity/ui'
 import {useMemo} from 'react'
-import {useRelativeTime} from 'sanity'
+import {useRelativeTime} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {type Vercel} from '../../types'
 import StatusDot from '../StatusDot'

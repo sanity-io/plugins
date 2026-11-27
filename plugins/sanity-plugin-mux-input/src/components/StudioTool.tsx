@@ -1,14 +1,27 @@
+import {Flex, Spinner} from '@sanity/ui'
+import {lazy, Suspense} from 'react'
 import type {Tool} from 'sanity'
 
 import {MuxApiHostProvider} from '../context/MuxApiHostContext'
 import type {PluginConfig} from '../util/types'
 import ToolIcon from './icons/ToolIcon'
-import VideosBrowser from './VideosBrowser'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const VideosBrowser = lazy(() => import('./VideosBrowser'))
 
 const StudioTool: React.FC<PluginConfig> = (config) => {
   return (
     <MuxApiHostProvider muxApiHost={config.muxApiHost}>
-      <VideosBrowser config={config} />
+      <Suspense
+        fallback={
+          <Flex align="center" justify="center" height="fill">
+            <Spinner />
+          </Flex>
+        }
+      >
+        <VideosBrowser config={config} />
+      </Suspense>
     </MuxApiHostProvider>
   )
 }

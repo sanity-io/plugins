@@ -62,7 +62,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer"
+    "sanity": "catalog:peer-internals"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

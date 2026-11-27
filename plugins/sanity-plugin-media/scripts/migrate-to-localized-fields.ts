@@ -11,7 +11,7 @@
  * string values should be mapped to.
  */
 
-import {defineMigration, patch} from 'sanity/migrate'
+import {defineMigration, type Migration, patch} from 'sanity/migrate'
 
 const DEFAULT_LOCALE_ID = 'en' // Change to your default locale id
 
@@ -20,7 +20,7 @@ const COMMON_LOCALIZED_FIELDS = ['title', 'altText', 'description'] as const
 // creditLine only exists on sanity.imageAsset
 const IMAGE_ONLY_LOCALIZED_FIELDS = ['creditLine'] as const
 
-export default defineMigration({
+const migration: Migration = defineMigration({
   title: 'Convert flat asset fields to localized object format',
   filter: `_type in ["sanity.imageAsset", "sanity.fileAsset"]`,
 
@@ -49,3 +49,5 @@ export default defineMigration({
     },
   },
 })
+
+export default migration

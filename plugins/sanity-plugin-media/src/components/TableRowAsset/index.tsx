@@ -26,7 +26,8 @@ import {
   useState,
 } from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue, useReferringDocuments} from 'sanity'
+import {useReferringDocuments} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled, css} from 'styled-components'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'

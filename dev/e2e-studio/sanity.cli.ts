@@ -7,6 +7,10 @@ const firefoxDataset = process.env.SANITY_E2E_DATASET_FIREFOX || dataset
 
 export default defineCliConfig({
   api: {projectId, dataset},
+  deployment: {
+    // Temporary until the module CDN serves the Studio v7 private-internals entries.
+    autoUpdates: false,
+  },
   vite: {
     // SANITY_E2E_* vars are not auto-exposed like SANITY_STUDIO_*; inline them
     // so sanity.config.ts can read them in the browser bundle.

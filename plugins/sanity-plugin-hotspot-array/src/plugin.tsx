@@ -1,7 +1,8 @@
 import {type ComponentType} from 'react'
 import {type ArrayOfObjectsInputProps, definePlugin} from 'sanity'
 
-import {type HotspotItem, ImageHotspotArray} from './ImageHotspotArray'
+import {type HotspotItem} from './ImageHotspotArray'
+import {ImageHotspotArray} from './LazyImageHotspotArray'
 import {type HotspotTooltipProps} from './Spot'
 
 export interface ImageHotspotOptions<HotspotFields = {[key: string]: unknown}> {

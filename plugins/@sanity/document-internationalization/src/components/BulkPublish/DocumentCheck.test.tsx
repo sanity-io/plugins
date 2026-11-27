@@ -8,10 +8,13 @@ const mockUseEditState = vi.fn()
 const mockUseValidationStatus = vi.fn()
 const mockGetSchemaType = vi.fn()
 
-vi.mock('sanity', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
   Preview: ({value}: {value: {_id?: string}}) => <div data-testid="preview">{value?._id}</div>,
   useEditState: (...args: unknown[]) => mockUseEditState(...args),
   useValidationStatus: (...args: unknown[]) => mockUseValidationStatus(...args),
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useSchema: () => ({get: mockGetSchemaType}),
 }))
 

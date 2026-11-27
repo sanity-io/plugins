@@ -41,7 +41,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "lodash-es": "catalog:"
   },
   "devDependencies": {
@@ -67,7 +67,7 @@
     "@sanity/language-filter": "workspace:^",
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer"
+    "sanity": "catalog:peer-internals"
   },
   "peerDependenciesMeta": {
     "@sanity/assist": {

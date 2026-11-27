@@ -1,9 +1,13 @@
+import {lazy} from 'react'
 import {defineField, defineType} from 'sanity'
 
-import AssetDiff from '../components/AssetDiff'
 import AssetPreview from '../components/AssetPreview'
-import ShopifyAssetInput from '../components/ShopifyAssetInput'
 import type {PluginConfig} from '../types'
+
+// Both import `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must
+// stay out of what the studio shell loads.
+const AssetDiff = lazy(() => import('../components/AssetDiff'))
+const ShopifyAssetInput = lazy(() => import('../components/ShopifyAssetInput'))
 
 declare module 'sanity' {
   interface ObjectOptions {

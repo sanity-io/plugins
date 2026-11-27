@@ -1,8 +1,12 @@
+import {lazy} from 'react'
 import {defineField, type FieldDefinition, type FieldProps} from 'sanity'
 
 import {createFieldName} from '../components/createFieldName'
-import InternationalizedInput from '../components/InternationalizedInput'
 import {LANGUAGE_FIELD_NAME} from '../constants'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const InternationalizedInput = lazy(() => import('../components/InternationalizedInput'))
 
 type ObjectFactoryConfig = {
   type: string | FieldDefinition

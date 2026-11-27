@@ -1,4 +1,5 @@
-import {createHookFromObservableFactory, type DocumentStore, type SanityDocument} from 'sanity'
+import {type DocumentStore, type SanityDocument} from 'sanity'
+import {createHookFromObservableFactory} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {SANITY_API_VERSION} from './useClient'
 

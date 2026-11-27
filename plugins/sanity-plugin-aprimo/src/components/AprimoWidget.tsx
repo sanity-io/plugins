@@ -1,6 +1,7 @@
 import {Box, Button, Card, Grid, Text} from '@sanity/ui'
 import {useEffect, useState, useMemo} from 'react'
-import {PatchEvent, type ObjectInputProps, set, unset} from 'sanity'
+import {type ObjectInputProps, set, unset} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {AprimoCDNAsset, AprimoAsset, AprimoConfig} from '../types'
 import {openSelector} from '../utils'

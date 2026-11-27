@@ -1,7 +1,12 @@
-import Input from './components/Input'
+import {lazy} from 'react'
+
 import VideoThumbnail from './components/VideoThumbnail'
 import {MuxApiHostProvider} from './context/MuxApiHostContext'
 import type {MuxInputProps, PluginConfig, VideoAssetDocument} from './util/types'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const Input = lazy(() => import('./components/Input'))
 
 export function muxVideoCustomRendering(config: PluginConfig) {
   return {

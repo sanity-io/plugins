@@ -1,6 +1,10 @@
 import {tzOffset} from '@date-fns/tz'
 import {type ReactNode, useCallback} from 'react'
-import {DateTimeInput, type FieldProps, type FormPatch, type PatchEvent, set, unset} from 'sanity'
+import {type FieldProps, type FormPatch, set, unset} from 'sanity'
+import {
+  DateTimeInput,
+  type PatchEvent,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {RichDate} from '../types'
 import {formatInTimeZone, getConstructedUTCDate, shiftWallClockToTimeZone} from '../utils'

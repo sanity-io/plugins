@@ -1,4 +1,10 @@
-import {getPublishedId, getVersionFromId, isDraftId, isPublishedId, isVersionId} from 'sanity'
+import {
+  getPublishedId,
+  getVersionFromId,
+  isDraftId,
+  isPublishedId,
+  isVersionId,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {SanityDocumentWithOrder} from '../types'
 

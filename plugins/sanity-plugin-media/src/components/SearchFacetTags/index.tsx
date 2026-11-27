@@ -3,7 +3,7 @@ import {Box, Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
 import {useDispatch} from 'react-redux'
 import Select from 'react-select'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {operators} from '../../config/searchFacets'
 import {useToolOptions} from '../../contexts/ToolOptionsContext'

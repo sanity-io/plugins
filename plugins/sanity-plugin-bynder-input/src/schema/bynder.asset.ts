@@ -1,6 +1,6 @@
 import {defineType, type ObjectDefinition, type ObjectOptions} from 'sanity'
 
-import {BynderDiff} from '../components/BynderDiff'
+import {BynderDiff} from '../components/lazyComponents'
 
 const bynderAssetSchemaName = 'bynder.asset'
 

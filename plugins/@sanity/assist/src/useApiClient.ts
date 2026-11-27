@@ -1,7 +1,8 @@
 import type {SanityClient} from '@sanity/client'
 import {useToast} from '@sanity/ui/toast'
 import {useCallback, useMemo, useState} from 'react'
-import {type Path, pathToString, useClient, useCurrentUser} from 'sanity'
+import {type Path, useClient, useCurrentUser} from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {useAiAssistanceConfig, useSerializedTypes} from './assistLayout/AiAssistanceConfigContext'
 import type {ConditionalMemberState} from './helpers/conditionalMembers'

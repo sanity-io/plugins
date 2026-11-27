@@ -1,5 +1,5 @@
 import {isReference} from 'sanity'
-import {useDocumentValues} from 'sanity'
+import {useDocumentValues} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {Reference, VideoAssetDocument} from '../util/types'
 

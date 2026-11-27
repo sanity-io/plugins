@@ -1,6 +1,11 @@
 import type {SanityDocument} from '@sanity/client'
 import {Box, Button, Card, Stack, Text} from '@sanity/ui'
-import {getPublishedId, Preview, type SchemaType, useSchema} from 'sanity'
+import {type SchemaType} from 'sanity'
+import {
+  getPublishedId,
+  Preview,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 import {useIntentLink} from 'sanity/router'
 
 type Props = {

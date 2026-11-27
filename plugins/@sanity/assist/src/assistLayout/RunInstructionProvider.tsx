@@ -1,21 +1,17 @@
 import {PlayIcon} from '@sanity/icons/Play'
-import {Button, Dialog, Flex, Stack, Text, TextArea} from '@sanity/ui'
+import {Button, Dialog, Flex, Spinner, Stack, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {
   createContext,
-  type Dispatch,
-  type FormEvent,
+  lazy,
   type PropsWithChildren,
-  type SetStateAction,
+  Suspense,
   useCallback,
   useContext,
-  useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
-import {FormFieldHeaderText} from 'sanity'
 
 import type {CustomInputResult, GetUserInput} from '../fieldActions/useUserInput'
 import {getInstructionTitle} from '../helpers/misc'
@@ -23,8 +19,12 @@ import {type UserInputBlock, userInputTypeName} from '../types'
 import {useApiClient, useRunInstructionApi} from '../useApiClient'
 import {useAiAssistanceConfig} from './AiAssistanceConfigContext'
 import type {RunInstructionArgs} from './AssistLayout'
+import type {BlockInputs} from './UserInput'
 
-type BlockInputs = Record<string, string>
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const UserInput = lazy(() => import('./UserInput'))
+
 const NO_INPUT: BlockInputs = {}
 
 export interface RunInstructionContextValue {
@@ -213,66 +213,27 @@ export function RunInstructionProvider(props: PropsWithChildren<{}>) {
           }
         >
           <Stack padding={4} gap={2}>
-            {runRequest?.userInputBlocks?.map((block, i) => (
-              <UserInput
-                key={block._key}
-                block={block}
-                autoFocus={i === 0}
-                inputs={inputs}
-                setInputs={setInputs}
-              />
-            ))}
+            <Suspense
+              fallback={
+                <Flex justify="center" padding={4}>
+                  <Spinner />
+                </Flex>
+              }
+            >
+              {runRequest?.userInputBlocks?.map((block, i) => (
+                <UserInput
+                  key={block._key}
+                  block={block}
+                  autoFocus={i === 0}
+                  inputs={inputs}
+                  setInputs={setInputs}
+                />
+              ))}
+            </Suspense>
           </Stack>
         </Dialog>
       ) : null}
       {props.children}
     </RunInstructionContext.Provider>
-  )
-}
-
-function UserInput(props: {
-  block: UserInputBlock
-  inputs: BlockInputs
-  setInputs: Dispatch<SetStateAction<BlockInputs>>
-  autoFocus?: boolean
-}) {
-  const {block, autoFocus, setInputs, inputs} = props
-  const key = block._key
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
-
-  const onChange = useCallback(
-    // oxlint-disable-next-line no-deprecated
-    (e: FormEvent<HTMLTextAreaElement>) => {
-      setInputs((current) => ({
-        ...current,
-        [key]: (e.currentTarget ?? e.target).value,
-      }))
-    },
-    [key, setInputs],
-  )
-
-  const value = useMemo(() => inputs[key], [inputs, key])
-
-  useEffect(() => {
-    if (!autoFocus) {
-      return
-    }
-    setTimeout(() => textAreaRef.current?.focus(), 0)
-  }, [autoFocus])
-
-  return (
-    <Stack padding={2} gap={3}>
-      <FormFieldHeaderText
-        title={block?.message ?? 'Provide more context'}
-        description={block.description}
-      />
-      <TextArea
-        ref={textAreaRef}
-        rows={4}
-        value={value}
-        onChange={onChange}
-        style={{resize: 'vertical'}}
-      />
-    </Stack>
   )
 }

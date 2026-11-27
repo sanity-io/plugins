@@ -5,14 +5,16 @@ import {AvatarCounter, Card, Box, Button, Flex, Text} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useContext} from 'react'
 import {
-  useSchema,
   PreviewCard,
   Preview,
-  DocumentStatusIndicator,
-  DocumentStatus,
   useDocumentVersionInfo,
-} from 'sanity'
-import {usePaneRouter} from 'sanity/structure'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
+import {
+  DocumentStatus,
+  DocumentStatusIndicator,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
+import {usePaneRouter} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-structure'
 
 import {OrderableContext} from './OrderableContext'
 import type {SanityDocumentWithOrder} from './types'

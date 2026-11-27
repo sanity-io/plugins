@@ -1,7 +1,8 @@
 import {useSecrets} from '@sanity/studio-secrets'
 import {nanoid} from 'nanoid'
 import {useCallback, useState} from 'react'
-import {type ObjectInputProps, PatchEvent, set} from 'sanity'
+import {type ObjectInputProps, set} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {CloudinaryAsset, InsertHandlerParams} from '../types'
 import {normalizeCloudinaryAsset, openMediaSelector} from '../utils'
