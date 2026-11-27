@@ -32,6 +32,7 @@ import {
 } from 'sanity'
 
 import {stickyStyles, createInitialMessage} from '../helpers'
+import {getDestinationClient} from '../helpers/getDestinationClient'
 import {getDocumentsInArray} from '../helpers/getDocumentsInArray'
 import {isAllowedMigrationTarget} from '../helpers/migrationFilters'
 import type {PluginConfig} from '../types'
@@ -60,6 +61,13 @@ type WorkspaceOption = WorkspaceSummary & {
 type Message = {
   text: string
   tone: CardTone
+}
+
+function createNotLoggedInMessage(destination: WorkspaceOption): Message {
+  return {
+    tone: 'critical',
+    text: `You are not logged in to the "${destination.title ?? destination.name}" Workspace. Open it and log in, then try again.`,
+  }
 }
 
 function isAssetDocument(doc: SanityDocument): doc is SanityDocument & SanityAssetDocument {
@@ -654,10 +662,21 @@ export default function Duplicator(props: DuplicatorProps) {
     }
 
     const payloadIds = payloadActual.map(({doc}) => doc._id)
-    const destinationClient = originClient.withConfig({
-      dataset: dest.dataset,
-      projectId: dest.projectId,
+    const destinationClient = await getDestinationClient({
+      originClient,
+      destination: dest,
+      apiVersion: pluginConfig.apiVersion,
     })
+
+    if (!destinationClient) {
+      // Still list the payload so it can be duplicated elsewhere, or here once
+      // logged in, just without destination statuses
+      setPayload(payloadActual.map((item) => ({...item, status: undefined})))
+      setMessage(createNotLoggedInMessage(dest))
+
+      return
+    }
+
     const destinationData = await destinationClient.fetch<SanityDocument[]>(
       `*[_id in $payloadIds]{ _id, _updatedAt }`,
       {payloadIds},
@@ -758,6 +777,21 @@ export default function Duplicator(props: DuplicatorProps) {
       return
     }
 
+    const resolvedClient = await getDestinationClient({
+      originClient,
+      destination,
+      apiVersion: pluginConfig.apiVersion,
+    })
+
+    if (!resolvedClient) {
+      setMessage(createNotLoggedInMessage(destination))
+
+      return
+    }
+
+    // Narrowed for use inside the hoisted `processDoc` below
+    const destinationClient: SanityClient = resolvedClient
+
     setIsDuplicating(true)
 
     const assetsCount = payload.filter(({doc, include}) => include && isAssetId(doc._id)).length
@@ -765,12 +799,6 @@ export default function Duplicator(props: DuplicatorProps) {
     setProgress([currentProgress, assetsCount])
 
     setMessage({text: 'Duplicating...', tone: `transparent`})
-
-    const destinationClient = originClient.withConfig({
-      apiVersion: pluginConfig.apiVersion,
-      dataset: destination.dataset,
-      projectId: destination.projectId,
-    })
 
     const transactionDocs: SanityDocument[] = []
     const svgMaps: {old: string; new: string}[] = []
@@ -942,6 +970,8 @@ export default function Duplicator(props: DuplicatorProps) {
 
     if (targeted) {
       setDestination(targeted)
+      // Clear any message about the previous destination
+      setMessage(null)
       updatePayloadStatuses(payload, targeted).catch(console.error)
     }
   }
