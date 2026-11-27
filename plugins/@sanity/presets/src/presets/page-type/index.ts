@@ -1,5 +1,4 @@
 import {
-  ALL_FIELDS_GROUP,
   type ArrayDefinition,
   defineArrayMember,
   defineField,
@@ -86,8 +85,11 @@ export function createPageType({lookupArrayPreset}: {lookupArrayPreset: LookupAr
         ...documentConfig,
         type: 'document',
         groups: [
+          // Studio treats a group named `all-fields` as its "All fields" tab. `ALL_FIELDS_GROUP` is
+          // only exported from the internals entry that must not load with schema definitions.
           {
-            ...ALL_FIELDS_GROUP,
+            name: 'all-fields',
+            title: 'All fields',
             hidden: true,
           },
           {
