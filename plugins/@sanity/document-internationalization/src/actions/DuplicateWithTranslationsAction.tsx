@@ -13,11 +13,11 @@ import {
   useDocumentOperation,
   useDocumentPairPermissions,
   useDocumentStore,
-  useTranslation,
   type DocumentActionProps,
   type DocumentActionDescription,
 } from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+import {useTranslation} from 'sanity/i18n'
 import {useRouter} from 'sanity/router'
 import {structureLocaleNamespace} from 'sanity/structure'
 
