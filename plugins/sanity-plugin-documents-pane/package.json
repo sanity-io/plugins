@@ -39,7 +39,7 @@
   "dependencies": {
     "@sanity/icons": "catalog:",
     "@sanity/ui": "catalog:",
-    "@sanity/util": "catalog:",
+    "@sanity/util": "catalog:studio",
     "@sanity/uuid": "catalog:",
     "dlv": "^1.1.3",
     "rxjs": "catalog:",
@@ -61,7 +61,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "catalog:peer-i18n",
     "styled-components": "catalog:peer"
   },
   "engines": {
