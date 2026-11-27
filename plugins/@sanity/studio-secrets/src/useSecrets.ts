@@ -1,7 +1,8 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useSyncObservable} from 'react-rx'
 import {map} from 'rxjs'
-import {useClient, useDocumentPreviewStore} from 'sanity'
+import {useClient} from 'sanity'
+import {useDocumentPreviewStore} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 const type = 'pluginSecrets'
 
