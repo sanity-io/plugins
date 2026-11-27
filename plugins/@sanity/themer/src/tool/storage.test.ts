@@ -156,6 +156,11 @@ describe('themer storage', () => {
       localStorage.setItem(SNAPSHOT_STORAGE_KEY, '{not json')
 
       expect(readPersistedSnapshot()).toBeUndefined()
+
+      // On to what earlier versions stored, which may still be there
+      localStorage.setItem(STATE_STORAGE_KEY, JSON.stringify({active: null, custom: [custom]}))
+
+      expect(themesOf(readPersistedSnapshot())?.custom).toEqual([custom])
     })
 
     it('takes over from what earlier versions stored once written', () => {
@@ -239,7 +244,7 @@ describe('themer storage', () => {
         custom: [
           {slug: 'custom-1', title: 'Valid', options: {light: {accent: '#ff0000', contrast: 100}}},
           {slug: 'custom-2', title: 'Stock', options: {}},
-          {slug: 'custom-3', title: 'Untitled theme', options: {dark: {accent: '#00f'}}},
+          {slug: 'custom-3', title: '   ', options: {dark: {accent: '#00f'}}},
         ],
         removed: ['verdant', 'custom-3'],
         order: ['custom-3', 'dew', 'config'],

@@ -194,7 +194,7 @@ Select the sparkles button in the sidebar header and describe a theme, like _coz
 
 - **Reorder:** drag cards, or move them from their menus. The order is saved between sessions.
 - **Share:** copy a theme's short code from its menu.
-- **Import:** paste a code into the list, or use the paste button—even in another Studio.
+- **Import:** paste a code into the list, or pick **Add from code** in the footer menu—even in another Studio.
 - **Remove or restore:** themes can be removed and brought back.
 
 <details>
