@@ -16,7 +16,7 @@ import {
 } from '@sanity/ui'
 import {Popover} from '@sanity/ui/popover'
 import {type MouseEventHandler, useCallback, useState} from 'react'
-import {TextWithTone} from 'sanity'
+import {TextWithTone} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {useLanguageFilterStudioContext} from './LanguageFilterStudioContext'
 import {usePaneLanguages} from './usePaneLanguages'
