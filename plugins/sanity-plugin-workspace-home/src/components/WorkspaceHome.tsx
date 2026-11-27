@@ -1,6 +1,7 @@
 import {Box, Card, Container, Flex, Heading, Stack, Text, TextInput} from '@sanity/ui'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {useActiveWorkspace, useWorkspaces} from 'sanity'
+import {useActiveWorkspace} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useWorkspaces} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import WorkspacePreview from './WorkspacePreview'
