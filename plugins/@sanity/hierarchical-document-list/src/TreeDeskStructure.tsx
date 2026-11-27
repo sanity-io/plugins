@@ -1,9 +1,12 @@
 import {Box, Flex, Spinner} from '@sanity/ui'
-import {useCallback, useEffect} from 'react'
-import {type PatchEvent, useDocumentOperation, useEditState} from 'sanity'
+import {lazy, Suspense, useCallback, useEffect} from 'react'
+import {
+  useDocumentOperation,
+  useEditState,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {type PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import DeskWarning from './components/DeskWarning'
-import TreeEditor from './components/TreeEditor'
 import type {DocumentOperations, StoredTreeItem, TreeDeskStructureProps} from './types'
 import {toGradient} from './utils/gradientPatchAdapter'
 import injectNodeTypeInPatches, {DEFAULT_DOC_TYPE} from './utils/injectNodeTypeInPatches'
@@ -11,6 +14,16 @@ import injectNodeTypeInPatches, {DEFAULT_DOC_TYPE} from './utils/injectNodeTypeI
 interface ComponentProps {
   options: TreeDeskStructureProps
 }
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const TreeEditor = lazy(() => import('./components/TreeEditor'))
+
+const spinner = (
+  <Flex padding={5} align={'center'} justify={'center'} height={'fill'}>
+    <Spinner width={4} muted />
+  </Flex>
+)
 
 export const DEFAULT_FIELD_KEY = 'tree'
 
@@ -60,21 +73,19 @@ const TreeDeskStructure = (props: ComponentProps) => {
   }
 
   if (!published?._id) {
-    return (
-      <Flex padding={5} align={'center'} justify={'center'} height={'fill'}>
-        <Spinner width={4} muted />
-      </Flex>
-    )
+    return spinner
   }
 
   return (
     <Box paddingBottom={5} paddingRight={2}>
-      <TreeEditor
-        options={props.options}
-        tree={treeValue}
-        onChange={handleChange}
-        patchPrefix={treeFieldKey}
-      />
+      <Suspense fallback={spinner}>
+        <TreeEditor
+          options={props.options}
+          tree={treeValue}
+          onChange={handleChange}
+          patchPrefix={treeFieldKey}
+        />
+      </Suspense>
     </Box>
   )
 }
