@@ -48,11 +48,12 @@ function writeStoredWidth(width: number): void {
  * @internal
  */
 export default function ResizableSidebar({
-  actorRef,
   dispatch,
   navbarHeight,
+  send,
+  snapshot,
   split,
-}: Pick<ThemerProps, 'actorRef' | 'dispatch' | 'navbarHeight' | 'split'>) {
+}: Pick<ThemerProps, 'dispatch' | 'navbarHeight' | 'send' | 'snapshot' | 'split'>) {
   const [width, setWidth] = useState(readStoredWidth)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{pointerId: number; startX: number; startWidth: number} | null>(null)
@@ -138,7 +139,8 @@ export default function ResizableSidebar({
             <ThemerSidebar
               split={split}
               navbarHeight={navbarHeight}
-              actorRef={actorRef}
+              send={send}
+              snapshot={snapshot}
               dispatch={dispatch}
             />
           </BoundaryElementProvider>

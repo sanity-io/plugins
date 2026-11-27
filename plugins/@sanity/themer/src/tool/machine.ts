@@ -1,7 +1,9 @@
-import {assign, not, setup, type SnapshotFrom} from 'xstate'
+import {dequal} from 'dequal/lite'
+import {createMachine, type EventFrom, type SnapshotFrom, transition, types} from 'xstate'
 
 import type {BuildThemeOptions} from '../theme/options'
 import type {ImagePalette} from './imagePalette'
+import {resolveActiveThemeOptions} from './selectors'
 import {
   CONFIG_SLUG,
   CONFIG_TITLE,
@@ -13,20 +15,9 @@ import {
   UNTITLED_THEME,
 } from './themes'
 
-/**
- * How long the machine stays `switching` after an event that applies another
- * theme, when no edit to the applied theme ends it sooner. The layout
- * cross-fades the Studio to the theme in the commit that follows the switch,
- * so this only bounds how long the tag lingers once that is done. Generous,
- * so that it never runs out before a slow deferred commit starts the fade.
- *
- * @internal
- */
-export const MOTION_DURATION = 2000
-
 /** @internal */
 export interface ThemerMachineContext extends ThemerState {
-  /** The theme open in the editor, while the `flow` is `edit` */
+  /** The theme open in the editor, while the machine is in `edit` */
   editing: {
     slug: string
     /** Whether the title input should take focus, for themes that were just created */
@@ -40,61 +31,11 @@ export interface ThemerMachineContext extends ThemerState {
   images: Record<string, string>
 }
 
-/** @internal */
-export type ThemerEvent =
-  /** Applies a theme to the whole Studio */
-  | {type: 'theme.pick'; slug: string}
-  /**
-   * Adds a theme and opens it in the editor — based on the applied theme, or
-   * on the given title, options and image palette (e.g. from an image)
-   */
-  | {
-      type: 'theme.add'
-      title?: string
-      options?: BuildThemeOptions
-      palette?: ImagePalette
-      imageUrl?: string
-    }
-  /** Adds a copy of a theme and opens it in the editor */
-  | {type: 'theme.duplicate'; slug: string}
-  /** Adds a theme someone shared as a code, and applies it — staying in the list */
-  | {type: 'theme.import'; title: string; options: BuildThemeOptions}
-  /** Opens one of the user's own themes in the editor */
-  | {type: 'theme.edit'; slug: string}
-  | {
-      type: 'theme.update'
-      slug: string
-      title?: string
-      options?: BuildThemeOptions
-      palette?: ImagePalette
-      imageUrl?: string
-    }
-  /** Takes a theme out of the list — it can be restored until it is deleted */
-  | {type: 'theme.remove'; slug: string}
-  /** Puts a removed theme back in the list */
-  | {type: 'theme.restore'; slug: string}
-  /** Deletes one of the user's own themes for good */
-  | {type: 'theme.delete'; slug: string}
-  /** Rearranges the list: the slugs of the listed themes, in their new order */
-  | {type: 'theme.reorder'; order: string[]}
-  /** Back to picking a theme */
-  | {type: 'flow.list'}
-  /** On to restoring removed themes */
-  | {type: 'flow.removed'}
-  /** Opens the dialog for adding a shared theme code by hand, from the list */
-  | {type: 'dialog.paste'}
-  /** Opens the dialog with the applied theme's `buildTheme` snippet, from the list */
-  | {type: 'dialog.snippet'}
-  /** Closes whichever dialog is open */
-  | {type: 'dialog.close'}
-  /**
-   * Takes over the persisted state as another tab of the same Studio changed
-   * it, so that every tab shows the same themes (see `sync.ts`)
-   */
-  | {type: 'themes.sync'; state: ThemerState}
-
-function themesOf(context: ThemerMachineContext) {
-  return resolveThemes(context)
+interface ThemeChanges {
+  title?: string
+  options?: BuildThemeOptions
+  palette?: ImagePalette
+  imageUrl?: string
 }
 
 function revokeObjectUrl(url: string) {
@@ -103,419 +44,263 @@ function revokeObjectUrl(url: string) {
   }
 }
 
+function isCustomTheme(context: ThemerMachineContext, slug: string | undefined) {
+  return resolveThemes(context).themes.some(
+    (theme) => theme.slug === slug && theme.source === 'custom',
+  )
+}
+
+function hasRemovedThemes(context: ThemerMachineContext) {
+  return resolveThemes(context).removed.length > 0
+}
+
 /**
- * The themes of the themer tool and the sidebar's way through them: which
- * `flow` the sidebar is in — picking a theme from the `list`, with its
- * dialogs for pasting a shared code and for the applied theme's snippet,
- * `edit`ing one of the user's own themes, or restoring `removed` ones — and,
- * in a parallel `theme` region, whether another theme was just applied. The
- * context carries the persisted state (the applied theme, the user's themes
- * and what was removed) alongside what the flows need. Whether the sidebar is
- * open and whether the Studio shows twice is not the machine's: the tool
- * reducer in `ThemerProvider` owns that, so that the navbar toggle and the
- * sidebar can change it in transitions of their own. Nor is persisting: the
- * machine never touches storage and takes no input — it starts from no
- * themes, and a session with something to pick up from restores its
- * persisted snapshot instead (see `storage.ts` and `sync.ts`), while the
- * persisted state of other tabs reaches it as a `themes.sync` event like any
- * other.
+ * The themes of the themer tool and the sidebar's way through them: picking
+ * a theme from the `list`, with its dialogs for pasting a shared code and for
+ * the applied theme's snippet, `edit`ing one of the user's own themes, or
+ * restoring `removed` ones. The context carries the persisted state (the
+ * applied theme, the user's themes and what was removed) alongside what the
+ * flows need. Whether the sidebar is open and whether the Studio shows twice
+ * is not the machine's: the tool reducer in `ThemerProvider` owns that, so
+ * that the navbar toggle and the sidebar can change it in transitions of
+ * their own. Nor is persisting: the machine never touches storage and takes
+ * no input — it starts from no themes, and a session with something to pick
+ * up from restores its persisted snapshot instead (see `storage.ts` and
+ * `sync.ts`), while the persisted state of other tabs reaches it as a
+ * `themes.sync` event like any other.
  *
- * The `theme` region is `switching` (its tag) right after an event that
- * applies another theme — picking one, adding, duplicating, importing or
- * editing one, removing or deleting the applied one — which is when the
- * layout cross-fades the Studio to it. Edits to the applied theme's colors are
- * not switches, they follow the pointer: the first one ends the switch, and so
- * does `MOTION_DURATION` when none follows.
- *
- * Theme operations are handled in every flow, and the flows leave on their
+ * Theme operations are handled in every state, and the states leave on their
  * own when they lose their subject: the editor when its theme is removed or
  * deleted, and the removed view when its last theme is restored or deleted.
  *
  * @internal
  */
-export const themerMachine = setup({
-  // XState reads `types` for their types only — the values are never used
-  types: {
-    // oxlint-disable-next-line no-unsafe-type-assertion -- type-level placeholder
-    context: {} as ThemerMachineContext,
-    // oxlint-disable-next-line no-unsafe-type-assertion -- type-level placeholder
-    events: {} as ThemerEvent,
-  },
-  guards: {
-    isCustomTheme: ({context}, params: {slug: string}) =>
-      themesOf(context).themes.some(
-        (theme) => theme.slug === params.slug && theme.source === 'custom',
-      ),
-    isEditingListedTheme: ({context}) =>
-      context.editing !== null &&
-      themesOf(context).themes.some(
-        (theme) => theme.slug === context.editing?.slug && theme.source === 'custom',
-      ),
-    hasRemovedThemes: ({context}) => themesOf(context).removed.length > 0,
-    // The configured theme has no code to show — it is the Studio's own
-    hasAppliedTheme: ({context}) => themesOf(context).active !== undefined,
-    // Only another theme than the applied one changes anything to cross-fade to
-    isAnotherTheme: ({context}, params: {slug: string}) =>
-      params.slug !== (context.active ?? CONFIG_SLUG),
-    // Removing or deleting the applied theme is what changes the applied theme
-    isAppliedTheme: ({context}, params: {slug: string}) => params.slug === context.active,
-    // Another tab applied another theme, which is as much of a switch as picking it here
-    appliesAnotherTheme: ({context}, params: {state: ThemerState}) =>
-      params.state.active !== context.active,
-    // A theme added from given options (an image's) looks different from the applied one
-    hasOptions: (_, params: {options: BuildThemeOptions | undefined}) =>
-      params.options !== undefined,
-  },
-  actions: {
-    // Another tab's persisted state replaces this one's: themes, order and
-    // all. The images of this session stay, they are this tab's
-    sync: assign((_, params: {state: ThemerState}) => ({
-      active: params.state.active,
-      custom: params.state.custom,
-      removed: params.state.removed,
-      order: params.state.order,
-    })),
-    // The image of a replaced palette or a deleted theme is released from memory
-    revokeImage: (_, params: {url: string | undefined}) => {
-      if (params.url) revokeObjectUrl(params.url)
+export const themerMachine = createMachine({
+  id: 'themer',
+  schemas: {
+    context: types<ThemerMachineContext>(),
+    events: {
+      /** Applies a theme to the whole Studio */
+      'theme.pick': types<{slug: string}>(),
+      /**
+       * Adds a theme and opens it in the editor — based on the applied theme, or
+       * on the given title, options and image palette (e.g. from an image)
+       */
+      'theme.add': types<ThemeChanges>(),
+      /** Adds a copy of a theme and opens it in the editor */
+      'theme.duplicate': types<{slug: string}>(),
+      /**
+       * Adds a theme someone shared as a code, and applies it — staying in the
+       * list. A sender that needs to know the theme's slug gives it one.
+       */
+      'theme.import': types<{title: string; options: BuildThemeOptions; slug?: string}>(),
+      /** Opens one of the user's own themes in the editor */
+      'theme.edit': types<{slug: string}>(),
+      'theme.update': types<ThemeChanges & {slug: string}>(),
+      /** Takes a theme out of the list — it can be restored until it is deleted */
+      'theme.remove': types<{slug: string}>(),
+      /** Puts a removed theme back in the list */
+      'theme.restore': types<{slug: string}>(),
+      /** Deletes one of the user's own themes for good */
+      'theme.delete': types<{slug: string}>(),
+      /** Rearranges the list: the slugs of the listed themes, in their new order */
+      'theme.reorder': types<{order: string[]}>(),
+      /** Back to picking a theme */
+      'flow.list': types<{}>(),
+      /** On to restoring removed themes */
+      'flow.removed': types<{}>(),
+      /** Opens the dialog for adding a shared theme code by hand, from the list */
+      'dialog.paste': types<{}>(),
+      /** Opens the dialog with the applied theme's `buildTheme` snippet, from the list */
+      'dialog.snippet': types<{}>(),
+      /** Closes whichever dialog is open */
+      'dialog.close': types<{}>(),
+      /**
+       * Takes over the persisted state as another tab of the same Studio changed
+       * it, so that every tab shows the same themes (see `sync.ts`). The images
+       * of this session stay, they are this tab's
+       */
+      'themes.sync': types<{state: ThemerState}>(),
     },
-    pick: assign((_, params: {slug: string}) => ({
-      active: params.slug === CONFIG_SLUG ? null : params.slug,
-    })),
-    add: assign(
-      (
-        {context},
-        params: {
-          title?: string
-          options?: BuildThemeOptions
-          palette?: ImagePalette
-          imageUrl?: string
-        },
-      ) => {
-        // Based on the applied theme — the stock one when the configured
-        // theme applies, which is not in the list
-        const theme = createCustomTheme(
-          params.title ?? UNTITLED_THEME,
-          params.options ?? themesOf(context).active?.options ?? {},
-          params.palette,
-        )
+  },
+  context: () => ({...initialThemerState, editing: null, images: {}}),
+  initial: 'list',
+  on: {
+    'theme.pick': ({event}) => ({
+      context: {active: event.slug === CONFIG_SLUG ? null : event.slug},
+    }),
+    'theme.add': ({context, event}) => {
+      // Based on the applied theme — the stock one when the configured theme
+      // applies, which is not in the list
+      const theme = createCustomTheme(
+        event.title ?? UNTITLED_THEME,
+        event.options ?? resolveThemes(context).active?.options ?? {},
+        event.palette,
+      )
 
-        return {
+      return {
+        target: '#themer.edit',
+        context: {
           active: theme.slug,
           custom: [...context.custom, theme],
           // A theme named after its image needs no renaming right away
-          editing: {slug: theme.slug, focusTitle: params.title === undefined},
-          images: params.imageUrl
-            ? {...context.images, [theme.slug]: params.imageUrl}
+          editing: {slug: theme.slug, focusTitle: event.title === undefined},
+          images: event.imageUrl
+            ? {...context.images, [theme.slug]: event.imageUrl}
             : context.images,
-        }
-      },
-    ),
-    import: assign(({context}, params: {title: string; options: BuildThemeOptions}) => {
-      const theme = createCustomTheme(params.title, params.options)
-
-      return {active: theme.slug, custom: [...context.custom, theme]}
-    }),
-    duplicate: assign(({context}, params: {slug: string}) => {
-      const {themes, removed} = themesOf(context)
+        },
+      }
+    },
+    'theme.duplicate': ({context, event}) => {
+      const {themes, removed} = resolveThemes(context)
       // The configured theme is not in the list: a copy of it starts from the
       // stock options, as the Studio shows it
       const source =
-        params.slug === CONFIG_SLUG
+        event.slug === CONFIG_SLUG
           ? {title: CONFIG_TITLE, options: {}, palette: undefined}
-          : [...themes, ...removed].find((theme) => theme.slug === params.slug)
+          : [...themes, ...removed].find((theme) => theme.slug === event.slug)
 
-      if (!source) return {}
+      // Nothing to copy leaves nothing to edit
+      if (!source) return {target: '#themer.list'}
 
       const theme = createCustomTheme(duplicateTitle(source.title), source.options, source.palette)
 
       return {
-        active: theme.slug,
-        custom: [...context.custom, theme],
-        editing: {slug: theme.slug, focusTitle: true},
-      }
-    }),
-    startEditing: assign((_, params: {slug: string}) => ({
-      active: params.slug,
-      editing: {slug: params.slug, focusTitle: false},
-    })),
-    stopEditing: assign({editing: null}),
-    update: assign(
-      (
-        {context},
-        params: {
-          slug: string
-          title?: string
-          options?: BuildThemeOptions
-          palette?: ImagePalette
-          imageUrl?: string
+        target: '#themer.edit',
+        context: {
+          active: theme.slug,
+          custom: [...context.custom, theme],
+          editing: {slug: theme.slug, focusTitle: true},
         },
-      ) => ({
-        custom: context.custom.map((theme) => {
-          if (theme.slug !== params.slug) return theme
+      }
+    },
+    'theme.import': ({context, event}) => {
+      const theme = createCustomTheme(event.title, event.options, undefined, event.slug)
 
-          // Keep the options identity when only the title changes, so the
-          // applied theme is not rebuilt on every keystroke
-          return {
-            ...theme,
-            title: params.title ?? theme.title,
-            options: params.options ?? theme.options,
-            ...(params.palette ? {palette: params.palette} : {}),
-          }
-        }),
-        images:
-          params.imageUrl && context.custom.some((theme) => theme.slug === params.slug)
-            ? {...context.images, [params.slug]: params.imageUrl}
-            : context.images,
-      }),
-    ),
-    remove: assign(({context}, params: {slug: string}) => {
-      if (params.slug === CONFIG_SLUG || context.removed.includes(params.slug)) return {}
+      return {context: {active: theme.slug, custom: [...context.custom, theme]}}
+    },
+    'theme.edit': ({context, event}) => {
+      if (!isCustomTheme(context, event.slug)) return undefined
 
       return {
-        active: context.active === params.slug ? null : context.active,
-        removed: [...context.removed, params.slug],
+        target: '#themer.edit',
+        context: {active: event.slug, editing: {slug: event.slug, focusTitle: false}},
       }
+    },
+    'theme.update': ({context, event}, enq) => {
+      const listed = context.custom.some((theme) => theme.slug === event.slug)
+      // A new image replaces the one the theme had
+      const replaced = event.imageUrl ? context.images[event.slug] : undefined
+      if (replaced) enq(() => revokeObjectUrl(replaced))
+
+      return {
+        context: {
+          custom: context.custom.map((theme) => {
+            if (theme.slug !== event.slug) return theme
+
+            // Keep the options identity when only the title changes, so the
+            // applied theme is not rebuilt on every keystroke
+            return {
+              ...theme,
+              title: event.title ?? theme.title,
+              options: event.options ?? theme.options,
+              ...(event.palette ? {palette: event.palette} : {}),
+            }
+          }),
+          images:
+            event.imageUrl && listed
+              ? {...context.images, [event.slug]: event.imageUrl}
+              : context.images,
+        },
+      }
+    },
+    'theme.remove': ({context, event}) => {
+      if (event.slug === CONFIG_SLUG || context.removed.includes(event.slug)) return {}
+
+      return {
+        context: {
+          active: context.active === event.slug ? null : context.active,
+          removed: [...context.removed, event.slug],
+        },
+      }
+    },
+    'theme.restore': ({context, event}) => ({
+      context: {removed: context.removed.filter((slug) => slug !== event.slug)},
     }),
-    restore: assign(({context}, params: {slug: string}) => ({
-      removed: context.removed.filter((slug) => slug !== params.slug),
-    })),
-    reorder: assign(({context}, params: {order: string[]}) => {
-      const listed = new Set(themesOf(context).themes.map((theme) => theme.slug))
-      const order = params.order.filter((slug) => listed.has(slug))
+    'theme.delete': ({context, event}, enq) => {
+      // The image of a deleted theme is released from memory
+      const image = context.images[event.slug]
+      if (image) enq(() => revokeObjectUrl(image))
+
+      if (!context.custom.some((theme) => theme.slug === event.slug)) return {}
+
+      const {[event.slug]: _deleted, ...images} = context.images
+
+      return {
+        context: {
+          active: context.active === event.slug ? null : context.active,
+          custom: context.custom.filter((theme) => theme.slug !== event.slug),
+          removed: context.removed.filter((slug) => slug !== event.slug),
+          images,
+        },
+      }
+    },
+    'theme.reorder': ({context, event}) => {
+      const listed = new Set(resolveThemes(context).themes.map((theme) => theme.slug))
+      const order = event.order.filter((slug) => listed.has(slug))
 
       // The removed themes keep their place in line for when they are restored
       return {
-        order: [...order, ...context.order.filter((slug) => !order.includes(slug))],
+        context: {order: [...order, ...context.order.filter((slug) => !order.includes(slug))]},
       }
+    },
+    'themes.sync': ({event}) => ({
+      context: {
+        active: event.state.active,
+        custom: event.state.custom,
+        removed: event.state.removed,
+        order: event.state.order,
+      },
     }),
-    delete: assign(({context}, params: {slug: string}) => {
-      if (!context.custom.some((theme) => theme.slug === params.slug)) return {}
-
-      const {[params.slug]: _deleted, ...images} = context.images
-
-      return {
-        active: context.active === params.slug ? null : context.active,
-        custom: context.custom.filter((theme) => theme.slug !== params.slug),
-        removed: context.removed.filter((slug) => slug !== params.slug),
-        images,
-      }
-    }),
+    'flow.list': {target: '#themer.list'},
+    'flow.removed': ({context}) =>
+      hasRemovedThemes(context) ? {target: '#themer.removed'} : undefined,
   },
-}).createMachine({
-  id: 'themer',
-  context: () => ({...initialThemerState, editing: null, images: {}}),
-  type: 'parallel',
   states: {
-    theme: {
-      initial: 'applied',
+    list: {
+      initial: 'idle',
+      // The list's dialogs — for a shared code pasted by hand, and for the
+      // applied theme's snippet — are states of the list, so that leaving it,
+      // as adding a theme does for the editor, closes them
       states: {
-        // Only events that change what is applied count: adding a copy of the
-        // applied theme, editing or duplicating it, picking it again, or
-        // removing another theme leaves the Studio looking the same — with
-        // nothing to cross-fade, the switch would only linger until the first
-        // edit that followed, which must follow the pointer
-        applied: {
+        idle: {
           on: {
-            'theme.pick': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-            },
-            'theme.edit': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-            },
-            'theme.duplicate': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-            },
-            'theme.remove': {
-              guard: {type: 'isAppliedTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-            },
-            'theme.delete': {
-              guard: {type: 'isAppliedTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-            },
-            'theme.add': {
-              guard: {type: 'hasOptions', params: ({event}) => ({options: event.options})},
-              target: 'switching',
-            },
-            'theme.import': 'switching',
-            'themes.sync': {
-              guard: {type: 'appliesAnotherTheme', params: ({event}) => ({state: event.state})},
-              target: 'switching',
-            },
+            'dialog.paste': {target: 'pasting'},
+            // The configured theme has no code to show — it is the Studio's own
+            'dialog.snippet': ({context}) =>
+              resolveThemes(context).active ? {target: 'snippet'} : undefined,
           },
         },
-        switching: {
-          tags: ['switching'],
-          after: {[MOTION_DURATION]: 'applied'},
-          on: {
-            // The editor edits the applied theme, and its colors must follow
-            // the pointer rather than cross-fade — a switch is over at the
-            // first edit, however soon it comes
-            'theme.update': 'applied',
-            // Another switch starts the clock over
-            'theme.pick': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.edit': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.duplicate': {
-              guard: {type: 'isAnotherTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.remove': {
-              guard: {type: 'isAppliedTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.delete': {
-              guard: {type: 'isAppliedTheme', params: ({event}) => ({slug: event.slug})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.add': {
-              guard: {type: 'hasOptions', params: ({event}) => ({options: event.options})},
-              target: 'switching',
-              reenter: true,
-            },
-            'theme.import': {target: 'switching', reenter: true},
-            'themes.sync': {
-              guard: {type: 'appliesAnotherTheme', params: ({event}) => ({state: event.state})},
-              target: 'switching',
-              reenter: true,
-            },
-          },
+        pasting: {
+          on: {'dialog.close': {target: 'idle'}},
+        },
+        snippet: {
+          on: {'dialog.close': {target: 'idle'}},
+          // The applied theme can go away meanwhile — removed from another tab
+          always: ({context}) => (resolveThemes(context).active ? undefined : {target: 'idle'}),
         },
       },
     },
-    flow: {
-      initial: 'list',
-      on: {
-        'theme.pick': {
-          actions: [{type: 'pick', params: ({event}) => ({slug: event.slug})}],
-        },
-        'theme.add': {
-          target: '.edit',
-          actions: [
-            {
-              type: 'add',
-              params: ({event}) => ({
-                title: event.title,
-                options: event.options,
-                palette: event.palette,
-                imageUrl: event.imageUrl,
-              }),
-            },
-          ],
-        },
-        'theme.duplicate': {
-          target: '.edit',
-          actions: [{type: 'duplicate', params: ({event}) => ({slug: event.slug})}],
-        },
-        'theme.edit': {
-          target: '.edit',
-          guard: {type: 'isCustomTheme', params: ({event}) => ({slug: event.slug})},
-          actions: [{type: 'startEditing', params: ({event}) => ({slug: event.slug})}],
-        },
-        'theme.update': {
-          actions: [
-            // A new image replaces the one the theme had
-            {
-              type: 'revokeImage',
-              params: ({context, event}) => ({
-                url: event.imageUrl ? context.images[event.slug] : undefined,
-              }),
-            },
-            {
-              type: 'update',
-              params: ({event}) => ({
-                slug: event.slug,
-                title: event.title,
-                options: event.options,
-                palette: event.palette,
-                imageUrl: event.imageUrl,
-              }),
-            },
-          ],
-        },
-        'theme.remove': {
-          actions: [{type: 'remove', params: ({event}) => ({slug: event.slug})}],
-        },
-        'theme.restore': {
-          actions: [{type: 'restore', params: ({event}) => ({slug: event.slug})}],
-        },
-        'theme.delete': {
-          actions: [
-            {
-              type: 'revokeImage',
-              params: ({context, event}) => ({url: context.images[event.slug]}),
-            },
-            {type: 'delete', params: ({event}) => ({slug: event.slug})},
-          ],
-        },
-        'theme.reorder': {
-          actions: [{type: 'reorder', params: ({event}) => ({order: event.order})}],
-        },
-        'theme.import': {
-          actions: [
-            {
-              type: 'import',
-              params: ({event}) => ({title: event.title, options: event.options}),
-            },
-          ],
-        },
-        'themes.sync': {
-          actions: {type: 'sync', params: ({event}) => ({state: event.state})},
-        },
-        'flow.list': '.list',
-        'flow.removed': {
-          target: '.removed',
-          guard: 'hasRemovedThemes',
-        },
-      },
-      states: {
-        list: {
-          initial: 'idle',
-          // The list's dialogs — for a shared code pasted by hand, and for the
-          // applied theme's snippet — are states of the list, so that leaving
-          // it, as adding a theme does for the editor, closes them
-          states: {
-            idle: {
-              on: {
-                'dialog.paste': 'pasting',
-                'dialog.snippet': {guard: 'hasAppliedTheme', target: 'snippet'},
-              },
-            },
-            pasting: {
-              on: {'dialog.close': 'idle'},
-            },
-            snippet: {
-              on: {'dialog.close': 'idle'},
-              // The applied theme can go away meanwhile — removed from another tab
-              always: {guard: not('hasAppliedTheme'), target: 'idle'},
-            },
-          },
-        },
-        edit: {
-          exit: 'stopEditing',
-          // The theme being edited can go away — removed from the editor, or
-          // duplicated from a theme that does not exist — and then there is
-          // nothing left to edit
-          always: {guard: not('isEditingListedTheme'), target: 'list'},
-        },
-        removed: {
-          always: {guard: not('hasRemovedThemes'), target: 'list'},
-        },
-      },
+    edit: {
+      exit: () => ({context: {editing: null}}),
+      // The theme being edited can go away — removed from the editor, or
+      // duplicated from a theme that does not exist — and then there is
+      // nothing left to edit
+      always: ({context}) =>
+        isCustomTheme(context, context.editing?.slug) ? undefined : {target: 'list'},
+    },
+    removed: {
+      always: ({context}) => (hasRemovedThemes(context) ? undefined : {target: 'list'}),
     },
   },
 })
@@ -523,9 +308,32 @@ export const themerMachine = setup({
 /** @internal */
 export type ThemerSnapshot = SnapshotFrom<typeof themerMachine>
 
+/** @internal */
+export type ThemerEvent = EventFrom<typeof themerMachine>
+
 /** The part of the machine context that is persisted between sessions @internal */
 export function selectStoredState(snapshot: ThemerSnapshot): ThemerState {
   const {active, custom, removed, order} = snapshot.context
 
   return {active, custom, removed, order}
+}
+
+/**
+ * Whether an event applies another theme that looks different from the
+ * applied one — picking one, adding one from an image, importing one,
+ * editing another, removing or deleting the applied one, or another tab
+ * applying another — which is when the layout cross-fades the Studio to it.
+ * Edits to the applied theme's colors are not switches, they follow the
+ * pointer; nor is applying a copy that looks the same. Previews the event on
+ * the snapshot, without running its effects.
+ *
+ * @internal
+ */
+export function switchesTheme(snapshot: ThemerSnapshot, event: ThemerEvent): boolean {
+  const [next] = transition(themerMachine, snapshot, event)
+
+  return (
+    next.context.active !== snapshot.context.active &&
+    !dequal(resolveActiveThemeOptions(snapshot.context), resolveActiveThemeOptions(next.context))
+  )
 }

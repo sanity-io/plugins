@@ -39,12 +39,12 @@ function scrollRefIntoViewIfNeeded(node: HTMLElement | null) {
  * @internal
  */
 export function ThemeCard({
-  actorRef,
+  send,
   active,
   theme,
   themes,
-}: {active: boolean; theme: ThemerTheme} & Pick<ThemerProps, 'actorRef' | 'themes'>) {
-  const {copyTheme} = useThemeCodes({actorRef})
+}: {active: boolean; theme: ThemerTheme} & Pick<ThemerProps, 'send' | 'themes'>) {
+  const {copyTheme} = useThemeCodes({send})
   const {scheme} = useRootTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const dragControls = useDragControls()
@@ -60,7 +60,7 @@ export function ThemeCard({
     const order = themes.map((candidate) => candidate.slug)
 
     order.splice(to, 0, ...order.splice(index, 1))
-    actorRef.send({type: 'theme.reorder', order})
+    send({type: 'theme.reorder', order})
   }
 
   return (
@@ -86,7 +86,7 @@ export function ThemeCard({
         aria-pressed={active}
         className={styles.pickButton}
         onClick={() => {
-          if (!dragged.current) actorRef.send({type: 'theme.pick', slug: theme.slug})
+          if (!dragged.current) send({type: 'theme.pick', slug: theme.slug})
         }}
         onPointerDown={(event) => {
           // A mouse or pen drags the card off the button; a finger scrolls the
@@ -152,13 +152,13 @@ export function ThemeCard({
                   {theme.source === 'custom' && (
                     <MenuItem
                       icon={EditIcon}
-                      onClick={() => actorRef.send({type: 'theme.edit', slug: theme.slug})}
+                      onClick={() => send({type: 'theme.edit', slug: theme.slug})}
                       text="Edit"
                     />
                   )}
                   <MenuItem
                     icon={CopyIcon}
-                    onClick={() => actorRef.send({type: 'theme.duplicate', slug: theme.slug})}
+                    onClick={() => send({type: 'theme.duplicate', slug: theme.slug})}
                     text={theme.source === 'custom' ? 'Duplicate' : 'Duplicate to edit'}
                   />
                   <MenuItem
@@ -171,7 +171,7 @@ export function ThemeCard({
                       <MenuDivider />
                       <MenuItem
                         icon={TrashIcon}
-                        onClick={() => actorRef.send({type: 'theme.remove', slug: theme.slug})}
+                        onClick={() => send({type: 'theme.remove', slug: theme.slug})}
                         text="Remove"
                         tone="critical"
                       />

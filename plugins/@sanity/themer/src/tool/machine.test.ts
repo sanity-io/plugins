@@ -1,8 +1,9 @@
 import {afterEach, describe, expect, it, vi} from 'vitest'
-import {createActor, SimulatedClock} from 'xstate'
+import {createActor} from 'xstate'
+import {restoreActor} from 'xstate/persist'
 
 import {presets} from '../theme/presets'
-import {MOTION_DURATION, selectStoredState, themerMachine} from './machine'
+import {selectStoredState, switchesTheme, type ThemerEvent, themerMachine} from './machine'
 import {snapshotFromState} from './schemas'
 import {
   CONFIG_SLUG,
@@ -15,20 +16,18 @@ import {
 const custom: CustomTheme = {slug: 'custom-1', title: 'Mine', options: {light: {accent: '#ff0000'}}}
 const verdant = presets.find((preset) => preset.slug === 'verdant')!
 
-/** The clock a switch runs out on, so that tests can run it out themselves */
-const clock = new SimulatedClock()
-
 /** A machine started from nothing, or restored with the given themes — as a session with a persisted snapshot is */
 function start(stored?: ThemerState) {
-  return createActor(themerMachine, {
-    clock,
-    snapshot: stored ? snapshotFromState(stored) : undefined,
-  }).start()
+  return (
+    stored ? restoreActor(themerMachine, snapshotFromState(stored)) : createActor(themerMachine)
+  ).start()
 }
 
-/** Lets a switch that no edit ends run out */
-function settle() {
-  clock.increment(MOTION_DURATION)
+/** Whether the event would cross-fade the Studio to another theme, and then sends it */
+function send(actor: ReturnType<typeof start>, event: ThemerEvent) {
+  const switches = switchesTheme(actor.getSnapshot(), event)
+  actor.send(event)
+  return switches
 }
 
 function startWithCustom(overrides: Partial<ThemerState> = {}) {
@@ -39,7 +38,7 @@ describe('themerMachine', () => {
   it('starts in the list with no themes, and takes no input', () => {
     const snapshot = start().getSnapshot()
 
-    expect(snapshot.matches({flow: 'list', theme: 'applied'})).toBe(true)
+    expect(snapshot.matches('list')).toBe(true)
     expect(selectStoredState(snapshot)).toEqual(initialThemerState)
     expect(snapshot.context).toEqual({...initialThemerState, editing: null, images: {}})
   })
@@ -54,80 +53,54 @@ describe('themerMachine', () => {
     const actor = start(stored)
     const snapshot = actor.getSnapshot()
 
-    expect(snapshot.matches({flow: 'list', theme: 'applied'})).toBe(true)
+    expect(snapshot.matches('list')).toBe(true)
     expect(selectStoredState(snapshot)).toEqual(stored)
     expect(snapshot.context.editing).toBeNull()
   })
 
   describe('picking', () => {
-    it('is switching themes right after a pick, not after an edit', () => {
+    it('switches themes with a pick, not with an edit', () => {
       const actor = startWithCustom()
 
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
-
-      actor.send({type: 'theme.pick', slug: 'custom-1'})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-
-      // The switch runs out on its own
-      settle()
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
-
-      actor.send({type: 'theme.update', slug: 'custom-1', options: {light: {accent: '#00ff00'}}})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+      expect(send(actor, {type: 'theme.pick', slug: 'custom-1'})).toBe(true)
+      expect(
+        send(actor, {
+          type: 'theme.update',
+          slug: 'custom-1',
+          options: {light: {accent: '#00ff00'}},
+        }),
+      ).toBe(false)
+      expect(send(actor, {type: 'theme.update', slug: 'custom-1', title: 'Ours'})).toBe(false)
 
       // Only what changes the applied theme is a switch: editing, duplicating or
       // picking the applied one, adding a copy of it, or removing another theme
       // leaves the Studio looking the same
-      actor.send({type: 'theme.edit', slug: 'custom-1'})
-      actor.send({type: 'theme.pick', slug: 'custom-1'})
-      actor.send({type: 'theme.duplicate', slug: 'custom-1'})
-      actor.send({type: 'theme.add'})
-      actor.send({type: 'theme.remove', slug: 'verdant'})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+      expect(send(actor, {type: 'theme.edit', slug: 'custom-1'})).toBe(false)
+      expect(send(actor, {type: 'theme.pick', slug: 'custom-1'})).toBe(false)
+      expect(send(actor, {type: 'theme.duplicate', slug: 'custom-1'})).toBe(false)
+      expect(send(actor, {type: 'theme.add'})).toBe(false)
+      expect(send(actor, {type: 'theme.remove', slug: 'verdant'})).toBe(false)
 
-      actor.send({type: 'theme.add', options: {dark: {accent: '#0000ff'}}})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-      settle()
+      expect(send(actor, {type: 'theme.add', options: {dark: {accent: '#0000ff'}}})).toBe(true)
 
       const applied = actor.getSnapshot().context.active!
 
-      actor.send({type: 'theme.remove', slug: applied})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-      settle()
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+      expect(send(actor, {type: 'theme.remove', slug: applied})).toBe(true)
+      expect(send(actor, {type: 'theme.edit', slug: 'custom-1'})).toBe(true)
+      expect(send(actor, {type: 'theme.delete', slug: 'custom-1'})).toBe(true)
     })
 
-    it('ends a switch at the first edit, so that the colors follow the pointer', () => {
-      const actor = startWithCustom()
+    it('previews a switch without running its effects', () => {
+      const actor = start()
+      const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined)
 
-      actor.send({type: 'theme.edit', slug: 'custom-1'})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-
-      // Well before the clock would, and whatever the edit changes — and the
-      // edit that ends the switch is applied like any other
-      clock.increment(MOTION_DURATION / 10)
-      actor.send({type: 'theme.update', slug: 'custom-1', title: 'Ours'})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
-      expect(actor.getSnapshot().context.custom[0]).toMatchObject({
-        title: 'Ours',
-        options: custom.options,
-      })
-
-      actor.send({type: 'theme.update', slug: 'custom-1', options: {light: {accent: '#00ff00'}}})
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
-      expect(actor.getSnapshot().context.custom[0]).toMatchObject({
-        title: 'Ours',
-        options: {light: {accent: '#00ff00'}},
-      })
-
-      // Another switch starts the clock over, and runs out as it would have
+      actor.send({type: 'theme.add', title: 'sunset', imageUrl: 'blob:one'})
+      const slug = actor.getSnapshot().context.active!
       actor.send({type: 'theme.pick', slug: 'verdant'})
-      clock.increment(MOTION_DURATION / 2)
-      actor.send({type: 'theme.pick', slug: 'custom-1'})
-      clock.increment(MOTION_DURATION / 2)
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-      clock.increment(MOTION_DURATION / 2)
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+
+      expect(switchesTheme(actor.getSnapshot(), {type: 'theme.delete', slug})).toBe(false)
+      expect(revoke).not.toHaveBeenCalled()
+      expect(actor.getSnapshot().context.images).toEqual({[slug]: 'blob:one'})
     })
 
     it('applies a theme, and picking the configured theme applies nothing', () => {
@@ -149,7 +122,7 @@ describe('themerMachine', () => {
 
       const {context} = actor.getSnapshot()
 
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(context.custom).toHaveLength(1)
       expect(context.custom[0]).toMatchObject({title: 'Untitled theme', options: verdant.options})
       expect(context.custom[0].slug).toMatch(/^custom-/)
@@ -178,7 +151,7 @@ describe('themerMachine', () => {
 
       const {context} = actor.getSnapshot()
 
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(context.custom[0]).toMatchObject({
         title: 'sunset beach',
         options: {light: {accent: '#e11d48'}},
@@ -246,7 +219,7 @@ describe('themerMachine', () => {
 
       let {context} = actor.getSnapshot()
 
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(context.custom.at(-1)).toMatchObject({title: 'Verdant copy', options: verdant.options})
       expect(context.editing).toEqual({slug: context.active, focusTitle: true})
 
@@ -263,7 +236,7 @@ describe('themerMachine', () => {
 
       const {context} = actor.getSnapshot()
 
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(context.custom).toHaveLength(1)
       expect(context.custom[0]).toMatchObject({title: 'Studio config copy', options: {}})
       expect(context.editing).toEqual({slug: context.active, focusTitle: true})
@@ -274,7 +247,7 @@ describe('themerMachine', () => {
 
       actor.send({type: 'theme.duplicate', slug: 'unknown'})
 
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(actor.getSnapshot().context.custom).toEqual([])
       expect(actor.getSnapshot().context.editing).toBeNull()
     })
@@ -285,10 +258,10 @@ describe('themerMachine', () => {
       const actor = startWithCustom()
 
       actor.send({type: 'theme.edit', slug: 'verdant'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
 
       actor.send({type: 'theme.edit', slug: 'custom-1'})
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(actor.getSnapshot().context.active).toBe('custom-1')
       expect(actor.getSnapshot().context.editing).toEqual({slug: 'custom-1', focusTitle: false})
     })
@@ -298,15 +271,16 @@ describe('themerMachine', () => {
 
       actor.send({type: 'theme.edit', slug: 'custom-1'})
 
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
     })
 
     it('updates a theme, keeping the options identity when only the title changes', () => {
       const actor = startWithCustom()
+      const {options} = actor.getSnapshot().context.custom[0]
 
       actor.send({type: 'theme.update', slug: 'custom-1', title: 'Ours'})
       expect(actor.getSnapshot().context.custom[0].title).toBe('Ours')
-      expect(actor.getSnapshot().context.custom[0].options).toBe(custom.options)
+      expect(actor.getSnapshot().context.custom[0].options).toBe(options)
 
       actor.send({type: 'theme.update', slug: 'custom-1', options: {dark: {accent: '#00ff00'}}})
       expect(actor.getSnapshot().context.custom[0]).toEqual({
@@ -324,19 +298,19 @@ describe('themerMachine', () => {
 
       actor.send({type: 'theme.edit', slug: 'custom-1'})
       actor.send({type: 'flow.list'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(actor.getSnapshot().context.editing).toBeNull()
 
       actor.send({type: 'theme.edit', slug: 'custom-1'})
       actor.send({type: 'theme.remove', slug: 'custom-1'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(actor.getSnapshot().context.editing).toBeNull()
       expect(actor.getSnapshot().context.active).toBeNull()
 
       actor.send({type: 'theme.restore', slug: 'custom-1'})
       actor.send({type: 'theme.edit', slug: 'custom-1'})
       actor.send({type: 'theme.delete', slug: 'custom-1'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(actor.getSnapshot().context.custom).toEqual([])
     })
 
@@ -346,7 +320,7 @@ describe('themerMachine', () => {
       actor.send({type: 'theme.edit', slug: 'custom-1'})
       actor.send({type: 'theme.remove', slug: 'verdant'})
 
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
       expect(actor.getSnapshot().context.active).toBe('custom-1')
     })
   })
@@ -375,7 +349,7 @@ describe('themerMachine', () => {
       // What there is to persist is a plain snapshot of the machine
       expect(JSON.parse(JSON.stringify(actor.getPersistedSnapshot()))).toMatchObject({
         status: 'active',
-        value: {flow: {list: 'idle'}},
+        value: {list: 'idle'},
         context: selectStoredState(actor.getSnapshot()),
       })
     })
@@ -398,69 +372,67 @@ describe('themerMachine', () => {
       expect(selectStoredState(actor.getSnapshot())).toEqual(theirs)
       // This tab's images and flow are its own
       expect(actor.getSnapshot().context.images).toEqual({[mine]: 'blob:mine'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
     })
 
     it('is a switch when the other tab applied another theme, not when it edited the applied one', () => {
       const actor = startWithCustom({active: 'custom-1'})
-      settle()
 
-      actor.send({
-        type: 'themes.sync',
-        state: {
-          active: 'custom-1',
-          custom: [{...custom, options: {light: {accent: '#00ff00'}}}],
-          removed: [],
-          order: [],
-        },
-      })
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+      expect(
+        send(actor, {
+          type: 'themes.sync',
+          state: {
+            active: 'custom-1',
+            custom: [{...custom, options: {light: {accent: '#00ff00'}}}],
+            removed: [],
+            order: [],
+          },
+        }),
+      ).toBe(false)
       expect(actor.getSnapshot().context.custom[0].options).toEqual({light: {accent: '#00ff00'}})
 
-      actor.send({
-        type: 'themes.sync',
-        state: {active: 'verdant', custom: [custom], removed: [], order: []},
-      })
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
+      expect(
+        send(actor, {
+          type: 'themes.sync',
+          state: {active: 'verdant', custom: [custom], removed: [], order: []},
+        }),
+      ).toBe(true)
       expect(actor.getSnapshot().context.active).toBe('verdant')
 
-      // Picking the configured theme elsewhere is a switch too, and the clock starts over
-      clock.increment(MOTION_DURATION / 2)
-      actor.send({
-        type: 'themes.sync',
-        state: {active: null, custom: [custom], removed: [], order: []},
-      })
-      clock.increment(MOTION_DURATION / 2)
-      expect(actor.getSnapshot().hasTag('switching')).toBe(true)
-      settle()
-      expect(actor.getSnapshot().hasTag('switching')).toBe(false)
+      // Picking the configured theme elsewhere is a switch too
+      expect(
+        send(actor, {
+          type: 'themes.sync',
+          state: {active: null, custom: [custom], removed: [], order: []},
+        }),
+      ).toBe(true)
     })
 
     it('leaves the editor when the other tab took its theme away', () => {
       const actor = startWithCustom()
       actor.send({type: 'theme.edit', slug: 'custom-1'})
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
 
       actor.send({
         type: 'themes.sync',
         state: {active: 'custom-1', custom: [custom], removed: ['custom-1'], order: []},
       })
 
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(actor.getSnapshot().context.editing).toBeNull()
     })
 
     it('leaves the removed themes when the other tab restored the last one', () => {
       const actor = startWithCustom({removed: ['verdant']})
       actor.send({type: 'flow.removed'})
-      expect(actor.getSnapshot().matches({flow: 'removed'})).toBe(true)
+      expect(actor.getSnapshot().matches('removed')).toBe(true)
 
       actor.send({
         type: 'themes.sync',
         state: {active: null, custom: [custom], removed: [], order: []},
       })
 
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
     })
   })
 
@@ -468,13 +440,14 @@ describe('themerMachine', () => {
     it('adds and applies a shared theme without opening the editor', () => {
       const actor = start()
 
-      actor.send({type: 'theme.import', title: 'Shared', options: {dark: {accent: '#ff0000'}}})
+      expect(
+        send(actor, {type: 'theme.import', title: 'Shared', options: {dark: {accent: '#ff0000'}}}),
+      ).toBe(true)
 
       const snapshot = actor.getSnapshot()
       const stored = selectStoredState(snapshot)
 
-      expect(snapshot.hasTag('switching')).toBe(true)
-      expect(snapshot.matches({flow: 'list'})).toBe(true)
+      expect(snapshot.matches('list')).toBe(true)
       expect(stored.custom).toHaveLength(1)
       expect(stored.custom[0]).toMatchObject({
         title: 'Shared',
@@ -483,35 +456,44 @@ describe('themerMachine', () => {
       expect(stored.active).toBe(stored.custom[0].slug)
       expect(snapshot.context.editing).toBeNull()
     })
+
+    it('takes the slug a sender gives the theme', () => {
+      const actor = start()
+
+      actor.send({type: 'theme.import', title: 'Shared', options: {}, slug: 'custom-known'})
+
+      expect(actor.getSnapshot().context.active).toBe('custom-known')
+      expect(actor.getSnapshot().context.custom[0].slug).toBe('custom-known')
+    })
   })
 
   describe("the list's dialogs", () => {
     it('opens and closes the paste dialog, in the list', () => {
       const actor = start()
 
-      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'idle'})).toBe(true)
 
       actor.send({type: 'dialog.paste'})
-      expect(actor.getSnapshot().matches({flow: {list: 'pasting'}})).toBe(true)
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'pasting'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
 
       actor.send({type: 'dialog.close'})
-      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'idle'})).toBe(true)
     })
 
     it('shows the snippet of the applied theme only — the configured theme has none', () => {
       const actor = startWithCustom()
 
       actor.send({type: 'dialog.snippet'})
-      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'idle'})).toBe(true)
 
       actor.send({type: 'theme.pick', slug: 'custom-1'})
       actor.send({type: 'dialog.snippet'})
-      expect(actor.getSnapshot().matches({flow: {list: 'snippet'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'snippet'})).toBe(true)
 
       // The applied theme goes away under the dialog — removed from another tab
       actor.send({type: 'themes.sync', state: {...initialThemerState, custom: [custom]}})
-      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'idle'})).toBe(true)
     })
 
     it('closes a dialog by leaving the list', () => {
@@ -519,10 +501,10 @@ describe('themerMachine', () => {
 
       actor.send({type: 'dialog.paste'})
       actor.send({type: 'theme.add'})
-      expect(actor.getSnapshot().matches({flow: 'edit'})).toBe(true)
+      expect(actor.getSnapshot().matches('edit')).toBe(true)
 
       actor.send({type: 'flow.list'})
-      expect(actor.getSnapshot().matches({flow: {list: 'idle'}})).toBe(true)
+      expect(actor.getSnapshot().matches({list: 'idle'})).toBe(true)
     })
   })
 
@@ -582,19 +564,19 @@ describe('themerMachine', () => {
       const actor = startWithCustom()
 
       actor.send({type: 'flow.removed'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
 
       actor.send({type: 'theme.remove', slug: 'verdant'})
       actor.send({type: 'theme.remove', slug: 'custom-1'})
       actor.send({type: 'flow.removed'})
-      expect(actor.getSnapshot().matches({flow: 'removed'})).toBe(true)
+      expect(actor.getSnapshot().matches('removed')).toBe(true)
 
       actor.send({type: 'theme.restore', slug: 'verdant'})
-      expect(actor.getSnapshot().matches({flow: 'removed'})).toBe(true)
+      expect(actor.getSnapshot().matches('removed')).toBe(true)
       expect(actor.getSnapshot().context.removed).toEqual(['custom-1'])
 
       actor.send({type: 'theme.delete', slug: 'custom-1'})
-      expect(actor.getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(actor.getSnapshot().matches('list')).toBe(true)
       expect(selectStoredState(actor.getSnapshot())).toEqual(initialThemerState)
     })
 

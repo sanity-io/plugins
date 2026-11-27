@@ -8,7 +8,6 @@ import {ImageIcon} from '@sanity/icons/Image'
 import {RestoreIcon} from '@sanity/icons/Restore'
 import {Button, Card, Flex, Stack} from '@sanity/ui'
 import {Menu, MenuButton, MenuDivider, MenuItem} from '@sanity/ui/menu'
-import {useSelector} from '@xstate/react'
 import {MotionConfig, Reorder} from 'motion/react'
 import {useId, useRef} from 'react'
 
@@ -17,7 +16,6 @@ import type {ThemerProps} from '#types'
 import {GenerateThemeBar, type GenerateThemeBarProps} from './GenerateThemeBar'
 import {ImageFileInput} from './ImageFileButton'
 import {optionsFromImagePalette, titleFromFileName} from './imagePalette'
-import type {ThemerSnapshot} from './machine'
 import {PasteThemeDialog} from './PasteThemeDialog'
 import {ScrollArea} from './ScrollArea'
 import {ThemeCard} from './ThemeCard'
@@ -40,25 +38,26 @@ import * as styles from './ThemeList.module.css'
  * @internal
  */
 export function ThemeList({
-  actorRef,
+  send,
   themes,
   removed,
   active,
+  dialog,
   generator,
-}: Pick<ThemerProps, 'actorRef' | 'themes' | 'removed' | 'active'> & {
+}: Pick<ThemerProps, 'send' | 'themes' | 'removed' | 'active'> & {
+  /** Which of the list's dialogs is open — the machine's, a state of the list */
+  dialog: 'paste' | 'snippet' | null
   /** The bar that generates a theme from a description, while it is open */
   generator: Pick<GenerateThemeBarProps, 'client' | 'onClose' | 'requestRef' | 'sessionRef'> | null
 }) {
-  const {addThemeFromClipboard} = useThemeCodes({actorRef})
-  // Which of the list's dialogs is open is the machine's: a state of the list flow
-  const dialog = useSelector(actorRef, selectDialog)
+  const {addThemeFromClipboard} = useThemeCodes({send})
   const imageInputRef = useRef<HTMLInputElement | null>(null)
   const actionsId = useId()
 
-  usePasteThemeCodes({actorRef})
+  usePasteThemeCodes({send})
 
   const {busy, pickImage} = useImagePalette((palette, file) =>
-    actorRef.send({
+    send({
       type: 'theme.add',
       title: titleFromFileName(file.name),
       options: optionsFromImagePalette(palette),
@@ -72,7 +71,10 @@ export function ThemeList({
     <Flex className={styles.root} direction="column" flex={1}>
       {generator && (
         <GenerateThemeBar
-          actorRef={actorRef}
+          active={active}
+          send={send}
+          themes={themes}
+          removed={removed}
           client={generator.client}
           onClose={generator.onClose}
           requestRef={generator.requestRef}
@@ -87,11 +89,11 @@ export function ThemeList({
             <Reorder.Group
               as="div"
               className={styles.cardGrid}
-              onReorder={(order: string[]) => actorRef.send({type: 'theme.reorder', order})}
+              onReorder={(order: string[]) => send({type: 'theme.reorder', order})}
               values={themes.map((theme) => theme.slug)}
             >
               <ThemeCard
-                actorRef={actorRef}
+                send={send}
                 active={!active}
                 theme={{
                   slug: CONFIG_SLUG,
@@ -104,7 +106,7 @@ export function ThemeList({
               {themes.map((theme) => (
                 <ThemeCard
                   key={theme.slug}
-                  actorRef={actorRef}
+                  send={send}
                   active={theme.slug === active?.slug}
                   theme={theme}
                   themes={themes}
@@ -119,7 +121,7 @@ export function ThemeList({
               gap={2}
               icon={RestoreIcon}
               mode="bleed"
-              onClick={() => actorRef.send({type: 'flow.removed'})}
+              onClick={() => send({type: 'flow.removed'})}
               padding={2}
               text={`Show removed (${removed.length})`}
               width="fill"
@@ -136,7 +138,7 @@ export function ThemeList({
             <Button
               gap={2}
               icon={EditIcon}
-              onClick={() => actorRef.send({type: 'theme.edit', slug: active.slug})}
+              onClick={() => send({type: 'theme.edit', slug: active.slug})}
               padding={2}
               text="Edit"
               mode="ghost"
@@ -145,9 +147,7 @@ export function ThemeList({
             <Button
               gap={2}
               icon={CopyIcon}
-              onClick={() =>
-                actorRef.send({type: 'theme.duplicate', slug: active?.slug ?? CONFIG_SLUG})
-              }
+              onClick={() => send({type: 'theme.duplicate', slug: active?.slug ?? CONFIG_SLUG})}
               padding={2}
               text="Duplicate & Edit"
               mode="ghost"
@@ -170,7 +170,7 @@ export function ThemeList({
               <Menu>
                 <MenuItem
                   icon={AddIcon}
-                  onClick={() => actorRef.send({type: 'theme.add'})}
+                  onClick={() => send({type: 'theme.add'})}
                   text="Add theme"
                 />
                 <MenuItem
@@ -183,7 +183,7 @@ export function ThemeList({
                   onClick={async () => {
                     // Straight from the clipboard where the browser allows; by hand otherwise
                     if ((await addThemeFromClipboard()) !== 'added') {
-                      actorRef.send({type: 'dialog.paste'})
+                      send({type: 'dialog.paste'})
                     }
                   }}
                   text="Add from code"
@@ -193,7 +193,7 @@ export function ThemeList({
                     <MenuDivider />
                     <MenuItem
                       icon={CodeBlockIcon}
-                      onClick={() => actorRef.send({type: 'dialog.snippet'})}
+                      onClick={() => send({type: 'dialog.snippet'})}
                       text="Show theme code"
                     />
                   </>
@@ -208,22 +208,11 @@ export function ThemeList({
       <ImageFileInput onFile={pickImage} ref={imageInputRef} />
 
       {dialog === 'paste' && (
-        <PasteThemeDialog
-          actorRef={actorRef}
-          onClose={() => actorRef.send({type: 'dialog.close'})}
-        />
+        <PasteThemeDialog send={send} onClose={() => send({type: 'dialog.close'})} />
       )}
       {dialog === 'snippet' && active && (
-        <ThemeSnippetDialog onClose={() => actorRef.send({type: 'dialog.close'})} theme={active} />
+        <ThemeSnippetDialog onClose={() => send({type: 'dialog.close'})} theme={active} />
       )}
     </Flex>
   )
-}
-
-/** The dialog the list has open, if any — a state of the machine's list flow */
-function selectDialog(snapshot: ThemerSnapshot): 'paste' | 'snippet' | null {
-  if (snapshot.matches({flow: {list: 'pasting'}})) return 'paste'
-  if (snapshot.matches({flow: {list: 'snippet'}})) return 'snippet'
-
-  return null
 }

@@ -121,8 +121,14 @@ export function createCustomTheme(
   title: string,
   options: BuildThemeOptions,
   palette?: ImagePalette,
+  slug: string = createCustomThemeSlug(),
 ): CustomTheme {
-  return {slug: `custom-${randomId()}`, title, options, ...(palette ? {palette} : {})}
+  return {slug, title, options, ...(palette ? {palette} : {})}
+}
+
+/** A slug for a custom theme, for a sender that needs to know it ahead of the theme @internal */
+export function createCustomThemeSlug(): string {
+  return `custom-${randomId()}`
 }
 
 /** The title of a duplicated theme @internal */

@@ -5,8 +5,7 @@ import {TrashIcon} from '@sanity/icons/Trash'
 import {Badge, Box, Button, Card, Flex, Stack, Text, TextInput} from '@sanity/ui'
 import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
-import {useSelector} from '@xstate/react'
-import {useId, useMemo} from 'react'
+import {startTransition, useId, useMemo, useOptimistic} from 'react'
 import {useColorSchemeValue} from 'sanity'
 
 import type {ThemerProps} from '#types'
@@ -64,13 +63,18 @@ const SCHEME_OPTION_KEYS: Array<keyof SchemeThemeOptions> = [
  * @internal
  */
 export function ThemeEditor({
-  actorRef,
+  send,
   focusTitle,
+  imageUrl,
   slug,
   split,
   themes,
-}: {focusTitle: boolean; slug: string} & Pick<ThemerProps, 'actorRef' | 'split' | 'themes'>) {
-  const images = useSelector(actorRef, (snapshot) => snapshot.context.images)
+}: {
+  focusTitle: boolean
+  /** The image the theme took its palette from, this session */
+  imageUrl: string | undefined
+  slug: string
+} & Pick<ThemerProps, 'send' | 'split' | 'themes'>) {
   const theme = themes.find((candidate) => candidate.slug === slug && candidate.source === 'custom')
 
   // The machine only enters the edit flow for a listed custom theme, and
@@ -80,7 +84,7 @@ export function ThemeEditor({
   const applyVariant = (variant: ImagePaletteVariant | null) => {
     if (!theme.palette || variant === null) return
 
-    actorRef.send({
+    send({
       type: 'theme.update',
       slug,
       options: applyImagePalette(theme.options, theme.palette, variant),
@@ -90,8 +94,8 @@ export function ThemeEditor({
   return (
     <ThemeEditorForm
       focusTitle={focusTitle}
-      imageUrl={images[slug]}
-      onDone={() => actorRef.send({type: 'flow.list'})}
+      imageUrl={imageUrl}
+      onDone={() => send({type: 'flow.list'})}
       onLucky={() => {
         if (!theme.palette) return
 
@@ -101,9 +105,9 @@ export function ThemeEditor({
           }),
         )
       }}
-      onOptionsChange={(options) => actorRef.send({type: 'theme.update', slug, options})}
+      onOptionsChange={(options) => send({type: 'theme.update', slug, options})}
       onPalette={(palette, file) =>
-        actorRef.send({
+        send({
           type: 'theme.update',
           slug,
           options: applyImagePalette(theme.options, palette),
@@ -111,8 +115,8 @@ export function ThemeEditor({
           imageUrl: URL.createObjectURL(file),
         })
       }
-      onRemove={() => actorRef.send({type: 'theme.remove', slug})}
-      onTitleChange={(title) => actorRef.send({type: 'theme.update', slug, title})}
+      onRemove={() => send({type: 'theme.remove', slug})}
+      onTitleChange={(title) => send({type: 'theme.update', slug, title})}
       onVariant={applyVariant}
       options={theme.options}
       palette={theme.palette}
@@ -150,11 +154,13 @@ function ThemeEditorForm(props: {
     onRemove,
     onTitleChange,
     onVariant,
-    options,
     palette,
     split,
-    title,
   } = props
+  // The machine takes every edit in a transition, while the inputs must
+  // follow every keystroke and every step of a drag right away
+  const [title, setOptimisticTitle] = useOptimistic(props.title)
+  const [options, setOptimisticOptions] = useOptimistic(props.options)
   // The scheme the Studio is showing, with the appearance setting resolved
   const studioScheme = useColorSchemeValue()
   const actionsId = useId()
@@ -177,7 +183,10 @@ function ThemeEditorForm(props: {
       next[scheme] = values
     }
 
-    onOptionsChange(next)
+    startTransition(() => {
+      setOptimisticOptions(next)
+      onOptionsChange(next)
+    })
   }
 
   return (
@@ -193,7 +202,13 @@ function ThemeEditorForm(props: {
             <TextInput
               autoFocus={focusTitle}
               fontSize={1}
-              onChange={(event) => onTitleChange(event.currentTarget.value)}
+              onChange={(event) => {
+                const next = event.currentTarget.value
+                startTransition(() => {
+                  setOptimisticTitle(next)
+                  onTitleChange(next)
+                })
+              }}
               onFocus={focusTitle ? (event) => event.currentTarget.select() : undefined}
               padding={2}
               placeholder="Untitled theme"

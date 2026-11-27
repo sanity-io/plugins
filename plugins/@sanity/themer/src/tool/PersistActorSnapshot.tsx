@@ -1,9 +1,9 @@
-import {useEffect} from 'react'
+import {useEffect, useEffectEvent, useRef} from 'react'
 
 import type {ThemerProps} from '#types'
 
 import {writePersistedSnapshot} from './storage'
-import {syncThemer} from './sync'
+import {syncThemer, type ThemerSync} from './sync'
 
 /**
  * Persists the machine's snapshot for the next session, and keeps the themes
@@ -13,8 +13,23 @@ import {syncThemer} from './sync'
  * closed too: other tabs change the themes whether this one shows them or
  * not.
  */
-export function PersistActorSnapshot({actorRef}: Pick<ThemerProps, 'actorRef'>) {
-  useEffect(() => syncThemer(actorRef, {persist: writePersistedSnapshot}), [actorRef])
+export function PersistActorSnapshot({send, snapshot}: Pick<ThemerProps, 'send' | 'snapshot'>) {
+  const syncRef = useRef<ThemerSync | null>(null)
+  const currentSnapshot = useEffectEvent(() => snapshot)
+
+  useEffect(() => {
+    const sync = syncThemer(currentSnapshot(), send, {persist: writePersistedSnapshot})
+    syncRef.current = sync
+
+    return () => {
+      syncRef.current = null
+      sync.stop()
+    }
+  }, [send])
+
+  useEffect(() => {
+    syncRef.current?.update(snapshot)
+  }, [snapshot])
 
   return null
 }

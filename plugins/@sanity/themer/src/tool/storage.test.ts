@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {createActor} from 'xstate'
+import {restoreActor} from 'xstate/persist'
 
 import {selectStoredState, themerMachine} from './machine'
 import type {PersistedThemerSnapshot} from './schemas'
@@ -29,7 +30,7 @@ function createMemoryStorage(): Storage {
 
 /** A session of the machine, started from the given snapshot — what the real one restores */
 function runMachine(snapshot = readPersistedSnapshot()) {
-  return createActor(themerMachine, {snapshot}).start()
+  return (snapshot ? restoreActor(themerMachine, snapshot) : createActor(themerMachine)).start()
 }
 
 /** The themes of a snapshot — what is persisted between sessions */
@@ -86,8 +87,8 @@ describe('themer storage', () => {
         removed: [],
         order: [],
       })
-      // The editor is where the session ended, not switching to anything
-      expect(restored.matches({flow: 'edit', theme: 'applied'})).toBe(true)
+      // The editor is where the session ended
+      expect(restored.matches('edit')).toBe(true)
       expect(restored.context.editing).toEqual({slug: active, focusTitle: false})
       // The images were the last session's
       expect(restored.context.images).toEqual({})
@@ -105,27 +106,23 @@ describe('themer storage', () => {
 
       const snapshot = readPersistedSnapshot()
 
-      expect(snapshot?.value).toEqual({flow: 'list', theme: 'applied'})
+      expect(snapshot?.value).toEqual('list')
       expect(snapshot?.context.editing).toBeNull()
-      expect(runMachine(snapshot).getSnapshot().matches({flow: 'list'})).toBe(true)
+      expect(runMachine(snapshot).getSnapshot().matches('list')).toBe(true)
     })
 
     it('closes a dialog that was open when the session ended', () => {
       const actor = runMachine()
       actor.send({type: 'dialog.paste'})
 
-      expect(actor.getPersistedSnapshot()).toMatchObject({value: {flow: {list: 'pasting'}}})
+      expect(actor.getPersistedSnapshot()).toMatchObject({value: {list: 'pasting'}})
 
       writePersistedSnapshot(actor.getPersistedSnapshot())
 
       const snapshot = readPersistedSnapshot()
 
-      expect(snapshot?.value).toEqual({flow: 'list', theme: 'applied'})
-      expect(
-        runMachine(snapshot)
-          .getSnapshot()
-          .matches({flow: {list: 'idle'}}),
-      ).toBe(true)
+      expect(snapshot?.value).toEqual('list')
+      expect(runMachine(snapshot).getSnapshot().matches({list: 'idle'})).toBe(true)
     })
 
     it('keeps the themes of a snapshot the machine has no states for', () => {
@@ -142,7 +139,7 @@ describe('themer storage', () => {
       const snapshot = readPersistedSnapshot()
 
       // Back in the list, with the themes
-      expect(snapshot?.value).toEqual({flow: 'list', theme: 'applied'})
+      expect(snapshot?.value).toEqual('list')
       expect(themesOf(snapshot)).toEqual({
         active: 'custom-1',
         custom: [custom],
@@ -150,6 +147,34 @@ describe('themer storage', () => {
         order: [],
       })
       expect(runMachine(snapshot).getSnapshot().context.active).toBe('custom-1')
+    })
+
+    it('restores the snapshot of the earlier machine, which switched themes in a region of its own', () => {
+      localStorage.setItem(
+        SNAPSHOT_STORAGE_KEY,
+        JSON.stringify({
+          status: 'active',
+          value: {flow: 'edit', theme: 'switching'},
+          context: {
+            active: 'custom-1',
+            custom: [custom],
+            removed: [],
+            order: [],
+            editing: {slug: 'custom-1', focusTitle: false},
+            images: {},
+          },
+          historyValue: {},
+          children: {},
+        }),
+      )
+
+      const snapshot = readPersistedSnapshot()
+      const restored = runMachine(snapshot).getSnapshot()
+
+      expect(snapshot?.value).toBe('edit')
+      expect(restored.status).toBe('active')
+      expect(restored.matches('edit')).toBe(true)
+      expect(restored.context.editing).toEqual({slug: 'custom-1', focusTitle: false})
     })
 
     it('falls back on a corrupt snapshot', () => {
@@ -179,7 +204,7 @@ describe('themer storage', () => {
       const snapshot = readPersistedSnapshot()
 
       if (snapshot) {
-        expect(snapshot.value).toEqual({flow: 'list', theme: 'applied'})
+        expect(snapshot.value).toEqual('list')
         expect(snapshot.context.editing).toBeNull()
         expect(snapshot.context.images).toEqual({})
       }
