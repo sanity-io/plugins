@@ -15,7 +15,7 @@ test('package exports', {timeout: 30_000}, async () => {
           "AprimoAdditionalFileSchema": "object",
           "AprimoAssetSchema": "object",
           "AprimoCDNAssetSchema": "object",
-          "AprimoWidget": "function",
+          "AprimoWidget": "object",
           "aprimoPlugin": "function",
         },
       }

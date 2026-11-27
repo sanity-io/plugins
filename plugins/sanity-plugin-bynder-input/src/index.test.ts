@@ -12,8 +12,8 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
       {
         ".": {
-          "BynderDiff": "function",
-          "BynderInput": "function",
+          "BynderDiff": "object",
+          "BynderInput": "object",
           "bynderAssetSchema": "object",
           "bynderInputPlugin": "function",
         },
