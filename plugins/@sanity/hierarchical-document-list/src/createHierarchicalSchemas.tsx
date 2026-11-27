@@ -1,8 +1,7 @@
-import type {FC} from 'react'
+import {type FC, lazy} from 'react'
 import type {ArraySchemaType} from 'sanity'
 
 import {DEFAULT_FIELD_KEY} from './TreeDeskStructure'
-import TreeInputComponent from './TreeInputComponent'
 import type {TreeDeskStructureProps, TreeFieldSchema} from './types'
 import {
   INTERNAL_NODE_ARRAY_TYPE,
@@ -11,6 +10,10 @@ import {
   getSchemaTypeName,
 } from './utils/injectNodeTypeInPatches'
 import throwError from './utils/throwError'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const TreeInputComponent = lazy(() => import('./TreeInputComponent'))
 
 type SchemaOptions = Omit<TreeDeskStructureProps, 'documentId' | 'maxDepth'>
 
