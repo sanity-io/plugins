@@ -23,6 +23,14 @@ export type Summarize = {
   tags?: Array<string>
 }
 
+export type AnalyzeStructure = {
+  jobId?: string
+  completedAt?: number
+  title?: string
+  summary?: string
+  tags?: Array<string>
+}
+
 export type Moderate = {
   jobId?: string
   completedAt?: number
@@ -63,6 +71,44 @@ export type CtaLink = {
   reference?: CorePresetsTestReference
   url?: string
   openInNewTab?: boolean
+}
+
+export type SanityReleaseMetadata = {
+  _type: 'sanity.releaseMetadata'
+  title?: string
+  description?: string
+  releaseType: 'asap' | 'scheduled' | 'undecided'
+  intendedPublishAt?: string
+  cardinality?: 'many' | 'one'
+}
+
+export type SystemRelease = {
+  _id: string
+  _type: 'system.release'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  state?:
+    | 'active'
+    | 'archiving'
+    | 'unarchiving'
+    | 'archived'
+    | 'published'
+    | 'publishing'
+    | 'scheduled'
+    | 'scheduling'
+  error?: {
+    message?: string
+  }
+  publishAt?: string
+  publishedAt?: string
+  metadata?: SanityReleaseMetadata
+  finalDocumentStates?: Array<{
+    id?: string
+    _key: string
+  }>
+  userId?: string
 }
 
 export type SanityVercelProtectionBypass = {
@@ -1770,6 +1816,7 @@ export type MuxVideoAsset = {
 export type MuxRobotsOutputs = {
   _type: 'mux.robotsOutputs'
   summarize?: Summarize
+  analyzeStructure?: AnalyzeStructure
   moderate?: Moderate
 }
 
@@ -1812,6 +1859,7 @@ export type MuxRobotsPendingCreate = {
   workflow?: string
   directiveId?: string
   requestedAt?: number
+  apiVersion?: string
 }
 
 export type MuxRobotsDirectiveRun = {
@@ -2028,6 +2076,7 @@ export type SanityImageAsset = {
 
 export type AllSanitySchemaTypes =
   | Summarize
+  | AnalyzeStructure
   | Moderate
   | MaxScores
   | Options
@@ -2035,6 +2084,8 @@ export type AllSanitySchemaTypes =
   | CorePresetsTestReference
   | Link
   | CtaLink
+  | SanityReleaseMetadata
+  | SystemRelease
   | SanityVercelProtectionBypass
   | SanityPreviewUrlSecret
   | DocumentListDemo
