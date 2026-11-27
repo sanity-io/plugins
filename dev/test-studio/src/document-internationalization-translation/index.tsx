@@ -7,7 +7,7 @@ import {TranslateIcon} from '@sanity/icons/Translate'
 import {Box, Card, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 import {useEffect, useMemo} from 'react'
-import {definePlugin, defineField, defineType, useClient, useSchema} from 'sanity'
+import {definePlugin, defineField, defineType, useClient} from 'sanity'
 import type {SanityDocument} from 'sanity'
 // The TranslationsTab component is provided by the Transifex plugin (a re-export of
 // the one from sanity-translations-tab).
@@ -17,6 +17,7 @@ import {TranslationsTab} from 'sanity-plugin-transifex'
 // translated document and links it through a `translation.metadata` document — the
 // same metadata @sanity/document-internationalization manages.
 import {baseDocumentLevelConfig} from 'sanity-translations-tab'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 import {
   structureTool,
   type DefaultDocumentNodeResolver,
