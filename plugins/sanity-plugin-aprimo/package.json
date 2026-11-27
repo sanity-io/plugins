@@ -52,7 +52,7 @@
   },
   "peerDependencies": {
     "react": "catalog:peer",
-    "sanity": "catalog:peer"
+    "sanity": "^6.17.0 || ^7"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"
