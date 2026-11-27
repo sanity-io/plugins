@@ -79,6 +79,21 @@ import {useInternationalizedArrayContext} from './InternationalizedArrayContext'
 type EventsStub = {events: unknown[]; loading: boolean}
 
 const PRISTINE_EVENTS: EventsStub = {events: [], loading: false}
+const DELETED_EVENTS: EventsStub = {events: [{type: 'deleteDocumentVersion'}], loading: false}
+
+const EXISTING_EDIT_STATE = {
+  ready: true,
+  draft: {_id: 'drafts.doc', _rev: 'rev1'},
+  published: null,
+  version: null,
+}
+
+const EMPTY_EDIT_STATE = {
+  ready: true,
+  draft: null,
+  published: null,
+  version: null,
+}
 
 /**
  * Creates minimal mock ArrayOfObjectsInputProps for InternationalizedArray.
@@ -115,6 +130,26 @@ function withEvents(
   )
 }
 
+function mockDocumentPane(
+  overrides: {
+    isDeleting?: boolean
+    isDeleted?: boolean
+    isInitialValueLoading?: boolean
+    formState?: unknown
+    editState?: unknown
+  } = {},
+): void {
+  vi.mocked(useDocumentPane).mockReturnValue({
+    isDeleting: false,
+    isDeleted: false,
+    isInitialValueLoading: false,
+    editState: EXISTING_EDIT_STATE,
+    onChange: vi.fn(),
+    ...overrides,
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- test pane stub
+  } as unknown as ReturnType<typeof useDocumentPane>)
+}
+
 function renderInternationalizedArray(
   props: ReturnType<typeof createMockArrayProps>,
   events: EventsStub | null = PRISTINE_EVENTS,
@@ -132,7 +167,7 @@ describe('InternationalizedArray', () => {
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: false,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as unknown as ReturnType<typeof useDocumentPane>)
   })
 
@@ -584,7 +619,7 @@ describe('InternationalizedArray', () => {
   test('does not auto-add default languages when document is being deleted', () => {
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: true,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -603,7 +638,7 @@ describe('InternationalizedArray', () => {
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleted: true,
       isDeleting: false,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -716,6 +751,162 @@ describe('InternationalizedArray', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 
+  test('does not auto-add default languages when the pair store has no snapshot', async () => {
+    mockDocumentPane({editState: EMPTY_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props, DELETED_EVENTS)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages when a discarded release version leaves the base pair in the store', async () => {
+    mockDocumentPane({
+      editState: {
+        ready: true,
+        scopeId: 'r1',
+        draft: {_id: 'drafts.doc', _rev: 'rev1'},
+        published: null,
+        version: null,
+      },
+    })
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props, DELETED_EVENTS)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages when form _rev lingers after the store is empty', async () => {
+    // The deleted pane can keep the last displayed snapshot (including `_rev`)
+    // while draft/published/version are already null. Patching then recreates
+    // the document — this is the remaining hole after the `_rev` guard.
+    mockDocumentPane({editState: EMPTY_EDIT_STATE})
+    vi.mocked(useFormValue).mockImplementation((path) =>
+      Array.isArray(path) && path[0] === '_rev' ? 'stale-rev' : 'article',
+    )
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+
+    renderInternationalizedArray(props, DELETED_EVENTS)
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages after language items disappear', async () => {
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const value = createValues(['en'])
+    const props = createMockArrayProps({onChange, value})
+
+    const view = renderInternationalizedArray(props)
+    expect(onChange).not.toHaveBeenCalled()
+
+    mockGetFormValue.mockImplementation(() => undefined)
+    view.rerender(withEvents(createMockArrayProps({onChange, value: undefined})))
+
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('does not auto-add default languages if the store empties before the scheduled patch runs', async () => {
+    vi.useFakeTimers()
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const view = renderInternationalizedArray(props, DELETED_EVENTS)
+
+    mockDocumentPane({editState: EMPTY_EDIT_STATE})
+    view.rerender(withEvents(props, DELETED_EVENTS))
+
+    await vi.runAllTimersAsync()
+    vi.useRealTimers()
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('still auto-adds default languages after a transient not-ready pair-store blip', async () => {
+    vi.useFakeTimers()
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue({
+      ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+      defaultLanguages: ['en'],
+    })
+
+    const onChange = vi.fn()
+    const props = createMockArrayProps({onChange})
+    const view = renderInternationalizedArray(props)
+
+    mockDocumentPane({
+      editState: {ready: false, draft: null, published: null, version: null},
+    })
+    view.rerender(withEvents(props))
+
+    mockDocumentPane({editState: EXISTING_EDIT_STATE})
+    view.rerender(withEvents(props))
+
+    await vi.runAllTimersAsync()
+    vi.useRealTimers()
+
+    expect(onChange).toHaveBeenCalled()
+  })
+
+  test('does not auto-reorder when the document is no longer in the pair store', () => {
+    mockDocumentPane({editState: EMPTY_EDIT_STATE})
+
+    vi.mocked(useInternationalizedArrayContext).mockReturnValue(
+      MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
+    )
+
+    const onChange = vi.fn()
+    const value = createValues(['fr', 'en'])
+    const props = createMockArrayProps({onChange, value})
+
+    renderInternationalizedArray(props, DELETED_EVENTS)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   test('does not auto-add default languages when documentReadOnly is true', async () => {
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
       ...MOCK_INTERNATIONALIZED_ARRAY_CONTEXT,
@@ -738,7 +929,7 @@ describe('InternationalizedArray', () => {
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: true,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -764,7 +955,7 @@ describe('InternationalizedArray', () => {
       isDeleting: false,
       isDeleted: false,
       formState: {readOnly: true},
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue({
@@ -825,7 +1016,7 @@ describe('InternationalizedArray', () => {
       isDeleting: false,
       isDeleted: false,
       isInitialValueLoading: true,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useInternationalizedArrayContext).mockReturnValue(
@@ -1052,7 +1243,7 @@ describe('InternationalizedArray', () => {
   test('renders MemberItemError for members with kind !== "item"', () => {
     vi.mocked(useDocumentPane).mockReturnValue({
       isDeleting: false,
-      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     } as ReturnType<typeof useDocumentPane>)
 
     vi.mocked(useLanguageFilterStudioContext).mockReturnValue({
