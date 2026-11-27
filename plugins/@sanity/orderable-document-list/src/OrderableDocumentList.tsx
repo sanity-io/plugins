@@ -1,9 +1,11 @@
 import type {SanityClient} from '@sanity/client'
+import {Flex, Spinner} from '@sanity/ui'
 import type {ToastParams} from '@sanity/ui/toast'
-import {useImperativeHandle, useState, type Ref} from 'react'
+import {lazy, Suspense, useImperativeHandle, useState, type Ref} from 'react'
 
-import {DocumentListWrapper} from './DocumentListWrapper'
 import {resetOrder} from './helpers/resetOrder'
+
+const DocumentListWrapper = lazy(() => import('./DocumentListWrapper.lazy'))
 
 export interface OrderableDocumentListProps {
   options: {
@@ -70,13 +72,21 @@ export function OrderableDocumentList({options, ref}: OrderableDocumentListProps
   }
 
   return (
-    <DocumentListWrapper
-      filter={filter}
-      params={params}
-      type={type}
-      showIncrements={showIncrements}
-      resetOrderTransaction={resetOrderTransaction}
-      currentVersion={currentVersion}
-    />
+    <Suspense
+      fallback={
+        <Flex style={{width: `100%`, height: `100%`}} align="center" justify="center">
+          <Spinner />
+        </Flex>
+      }
+    >
+      <DocumentListWrapper
+        filter={filter}
+        params={params}
+        type={type}
+        showIncrements={showIncrements}
+        resetOrderTransaction={resetOrderTransaction}
+        currentVersion={currentVersion}
+      />
+    </Suspense>
   )
 }
