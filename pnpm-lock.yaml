@@ -490,7 +490,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"with": {
 						"supports-color": "8.1.1",
 					},
@@ -607,14 +607,14 @@ snapshots:
 				"@sanity/vercel-protection-bypass": "workspace:*",
 				"@sanity/vision": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@vanilla-extract/css": "catalog:",
 				"react": "catalog:",
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"sanity-naive-html-serializer": "workspace:*",
 				"sanity-plugin-aprimo": "workspace:*",
@@ -778,7 +778,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"with": {
 						"supports-color": "5.5.0",
 					},
@@ -813,7 +813,7 @@ snapshots:
 				"@sanity/icons": "catalog:",
 				"@sanity/mutator": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/ui": "catalog:",
 				"date-fns": "catalog:",
@@ -828,7 +828,7 @@ snapshots:
 			"devDependencies": {
 				"@sanity/schema": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/tsconfig": "catalog:",
 				"@sanity/tsdown-config": "catalog:",
@@ -846,7 +846,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -889,7 +889,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -984,7 +984,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1028,7 +1028,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -1047,7 +1047,7 @@ snapshots:
 				"@sanity/icons": "catalog:",
 				"@sanity/mutator": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/studio-secrets": "workspace:^",
 				"@sanity/ui": "catalog:",
@@ -1070,7 +1070,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1101,7 +1101,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1137,7 +1137,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1166,7 +1166,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1185,12 +1185,12 @@ snapshots:
 				"@sanity/icons": "catalog:",
 				"@sanity/mutator": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/uuid": "catalog:",
 				"rxjs": "catalog:",
@@ -1214,7 +1214,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"sanity-plugin-internationalized-array": "workspace:*",
 				"styled-components": "catalog:",
@@ -1249,7 +1249,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1301,7 +1301,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -1336,7 +1336,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1368,12 +1368,12 @@ snapshots:
 				"@sanity/icons": "catalog:",
 				"@sanity/mutator": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 			},
 			"devDependencies": {
@@ -1386,7 +1386,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1424,7 +1424,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1460,7 +1460,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1493,7 +1493,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -1533,7 +1533,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1568,7 +1568,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1600,7 +1600,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1637,7 +1637,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1674,7 +1674,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1708,7 +1708,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1765,7 +1765,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": "catalog:",
@@ -1795,7 +1795,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1815,15 +1815,15 @@ snapshots:
 				"@portabletext/to-html": "catalog:",
 				"@sanity/mutator": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/schema": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 			},
 			"devDependencies": {
@@ -1846,7 +1846,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -1875,7 +1875,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1909,7 +1909,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1948,7 +1948,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -1983,7 +1983,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2015,7 +2015,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -2043,7 +2043,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2096,7 +2096,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2116,7 +2116,7 @@ snapshots:
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"@sanity/uuid": "catalog:",
 				"dlv": {
@@ -2140,7 +2140,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2168,7 +2168,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2208,7 +2208,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2229,7 +2229,7 @@ snapshots:
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"lodash-es": "catalog:",
 				"motion": "catalog:",
@@ -2249,7 +2249,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2290,7 +2290,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2311,7 +2311,7 @@ snapshots:
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"lodash-es": "catalog:",
 			},
@@ -2334,7 +2334,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2365,7 +2365,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"tsdown": {
 					"specifier": "catalog:",
@@ -2406,7 +2406,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2450,7 +2450,7 @@ snapshots:
 				},
 				"groq": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"is-hotkey-esm": {
 					"specifier": "^1.0.0",
@@ -2506,7 +2506,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2597,7 +2597,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2645,7 +2645,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2673,7 +2673,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2701,7 +2701,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2733,7 +2733,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2774,7 +2774,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2807,7 +2807,7 @@ snapshots:
 				"react": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -2829,7 +2829,7 @@ snapshots:
 				"@sanity/ui": "catalog:",
 				"@sanity/util": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"sanity-naive-html-serializer": "workspace:^",
 			},
@@ -2843,7 +2843,7 @@ snapshots:
 				"react-dom": "catalog:",
 				"sanity": {
 					"specifier": "next",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": "catalog:",
 				"tsdown": {
@@ -13471,7 +13471,7 @@ snapshots:
 				"@portabletext/html": "1.2.0",
 				"@portabletext/sanity-bridge": "3.2.5",
 				"@portabletext/schema": "2.2.4",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 			},
 		},
 
@@ -13824,8 +13824,8 @@ snapshots:
 			},
 			"dependencies": {
 				"@portabletext/schema": "2.2.4",
-				"@sanity/schema": "6.26.0-next.50",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
+				"@sanity/types": "6.26.0-next.56",
 			},
 		},
 
@@ -13844,7 +13844,7 @@ snapshots:
 			},
 			"dependencies": {
 				"@portabletext/schema": "3.1.2",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 			},
 		},
 
@@ -14673,8 +14673,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/access-ui@6.26.0-next.50": {
-			"integrity": "sha512-SqfgMUh9Mujm7niKleMTXDeXPbSOs7ppxQm4+C0tmRAlrt1MI6yZJYXv0CgqYyEtdBHYzVvMtQXTENITYTEHgw==",
+		"@sanity/access-ui@6.26.0-next.56": {
+			"integrity": "sha512-1Fd4PweuH2/xQIvL11GE4/U9cNZLLEAWU9bfNBwi6ea5IwcihqJP/KktCyOzp46I8ALy2GhypQMtCmhQ6khamw==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"react": {
@@ -14919,9 +14919,9 @@ snapshots:
 				"@rolldown/plugin-babel": "0.3.2",
 				"@sanity/cli-core": "3.16.0",
 				"@sanity/generate-help-url": "4.0.0",
-				"@sanity/schema": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
 				"@sanity/telemetry": "1.1.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"@sanity/workbench-cli": "2.20.0",
 				"@vitejs/plugin-react": "6.3.0",
 				"chokidar": "5.0.0",
@@ -14948,7 +14948,7 @@ snapshots:
 							"below": true,
 						},
 						"sanity": {
-							"version": "6.26.0-next.50",
+							"version": "6.26.0-next.56",
 							"with": {
 								"@vitejs/devtools": "0.4.12",
 								"supports-color": "10.2.2",
@@ -14959,7 +14959,7 @@ snapshots:
 				{
 					"peerDependencies": {
 						"sanity": {
-							"version": "6.26.0-next.50",
+							"version": "6.26.0-next.56",
 							"with": {
 								"supports-color": "8.1.1",
 							},
@@ -15133,7 +15133,7 @@ snapshots:
 					"below": true,
 				},
 				"sanity": {
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"below": true,
 				},
 				"tsx": {
@@ -15174,12 +15174,12 @@ snapshots:
 				"@sanity/import": "7.1.1",
 				"@sanity/migrate": "8.0.5",
 				"@sanity/runtime-cli": "17.23.0",
-				"@sanity/schema": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
 				"@sanity/schema-descriptor-utils": "1.4.0",
 				"@sanity/telemetry": "1.1.0",
 				"@sanity/template-validator": "3.1.1",
-				"@sanity/types": "6.26.0-next.50",
-				"@sanity/util": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
+				"@sanity/util": "6.26.0-next.56",
 				"@sanity/validation": "6.25.0",
 				"@sanity/workbench-cli": "2.20.0",
 				"@sanity/worker-channels": "2.0.0",
@@ -15374,7 +15374,7 @@ snapshots:
 				"@sanity/worker-channels": "2.0.0",
 				"chokidar": "3.6.0",
 				"globby": "11.1.0",
-				"groq": "6.26.0-next.50",
+				"groq": "6.26.0-next.56",
 				"groq-js": "2.0.3",
 				"json5": "2.2.3",
 				"lodash-es": "4.18.1",
@@ -15448,8 +15448,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/diff@6.26.0-next.50": {
-			"integrity": "sha512-gxOmmYlDx/vjGjJSrLRfj3xyw/ufPBY+tdkNeyF7SdcZQL4dAizSkGdzkUcS9VlV+vFw7gRmP9l67FR5vWUoww==",
+		"@sanity/diff@6.26.0-next.56": {
+			"integrity": "sha512-MJ/VOGLIGW5R6WiMSsKZ8gd//tx3Kz38FgKIser8teYcCscdb3s7cM1ankUdafjQSAKqvv3bYAWgcHfNmD4PYw==",
 			"engines": {"node": ">=22.12"},
 			"dependencies": {
 				"@sanity/diff-match-patch": "3.2.1",
@@ -15536,7 +15536,7 @@ snapshots:
 			"dependencies": {
 				"@sanity/asset-utils": "2.3.0",
 				"@sanity/generate-help-url": "4.0.0",
-				"@sanity/mutator": "6.26.0-next.50",
+				"@sanity/mutator": "6.26.0-next.56",
 				"get-it": "9.7.0",
 				"modern-tar": "0.8.6",
 				"obug": "3.0.0",
@@ -15578,7 +15578,7 @@ snapshots:
 			"peerDependencies": {
 				"@sanity/types": {
 					"specifier": "^4.0.0 || ^5.0.0 || ^6.0.0",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 				},
 			},
 		},
@@ -15611,8 +15611,8 @@ snapshots:
 			"dependencies": {
 				"@sanity/client": "8.17.0",
 				"@sanity/mutate": "0.18.4",
-				"@sanity/types": "6.26.0-next.50",
-				"@sanity/util": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
+				"@sanity/util": "6.26.0-next.56",
 				"arrify": "3.0.0",
 				"get-it": "9.7.0",
 				"groq-js": "2.0.3",
@@ -15647,8 +15647,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/mutator@6.26.0-next.50": {
-			"integrity": "sha512-eXR3CEsyELA+3rLiokdn2BlV6DWM8jU8vN7VXwvabL9IJPADrpCV9YvpahAKW9vhO8eo6jllzs80FGrXQ+Vdbg==",
+		"@sanity/mutator@6.26.0-next.56": {
+			"integrity": "sha512-WcE5Q/jcN06a7B1yRegALBQNR0HfitWT9vl7gAffh60abSr6F44CwVgDSRPdR6cFDtoZ0a+THgaVdt5BIgFEXQ==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@types/react": {
@@ -15662,7 +15662,7 @@ snapshots:
 			},
 			"dependencies": {
 				"@sanity/diff-match-patch": "3.2.1",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"@sanity/uuid": "3.0.3",
 				"dequal": "2.0.3",
 				"obug": "3.0.0",
@@ -15779,7 +15779,7 @@ snapshots:
 			"engines": {"node": ">=20.19 <22 || >=22.12"},
 			"peerDependencies": {
 				"@sanity/types": {
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"below": true,
 				},
 			},
@@ -15857,7 +15857,7 @@ snapshots:
 					"below": true,
 				},
 				"sanity": {
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"below": true,
 				},
 				"tsx": {
@@ -15956,8 +15956,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/schema@6.26.0-next.50": {
-			"integrity": "sha512-rzYH1MSaQ0uCei9k/67r3nM1SCzod99JG9uf/oahcVqFFSPJeiFE09XDhxsL+/AAprDPnMJ8qMdxAZ0hTZbo1Q==",
+		"@sanity/schema@6.26.0-next.56": {
+			"integrity": "sha512-HDwF24e/jANgaqYrcX8MfI5feRhYQTSI+9A0QvpZvzeT73MnOESUKO9uO6LWrGnnqD8ODh8fWtUw59b9OsQz3A==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@types/react": {
@@ -15972,7 +15972,7 @@ snapshots:
 			"dependencies": {
 				"@sanity/descriptors": "1.3.0",
 				"@sanity/generate-help-url": "4.0.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"arrify": "3.0.0",
 				"dequal": "2.0.3",
 				"get-it": "9.7.0",
@@ -16020,7 +16020,7 @@ snapshots:
 				"@sanity/client": "8.17.0",
 				"@sanity/message-protocol": "0.24.0",
 				"@sanity/sdk": "3.17.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"react-compiler-runtime": "1.0.0",
 				"react-error-boundary": "6.1.6",
 				"rxjs": "7.8.2",
@@ -16067,9 +16067,9 @@ snapshots:
 				"@sanity/message-protocol": "0.24.0",
 				"@sanity/mutate": "0.18.4",
 				"@sanity/telemetry": "1.1.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"@sentry/browser": "11.18.0",
-				"groq": "6.26.0-next.50",
+				"groq": "6.26.0-next.56",
 				"groq-js": "2.0.3",
 				"reselect": "5.3.0",
 				"rxjs": "7.8.2",
@@ -16124,7 +16124,7 @@ snapshots:
 				},
 				"sanity": {
 					"specifier": "^3 || ^4 || ^5 || ^6",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"optional": true,
 				},
 				"styled-components": {
@@ -16319,8 +16319,8 @@ snapshots:
 			],
 		},
 
-		"@sanity/types@6.26.0-next.50": {
-			"integrity": "sha512-P9zTmaumoRRoDgWfyYcpTLwlij6bZrIKu816s9UwIavsUd01g5sBtni/iIJrCioQU76sPqHgk4mOZBEwngNraA==",
+		"@sanity/types@6.26.0-next.56": {
+			"integrity": "sha512-pGBtcFZ4J/M+cHksT68BjmOqZIfTKE2XzxfHb3bcvb2lluLmFuTB/GUqLrjkSrJ2azW/x6W4pEo1GwbEKj0EVg==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@types/react": {
@@ -16393,8 +16393,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/util@6.26.0-next.50": {
-			"integrity": "sha512-oYKbw0HokpLRbSXmHCCHDqA77I5HtLK0sMDiMKKnjxW14m53r1TcN3yPMCiUU/+p5z075Ssm1wkgCZvDFnloKA==",
+		"@sanity/util@6.26.0-next.56": {
+			"integrity": "sha512-1AK13lIPXYSTtRCWsMYN7a8Q0dcapeUZoFIUFK2C+kNjYx/zAzq9CqYfEO2JShdH0YkQVnf7A6PLUKNLyJY/7g==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@types/react": {
@@ -16410,7 +16410,7 @@ snapshots:
 				"@date-fns/tz": "1.5.0",
 				"@date-fns/utc": "2.1.1",
 				"@sanity/client": "8.17.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"date-fns": "4.4.0",
 				"get-it": "9.7.0",
 				"rxjs": "7.8.2",
@@ -16444,9 +16444,9 @@ snapshots:
 			"dependencies": {
 				"@sanity/client": "8.17.0",
 				"@sanity/id-utils": "1.1.0",
-				"@sanity/schema": "6.26.0-next.50",
-				"@sanity/types": "6.26.0-next.50",
-				"@sanity/util": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
+				"@sanity/types": "6.26.0-next.56",
+				"@sanity/util": "6.26.0-next.56",
 				"dequal": "2.0.3",
 				"i18next": "26.7.2",
 				"lodash-es": "4.18.1",
@@ -16454,8 +16454,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/validation@6.26.0-next.50": {
-			"integrity": "sha512-SKn3gGB2EJ/EcgbFwSdrv1YvsAUiMaDWT+4S1liW3s+q0gJW8Ll+keH0tBPsHkviaCwgVrEaSYsv8Qr94+0+Wg==",
+		"@sanity/validation@6.26.0-next.56": {
+			"integrity": "sha512-qp2zHUMR1KCNtmnAD0QQl8Co0lX2UNr2FmzdEPGLRDPmtjSWsAVLGp5La7w9wJwJRFBDV6cq1crOIKTwimM2fg==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@types/react": {
@@ -16474,9 +16474,9 @@ snapshots:
 			"dependencies": {
 				"@sanity/client": "8.17.0",
 				"@sanity/id-utils": "1.1.0",
-				"@sanity/schema": "6.26.0-next.50",
-				"@sanity/types": "6.26.0-next.50",
-				"@sanity/util": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
+				"@sanity/types": "6.26.0-next.56",
+				"@sanity/util": "6.26.0-next.56",
 				"dequal": "2.0.3",
 				"i18next": "26.7.2",
 				"lodash-es": "4.18.1",
@@ -16567,8 +16567,8 @@ snapshots:
 			},
 		},
 
-		"@sanity/vision@6.26.0-next.50": {
-			"integrity": "sha512-XHW+DFdL77c564cOkxd79OqliI6x96OCyeAjOftm6BHSiKOQjMawVw4LPnURJlBCMq27XpaISDIhiitckE1FVQ==",
+		"@sanity/vision@6.26.0-next.56": {
+			"integrity": "sha512-v0rh3/wg/0XvRV63qUpG61mcAb1l8w79W+XWp05tY/ZmiTeFJv71PbNmCesny02GBWn7eGnRQHFg20Z18gGrcQ==",
 			"engines": {"node": ">=22.12"},
 			"peerDependencies": {
 				"@babel/runtime": {
@@ -16596,8 +16596,8 @@ snapshots:
 					"below": true,
 				},
 				"sanity": {
-					"specifier": "^6.26.0-next.50+97c5f0e8e6",
-					"version": "6.26.0-next.50",
+					"specifier": "^6.26.0-next.56+c6cfce16f8",
+					"version": "6.26.0-next.56",
 				},
 				"styled-components": {
 					"version": "6.6.0",
@@ -16650,7 +16650,7 @@ snapshots:
 				},
 				"@sanity/types": {
 					"specifier": "*",
-					"version": "6.26.0-next.50",
+					"version": "6.26.0-next.56",
 					"optional": true,
 				},
 			},
@@ -16726,7 +16726,7 @@ snapshots:
 				"@module-federation/vite": "1.24.0",
 				"@sanity/cli-core": "3.16.0",
 				"@sanity/sdk": "3.17.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"@vitejs/plugin-react": "6.3.0",
 				"form-data": "4.0.6",
 				"open": "11.0.4",
@@ -16827,7 +16827,7 @@ snapshots:
 				"@sanity/client": "8.17.0",
 				"@sanity/id-utils": "1.1.0",
 				"@sanity/telemetry": "1.1.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"groq-js": "1.30.3",
 				"valibot": "1.5.0",
 			},
@@ -24831,8 +24831,8 @@ snapshots:
 			},
 		},
 
-		"groq@6.26.0-next.50": {
-			"integrity": "sha512-SHnf8T2e2iffwM1Mf2VpJ4EHgLV/yBbLEzC3wzw4oGnkaDLHsFNxwmScm4FkHX/dt8Drga37z22SbGdYI2bwxg==",
+		"groq@6.26.0-next.56": {
+			"integrity": "sha512-ZgripJyQIn9awEConF86YP+TX5y45WCRUX93950oriwOh8atx36qszu1s4/scrSHnH7pEgVNje7RhWNR+0LVKQ==",
 			"engines": {"node": ">=22.12"},
 		},
 
@@ -30681,8 +30681,8 @@ snapshots:
 			},
 		},
 
-		"sanity@6.26.0-next.50": {
-			"integrity": "sha512-iUmUk4FedRCe/UiIgOrwG4fPf01Nx2gyLT2VTIzrq/FPE86LAecS2ItS4vpgcl7BVIEkftZhJ5ekHirhwa5nHA==",
+		"sanity@6.26.0-next.56": {
+			"integrity": "sha512-S6YlaUWGn9U0JwaQv+XeT5QQMTY5Za1D7H206erJsArnRoRdclw+PmZsqzFgvubZ9DzM2jyMT2DJc4k9YWgqDw==",
 			"engines": {"node": ">=22.12"},
 			"hasBin": true,
 			"peerDependencies": {
@@ -30787,14 +30787,14 @@ snapshots:
 				"@portabletext/to-html": "6.0.0",
 				"@portabletext/toolkit": "6.1.1",
 				"@rexxars/react-json-inspector": "9.0.1",
-				"@sanity/access-ui": "6.26.0-next.50",
+				"@sanity/access-ui": "6.26.0-next.56",
 				"@sanity/asset-utils": "2.3.0",
 				"@sanity/bifur-client": "3.0.1",
 				"@sanity/cli": "8.35.0",
 				"@sanity/client": "8.17.0",
 				"@sanity/color": "3.0.9",
 				"@sanity/comlink": "4.0.3",
-				"@sanity/diff": "6.26.0-next.50",
+				"@sanity/diff": "6.26.0-next.56",
 				"@sanity/diff-match-patch": "3.2.1",
 				"@sanity/diff-patch": "7.0.0",
 				"@sanity/eventsource": "5.0.4",
@@ -30807,19 +30807,19 @@ snapshots:
 				"@sanity/message-protocol": "0.24.0",
 				"@sanity/migrate": "8.0.5",
 				"@sanity/mutate": "0.18.4",
-				"@sanity/mutator": "6.26.0-next.50",
+				"@sanity/mutator": "6.26.0-next.56",
 				"@sanity/presentation-comlink": "2.2.3",
 				"@sanity/preview-url-secret": "4.1.5",
 				"@sanity/prism-groq": "1.1.2",
-				"@sanity/schema": "6.26.0-next.50",
+				"@sanity/schema": "6.26.0-next.56",
 				"@sanity/sdk": "3.17.0",
 				"@sanity/sdk-react": "3.17.0",
 				"@sanity/telemetry": "1.1.0",
-				"@sanity/types": "6.26.0-next.50",
+				"@sanity/types": "6.26.0-next.56",
 				"@sanity/ui": "4.4.14",
-				"@sanity/util": "6.26.0-next.50",
+				"@sanity/util": "6.26.0-next.56",
 				"@sanity/uuid": "3.0.3",
-				"@sanity/validation": "6.26.0-next.50",
+				"@sanity/validation": "6.26.0-next.56",
 				"@sentry/react": "11.18.0",
 				"@tanstack/react-virtual": "3.14.28",
 				"@xstate/react": "6.1.0",
@@ -33450,6 +33450,7 @@ snapshots:
 				},
 				"jsdom": {
 					"specifier": "*",
+					"version": "29.1.1",
 					"optional": true,
 				},
 				"vite": {
@@ -33472,22 +33473,6 @@ snapshots:
 				"tinyglobby": "0.2.17",
 				"why-is-node-running": "3.2.1",
 			},
-			"snapshots": [
-				{
-					"peerDependencies": {
-						"jsdom": {
-							"version": "29.1.1",
-						},
-					},
-				},
-				{
-					"peerDependencies": {
-						"jsdom": {
-							"version": "31.0.1",
-						},
-					},
-				},
-			],
 		},
 
 		"vue-virtual-scroller@3.0.5": {
