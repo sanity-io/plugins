@@ -12,7 +12,7 @@ type ValidateProps = {
 export default function Validate(props: ValidateProps) {
   const {documentId, type, onChange} = props
   // oxlint-disable-next-line no-useless-default-assignment
-  const {isValidating, validation = []} = useValidationStatus(documentId, type, false)
+  const {isValidating, validation = []} = useValidationStatus(documentId, type)
 
   useEffect(() => {
     onChange({isValidating, validation})
