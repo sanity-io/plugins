@@ -1,7 +1,7 @@
 import {ThemeProvider, useMediaIndex} from '@sanity/ui'
 import {use, useReducer, useState} from 'react'
 import {browser} from 'react-dom'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {MIN_MEDIA_INDEX_FOR_SIDEBAR, MIN_MEDIA_INDEX_FOR_SPLIT_SCREEN} from '#constants'
 import type {ThemerProps} from '#types'

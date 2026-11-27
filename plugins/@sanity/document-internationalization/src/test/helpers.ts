@@ -1,11 +1,6 @@
-import {
-  createSchema,
-  defineField,
-  defineType,
-  type DocumentActionProps,
-  type SanityDocument,
-} from 'sanity'
+import {defineField, defineType, type DocumentActionProps, type SanityDocument} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+import {createSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {vi} from 'vitest'
 
 import {DEFAULT_CONFIG, TRANSLATIONS_ARRAY_NAME} from '../constants'

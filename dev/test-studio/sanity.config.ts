@@ -65,7 +65,8 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'ppsg7ml5'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'plugins'
 // Keeps recently used tools mounted behind React's `<Activity>` when switching tools, so plugin
 // tools get exercised with their effects torn down while hidden and re-created on reveal.
-const beta = {reactActivityMode: {enabled: true}} satisfies WorkspaceOptions['beta']
+const reactActivityMode = {enabled: true} satisfies WorkspaceOptions['reactActivityMode']
+const beta = {} satisfies NonNullable<WorkspaceOptions['beta']>
 
 function createWorkspace(
   config: Omit<WorkspaceOptions, 'projectId' | 'dataset' | 'basePath'>,
@@ -73,6 +74,7 @@ function createWorkspace(
   return {
     projectId,
     dataset,
+    reactActivityMode,
     beta,
     ...config,
     basePath: `/${config.name}`,
@@ -141,9 +143,7 @@ export default defineConfig([
       scriptRunnerTool(),
       debugSecrets(),
       vercelProtectionBypassTool(),
-      visionTool({
-        beta: {redesign: {enabled: true}},
-      }),
+      visionTool(),
       themerExample(),
     ],
   }),

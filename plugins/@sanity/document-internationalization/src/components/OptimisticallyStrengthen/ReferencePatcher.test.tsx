@@ -1,6 +1,6 @@
 /* oxlint-disable typescript-eslint/no-unsafe-type-assertion */
 import {cleanup, render} from '@testing-library/react'
-import {PatchEvent} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest'
 
 import {ThemeWrapper} from '../../test/component-helpers'
@@ -12,15 +12,21 @@ const mockUseUnstableObserveDocument = vi.fn()
 const mockOnChange = vi.fn()
 const mockUseDocumentPane = vi.fn()
 
-vi.mock('sanity', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('sanity')>()
-  return {
-    ...actual,
-    useUnstableObserveDocument: (id: string) => mockUseUnstableObserveDocument(id),
-  }
-})
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver')
+      >()
+    return {
+      ...actual,
+      useUnstableObserveDocument: (id: string) => mockUseUnstableObserveDocument(id),
+    }
+  },
+)
 
-vi.mock('sanity/structure', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useDocumentPane: () => mockUseDocumentPane(),
 }))
 
@@ -60,7 +66,7 @@ describe('OptimisticallyStrengthen', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  test('renders ReferencePatcher only for items with _strengthenOnPublish.type', () => {
+  test('renders ReferencePatcher only for items with _strengthenOnPublish.type', async () => {
     const withStrengthen = createMockTranslation('en', 'doc-1', {
       weak: true,
       strengthenOnPublish: true,
@@ -75,7 +81,7 @@ describe('OptimisticallyStrengthen', () => {
       wrapper: ThemeWrapper,
     })
 
-    expect(mockUseUnstableObserveDocument).toHaveBeenCalledTimes(1)
+    await vi.waitFor(() => expect(mockUseUnstableObserveDocument).toHaveBeenCalledTimes(1))
     expect(mockUseUnstableObserveDocument).toHaveBeenCalledWith('doc-1')
   })
 })

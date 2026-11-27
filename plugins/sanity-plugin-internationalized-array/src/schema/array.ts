@@ -1,12 +1,16 @@
+import {lazy} from 'react'
 import {defineField, type FieldDefinition, type FieldProps, type Rule} from 'sanity'
 
 import {getFunctionCache, peek, setFunctionCache} from '../cache'
 import {createFieldName} from '../components/createFieldName'
 import {getSelectedValue} from '../components/getSelectedValue'
-import InternationalizedArray from '../components/InternationalizedArray'
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {Language, LanguageCallback, InternationalizedArrayItem} from '../types'
 import {getLanguagesFieldOption} from '../utils/getLanguagesFieldOption'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const InternationalizedArray = lazy(() => import('../components/InternationalizedArray'))
 
 type ArrayFactoryConfig = {
   apiVersion: string

@@ -1,4 +1,4 @@
-import {defineMigration, set} from 'sanity/migrate'
+import {defineMigration, type SetOp} from 'sanity/migrate'
 
 const DOCUMENT_TYPES: string[] = ['internationalizedPost', 'translation.metadata'] // Example: ['post', 'page']
 
@@ -27,11 +27,15 @@ export default defineMigration({
         return undefined
       }
 
-      return set({
-        ...node,
-        _key: language,
-        [LANGUAGE_FIELD_NAME]: undefined,
-      })
+      // Studio v7's `sanity/migrate` no longer exports the `set` helper, so build the operation it returns
+      return {
+        type: 'set',
+        value: {
+          ...node,
+          _key: language,
+          [LANGUAGE_FIELD_NAME]: undefined,
+        },
+      } satisfies SetOp<unknown>
     },
   },
 })

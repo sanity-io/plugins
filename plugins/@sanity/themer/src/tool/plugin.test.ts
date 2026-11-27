@@ -11,6 +11,9 @@ import {createThemeSnippet} from './snippet'
 // `definePlugin` only wraps the factory, so the mock returns it as-is.
 vi.mock('sanity', () => ({
   definePlugin: (factory: unknown) => factory,
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
   useColorSchemeValue: () => 'light',
 }))
 

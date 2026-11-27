@@ -2,7 +2,11 @@ import {dequal as isEqual} from 'dequal/lite'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import type {Subscription} from 'rxjs'
 import {catchError, distinctUntilChanged} from 'rxjs/operators'
-import {type ListenQueryOptions, type ListenQueryParams, useDocumentStore} from 'sanity'
+import {type ListenQueryOptions} from 'sanity'
+import {
+  type ListenQueryParams,
+  useDocumentStore,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 interface Config<V> {
   params?: ListenQueryParams

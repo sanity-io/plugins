@@ -1,3 +1,4 @@
+import {lazy} from 'react'
 import {
   type DatetimeDefinition,
   defineField,
@@ -6,7 +7,7 @@ import {
   type ObjectSchemaType,
 } from 'sanity'
 
-import {RichDateInput} from './components/RichDateInput'
+const RichDateInput = lazy(() => import('./components/RichDateInput.lazy'))
 
 const richDateTypeName = 'richDate' as const
 

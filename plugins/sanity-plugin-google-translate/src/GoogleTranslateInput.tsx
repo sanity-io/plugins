@@ -2,8 +2,13 @@ import {Box, Button, Text, Flex, Stack} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
-import {MemberField, MemberFieldSet, MemberFieldError, set, unset} from 'sanity'
+import {set, unset} from 'sanity'
 import type {FieldMember, InputProps, ObjectInputProps} from 'sanity'
+import {
+  MemberField,
+  MemberFieldError,
+  MemberFieldSet,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {extractLanguageFromCode} from './helpers/extractLanguageFromCode'
 import {getLanguageFromMember} from './helpers/getLanguageFromMember'

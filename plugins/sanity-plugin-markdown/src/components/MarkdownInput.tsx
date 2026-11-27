@@ -18,10 +18,12 @@ import {
 } from 'react'
 // dont import non-types here, it will break SSR on next
 import type {SimpleMDEReactProps} from 'react-simplemde-editor'
-import {PatchEvent, set, type StringInputProps, unset, useClient} from 'sanity'
+import {set, type StringInputProps, unset, useClient} from 'sanity'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 import {styled} from 'styled-components'
 
 import type {MarkdownOptions} from '../schema'
+import {defaultMdeTools} from './defaultMdeTools'
 
 const SimpleMdeReact = lazy(() => import('react-simplemde-editor'))
 
@@ -105,23 +107,6 @@ export interface MarkdownInputProps extends StringInputProps {
    */
   reactMdeProps?: Omit<SimpleMDEReactProps, 'value' | 'onChange'>
 }
-
-export const defaultMdeTools: EasyMdeOptions['toolbar'] = [
-  'heading',
-  'bold',
-  'italic',
-  '|',
-  'quote',
-  'unordered-list',
-  'ordered-list',
-  '|',
-  'link',
-  'image',
-  'code',
-  '|',
-  'preview',
-  'side-by-side',
-]
 
 export function MarkdownInput(props: MarkdownInputProps): React.JSX.Element {
   const {

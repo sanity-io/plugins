@@ -1,9 +1,9 @@
 import '@sanity/ui/styles.css'
+import {lazy} from 'react'
 import {type AssetSource, definePlugin, isArrayOfObjectsInputProps} from 'sanity'
 
 import {CloudinaryAssetSource} from './components/asset-source/CloudinaryAssetSource'
 import {CloudinaryIcon} from './components/asset-source/Icon'
-import {AssetListFunctions} from './components/AssetListFunctions'
 import {videoPreviewStudio} from './components/VideoPreviewOptions'
 import {cloudinaryAssetSchema} from './schema/cloudinaryAsset'
 import {cloudinaryAssetContext} from './schema/cloudinaryAssetContext'
@@ -12,6 +12,8 @@ import {cloudinaryAssetDerivedSchema} from './schema/cloudinaryAssetDerived'
 import {cloudinaryAssetDocument} from './schema/cloudinaryAssetDocument'
 import {cloudinaryAssetReference} from './schema/cloudinaryAssetReference'
 import type {CloudinaryPluginConfig} from './types'
+
+const AssetListFunctions = lazy(() => import('./components/AssetListFunctions.lazy'))
 
 export {type CloudinaryAssetContext} from './schema/cloudinaryAssetContext'
 export {type CloudinaryAssetDerived} from './schema/cloudinaryAssetDerived'

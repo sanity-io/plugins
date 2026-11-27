@@ -12,13 +12,13 @@ test('package exports', {timeout: 30_000}, async () => {
   expect(manifest.exports).toMatchInlineSnapshot(`
       {
         ".": {
-          "MarkdownInput": "function",
+          "MarkdownInput": "object",
           "defaultMdeTools": "object",
           "markdownSchema": "function",
           "markdownSchemaType": "object",
         },
         "./next": {
-          "MarkdownInput": "function",
+          "MarkdownInput": "object",
           "defaultMdeTools": "object",
           "markdownSchema": "function",
           "markdownSchemaType": "object",

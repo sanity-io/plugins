@@ -2,7 +2,10 @@ import {DatabaseIcon} from '@sanity/icons/Database'
 import {Box, Button, Card, Flex, Grid, Hotkeys, Stack, Text} from '@sanity/ui'
 import {isValidElement, useMemo} from 'react'
 import {isValidElementType} from 'react-is'
-import {useActiveWorkspace, type WorkspaceSummary} from 'sanity'
+import {
+  useActiveWorkspace,
+  type WorkspaceSummary,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 const createIcon = (Icon: React.ComponentType | React.ReactNode) => {

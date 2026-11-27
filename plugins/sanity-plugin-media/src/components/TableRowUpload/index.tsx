@@ -2,7 +2,7 @@ import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Button, Flex, Grid, Stack, Text, useMediaIndex} from '@sanity/ui'
 import filesize from 'filesize'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {GRID_TEMPLATE_COLUMNS} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'

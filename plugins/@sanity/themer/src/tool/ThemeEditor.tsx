@@ -7,7 +7,7 @@ import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 import {type ThemeColorSchemeKey} from '@sanity/ui/theme'
 import {useSelector} from '@xstate/react'
 import {useId, useMemo} from 'react'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import type {ThemerProps} from '#types'
 

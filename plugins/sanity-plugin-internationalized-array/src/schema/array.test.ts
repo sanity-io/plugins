@@ -4,7 +4,7 @@ import {MOCK_LANGUAGES, createValue, createValues} from '../test/helpers'
 import type {Language} from '../types'
 
 // Mock the React component to avoid transitive import issues
-// (InternationalizedArray imports from sanity/structure, @sanity/language-filter, etc.)
+// (InternationalizedArray imports from sanity internals, @sanity/language-filter, etc.)
 vi.mock('../components/InternationalizedArray', () => ({
   default: () => null,
 }))

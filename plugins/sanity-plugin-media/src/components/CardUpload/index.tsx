@@ -2,7 +2,7 @@ import {CloseIcon} from '@sanity/icons/Close'
 import {Box, Button, Flex, Text} from '@sanity/ui'
 import filesize from 'filesize'
 import {useDispatch} from 'react-redux'
-import {useColorSchemeValue} from 'sanity'
+import {useColorSchemeValue} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {styled} from 'styled-components'
 
 import {PANEL_HEIGHT} from '../../constants'

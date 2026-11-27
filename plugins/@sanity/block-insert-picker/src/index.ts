@@ -1,6 +1,6 @@
 import '@sanity/ui/styles.css'
 
-export {BlockInsertPicker, type BlockInsertPickerProps} from './blockInsertPicker'
+export {type BlockInsertPickerProps} from './blockInsertPicker'
 export {derivePickerItems} from './deriveItems'
 export {filterPickerItems} from './filterItems'
 export {
@@ -15,7 +15,8 @@ export {
   normalizeFenceLanguage,
 } from './inputRules'
 export type {BlockInsertPickerLabels} from './labels'
-export {MarkdownInputRules, type MarkdownInputRulesProps} from './markdownInputRules'
+export {BlockInsertPicker, MarkdownInputRules} from './lazyComponents'
+export {type MarkdownInputRulesProps} from './markdownInputRules'
 export {blockInsertPicker, type BlockInsertPickerConfig} from './plugin'
 export {standardBlockPresets, wellKnownInputRules} from './presets'
 export type {

@@ -1,5 +1,10 @@
-import {getVersionFromId, getVersionId, isSanityDocument, isVersionId} from 'sanity'
+import {isSanityDocument} from 'sanity'
 import {LANGUAGE_FIELD_NAME} from 'sanity-plugin-internationalized-array'
+import {
+  getVersionFromId,
+  getVersionId,
+  isVersionId,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {API_VERSION} from './constants'
 import type {TranslationReference} from './types'

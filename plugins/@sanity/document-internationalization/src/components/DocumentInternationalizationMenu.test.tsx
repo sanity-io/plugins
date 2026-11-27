@@ -17,10 +17,23 @@ vi.mock('sanity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('sanity')>()
   return {
     ...actual,
-    useEditState: (...args: unknown[]) => mockUseEditState(...args),
     usePerspective: () => mockUsePerspective(),
   }
 })
+
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver')
+      >()
+    return {
+      ...actual,
+      useEditState: (...args: unknown[]) => mockUseEditState(...args),
+    }
+  },
+)
 
 vi.mock('../hooks/useLanguageMetadata', () => ({
   useTranslationMetadata: vi.fn(),

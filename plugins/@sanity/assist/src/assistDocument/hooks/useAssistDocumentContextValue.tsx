@@ -1,12 +1,13 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
+import {type ObjectSchemaType, usePerspective} from 'sanity'
 import {
   getPublishedId,
-  type ObjectSchemaType,
-  usePerspective,
-  useSchema,
   useSyncState,
-} from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {
+  useDocumentPane,
+  useSchema,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'

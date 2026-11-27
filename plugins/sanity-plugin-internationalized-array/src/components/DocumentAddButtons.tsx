@@ -7,12 +7,14 @@ import {
   type FormSetIfMissingPatch,
   insert,
   isSanityDocument,
-  PatchEvent,
   setIfMissing,
   useGetFormValue,
-  useSchema,
 } from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+import {
+  useDocumentPane,
+  useSchema,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {DocumentsToTranslate} from '../utils/getDocumentsToTranslate'

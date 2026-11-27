@@ -6,15 +6,17 @@ import type React from 'react'
 import {useCallback, useContext, useEffect, useMemo} from 'react'
 import {
   type ArrayOfObjectsInputProps,
-  ArrayOfObjectsItem,
-  MemberItemError,
   set,
   setIfMissing,
   useFormValue,
   useGetFormValue,
 } from 'sanity'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
+import {
+  ArrayOfObjectsItem,
+  MemberItemError,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 import {EventsContext} from 'sanity/_singletons'
-import {useDocumentPane} from 'sanity/structure'
 
 import {LANGUAGE_FIELD_NAME} from '../constants'
 import type {InternationalizedArrayItem} from '../types'

@@ -1,5 +1,6 @@
-import {Preview, useSchema} from 'sanity'
 import {Feedback} from 'sanity-plugin-utils'
+import {Preview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 type DocumentPreviewProps = {
   value: unknown

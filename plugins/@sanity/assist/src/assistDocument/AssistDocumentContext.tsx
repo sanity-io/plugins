@@ -1,5 +1,6 @@
 import {createContext, useContext} from 'react'
-import {type DocumentInspector, type ObjectSchemaType, PatchEvent} from 'sanity'
+import {type DocumentInspector, type ObjectSchemaType} from 'sanity'
+import {type PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {FieldRef} from '../assistInspector/helpers'
 import type {InstructionTask, StudioAssistDocument} from '../types'

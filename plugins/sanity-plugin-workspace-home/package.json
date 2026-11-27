@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "react": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "catalog:peer-internals",
     "styled-components": "catalog:peer"
   },
   "engines": {

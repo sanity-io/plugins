@@ -42,7 +42,7 @@
     "@sanity/client": "catalog:",
     "@sanity/color": "catalog:",
     "@sanity/icons": "catalog:",
-    "@sanity/mutator": "catalog:",
+    "@sanity/mutator": "catalog:studio",
     "@sanity/ui": "catalog:",
     "date-fns": "catalog:",
     "dequal": "catalog:",
@@ -70,7 +70,7 @@
   "peerDependencies": {
     "react": "catalog:peer",
     "react-dom": "catalog:peer",
-    "sanity": "catalog:peer",
+    "sanity": "catalog:peer-internals",
     "styled-components": "catalog:peer"
   },
   "engines": {

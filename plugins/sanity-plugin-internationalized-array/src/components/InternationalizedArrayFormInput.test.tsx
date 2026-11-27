@@ -29,12 +29,12 @@ afterEach(() => {
 })
 
 describe('InternationalizedArrayFormInput', () => {
-  test('renders document add buttons when buttonLocations includes document', () => {
+  test('renders document add buttons when buttonLocations includes document', async () => {
     render(<InternationalizedArrayFormInput {...createProps(['field', 'document'])} />, {
       wrapper: ThemeWrapper,
     })
 
-    expect(screen.getByTestId('document-add-buttons')).toBeInTheDocument()
+    expect(await screen.findByTestId('document-add-buttons')).toBeInTheDocument()
     expect(screen.getByTestId('default-input')).toBeInTheDocument()
   })
 

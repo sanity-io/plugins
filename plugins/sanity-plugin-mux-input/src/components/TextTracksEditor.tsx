@@ -4,7 +4,7 @@ import {Autocomplete} from '@sanity/ui/autocomplete'
 import {uuid} from '@sanity/uuid'
 import LanguagesList from 'iso-639-1'
 import {type Dispatch} from 'react'
-import {FormField} from 'sanity'
+import {FormField} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {type PluginConfig, SUPPORTED_MUX_LANGUAGES, type UploadTextTrack} from '../util/types'
 

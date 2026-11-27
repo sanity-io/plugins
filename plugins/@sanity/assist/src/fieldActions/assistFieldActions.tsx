@@ -7,12 +7,14 @@ import {
   type DocumentFieldAction,
   type DocumentFieldActionGroup,
   type DocumentFieldActionItem,
+  useCurrentUser,
+} from 'sanity'
+import {
   pathToString,
   stringToPath,
   typed,
-  useCurrentUser,
-} from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
 import {getIcon} from '../assistDocument/components/instruction/appearance/IconInput'

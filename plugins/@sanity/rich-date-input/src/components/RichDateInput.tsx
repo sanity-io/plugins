@@ -1,6 +1,7 @@
 import {Box, Dialog, Flex} from '@sanity/ui'
 import {type ReactNode, useCallback, useState} from 'react'
-import {ObjectInputMember, type ObjectInputProps} from 'sanity'
+import {type ObjectInputProps} from 'sanity'
+import {ObjectInputMember} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import type {RichDate} from '../types'
 import {RelativeDateTimePicker} from './RelativeDateTimePicker'

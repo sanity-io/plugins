@@ -3,14 +3,14 @@ import {
   type ArrayOfObjectsFormNode,
   type ArrayOfObjectsItemMember,
   type ArrayOfPrimitivesFormNode,
-  type DocumentFormNode,
   type FieldsetState,
   isObjectSchemaType,
   type ObjectFormNode,
   type Path,
-  pathToString,
   type SchemaType,
 } from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {type DocumentFormNode} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 const DEFAULT_MAX_DEPTH = 8
 const ABSOLUTE_MAX_DEPTH = 50

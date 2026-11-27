@@ -2,7 +2,7 @@ import {useLanguageFilterStudioContext} from '@sanity/language-filter'
 import type React from 'react'
 import {createContext, use, useContext, useDeferredValue, useMemo} from 'react'
 import {useClient, useWorkspace} from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {createCacheKey, createOrGetPromise, setFunctionCache} from '../cache'
 import {CONFIG_DEFAULT} from '../constants'

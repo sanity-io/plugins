@@ -31,22 +31,35 @@ vi.mock('sanity', async (importOriginal) => {
     ...actual,
     useClient: vi.fn(() => mockClient),
     useCurrentUser: vi.fn(() => ({id: 'user-1', name: 'Test User'})),
-    useDocumentOperation: vi.fn(() => ({
-      duplicate: {
-        disabled: mockDuplicateDisabled(),
-        execute: mockDuplicateExecute,
-      },
-    })),
-    useDocumentPairPermissions: vi.fn(() => [mockPermissions(), mockPermissionsLoading()]),
-    useDocumentStore: vi.fn(() => ({
-      pair: {
-        editOperations: mockEditOperations,
-        operationEvents: mockOperationEvents,
-      },
-    })),
     useTranslation: vi.fn(() => ({t: (key: string) => key})),
   }
 })
+
+vi.mock(
+  'sanity/_dangerously_use_private_internals_that_do_not_follow_semver',
+  async (importOriginal) => {
+    const actual =
+      await importOriginal<
+        typeof import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver')
+      >()
+    return {
+      ...actual,
+      useDocumentOperation: vi.fn(() => ({
+        duplicate: {
+          disabled: mockDuplicateDisabled(),
+          execute: mockDuplicateExecute,
+        },
+      })),
+      useDocumentPairPermissions: vi.fn(() => [mockPermissions(), mockPermissionsLoading()]),
+      useDocumentStore: vi.fn(() => ({
+        pair: {
+          editOperations: mockEditOperations,
+          operationEvents: mockOperationEvents,
+        },
+      })),
+    }
+  },
+)
 
 vi.mock('sanity/router', () => ({
   useRouter: vi.fn(() => ({navigateIntent: mockNavigateIntent})),

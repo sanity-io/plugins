@@ -2,8 +2,8 @@ import '@sanity/ui/styles.css'
 
 export {bynderInputPlugin} from './plugin'
 
-export {BynderInput, type BynderConfig, type BynderInputProps} from './components/BynderInput'
-export {BynderDiff} from './components/BynderDiff'
+export {type BynderConfig, type BynderInputProps} from './components/BynderInput'
+export {BynderDiff, BynderInput} from './components/lazyComponents'
 export {
   bynderAssetSchema,
   type BynderAssetValue,

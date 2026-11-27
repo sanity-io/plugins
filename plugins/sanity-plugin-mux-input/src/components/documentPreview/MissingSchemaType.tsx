@@ -2,7 +2,7 @@
 import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import type {SanityDocument} from 'sanity'
 import type {GeneralPreviewLayoutKey} from 'sanity'
-import {SanityDefaultPreview} from 'sanity'
+import {SanityDefaultPreview} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 export interface MissingSchemaTypeProps {
   layout?: GeneralPreviewLayoutKey

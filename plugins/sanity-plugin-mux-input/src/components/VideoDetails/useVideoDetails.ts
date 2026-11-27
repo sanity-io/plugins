@@ -1,6 +1,6 @@
 import {useToast} from '@sanity/ui/toast'
 import {useMemo, useState} from 'react'
-import {useDocumentStore} from 'sanity'
+import {useDocumentStore} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {useClient} from '../../hooks/useClient'
 import useDocReferences from '../../hooks/useDocReferences'
