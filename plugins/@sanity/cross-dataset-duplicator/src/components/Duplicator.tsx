@@ -22,14 +22,13 @@ import {
 import {getTheme_v2} from '@sanity/ui/theme'
 import {dset} from 'dset'
 import {type ChangeEvent, Fragment, useEffect, useEffectEvent, useMemo, useState} from 'react'
+import {useClient, type SanityDocument} from 'sanity'
 import {
-  useClient,
   Preview,
-  useSchema,
-  useWorkspaces,
   type WorkspaceSummary,
-  type SanityDocument,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useWorkspaces} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {stickyStyles, createInitialMessage} from '../helpers'
 import {getDocumentsInArray} from '../helpers/getDocumentsInArray'
