@@ -63,14 +63,18 @@
     "tinycolor2": "^1.6.0"
   },
   "devDependencies": {
+    "@sanity/browserslist-config": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-tsdown-plugin": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/lodash-es": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/tinycolor2": "^1.4.6",
     "@vanilla-extract/css": "catalog:",
+    "browserslist": "catalog:",
+    "lightningcss": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",

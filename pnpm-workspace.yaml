@@ -29,6 +29,7 @@ catalog:
   '@portabletext/to-html': ^5.0.3
   '@portabletext/types': ^4.0.3
   '@sanity/asset-utils': ^2.3.0
+  '@sanity/browserslist-config': ^1.0.5
   '@sanity/client': ^8.17.0
   '@sanity/color': ^3.0.9
   '@sanity/icons': ^5.4.0
@@ -44,6 +45,7 @@ catalog:
   '@sanity/ui': ^4.4.14
   '@sanity/util': ^6.19.0
   '@sanity/uuid': ^3.0.3
+  '@sanity/vanilla-extract-tsdown-plugin': ^0.5.5
   '@sanity/vanilla-extract-vite-plugin': ^0.3.5
   '@sanity/vision': ^6.19.0
   '@testing-library/jest-dom': ^7.0.1
@@ -61,11 +63,13 @@ catalog:
   '@vis.gl/react-google-maps': ^1.10.2
   '@vitest/coverage-v8': ^5.0.5
   '@xstate/react': ^6.1.0
+  browserslist: ^4.29.6
   date-fns: ^4.4.0
   dequal: ^2.0.3
   groq: ^6.19.0
   jsdom: ^29.1.1
   lexorank: ^1.0.5
+  lightningcss: ^1.33.0
   lodash-es: ^4.18.1
   motion: ^14.10.1
   nanoid: ^6.0.2

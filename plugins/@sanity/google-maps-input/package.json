@@ -61,13 +61,17 @@
     "@vis.gl/react-google-maps": "catalog:"
   },
   "devDependencies": {
+    "@sanity/browserslist-config": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-tsdown-plugin": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/google.maps": "^3.65.5",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vanilla-extract/css": "catalog:",
+    "browserslist": "catalog:",
+    "lightningcss": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

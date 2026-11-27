@@ -60,12 +60,16 @@
     "sanity-plugin-utils": "workspace:^"
   },
   "devDependencies": {
+    "@sanity/browserslist-config": "catalog:",
     "@sanity/tsconfig": "catalog:",
     "@sanity/tsdown-config": "catalog:",
+    "@sanity/vanilla-extract-tsdown-plugin": "catalog:",
     "@sanity/vanilla-extract-vite-plugin": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@vanilla-extract/css": "catalog:",
+    "browserslist": "catalog:",
+    "lightningcss": "catalog:",
     "oxc-transform-react": "catalog:",
     "react": "catalog:",
     "sanity": "catalog:",
