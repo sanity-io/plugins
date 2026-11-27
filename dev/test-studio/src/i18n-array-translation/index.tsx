@@ -2,7 +2,7 @@ import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {Box, Card, Stack, Text} from '@sanity/ui'
 import {Code} from '@sanity/ui/code'
 import {useEffect, useMemo} from 'react'
-import {definePlugin, defineField, defineType, useClient, useSchema} from 'sanity'
+import {definePlugin, defineField, defineType, useClient} from 'sanity'
 import type {SanityDocument} from 'sanity'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 // The TranslationsTab component comes from the Transifex plugin (it re-exports the
@@ -15,6 +15,7 @@ import {TranslationsTab} from 'sanity-plugin-transifex'
 // arrays. We swap in a small offline `demoAdapter` so the full export/import round
 // trip works without a real translation vendor.
 import {baseI18nArrayConfig} from 'sanity-translations-tab'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 import {
   structureTool,
   type DefaultDocumentNodeResolver,
