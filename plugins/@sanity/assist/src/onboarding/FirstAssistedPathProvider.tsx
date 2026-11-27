@@ -1,5 +1,6 @@
 import {createContext, type PropsWithChildren, useMemo} from 'react'
-import {type FieldMember, type ObjectInputProps, pathToString} from 'sanity'
+import {type FieldMember, type ObjectInputProps} from 'sanity'
+import {pathToString} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {isAssistSupported} from '../helpers/assistSupported'
 

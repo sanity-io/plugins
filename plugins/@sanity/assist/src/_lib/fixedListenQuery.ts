@@ -2,7 +2,8 @@ import type {SanityClient} from '@sanity/client'
 import {defer, delay, merge, Observable, of, partition, switchMap, throwError} from 'rxjs'
 import {exhaustMapToWithTrailing} from 'rxjs-exhaustmap-with-trailing'
 import {filter, mergeMap, share, take} from 'rxjs/operators'
-import type {MutationEvent, ReconnectEvent, WelcomeEvent} from 'sanity'
+import type {ReconnectEvent, WelcomeEvent} from 'sanity'
+import type {MutationEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 /** @internal */
 export type ListenQueryParams = Record<string, string | number | boolean | string[]>

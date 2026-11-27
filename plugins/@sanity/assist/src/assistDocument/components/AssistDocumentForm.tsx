@@ -2,24 +2,28 @@ import {Card, Stack, Text} from '@sanity/ui'
 import {useContext, useEffect, useMemo, useRef} from 'react'
 import {
   type FieldError,
-  FormCallbacksProvider,
-  type FormCallbacksValue,
-  FormInput,
   insert,
   type KeyedSegment,
-  MemberFieldError,
   type ObjectInputProps,
   type ObjectSchemaType,
-  PatchEvent,
   type Path,
   type SchemaType,
   set,
   setIfMissing,
+} from 'sanity'
+import {
   stringToPath,
   typed,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
+import {useSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
+import {
+  FormCallbacksProvider,
+  type FormCallbacksValue,
+  FormInput,
+  MemberFieldError,
+  PatchEvent,
   useFormCallbacks,
-  useSchema,
-} from 'sanity'
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {useAiPaneRouter} from '../../assistInspector/helpers'
 import {useAiAssistanceConfig} from '../../assistLayout/AiAssistanceConfigContext'

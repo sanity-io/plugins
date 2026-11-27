@@ -2,7 +2,7 @@ import {ImageIcon} from '@sanity/icons/Image'
 import {Box, Spinner} from '@sanity/ui'
 import {useContext, useMemo} from 'react'
 import type {DocumentFieldAction, DocumentFieldActionGroup, DocumentFieldActionItem} from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {useAssistDocumentContext} from '../assistDocument/AssistDocumentContext'
 import {useDraftDelayedTask} from '../assistDocument/useDraftDelayedTask'

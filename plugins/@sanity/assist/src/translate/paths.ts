@@ -2,16 +2,18 @@
 import {extractWithPath} from '@sanity/mutator'
 import {
   isDocumentSchemaType,
-  isKeySegment,
   isObjectSchemaType,
   type ObjectField,
   type ObjectSchemaType,
   type Path,
-  pathToString,
   type SanityDocumentLike,
   type SchemaType,
-  isRecord,
 } from 'sanity'
+import {
+  isKeySegment,
+  pathToString,
+  isRecord,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 import {randomKey} from '../_lib/randomKey'
 import {isSchemaAssistEnabled} from '../helpers/assistSupported'

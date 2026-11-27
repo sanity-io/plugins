@@ -1,6 +1,10 @@
 import {Box, Flex} from '@sanity/ui'
 import {useCallback} from 'react'
-import {type BlockProps, PatchEvent, useFormCallbacks} from 'sanity'
+import {type BlockProps, type FormPatch} from 'sanity'
+import {
+  PatchEvent,
+  useFormCallbacks,
+} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
 
 import {ErrorWrapper} from '../components/SafeValueInput'
 import {AiFieldPresence} from '../presence/AiFieldPresence'
@@ -11,11 +15,11 @@ export function AssistFormBlock(props: BlockProps) {
   const {onChange} = useFormCallbacks()
   const key = props.value._key
   const localOnChange = useCallback(
-    (patchEvent: PatchEvent) => {
+    (patch: FormPatch | FormPatch[] | PatchEvent) => {
       if (!key) {
         return
       }
-      onChange(PatchEvent.from(patchEvent).prefixAll({_key: key}))
+      onChange(PatchEvent.from(patch).prefixAll({_key: key}))
     },
     [onChange, key],
   )

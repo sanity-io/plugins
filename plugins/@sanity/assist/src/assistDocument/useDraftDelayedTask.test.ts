@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
-import {act, renderHook} from '@testing-library/react'
-import {PatchEvent} from 'sanity'
-import {describe, expect, test, vi} from 'vitest'
+import {act, renderHook, waitFor} from '@testing-library/react'
+import {PatchEvent} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2'
+import {beforeAll, describe, expect, test, vi} from 'vitest'
 
-import {useDraftDelayedTask} from './useDraftDelayedTask'
+import {loadPatchEvent, useDraftDelayedTask} from './useDraftDelayedTask'
 
 interface DocumentState {
   isDocAssistable: boolean
@@ -32,7 +32,25 @@ function expectEmptyOnChange(documentOnChange: ReturnType<typeof vi.fn>, times: 
   }
 }
 
+describe('useDraftDelayedTask before PatchEvent has loaded', () => {
+  test('materializes the draft once it has loaded', async () => {
+    const {task, documentOnChange, request, update} = setup({isDocAssistable: false})
+
+    request()
+    expect(documentOnChange).not.toHaveBeenCalled()
+    await waitFor(() => expectEmptyOnChange(documentOnChange, 1))
+
+    update({isDocAssistable: true, isSyncing: true})
+    update({isDocAssistable: true, isSyncing: false})
+    expect(task).toHaveBeenCalledExactlyOnceWith(TASK_ARGS)
+  })
+})
+
 describe('useDraftDelayedTask', () => {
+  beforeAll(async () => {
+    await loadPatchEvent()
+  })
+
   test('runs synchronously when a real draft exists and nothing is syncing', () => {
     const {task, documentOnChange, request} = setup({isDocAssistable: true, isSyncing: false})
 

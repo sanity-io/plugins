@@ -1,4 +1,4 @@
-import {useEditState} from 'sanity'
+import {useEditState} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 
 // oxlint-disable-next-line no-unnecessary-type-parameters
 export function useDocumentState<T>(id: string, docType: string): T | undefined {
