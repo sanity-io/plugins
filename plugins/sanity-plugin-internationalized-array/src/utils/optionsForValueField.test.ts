@@ -1,4 +1,5 @@
-import {createSchema, defineField, defineType, isArraySchemaType, isObjectSchemaType} from 'sanity'
+import {defineField, defineType, isArraySchemaType, isObjectSchemaType} from 'sanity'
+import {createSchema} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver'
 import {describe, expect, test} from 'vitest'
 
 import arrayFactory from '../schema/array'

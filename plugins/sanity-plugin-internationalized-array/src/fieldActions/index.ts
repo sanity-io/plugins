@@ -5,11 +5,11 @@ import {
   defineDocumentFieldAction,
   type DocumentFieldActionItem,
   type DocumentFieldActionProps,
-  PatchEvent,
+  type FormPatch,
   setIfMissing,
   useFormValue,
 } from 'sanity'
-import {useDocumentPane} from 'sanity/structure'
+import {useDocumentPane} from 'sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1'
 
 import {useInternationalizedArrayContext} from '../components/InternationalizedArrayContext'
 import {LANGUAGE_FIELD_NAME} from '../constants'
@@ -17,6 +17,17 @@ import type {Language, InternationalizedArrayItem} from '../types'
 import {checkAllLanguagesArePresent} from '../utils/checkAllLanguagesArePresent'
 import {createAddAllTitle} from '../utils/createAddAllTitle'
 import {createAddLanguagePatches} from '../utils/createAddLanguagePatches'
+
+// `PatchEvent` is only exported from the `/2` internals entry, which must stay out of what the studio
+// shell loads, and field actions are registered with the plugin, so it loads when an action runs.
+function changeWithPatches(
+  onChange: ReturnType<typeof useDocumentPane>['onChange'],
+  patches: FormPatch[],
+): void {
+  void import('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2').then(
+    ({PatchEvent}) => onChange(PatchEvent.from(patches)),
+  )
+}
 
 const createTranslateFieldActions: (
   fieldActionProps: DocumentFieldActionProps,
@@ -49,7 +60,7 @@ const createTranslateFieldActions: (
         path,
       })
 
-      onChange(PatchEvent.from([setIfMissing([], path), ...patches]))
+      changeWithPatches(onChange, [setIfMissing([], path), ...patches])
     }, [language.id, value, onChange])
 
     return {
@@ -89,7 +100,7 @@ const AddMissingTranslationsFieldAction: (
       path,
     })
 
-    onChange(PatchEvent.from([setIfMissing([], path), ...patches]))
+    changeWithPatches(onChange, [setIfMissing([], path), ...patches])
   }, [fieldActionProps, filteredLanguages, languages, onChange, value])
 
   return {

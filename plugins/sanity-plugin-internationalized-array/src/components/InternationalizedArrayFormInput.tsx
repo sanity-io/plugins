@@ -1,8 +1,12 @@
 import {Stack} from '@sanity/ui'
+import {lazy, Suspense} from 'react'
 import type {ObjectInputProps} from 'sanity'
 
 import type {PluginConfig} from '../types'
-import DocumentAddButtons from './DocumentAddButtons'
+
+// It imports `sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2`, which must stay
+// out of what the studio shell loads.
+const DocumentAddButtons = lazy(() => import('./DocumentAddButtons'))
 
 /**
  * An input component for the root object of an internationalized array.
@@ -16,7 +20,9 @@ export function InternationalizedArrayFormInput(
   if (showDocumentButtons) {
     return (
       <Stack gap={5}>
-        <DocumentAddButtons />
+        <Suspense fallback={null}>
+          <DocumentAddButtons />
+        </Suspense>
         {props.renderDefault(props)}
       </Stack>
     )
