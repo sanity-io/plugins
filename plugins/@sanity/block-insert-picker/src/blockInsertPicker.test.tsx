@@ -55,12 +55,18 @@ const mocks = vi.hoisted(() => {
   }
 })
 
-vi.mock('sanity', () => ({
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver', () => ({
+  useResolveInitialValueForType: () => mocks.resolveInitialValue,
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-2', () => ({
   useFormCallbacks: () => ({
     onPathOpen: () => {},
     onSetPathCollapsed: () => {},
   }),
-  useResolveInitialValueForType: () => mocks.resolveInitialValue,
+}))
+
+vi.mock('sanity/_dangerously_use_private_internals_that_do_not_follow_semver-1', () => ({
   useSchema: () => ({get: mocks.schemaGet}),
 }))
 

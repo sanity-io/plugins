@@ -1,10 +1,9 @@
 import type {ComponentType} from 'react'
 import type {PortableTextPluginsProps} from 'sanity'
 
-import {BlockInsertPicker} from './blockInsertPicker'
 import type {MarkdownInputRuleConfig} from './inputRules'
 import type {BlockInsertPickerLabels} from './labels'
-import {MarkdownInputRules} from './markdownInputRules'
+import {BlockInsertPicker, MarkdownInputRules} from './lazyComponents'
 import type {PickerInsertEvent, PickerItem, PickerItemMetadata, PickerItemsResolver} from './types'
 
 export interface BlockInsertPickerConfig {
