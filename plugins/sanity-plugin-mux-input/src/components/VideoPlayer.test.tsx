@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
-import {cleanup, fireEvent, render, screen} from '@testing-library/react'
+import {act, cleanup, fireEvent, render, screen} from '@testing-library/react'
 import type {ReactNode} from 'react'
 import {afterEach, describe, expect, test, vi} from 'vitest'
 
@@ -25,8 +25,13 @@ vi.mock('../hooks/useClient', () => ({
   useClient: () => ({}),
 }))
 
+const jwt = vi.hoisted(() => ({signing: null as Promise<void> | null}))
+
 vi.mock('../util/generateJwt', () => ({
-  generateJwt: (_client: unknown, playbackId: string, aud: string) => `${aud}.${playbackId}`,
+  generateJwt: (_client: unknown, playbackId: string, aud: string) => {
+    if (jwt.signing) throw jwt.signing
+    return `${aud}.${playbackId}`
+  },
 }))
 
 const theme = buildTheme()
@@ -53,6 +58,7 @@ async function findSource() {
 }
 
 afterEach(() => {
+  jwt.signing = null
   cleanup()
 })
 
@@ -106,6 +112,39 @@ describe('VideoPlayer', () => {
     expect(screen.getByTestId('media-player').dataset['poster']).toBe(
       'https://image.mux.com/signed-playback-id/thumbnail.png?token=t.signed-playback-id',
     )
+  })
+
+  test('keeps its content on screen, without a Suspense boundary, while tokens are signed', async () => {
+    let finishSigning = () => {}
+    jwt.signing = new Promise<void>((resolve) => {
+      finishSigning = resolve
+    })
+    const signedAsset: VideoAssetDocument = {
+      ...asset,
+      playbackId: 'signed-playback-id',
+      data: {
+        aspect_ratio: '16:9',
+        playback_ids: [{id: 'signed-playback-id', policy: 'signed'}],
+      },
+    }
+    render(
+      <VideoPlayer asset={signedAsset}>
+        <div data-testid="overlay" />
+      </VideoPlayer>,
+      {wrapper: Wrapper},
+    )
+
+    expect(screen.getByTestId('overlay')).toBeTruthy()
+    expect(screen.queryByTestId('media-player')).toBeNull()
+
+    jwt.signing = null
+    await act(async () => finishSigning())
+
+    expect(await findSource()).toEqual({
+      playbackId: 'signed-playback-id',
+      playback: {token: 'v.signed-playback-id'},
+      storyboard: {token: 's.signed-playback-id'},
+    })
   })
 
   test('adds a DRM license token for DRM playback IDs', async () => {

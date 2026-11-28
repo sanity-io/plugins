@@ -2550,10 +2550,6 @@ snapshots:
 					"specifier": "^3.1.6",
 					"version": "3.1.6",
 				},
-				"jsonwebtoken-esm": {
-					"specifier": "^1.0.5",
-					"version": "1.0.5",
-				},
 				"react-is": "catalog:",
 				"react-rx": "catalog:",
 				"rxjs": "catalog:",
@@ -26114,11 +26110,6 @@ snapshots:
 
 		"jsonlines@0.1.1": {
 			"integrity": "sha512-ekDrAGso79Cvf+dtm+mL8OBI2bmAOt3gssYs833De/C9NmIpWDWyUO4zPgB5x2/OhY366dkhgfPMYfwZF7yOZA==",
-		},
-
-		"jsonwebtoken-esm@1.0.5": {
-			"integrity": "sha512-CW3CJGtN3nAtkoyV58jl0aOo8VzFv3V2t24ef5OEdULwMGp9pUpnWkCmwxuwo16Tfhoq9cUBFLb3i9P2YlVc4Q==",
-			"engines": {"node": ">=14.18"},
 		},
 
 		"jsonwebtoken@9.0.3": {
